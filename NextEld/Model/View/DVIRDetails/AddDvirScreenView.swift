@@ -297,9 +297,9 @@ struct AddDvirScreenView: View  {
     }
 }
 
-
+//
 //#Preview {
 //    AddDvirScreenView()
 //        .environmentObject(NavigationManager())
 //}
-
+//

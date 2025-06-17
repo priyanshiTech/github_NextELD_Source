@@ -20,6 +20,8 @@ enum AppRoute: Hashable {
     case CertifySelectedView(tittle: String)
     case AddDvirPriTrip
     case DvirHostory(tittle: String)
+    case NT11Connection
+    case PT30Connection
 
     // Side Menu Screens
     case DailyLogs(tittle: String)
@@ -86,6 +88,11 @@ struct RootView: View {
                         LoginScreen()
                     case .Home:
                         HomeScreenView(presentSideMenu: $presentSideMenu, selectedSideMenuTab: $selectedSideMenuTab)
+                    case .NT11Connection:
+                        NT11ConnectionView()
+                       // NT11Connection()
+                    case .PT30Connection:
+                        PT30ConnectionView()
                     case .DailyLogs(let title):
                         DailyLogView(title: title, entry: WorkEntry(date: Date(), hoursWorked: 0)) // ← default/fake data
                     case .emailLogs( let tittle):

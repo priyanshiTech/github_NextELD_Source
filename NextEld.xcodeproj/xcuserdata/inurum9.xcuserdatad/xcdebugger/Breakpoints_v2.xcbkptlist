@@ -103,17 +103,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "373831D6-DFC2-499A-B7CC-13C02078B38B"
+            uuid = "01AE8262-C6BC-44BE-AF29-8625459A676A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "NextEld/Model/View/HomeView/HomeScreenView.swift"
+            filePath = "NextEld/BluetoothViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "151"
+            endingLineNumber = "151"
+            landmarkName = "parseDataLine(_:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
