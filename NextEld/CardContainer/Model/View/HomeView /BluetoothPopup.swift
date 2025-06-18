@@ -8,61 +8,7 @@
 import Foundation
 import SwiftUI
 
-//struct DeviceSelectorView: View {
-//    @Binding var selectedBtnDevice: String?
-//    @Binding var isPresentedDevices: Bool
-//
-//    var DivSelect: [String] = ["PT30", "NT-11"]
-//
-//    var body: some View {
-//        VStack(spacing: 10) {
-//            Text("Select a Device")
-//                .font(.headline)
-//                .padding(.top)
-//
-//            Divider()
-//
-//            VStack(spacing: 12) {
-//                ForEach(DivSelect, id: \.self) { device in
-//                    HStack {
-//                        Text(device)
-//                            .foregroundColor(.black)
-//
-//                        Spacer()
-//
-//                        Image(systemName: selectedBtnDevice == device ? "checkmark.circle.fill" : "checkmark.circle")
-//                            .foregroundColor(.blue)
-//                    }
-//                    .contentShape(Rectangle())
-//                    .onTapGesture {
-//                        selectedBtnDevice = device
-//                    }
-//                    Divider()
-//                }
-//            }
-//            .padding(.horizontal)
-//
-//            Button(action: {
-//                isPresentedDevices = false
-//            }) {
-//                Text("Ok")
-//                    .fontWeight(.bold)
-//                    .foregroundColor(.white)
-//                    .padding()
-//                    .frame(maxWidth: .infinity)
-//                    .background(Color.blue)
-//                    .cornerRadius(12)
-//            }
-//            .padding(.horizontal)
-//            .padding(.bottom)
-//        }
-//        .padding()
-//        .background(Color.white)
-//        .cornerRadius(16)
-//        .shadow(radius: 10)
-//        .frame(maxWidth: 300)
-//    }
-//}
+
 
 import SwiftUI
 

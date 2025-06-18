@@ -47,20 +47,6 @@ struct IconButton: View {
     }
 }
 
-//struct CustomIconButton: View {
-//    var iconName: String
-//    var action: () -> Void
-//    var iconColor: Color = .blue
-//    var iconSize: CGFloat = 30
-//    
-//    var body: some View {
-//        Button(action: action) {
-//            Image(iconName)
-//                .font(.system(size: iconSize))
-//                .foregroundColor(iconColor)
-//        }
-//    }
-//}
 
 struct CustomIconButton: View {
     var iconName: String

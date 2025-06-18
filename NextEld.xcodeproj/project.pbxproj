@@ -66,6 +66,39 @@
 		AF9DD4EF2DDDB1A70034FA8E /* AddDvirScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4EE2DDDB1A70034FA8E /* AddDvirScreenView.swift */; };
 		AF9DD4F12DDDB1FF0034FA8E /* DvirField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4F02DDDB1FF0034FA8E /* DvirField.swift */; };
 		AF9DD4F32DDDB25F0034FA8E /* DvirEditField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4F22DDDB25F0034FA8E /* DvirEditField.swift */; };
+		AFA98C882E0152E400E87802 /* PacificTrack.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */; };
+		AFA98C892E0152E400E87802 /* PacificTrack.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AFA98C8C2E015FD200E87802 /* PT30BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C8B2E015FD200E87802 /* PT30BluetoothManager.swift */; };
+		AFA98C8F2E01748000E87802 /* VariablesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C8E2E01748000E87802 /* VariablesView.swift */; };
+		AFA98C912E017A1B00E87802 /* PT30DataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C902E017A1B00E87802 /* PT30DataViewModel.swift */; };
+		AFA98C932E017BCB00E87802 /* PT30Devicedata.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C922E017BCB00E87802 /* PT30Devicedata.swift */; };
+		AFA98C952E017C1F00E87802 /* DeviceManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C942E017C1F00E87802 /* DeviceManagerView.swift */; };
+		AFA98C972E017F6700E87802 /* StoreEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C962E017F6700E87802 /* StoreEventView.swift */; };
+		AFA98C992E01826100E87802 /* FrimWareUpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */; };
+		AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943082E029A7900AD19D7 /* TrackerPeripheral.swift */; };
+		AFB943102E029C5B00AD19D7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AFB9430C2E029C5B00AD19D7 /* Main.storyboard */; };
+		AFB943112E029C5B00AD19D7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AFB9430E2E029C5B00AD19D7 /* LaunchScreen.storyboard */; };
+		AFB943192E029C9500AD19D7 /* DashboardReportView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AFB943162E029C9500AD19D7 /* DashboardReportView.xib */; };
+		AFB9431A2E029C9500AD19D7 /* DeviceInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AFB943132E029C9500AD19D7 /* DeviceInfoView.xib */; };
+		AFB9431B2E029C9500AD19D7 /* DeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943142E029C9500AD19D7 /* DeviceTableViewCell.swift */; };
+		AFB9431C2E029C9500AD19D7 /* DashboardReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943172E029C9500AD19D7 /* DashboardReportView.swift */; };
+		AFB9431D2E029C9500AD19D7 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943152E029C9500AD19D7 /* EventTableViewCell.swift */; };
+		AFB9431E2E029C9500AD19D7 /* DeviceInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943122E029C9500AD19D7 /* DeviceInfoView.swift */; };
+		AFB943202E029CA100AD19D7 /* UIViewControllerEventsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9431F2E029CA100AD19D7 /* UIViewControllerEventsDelegate.swift */; };
+		AFB943242E029CB000AD19D7 /* StoredEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943212E029CB000AD19D7 /* StoredEventsViewController.swift */; };
+		AFB943252E029CB000AD19D7 /* StoredEventsViewController+UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943222E029CB000AD19D7 /* StoredEventsViewController+UITableView.swift */; };
+		AFB943282E029CCC00AD19D7 /* BluetoothStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943262E029CCC00AD19D7 /* BluetoothStatusViewController.swift */; };
+		AFB9432C2E029CCF00AD19D7 /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943292E029CCF00AD19D7 /* DeviceViewController.swift */; };
+		AFB9432D2E029CCF00AD19D7 /* DeviceViewController+TrackerServiceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9432A2E029CCF00AD19D7 /* DeviceViewController+TrackerServiceDelegate.swift */; };
+		AFB943332E029CD300AD19D7 /* DeviceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9432E2E029CD300AD19D7 /* DeviceListViewController.swift */; };
+		AFB943342E029CD300AD19D7 /* DeviceListViewController+UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943302E029CD300AD19D7 /* DeviceListViewController+UITableView.swift */; };
+		AFB943352E029CD300AD19D7 /* DeviceListViewController+CBCentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9432F2E029CD300AD19D7 /* DeviceListViewController+CBCentralManagerDelegate.swift */; };
+		AFB943362E029CD300AD19D7 /* DeviceListViewController+UIViewControllerEventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943312E029CD300AD19D7 /* DeviceListViewController+UIViewControllerEventDelegate.swift */; };
+		AFB943392E029CD700AD19D7 /* VariablesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943372E029CD700AD19D7 /* VariablesViewController.swift */; };
+		AFB9433C2E029CE200AD19D7 /* FirmwareUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9433A2E029CE200AD19D7 /* FirmwareUpdateViewController.swift */; };
+		AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9433D2E029CEB00AD19D7 /* Double+Round.swift */; };
+		AFB943412E029D3100AD19D7 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943402E029D3100AD19D7 /* AppConfig.swift */; };
+		AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943422E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift */; };
 		AFC3CF992DE5C4A100D83558 /* AddVichleMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC3CF982DE5C4A100D83558 /* AddVichleMode.swift */; };
 		AFC3CF9C2DE5D0C100D83558 /* CompanyInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC3CF9B2DE5D0C100D83558 /* CompanyInformationView.swift */; };
 		AFC3CF9F2DE5D6BE00D83558 /* InformationPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC3CF9E2DE5D6BE00D83558 /* InformationPacket.swift */; };
@@ -77,7 +110,6 @@
 		AFE146862DEB0498007A4AF0 /* FirmWare Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE146852DEB0498007A4AF0 /* FirmWare Update.swift */; };
 		AFEEDF822DE6DD06005675C2 /* HOSEventChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */; };
 		AFFC64A22DCE1EE2008D1CC0 /* AlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */; };
-		AFFC64A52DCE1F9D008D1CC0 /* AlertsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFC64A42DCE1F9D008D1CC0 /* AlertsExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +128,20 @@
 			remoteInfo = NextEld;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AFA98C8A2E0152E400E87802 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AFA98C892E0152E400E87802 /* PacificTrack.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1009E35A2DCB22EB002E3D13 /* CheckBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxView.swift; sourceTree = "<group>"; };
@@ -147,7 +193,6 @@
 		AF72E4602DFD845800626DC0 /* QRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		AF72E4622DFD84B100626DC0 /* HelperScaneer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperScaneer.swift; sourceTree = "<group>"; };
 		AF80FFA82DDF64DE00CC6A3D /* DotInspection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotInspection.swift; sourceTree = "<group>"; };
-		AF8717F82DFFF36B00544383 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AF8717F92DFFF97400544383 /* blueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blueModel.swift; sourceTree = "<group>"; };
 		AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuRowEnum.swift; sourceTree = "<group>"; };
 		AF8E3A042DD1D9F8004AE777 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
@@ -162,6 +207,39 @@
 		AF9DD4EE2DDDB1A70034FA8E /* AddDvirScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDvirScreenView.swift; sourceTree = "<group>"; };
 		AF9DD4F02DDDB1FF0034FA8E /* DvirField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirField.swift; sourceTree = "<group>"; };
 		AF9DD4F22DDDB25F0034FA8E /* DvirEditField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirEditField.swift; sourceTree = "<group>"; };
+		AFA98C832E0146C200E87802 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = PacificTrack.xcframework; sourceTree = "<group>"; };
+		AFA98C8B2E015FD200E87802 /* PT30BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PT30BluetoothManager.swift; sourceTree = "<group>"; };
+		AFA98C8E2E01748000E87802 /* VariablesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariablesView.swift; sourceTree = "<group>"; };
+		AFA98C902E017A1B00E87802 /* PT30DataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PT30DataViewModel.swift; sourceTree = "<group>"; };
+		AFA98C922E017BCB00E87802 /* PT30Devicedata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PT30Devicedata.swift; sourceTree = "<group>"; };
+		AFA98C942E017C1F00E87802 /* DeviceManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManagerView.swift; sourceTree = "<group>"; };
+		AFA98C962E017F6700E87802 /* StoreEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreEventView.swift; sourceTree = "<group>"; };
+		AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrimWareUpdateModel.swift; sourceTree = "<group>"; };
+		AFB943082E029A7900AD19D7 /* TrackerPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerPeripheral.swift; sourceTree = "<group>"; };
+		AFB9430B2E029C5B00AD19D7 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		AFB9430D2E029C5B00AD19D7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AFB943122E029C9500AD19D7 /* DeviceInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoView.swift; sourceTree = "<group>"; };
+		AFB943132E029C9500AD19D7 /* DeviceInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceInfoView.xib; sourceTree = "<group>"; };
+		AFB943142E029C9500AD19D7 /* DeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTableViewCell.swift; sourceTree = "<group>"; };
+		AFB943152E029C9500AD19D7 /* EventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
+		AFB943162E029C9500AD19D7 /* DashboardReportView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DashboardReportView.xib; sourceTree = "<group>"; };
+		AFB943172E029C9500AD19D7 /* DashboardReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardReportView.swift; sourceTree = "<group>"; };
+		AFB9431F2E029CA100AD19D7 /* UIViewControllerEventsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerEventsDelegate.swift; sourceTree = "<group>"; };
+		AFB943212E029CB000AD19D7 /* StoredEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredEventsViewController.swift; sourceTree = "<group>"; };
+		AFB943222E029CB000AD19D7 /* StoredEventsViewController+UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoredEventsViewController+UITableView.swift"; sourceTree = "<group>"; };
+		AFB943262E029CCC00AD19D7 /* BluetoothStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStatusViewController.swift; sourceTree = "<group>"; };
+		AFB943292E029CCF00AD19D7 /* DeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
+		AFB9432A2E029CCF00AD19D7 /* DeviceViewController+TrackerServiceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceViewController+TrackerServiceDelegate.swift"; sourceTree = "<group>"; };
+		AFB9432E2E029CD300AD19D7 /* DeviceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListViewController.swift; sourceTree = "<group>"; };
+		AFB9432F2E029CD300AD19D7 /* DeviceListViewController+CBCentralManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceListViewController+CBCentralManagerDelegate.swift"; sourceTree = "<group>"; };
+		AFB943302E029CD300AD19D7 /* DeviceListViewController+UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceListViewController+UITableView.swift"; sourceTree = "<group>"; };
+		AFB943312E029CD300AD19D7 /* DeviceListViewController+UIViewControllerEventDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceListViewController+UIViewControllerEventDelegate.swift"; sourceTree = "<group>"; };
+		AFB943372E029CD700AD19D7 /* VariablesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariablesViewController.swift; sourceTree = "<group>"; };
+		AFB9433A2E029CE200AD19D7 /* FirmwareUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareUpdateViewController.swift; sourceTree = "<group>"; };
+		AFB9433D2E029CEB00AD19D7 /* Double+Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Round.swift"; sourceTree = "<group>"; };
+		AFB943402E029D3100AD19D7 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		AFB943422E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI&SwiftUIConnecter.swift"; sourceTree = "<group>"; };
 		AFC3CF982DE5C4A100D83558 /* AddVichleMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVichleMode.swift; sourceTree = "<group>"; };
 		AFC3CF9B2DE5D0C100D83558 /* CompanyInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyInformationView.swift; sourceTree = "<group>"; };
 		AFC3CF9E2DE5D6BE00D83558 /* InformationPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationPacket.swift; sourceTree = "<group>"; };
@@ -173,7 +251,6 @@
 		AFE146852DEB0498007A4AF0 /* FirmWare Update.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirmWare Update.swift"; sourceTree = "<group>"; };
 		AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HOSEventChartView.swift; sourceTree = "<group>"; };
 		AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModifier.swift; sourceTree = "<group>"; };
-		AFFC64A42DCE1F9D008D1CC0 /* AlertsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +258,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFA98C882E0152E400E87802 /* PacificTrack.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,19 +329,18 @@
 		108FF8002DC895E10051671B /* NextEld */ = {
 			isa = PBXGroup;
 			children = (
-				AF8717F82DFFF36B00544383 /* Info.plist */,
-				AF72E4472DFD579500626DC0 /* BluetoothViewModel.swift */,
+				AFA98C832E0146C200E87802 /* Info.plist */,
 				AF72E4452DFD557700626DC0 /* LocationManager.swift */,
 				AFFC64A32DCE1F73008D1CC0 /* Extensions */,
 				1065860B2DCCC71A003CE502 /* LiveCharts */,
 				10CA6EC12DCC9B77003B265C /* HelpingInterfacesFile */,
 				10CA6EBE2DCC90CF003B265C /* ScrollUniversal */,
 				10CA6EBB2DCC89CE003B265C /* CardContainer */,
-				108FF82C2DC89C620051671B /* Model */,
 				1009E35C2DCB358E002E3D13 /* Interface Model */,
 				108FF8012DC895E10051671B /* NextEldApp.swift */,
 				108FF8072DC895E20051671B /* NextEld.entitlements */,
 				AFCAF8242DD85D9200D82F29 /* assets .xcassets */,
+				AFA98C862E014F4F00E87802 /* Framework 2 */,
 			);
 			path = NextEld;
 			sourceTree = "<group>";
@@ -296,6 +373,7 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFA98C8D2E01716100E87802 /* PT30Group */,
 				AF72E45F2DFD843E00626DC0 /* ScannerAddress */,
 				AF72E4302DFD54B400626DC0 /* HomeView  */,
 				AF95DD442DE9C47C0099D4CC /* LogoutView */,
@@ -322,6 +400,7 @@
 		10CA6EBB2DCC89CE003B265C /* CardContainer */ = {
 			isa = PBXGroup;
 			children = (
+				108FF82C2DC89C620051671B /* Model */,
 				10CA6EBC2DCC89EF003B265C /* CardContainer.swift */,
 			);
 			path = CardContainer;
@@ -331,6 +410,7 @@
 			isa = PBXGroup;
 			children = (
 				10CA6EBF2DCC9103003B265C /* ScrollViewUniversal.swift */,
+				AFB943442E02B99D00AD19D7 /* ViewModels */,
 			);
 			path = ScrollUniversal;
 			sourceTree = "<group>";
@@ -372,6 +452,7 @@
 			isa = PBXGroup;
 			children = (
 				AFE146852DEB0498007A4AF0 /* FirmWare Update.swift */,
+				AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */,
 			);
 			path = Frimware;
 			sourceTree = "<group>";
@@ -412,8 +493,6 @@
 				AF72E42B2DFD54B400626DC0 /* HomeScreenView.swift */,
 				AF72E44B2DFD60EF00626DC0 /* NT11ConnectionView.swift */,
 				AF8717F92DFFF97400544383 /* blueModel.swift */,
-				AF72E42D2DFD54B400626DC0 /* PT30ConnectionView.swift */,
-				AF72E42E2DFD54B400626DC0 /* PT30ModelView.swift */,
 				AF72E42F2DFD54B400626DC0 /* ToggleRow.swift */,
 			);
 			path = "HomeView ";
@@ -466,6 +545,149 @@
 				AF9DB2C22DE1CD0B00B98C17 /* ADDVehicle.swift */,
 			);
 			path = DVIRDetails;
+			sourceTree = "<group>";
+		};
+		AFA98C862E014F4F00E87802 /* Framework 2 */ = {
+			isa = PBXGroup;
+			children = (
+				AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */,
+			);
+			path = "Framework 2";
+			sourceTree = "<group>";
+		};
+		AFA98C8D2E01716100E87802 /* PT30Group */ = {
+			isa = PBXGroup;
+			children = (
+				AF72E42D2DFD54B400626DC0 /* PT30ConnectionView.swift */,
+				AFB943092E029A7900AD19D7 /* Models */,
+				AFB943072E02999F00AD19D7 /* PTPOLD */,
+			);
+			path = PT30Group;
+			sourceTree = "<group>";
+		};
+		AFB943072E02999F00AD19D7 /* PTPOLD */ = {
+			isa = PBXGroup;
+			children = (
+				AFA98C922E017BCB00E87802 /* PT30Devicedata.swift */,
+				AFA98C962E017F6700E87802 /* StoreEventView.swift */,
+				AFA98C942E017C1F00E87802 /* DeviceManagerView.swift */,
+				AFA98C8E2E01748000E87802 /* VariablesView.swift */,
+				AFA98C902E017A1B00E87802 /* PT30DataViewModel.swift */,
+				AFA98C8B2E015FD200E87802 /* PT30BluetoothManager.swift */,
+				AF72E42E2DFD54B400626DC0 /* PT30ModelView.swift */,
+			);
+			path = PTPOLD;
+			sourceTree = "<group>";
+		};
+		AFB943092E029A7900AD19D7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AFB9430F2E029C5B00AD19D7 /* Storyboards */,
+				AFB943082E029A7900AD19D7 /* TrackerPeripheral.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AFB9430F2E029C5B00AD19D7 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				AFB943182E029C9500AD19D7 /* Views */,
+				AFB9430C2E029C5B00AD19D7 /* Main.storyboard */,
+				AFB9430E2E029C5B00AD19D7 /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		AFB943182E029C9500AD19D7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AFB9431F2E029CA100AD19D7 /* UIViewControllerEventsDelegate.swift */,
+				AFB943122E029C9500AD19D7 /* DeviceInfoView.swift */,
+				AFB943132E029C9500AD19D7 /* DeviceInfoView.xib */,
+				AFB943142E029C9500AD19D7 /* DeviceTableViewCell.swift */,
+				AFB943152E029C9500AD19D7 /* EventTableViewCell.swift */,
+				AFB943162E029C9500AD19D7 /* DashboardReportView.xib */,
+				AFB943172E029C9500AD19D7 /* DashboardReportView.swift */,
+				AFB943402E029D3100AD19D7 /* AppConfig.swift */,
+				AFB943382E029CD700AD19D7 /* VariablesViewController */,
+				AFB943322E029CD300AD19D7 /* DeviceListViewController */,
+				AFB9432B2E029CCF00AD19D7 /* DeviceViewController */,
+				AFB943272E029CCC00AD19D7 /* BluetoothStatusViewController */,
+				AFB943232E029CB000AD19D7 /* StoredEventViewController */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AFB943232E029CB000AD19D7 /* StoredEventViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AFB943212E029CB000AD19D7 /* StoredEventsViewController.swift */,
+				AFB943222E029CB000AD19D7 /* StoredEventsViewController+UITableView.swift */,
+			);
+			path = StoredEventViewController;
+			sourceTree = "<group>";
+		};
+		AFB943272E029CCC00AD19D7 /* BluetoothStatusViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AFB943262E029CCC00AD19D7 /* BluetoothStatusViewController.swift */,
+			);
+			path = BluetoothStatusViewController;
+			sourceTree = "<group>";
+		};
+		AFB9432B2E029CCF00AD19D7 /* DeviceViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AFB9433B2E029CE200AD19D7 /* FIrmwareUpdateViewController */,
+				AFB943292E029CCF00AD19D7 /* DeviceViewController.swift */,
+				AFB9432A2E029CCF00AD19D7 /* DeviceViewController+TrackerServiceDelegate.swift */,
+				AFB943422E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift */,
+			);
+			path = DeviceViewController;
+			sourceTree = "<group>";
+		};
+		AFB943322E029CD300AD19D7 /* DeviceListViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AFB9432E2E029CD300AD19D7 /* DeviceListViewController.swift */,
+				AFB9432F2E029CD300AD19D7 /* DeviceListViewController+CBCentralManagerDelegate.swift */,
+				AFB943302E029CD300AD19D7 /* DeviceListViewController+UITableView.swift */,
+				AFB943312E029CD300AD19D7 /* DeviceListViewController+UIViewControllerEventDelegate.swift */,
+			);
+			path = DeviceListViewController;
+			sourceTree = "<group>";
+		};
+		AFB943382E029CD700AD19D7 /* VariablesViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AFB9433E2E029CEB00AD19D7 /* Extensions */,
+				AFB943372E029CD700AD19D7 /* VariablesViewController.swift */,
+			);
+			path = VariablesViewController;
+			sourceTree = "<group>";
+		};
+		AFB9433B2E029CE200AD19D7 /* FIrmwareUpdateViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AFB9433A2E029CE200AD19D7 /* FirmwareUpdateViewController.swift */,
+			);
+			path = FIrmwareUpdateViewController;
+			sourceTree = "<group>";
+		};
+		AFB9433E2E029CEB00AD19D7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AFB9433D2E029CEB00AD19D7 /* Double+Round.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		AFB943442E02B99D00AD19D7 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AF72E4472DFD579500626DC0 /* BluetoothViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		AFC3CF972DE5C46400D83558 /* VechiclesModule */ = {
@@ -550,7 +772,6 @@
 			isa = PBXGroup;
 			children = (
 				106586122DCCE182003CE502 /* ColourExtensions.swift */,
-				AFFC64A42DCE1F9D008D1CC0 /* AlertsExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -565,6 +786,7 @@
 				108FF7FA2DC895E10051671B /* Sources */,
 				108FF7FB2DC895E10051671B /* Frameworks */,
 				108FF7FC2DC895E10051671B /* Resources */,
+				AFA98C8A2E0152E400E87802 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -661,6 +883,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFB943102E029C5B00AD19D7 /* Main.storyboard in Resources */,
+				AFB943192E029C9500AD19D7 /* DashboardReportView.xib in Resources */,
+				AFB9431A2E029C9500AD19D7 /* DeviceInfoView.xib in Resources */,
+				AFB943112E029C5B00AD19D7 /* LaunchScreen.storyboard in Resources */,
 				AF04B1B12DE9839000A5F3D1 /* LocalizableEng.strings in Resources */,
 				AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */,
 				AF8FCAB12DE9B4FE00935671 /* eld_instruction.pdf in Resources */,
@@ -689,32 +915,40 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF72E4312DFD54B400626DC0 /* DataRow.swift in Sources */,
+				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
 				AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */,
 				AF72E4332DFD54B400626DC0 /* PT30ConnectionView.swift in Sources */,
 				AF72E4342DFD54B400626DC0 /* PT30ModelView.swift in Sources */,
 				AF72E4352DFD54B400626DC0 /* DutyLogEntryView .swift in Sources */,
 				AF72E4362DFD54B400626DC0 /* ToggleRow.swift in Sources */,
 				AF72E4372DFD54B400626DC0 /* LogsDetails.swift in Sources */,
+				AFA98C932E017BCB00E87802 /* PT30Devicedata.swift in Sources */,
 				AF72E4382DFD54B400626DC0 /* HalfScreenMapView.swift in Sources */,
+				AFB943412E029D3100AD19D7 /* AppConfig.swift in Sources */,
+				AFA98C972E017F6700E87802 /* StoreEventView.swift in Sources */,
 				AF72E4482DFD579500626DC0 /* BluetoothViewModel.swift in Sources */,
 				AF72E4392DFD54B400626DC0 /* DriverSignatiureView.swift in Sources */,
 				AF72E43A2DFD54B400626DC0 /* Foam&certify.swift in Sources */,
 				AF72E43B2DFD54B400626DC0 /* DeviceScannerView.swift in Sources */,
 				AF72E43C2DFD54B400626DC0 /* CertifySelectedView.swift in Sources */,
+				AFB9433C2E029CE200AD19D7 /* FirmwareUpdateViewController.swift in Sources */,
 				AF72E43D2DFD54B400626DC0 /* EyeViewData.swift in Sources */,
 				AF72E43E2DFD54B400626DC0 /* BluetoothPopup.swift in Sources */,
 				AF72E4632DFD84B100626DC0 /* HelperScaneer.swift in Sources */,
 				AF72E44A2DFD59E100626DC0 /* DateInfo 2.swift in Sources */,
 				AF8717FA2DFFF97400544383 /* blueModel.swift in Sources */,
 				AF72E44C2DFD60EF00626DC0 /* NT11ConnectionView.swift in Sources */,
+				AFA98C912E017A1B00E87802 /* PT30DataViewModel.swift in Sources */,
 				AF72E4412DFD54B400626DC0 /* HoursRecap.swift in Sources */,
 				AF72E4612DFD845800626DC0 /* QRScanner.swift in Sources */,
 				AF72E4422DFD54B400626DC0 /* DailyLogView.swift in Sources */,
 				AF72E4432DFD54B400626DC0 /* HomeScreenView.swift in Sources */,
 				AF72E4442DFD54B400626DC0 /* EmailLogs.swift in Sources */,
 				AF9DB2C32DE1CD0B00B98C17 /* ADDVehicle.swift in Sources */,
-				AFFC64A52DCE1F9D008D1CC0 /* AlertsExtension.swift in Sources */,
+				AFB943202E029CA100AD19D7 /* UIViewControllerEventsDelegate.swift in Sources */,
 				1009E35B2DCB22EB002E3D13 /* CheckBoxView.swift in Sources */,
+				AFB943282E029CCC00AD19D7 /* BluetoothStatusViewController.swift in Sources */,
+				AFA98C8C2E015FD200E87802 /* PT30BluetoothManager.swift in Sources */,
 				AF9593B02DDE0AC800C5FCC1 /* CalanderView.swift in Sources */,
 				AF8E3A032DD1D646004AE777 /* SideMenuRowEnum.swift in Sources */,
 				AFD072642DE59A9600C939B0 /* SelectedCoDriverPopup.swift in Sources */,
@@ -723,33 +957,51 @@
 				108FF8322DC8CB470051671B /* ForgetPasswordView.swift in Sources */,
 				1065860D2DCCC75F003CE502 /* HoursOfServices.swift in Sources */,
 				AF04B1B62DE986F300A5F3D1 /* SupportView.swift in Sources */,
+				AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */,
+				AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */,
 				1009E3612DCB37F5002E3D13 /* AppRoute.swift in Sources */,
 				AF04B1BB2DE98DA600A5F3D1 /* SelectLanguagepopup.swift in Sources */,
 				AF92F4DD2DDDE7DB00DEBBF6 /* EmailDvir.swift in Sources */,
 				10CA6EC02DCC9103003B265C /* ScrollViewUniversal.swift in Sources */,
+				AFA98C8F2E01748000E87802 /* VariablesView.swift in Sources */,
 				AF72E4462DFD557700626DC0 /* LocationManager.swift in Sources */,
 				AF9DD4F32DDDB25F0034FA8E /* DvirEditField.swift in Sources */,
 				AFC3CF9F2DE5D6BE00D83558 /* InformationPacket.swift in Sources */,
 				AF04B1B92DE9873600A5F3D1 /* SettingsLanguageView.swift in Sources */,
 				AFEEDF822DE6DD06005675C2 /* HOSEventChartView.swift in Sources */,
+				AFB9432C2E029CCF00AD19D7 /* DeviceViewController.swift in Sources */,
+				AFB9432D2E029CCF00AD19D7 /* DeviceViewController+TrackerServiceDelegate.swift in Sources */,
 				1009E35F2DCB376D002E3D13 /* CoordinatorClass.swift in Sources */,
 				AFC3CFA22DE5F1A200D83558 /* RulesView.swift in Sources */,
+				AFB943392E029CD700AD19D7 /* VariablesViewController.swift in Sources */,
+				AFB943242E029CB000AD19D7 /* StoredEventsViewController.swift in Sources */,
+				AFB943252E029CB000AD19D7 /* StoredEventsViewController+UITableView.swift in Sources */,
 				AF95DD432DE9C1280099D4CC /* PDFInformationEld.swift in Sources */,
 				AFC3CF9C2DE5D0C100D83558 /* CompanyInformationView.swift in Sources */,
 				AF80FFA92DDF64DE00CC6A3D /* DotInspection.swift in Sources */,
 				108FF8342DC8EC850051671B /* ForgetUserName.swift in Sources */,
 				AF95DD462DE9C4940099D4CC /* LogOut.swift in Sources */,
 				AF9DB2C12DE1B3FE00B98C17 /* HadDefectedView.swift in Sources */,
+				AFB9431B2E029C9500AD19D7 /* DeviceTableViewCell.swift in Sources */,
+				AFB9431C2E029C9500AD19D7 /* DashboardReportView.swift in Sources */,
+				AFB9431D2E029C9500AD19D7 /* EventTableViewCell.swift in Sources */,
+				AFB9431E2E029C9500AD19D7 /* DeviceInfoView.swift in Sources */,
 				AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */,
 				106586132DCCE182003CE502 /* ColourExtensions.swift in Sources */,
 				108FF8022DC895E10051671B /* NextEldApp.swift in Sources */,
+				AFB943332E029CD300AD19D7 /* DeviceListViewController.swift in Sources */,
+				AFB943342E029CD300AD19D7 /* DeviceListViewController+UITableView.swift in Sources */,
+				AFB943352E029CD300AD19D7 /* DeviceListViewController+CBCentralManagerDelegate.swift in Sources */,
+				AFB943362E029CD300AD19D7 /* DeviceListViewController+UIViewControllerEventDelegate.swift in Sources */,
 				AF92F4DF2DDDEE0D00DEBBF6 /* DVIRHistory.swift in Sources */,
+				AFA98C992E01826100E87802 /* FrimWareUpdateModel.swift in Sources */,
 				1009E3632DCB3A79002E3D13 /* SplashView.swift in Sources */,
 				AF8E3A052DD1D9F8004AE777 /* SideMenuView.swift in Sources */,
 				AFC3CF992DE5C4A100D83558 /* AddVichleMode.swift in Sources */,
 				10CA6EC32DCC9BA8003B265C /* Reuseable  Label.swift in Sources */,
 				108FF8302DC8A8BA0051671B /* LoginScreen.swift in Sources */,
 				AFE146862DEB0498007A4AF0 /* FirmWare Update.swift in Sources */,
+				AFA98C952E017C1F00E87802 /* DeviceManagerView.swift in Sources */,
 				10CA6EBD2DCC89EF003B265C /* CardContainer.swift in Sources */,
 				AFD072662DE5A49000C939B0 /* NewDriverLogin.swift in Sources */,
 				AF9DD4EF2DDDB1A70034FA8E /* AddDvirScreenView.swift in Sources */,
@@ -787,6 +1039,25 @@
 			targetProxy = 108FF81A2DC895E20051671B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		AFB9430C2E029C5B00AD19D7 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AFB9430B2E029C5B00AD19D7 /* Main.storyboard */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		AFB9430E2E029C5B00AD19D7 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AFB9430D2E029C5B00AD19D7 /* LaunchScreen.storyboard */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		108FF8212DC895E20051671B /* Debug */ = {

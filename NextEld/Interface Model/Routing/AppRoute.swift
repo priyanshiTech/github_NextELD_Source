@@ -22,6 +22,7 @@ enum AppRoute: Hashable {
     case DvirHostory(tittle: String)
     case NT11Connection
     case PT30Connection
+   // case PT30DeviceDataView
 
     // Side Menu Screens
     case DailyLogs(tittle: String)
@@ -152,6 +153,8 @@ struct RootView: View {
                         
                     case .FirmWare_Update:
                         FirmWare_Update()
+//                    case .PT30DeviceDataView:
+//                        PT30DeviceDataView()
                     }
                   
                     }
