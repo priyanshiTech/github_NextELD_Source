@@ -5,111 +5,7 @@
 //  Created by Priyanshi on 05/05/25.
 //
 
-
-
-
 import SwiftUI
-
-//struct LoginScreen: View {
-//    @StateObject private var loginVM = LoginViewModel()
-//
-//    @State private var email = ""
-//    @State private var password = ""
-//    @State private var isPasswordVisible = false
-//    @State private var alertVisible = false
-//
-//    var body: some View {
-//        VStack(spacing: 20) {
-//            Text("Next ELD")
-//                .font(.largeTitle)
-//                .foregroundColor(.white)
-//                .padding(.top, 60)
-//
-//            // Email field
-//            HStack {
-//                Image(systemName: "envelope")
-//                    .foregroundColor(.blue)
-//                TextField("Email", text: $email)
-//                    .autocapitalization(.none)
-//                    .keyboardType(.emailAddress)
-//            }
-//            .padding()
-//            .background(Color.white)
-//            .cornerRadius(10)
-//
-//            // Password field
-//            HStack {
-//                Image(systemName: "lock")
-//                    .foregroundColor(.blue)
-//                if isPasswordVisible {
-//                    TextField("Password", text: $password)
-//                } else {
-//                    SecureField("Password", text: $password)
-//                }
-//                Button(action: {
-//                    isPasswordVisible.toggle()
-//                }) {
-//                    Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
-//                        .foregroundColor(.blue)
-//                }
-//            }
-//            .padding()
-//            .background(Color.white)
-//            .cornerRadius(10)
-//
-//            // Log In Button
-//            Button(action: {
-//                if email.isEmpty || password.isEmpty {
-//                    alertVisible = true
-//                } else {
-//                    Task {
-//                        await loginVM.login(email: email, password: password)
-//                    }
-//                }
-//            }) {
-//                Text("Log - In")
-//                    .foregroundColor(.blue)
-//                    .frame(maxWidth: .infinity)
-//                    .padding()
-//                    .background(Color.white)
-//                    .cornerRadius(10)
-//            }
-//
-//            if loginVM.isLoading {
-//                ProgressView("Logging in...")
-//                    .padding()
-//            }
-//
-//            if let error = loginVM.errorMessage {
-//                Text(error)
-//                    .foregroundColor(.red)
-//                    .padding()
-//            }
-//
-//            Spacer()
-//        }
-//        .padding()
-//        .background(Color.blue.ignoresSafeArea())
-//        .alert(isPresented: $alertVisible) {
-//            Alert(
-//                title: Text("Input Error"),
-//                message: Text("Email and Password cannot be empty."),
-//                dismissButton: .default(Text("OK"))
-//            )
-//        }
-//    }
-//}
-
-
-
-
-
-
-
-import SwiftUI
-
-
-
 struct LoginScreen: View {
     
     @EnvironmentObject var navManager: NavigationManager
@@ -194,17 +90,19 @@ struct LoginScreen: View {
                         .padding(.horizontal, 20)
                 }
 
- // Log In Button
+//  Log In Button
  Button(action: {
      if email.isEmpty || password.isEmpty {
          alertVisible = true
      } else {
+        
+
          Task {
              await loginVM.login(email: email, password: password)
              navManager.navigate(to: AppRoute.Scanner)
          }
      }
- }) {
+ }){
      Text("Log - In")
          .foregroundColor(.blue)
          .frame(maxWidth: .infinity)
@@ -222,12 +120,6 @@ struct LoginScreen: View {
      ProgressView("Logging in...")
          .padding()
  }
-
-// if let error = loginVM.errorMessage {
-//     Text(error)
-//         .foregroundColor(.red)
-//         .padding()
-// }
 
  Spacer()
  .padding()
@@ -262,7 +154,6 @@ struct LoginScreen: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.blue)
             .navigationBarTitleDisplayMode(.inline)
-     //  }
     }
 }
 

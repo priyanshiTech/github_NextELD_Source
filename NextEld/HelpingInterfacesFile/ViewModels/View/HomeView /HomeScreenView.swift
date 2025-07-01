@@ -8,6 +8,7 @@ import SwiftUI
 // MARK: - Subviews
 struct TopBarView: View {
     @Binding var presentSideMenu: Bool
+    @EnvironmentObject var navManager: NavigationManager
     var labelValue: String
     @Binding var showDeviceSelector: Bool
 
@@ -18,11 +19,25 @@ struct TopBarView: View {
             HStack {
                 HStack(spacing: 80) {
                     IconButton(iconName: "line.horizontal.3", action: {
-                        presentSideMenu.toggle()
-                    }, iconColor: .black, iconSize: 25)
+                  presentSideMenu.toggle()
+                        print("✅ Hamburger tapped, presentSideMenu is now: \(presentSideMenu)")
+
+                    }, iconColor: .black, iconSize:20)
+                    .bold()
                     .padding()
-                    DynamicLabel(text: labelValue, systemImage: "")
-                        .font(.system(size: 15))
+                    Button(action: {
+                       //showDeviceSelector = true
+                        navManager.navigate(to: AppRoute.DriverLogListView)
+                    }) {
+                        Text(labelValue)
+                            .font(.system(size: 20))
+                            .bold()
+                            .foregroundColor(.blue    ) // match DynamicLabel style
+                    }
+                    .padding()
+                    .foregroundColor(.blue)
+                    .buttonStyle(PlainButtonStyle()) // prevents default blue tint on iOS
+
                 }
                 Spacer()
                 HStack(spacing: 5) {
@@ -33,7 +48,6 @@ struct TopBarView: View {
                             .resizable()
                             .frame(width: 30, height: 30)
                     }
-
                     IconButton(iconName: "arrow.2.circlepath", action: {})
                         .padding()
                 }
@@ -44,49 +58,6 @@ struct TopBarView: View {
 
 
 
-// struct TopBarView: View {
-//    @Binding var presentSideMenu: Bool
-//    var labelValue: String
-//
-//    // NEW: Add popup bindings
-//    @Binding var showDeviceSelector: Bool
-//    @Binding var selectedDevice: String?
-//
-//    var body: some View {
-//        ZStack(alignment: .top) {
-//            Color.white
-//                .frame(height: 50)
-//                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
-//            
-//            HStack {
-//                HStack(spacing: 80) {
-//                    IconButton(iconName: "line.horizontal.3", action: {
-//                        presentSideMenu.toggle()
-//                    }, iconColor: .black, iconSize: 25)
-//                    .padding()
-//                    
-//                    DynamicLabel(text: labelValue, systemImage: "")
-//                        .font(.system(size: 15))
-//                }
-//                Spacer()
-//                HStack(spacing: 5) {
-//                    Button(action: {
-//                        showDeviceSelector = true
-//                    }) {
-//                        Image("bluuu")
-//                            .resizable()
-//                            .frame(width: 30, height: 30)
-//                            .foregroundColor(.white)
-//                    }
-//
-//                    IconButton(iconName: "arrow.2.circlepath", action: {})
-//                        .foregroundColor(.black)
-//                        .padding()
-//                }
-//            }
-//        }
-//    }
-//}
 
 
 struct VehicleInfoView: View {
@@ -129,6 +100,7 @@ struct VehicleInfoView: View {
 }
 
 struct StatusView: View {
+    
     @Binding var confirmedStatus: String?
     @Binding var selectedStatus: String?
     @Binding var showAlert: Bool
@@ -266,16 +238,22 @@ struct StatusButton: View {
     }
 }
 
+
 struct AvailableHoursView: View {
-    @EnvironmentObject var navmanager:NavigationManager
+    @EnvironmentObject var navmanager: NavigationManager
+    
+    @ObservedObject var driveTimer: CountdownTimer
+    @ObservedObject var dutyTimer: CountdownTimer
+    @ObservedObject var cycleTimer: CountdownTimer
+    @ObservedObject var sleepTimer: CountdownTimer
+
+   // @StateObject private var sleepTimer = CountdownTimer(startTime: 10 * 3600)
 
     var body: some View {
         CardContainer {
-                VStack(spacing: 2) {
+            VStack(spacing: 2) {
                 HStack(spacing: 5) {
-                    
                     Button("Recap") {
-                        
                         navmanager.navigate(to: .RecapHours(tittle: "Hours Recap"))
                     }
                     .buttonStyle(.plain)
@@ -291,19 +269,21 @@ struct AvailableHoursView: View {
                     Button("Daily Logs") {
                         navmanager.navigate(to: .DailyLogs(tittle: "Daily Logs"))
                     }
-                        .buttonStyle(.plain)
-                        .foregroundColor(.purple)
+                    .buttonStyle(.plain)
+                    .foregroundColor(.purple)
                 }
-                   .padding()
+                .padding()
+                
                 //MARK: -  Time boxes
-                    VStack(spacing: 2) {
+                VStack(spacing: 2) {
                     HStack(spacing: 2) {
-                        TimeBox(title: "Drive", time: "11:00:00")
-                        TimeBox(title: "On-Duty", time: "14:00:00")
+                        TimeBox(title: "On-Duty", timer: dutyTimer)
+                        TimeBox(title: "Drive", timer: driveTimer)
                     }
+
                     HStack(spacing: 2) {
-                        TimeBox(title: "Cycle", time: "19:38:06")
-                        TimeBox(title: "Sleep", time: "10:00:00")
+                        TimeBox(title: "Cycle / 7 Days", timer: cycleTimer)
+                        TimeBox(title: "Sleep", timer: sleepTimer)
                     }
                 }
             }
@@ -311,23 +291,38 @@ struct AvailableHoursView: View {
     }
 }
 
+
 struct TimeBox: View {
     let title: String
-    let time: String
-    
+    @ObservedObject var timer: CountdownTimer
+
     var body: some View {
         ZStack {
             VStack {
                 HStack {
-                    Text(title)
-                        .foregroundColor(.white)
-                        .bold()
+                    if title == "Cycle / 7 Days" {
+                        // Only apply style for Cycle
+                        (
+                            Text("Cycle")
+                                .foregroundColor(.white)
+                                .bold()
+                            +
+                            Text(" / 7 Days")
+                                .foregroundColor(.white)
+                                .font(.footnote)
+                        )
+                    } else {
+                        // Normal case
+                        Text(title)
+                            .foregroundColor(.white)
+                            .bold()
+                    }
                     Spacer()
                 }
                 Spacer()
                 HStack {
                     Spacer()
-                    Label(time, systemImage: "")
+                    Text(formatTime(timer.remainingTime))
                         .foregroundColor(.white)
                         .bold()
                 }
@@ -340,6 +335,7 @@ struct TimeBox: View {
         .frame(maxWidth: .infinity)
     }
 }
+
 
 // MARK: - Main View
 struct HomeScreenView: View {
@@ -354,9 +350,27 @@ struct HomeScreenView: View {
     @Binding var selectedSideMenuTab: Int
     @State private var showDeviceSelector: Bool = false
     @State private var selectedDevice: String? = nil
+    @StateObject private var driveTimer = CountdownTimer(startTime: 11 * 3600)
+    @StateObject private var dutyTimer = CountdownTimer(startTime: 14 * 3600)
+    @StateObject private var cycleTimerOn = CountdownTimer(startTime: 70 * 3600)
+    @StateObject private var sleepTimer = CountdownTimer(startTime: 10 * 3600)
 
+    
 
     @EnvironmentObject var navmanager: NavigationManager
+    //MARK: -  Show Alert Drive Before 30 min
+    @State private var showDrive30MinAlert = false
+    @State private var drive30MinAlertTime: Date?
+    
+    //MARK: -  to show a Cycle state
+    @State private var isOnDutyActive = false
+    @State private var isDriveActive = false
+
+    @State private var isCycleTimerActive = false
+    @State private var cycleTimeElapsed = 0
+    @State private var cycleTimer: Timer?
+
+
     
     var body: some View {
         ZStack(alignment: .leading) {
@@ -376,7 +390,6 @@ struct HomeScreenView: View {
                     showDeviceSelector: $showDeviceSelector
                 )
 
-
                 
                 UniversalScrollView {
                     VStack {
@@ -392,8 +405,14 @@ struct HomeScreenView: View {
                             showAlert: $showAlert
                         )
                         
-                        AvailableHoursView()
-                        
+                        AvailableHoursView(
+                            driveTimer: driveTimer,
+                            dutyTimer: dutyTimer,
+                            cycleTimer: cycleTimerOn,
+                            sleepTimer: sleepTimer
+                           
+                        )
+
                         HOSEventsChartScreen()
                         
                         VStack(alignment: .leading) {
@@ -425,44 +444,74 @@ struct HomeScreenView: View {
                 .transition(.move(edge: .leading))
                 .zIndex(1)
             }
-            
-            // Status Popups
-            if showAlert, let selected = selectedStatus {
+
+            //MARK: -  Add a new Updated Timer in my screen if showAlert, let selected = selectedStatus {
+     
+
+            if showAlert, let selected = selectedStatus{
                 ZStack {
-                    Color.black.opacity(0.5)
-                        .ignoresSafeArea()
-                        .zIndex(2)
-                    
-                    if selected == "Sleep" || selected == "Off-Duty" || selected == "Personal Use" || selected == "Yard Move" || selected == "On-Duty" {
-                        StatusDetailsPopup(
-                            statusTitle: selected,
-                            onClose: {
-                                showAlert = false
-                            },
-                            onSubmit: { note in
-                                confirmedStatus = selected
-                                print("Note for \(selected): \(note)")
-                                showAlert = false
+                Color.black.opacity(0.5)
+                    .ignoresSafeArea()
+                    .zIndex(2)
+            
+
+                if selected == "Sleep" || selected == "Off-Duty" || selected == "Personal Use" || selected == "Yard Move" || selected == "On-Duty" {
+                    StatusDetailsPopup(
+                        statusTitle: selected,
+                        onClose: {
+                            showAlert = false
+                        },
+                        onSubmit: { note in
+                            confirmedStatus = selected
+                            print("Note for \(selected): \(note)")
+                            
+                            // 🟢 Start "On-Duty" timer
+                            if selected == "On-Duty" {
+                                dutyTimer.start()
+                                isOnDutyActive = true
+                                checkAndStartCycleTimer()
+                            }else if selected == "Sleep" {
+                                sleepTimer.start() // ✅ starts when sleep note is submitted
+                            }else if selected == "Off-Duty" {
+                                // ✅ Stop all timers
+                                driveTimer.stop()
+                                dutyTimer.stop()
+                                sleepTimer.stop()
+                                cycleTimerOn.stop()
+
+                                // MARK:  Clear flags
+                                isDriveActive = false
+                                isOnDutyActive = false
+                                checkAndStartCycleTimer()
                             }
-                        )
-                        .zIndex(3)
-                    } else if selected == "Drive" {
-                        CustomPopupAlert(
-                            title: "Certify Log",
-                            message: "please add DVIR before going to On-Drive",
-                            onOK: {
-                                confirmedStatus = selected
-                                showAlert = false
-                            },
-                            onCancel: {
-                                showAlert = false
-                            }
-                        )
-                        .zIndex(3)
-                    }
+
+                            showAlert = false
+                        }
+                    )
+                    .zIndex(3)
+                } else if selected == "Drive" {
+                    CustomPopupAlert(
+                        title: "Certify Log",
+                        message: "please add DVIR before going to On-Drive",
+                        onOK: {
+                            confirmedStatus = selected
+                            
+                            // 🟢 Start "Drive" timer
+                            isDriveActive = true
+                            driveTimer.start()
+                            checkAndStartCycleTimer()
+                            showAlert = false
+                         
+                        },
+                        onCancel: {
+                            showAlert = false
+                        }
+                    )
+                    .zIndex(3)
                 }
             }
-            
+        }
+
             // Logout Popup
             if showLogoutPopup {
                 Color.black.opacity(0.5)
@@ -490,7 +539,7 @@ struct HomeScreenView: View {
     
  
         // Device Popup - Show centered, non-intrusive
-        // Inside HomeScreenView's main ZStack
+
 
         if showDeviceSelector {
             ZStack {
@@ -517,21 +566,88 @@ struct HomeScreenView: View {
             }
             .zIndex(10)
         }
+            if showDrive30MinAlert, let alertTime = drive30MinAlertTime {
+                ZStack {
+                    Color.black.opacity(0.4).ignoresSafeArea()
 
+                    VStack(spacing: 16) {
+                        Text("ONDutyalert")
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(.black)
 
+                        Text("You are continue Driving - 30 min left for take 30 min break at \(formattedDate(alertTime))")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.black)
+                            .padding(.horizontal)
 
+                        Button(action: {
+                            showDrive30MinAlert = false
+                        }) {
+                            Text("OK")
+                                .bold()
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 30)
+                                .background(Color.white)
+                                .cornerRadius(8)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    .padding()
+                    .background(Color.yellow)
+                    .cornerRadius(20)
+                    .padding(.horizontal, 30)
+                }
+                .zIndex(99)
+            }
 
 
         }.navigationBarBackButtonHidden()
-//        .animation(.easeInOut, value: presentSideMenu)
-//        .animation(.easeInOut, value: showLogoutPopup)
-//        .navigationBarBackButtonHidden(true)
+            .onAppear {
+                    print("📍 presentSideMenu in [HomeScreenView] = \(presentSideMenu)")
+                }
+                .onChange(of: presentSideMenu) { newValue in
+                    print(" Side menu changed: \(newValue)")
+                }
+
 }
+    func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "E - MMM d HH:mm:ss 'GMT+05:30 yyyy'"
+        formatter.timeZone = TimeZone(identifier: "Asia/Kolkata")
+        return formatter.string(from: date)
+    }
+
+    func checkAndStartCycleTimer() {
+        print(" Checking Cycle Timer: Drive=\(isDriveActive), Duty=\(isOnDutyActive)")
+
+        if isOnDutyActive && isDriveActive {
+            startCycleTimer()
+        } else {
+            stopCycleTimer()
+        }
+    }
+
+    func startCycleTimer() {
+        guard !isCycleTimerActive else { return }
+        print("🚀 Starting Cycle Timer")
+        isCycleTimerActive = true
+        cycleTimerOn.start() //  this is the CountdownTimer you passed to AvailableHoursView
+    
+    }
+
+
+    func stopCycleTimer() {
+        guard isCycleTimerActive else { return }
+        isCycleTimerActive = false
+        cycleTimerOn.stop() //  stop your cycle countdown
+        print(" Cycle Timer Stopped")
+    }
+
+
 }
    //#Preview {
    //    HomeScreenView()
   //}
-
-//MARK: -  LogoutView
 
 

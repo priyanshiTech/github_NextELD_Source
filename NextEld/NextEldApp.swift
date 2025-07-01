@@ -7,15 +7,29 @@
 
 import SwiftUI
 
+//@main
+//struct NextEldApp: App {
+//    
+//    @StateObject private var navManager = NavigationManager()
+//
+//    var body: some Scene {
+//        WindowGroup {
+//            RootView()
+//                .environmentObject(navManager) // Injecting at the top level
+//        }
+//    }
+//}
+
 @main
 struct NextEldApp: App {
-    
+    @StateObject private var loginVM = LoginViewModel()
     @StateObject private var navManager = NavigationManager()
 
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environmentObject(navManager) // Injecting at the top level
+            AppStartupView()
+                .environmentObject(loginVM)
+                .environmentObject(navManager)
         }
     }
 }

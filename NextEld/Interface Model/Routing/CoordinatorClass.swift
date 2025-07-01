@@ -11,7 +11,6 @@ import SwiftUI
 
 class NavigationManager: ObservableObject {
     
-
     @Published var path: [AppRoute] = []
 
     func navigate(to route: AppRoute) {

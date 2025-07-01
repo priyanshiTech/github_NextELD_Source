@@ -82,6 +82,7 @@ struct LogOut: View {
                         currentStatus: "OffDuty",
                         onLogout: {
                             print("Logging out…")
+                            
                             isPresented = false
                         },
                         onCancel: {

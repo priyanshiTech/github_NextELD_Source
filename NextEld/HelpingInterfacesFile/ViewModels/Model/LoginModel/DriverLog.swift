@@ -6,7 +6,7 @@
 
 
 import Foundation
-struct DriverLog : Codable {
+/*struct DriverLog : Codable {
 	let _id : String?
 	let certifiedLogId : String?
 	let statusId : Int?
@@ -253,4 +253,37 @@ struct DriverLog : Codable {
 		isReportGenerated = try values.decodeIfPresent(Int.self, forKey: .isReportGenerated)
 	}
 
+}*/
+
+
+
+struct DriverLog: Decodable {
+    let _id: String?
+    let vehicleId: Int?
+    let driverId: Int?
+    let status: String?
+    let dateTime: String?
+    let utcDateTime: Int64?
+    let lastUtcDateTime: Int64?
+    let employeeStatus: String?
+    let lattitude: Double?
+    let longitude: Double?
+    let customLocation: String?
+    let origin: String?
+    let odometer: Double?
+    let engineHour: String?
+    let note: String?
+    let isVoilation: Int?
+    let logType: String?
+    let statusId: Int?
+    let remainingWeeklyTime: String?
+    let remainingDutyTime: String?
+    let remainingDriveTime: String?
+    let remainingSleepTime: String?
+    let shift: Int?
+    let days: Int?
+    let identifier: Int?
+    let lastOnSleepTime: String?
+    let truckNo: String?
+    let trailers: [String]?
 }

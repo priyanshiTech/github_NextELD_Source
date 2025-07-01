@@ -70,26 +70,6 @@ final class NetworkManager {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*enum API {
     static let baseURL = URL(string: "https://gbt-usa.com/eld_log/")! //  MARK: BASE URL
 

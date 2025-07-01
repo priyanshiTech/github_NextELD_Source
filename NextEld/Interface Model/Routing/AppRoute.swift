@@ -22,16 +22,13 @@ enum AppRoute: Hashable {
     case DvirHostory(tittle: String)
     case NT11Connection
     case PT30Connection
-   // case PT30DeviceDataView
-
     // Side Menu Screens
     case DailyLogs(tittle: String)
     case emailLogs(tittle: String)
     case RecapHours(tittle: String)
     // case AddDvirScreenView
     case AddDvirScreenView(selectedVehicle: String)
-
-     case  ADDVehicle
+    case  ADDVehicle
     case DotInspection(tittle: String)
     // ✅ With associated value
     case LogsDetails(title: String, entry: WorkEntry)
@@ -47,16 +44,13 @@ enum AppRoute: Hashable {
     case SupportView
     case Logout
     case FirmWare_Update
+    case DriverLogListView
+    
 }
 
 
-//    case Rule
-//    case EldConnection
-//    case settings
-//    case support
-//    case FirmWareUpdate
-//    case Logout
 
+import SwiftUI
 
 struct RootView: View {
     
@@ -67,16 +61,38 @@ struct RootView: View {
     @State private var language: String = ""
     @State private var isLogoutPresented: Bool = false
     @State private var isCycleCompleted: Bool = false
+    @State private var hasCheckedSession = false
+    @EnvironmentObject var loginVM: LoginViewModel
 
 
  
 
     var body: some View {
+        
+        
         NavigationStack(path: $navManager.path) {
             SplashView()
+//            Group {
+//                if hasCheckedSession {
+//                    Color.clear // Do nothing
+//                } else {
+//                    SplashView()
+//                        .onAppear {
+//                            DispatchQueue.main.async {
+//                                if loginVM.checkExistingSession() {
+//                                    print("Sorry something went wrong")
+//                                   
+//                                } else {
+//                                   
+//                                    navManager.navigate(to: .Home)
+//                                }
+//                                hasCheckedSession = true
+//                            }
+//                        }
+//                }
+//            }
                 .navigationDestination(for: AppRoute.self) { route in
                     switch route {
-                        
                     case .SplashScreen:
                         SplashView()
                     case .ForgetPassword(let title):
@@ -153,8 +169,9 @@ struct RootView: View {
                         
                     case .FirmWare_Update:
                         FirmWare_Update()
-//                    case .PT30DeviceDataView:
-//                        PT30DeviceDataView()
+
+                    case .DriverLogListView:
+                        DriverLogListView()
                     }
                   
                     }
