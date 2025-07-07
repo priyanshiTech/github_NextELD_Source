@@ -7,7 +7,7 @@
 import Foundation
 
 
-struct Result : Decodable {
+struct ToknResult : Decodable {
 	let tokenNo : String?
 	let status : String?
 	let employeeId : Int?

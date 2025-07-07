@@ -2,7 +2,7 @@
 //  ColourExtensions.swift
 //  NextEld
 //
-//  Created by AroGeek11 on 08/05/25.
+//  Created by Priyanshi on 08/05/25.
 //
 
 import Foundation

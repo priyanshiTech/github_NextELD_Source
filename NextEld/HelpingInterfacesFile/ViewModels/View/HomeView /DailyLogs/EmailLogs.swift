@@ -2,7 +2,7 @@
 //  EmailLogs.swift
 //  NextEld
 //
-//  Created by Inurum   on 14/05/25.
+//  Created by Priyanshi  on 14/05/25.
 //
 
 import SwiftUI
@@ -47,7 +47,7 @@ struct EmailLogs: View {
                     .foregroundColor(.white)
                     .fontWeight(.semibold)
                 Spacer()
-                
+                  
             }
             .padding()
             .background(Color.blue.shadow(radius: 1))

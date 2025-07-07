@@ -261,6 +261,7 @@ struct DriverLog: Decodable {
     let _id: String?
     let vehicleId: Int?
     let driverId: Int?
+    let driverName: String?
     let status: String?
     let dateTime: String?
     let utcDateTime: Int64?

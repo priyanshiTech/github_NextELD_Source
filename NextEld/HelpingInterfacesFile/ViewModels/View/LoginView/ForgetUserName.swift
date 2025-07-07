@@ -10,8 +10,9 @@ import SwiftUI
 struct ForgetUserName: View {
     var title: String
     @State  var mobNumber  = ""
-   // @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var navManager: NavigationManager
+    @StateObject private var viewModel = ForgetUsernameViewModel()
+
     @FocusState  private var istextfieldFocus: Bool
 
     var body: some View {
@@ -25,7 +26,6 @@ struct ForgetUserName: View {
             }
                 HStack {
                     Button(action: {
-                       // presentationMode.wrappedValue.dismiss()
                         navManager.goBack()
                     }) {
                         Image(systemName: "arrow.left")
@@ -44,7 +44,7 @@ struct ForgetUserName: View {
                
             .padding()
             .background(Color.blue.shadow(radius: 1))
-            .frame(height: 40, alignment: .topLeading)
+            .frame(height: 60, alignment: .topLeading)
             Spacer()
             VStack {
                 HStack{
@@ -71,6 +71,9 @@ struct ForgetUserName: View {
                 if istextfieldFocus {
                                Button("Continue") {
                                    //MARK: button action here
+                                   Task {
+                                       await viewModel.submitForgetUsername()
+                                   }
                                    print("Continue tapped with number: \(mobNumber)")
                                }
                                .bold()
@@ -87,7 +90,12 @@ struct ForgetUserName: View {
                 Spacer()
             }
         }
-        .navigationBarHidden(true) 
+        .navigationBarHidden(true)
+        .alert("Response", isPresented: $viewModel.showAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(viewModel.message)
+        }
     }
 }
 #Preview {

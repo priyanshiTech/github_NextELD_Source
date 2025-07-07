@@ -12,6 +12,8 @@ import SwiftUI
 class NavigationManager: ObservableObject {
     
     @Published var path: [AppRoute] = []
+    @Published var currentRoute: AppRoute = .SplashScreen
+
 
     func navigate(to route: AppRoute) {
         print("Navigating to \(route)")
@@ -26,4 +28,8 @@ class NavigationManager: ObservableObject {
     func reset(to route: AppRoute) {
         path = [route]
     }
+
 }
+
+
+

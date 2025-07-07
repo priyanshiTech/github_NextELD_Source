@@ -16,7 +16,7 @@ class DatabaseManager {
 
     // MARK: - Table and Columns
     let driverLogs = Table("driverLogs")
-    let id = Expression<Int64>("id") // Auto-increment
+    let id = Expression<Int64>("id")
     let status = Expression<String>("status")
     let startTime = Expression<String>("startTime")
     let userId = Expression<Int>("userId")
@@ -51,11 +51,11 @@ class DatabaseManager {
             let docDir = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             let path = docDir.appendingPathComponent("local.db").path
             db = try Connection(path)
-            print("📁 SQLite DB path: \(path)")
+            print("*__________ SQLite DB path: \(path)")
 
             createTable()
         } catch {
-            print("❌ DB Init Error: \(error)")
+            print("******DB Init Error: \(error)")
         }
     }
 
@@ -93,7 +93,7 @@ class DatabaseManager {
                 t.column(engineStatus)
             })
         } catch {
-            print("❌ Table Create Error: \(error)")
+            print("****** Table Create Error: \(error)")
         }
     }
 
@@ -103,6 +103,7 @@ class DatabaseManager {
         do {
             for row in try db!.prepare(driverLogs) {
                 logs.append(DriverLogModel(
+                    id: row[id],
                     status: row[status],
                     startTime: row[startTime],
                     userId: row[userId],
@@ -145,6 +146,7 @@ class DatabaseManager {
 
         for (index, log) in logs.enumerated() {
             let model = DriverLogModel(
+                id: nil,
                 status: log.status ?? "Unknown",
                 startTime: log.dateTime ?? "N/A",
                 userId: log.driverId ?? 0,
@@ -175,64 +177,125 @@ class DatabaseManager {
                 engineStatus: "Off" // Not present in DriverLog — defaulted
             )
 
-            print("📝 Saving log #\(index + 1): \(model.status), \(model.startTime)")
+            print(" Saving log #\(index + 1): \(model.status), \(model.startTime)")
             insertLog(from: model)
         }
 
-        print("✅ Finished saving logs.")
+        print("Finished saving logs.")
     }
 
-    
-    func insertLog(from model: DriverLogModel) {
-        do {
-            let insert = driverLogs.insert(
-                status <- model.status,
-                startTime <- model.startTime,
-                userId <- model.userId,
-                day <- model.day,
-                isVoilation <- model.isVoilation,
-                dutyType <- model.dutyType,
-                shift <- model.shift,
-                vehicleName <- model.vehicle, // ✅ Ensure this matches column
-                odometer <- model.odometer,
-                engineHours <- model.engineHours,
-                location <- model.location,
-                lat <- model.lat,
-                long <- model.long,
-                origin <- model.origin,
-                isSynced <- model.isSynced,
-                vehicleId <- model.vehicleId,
-                trailers <- model.trailers,
-                notes <- model.notes,
-                serverId <- model.serverId,
-                timestamp <- model.timestamp,
-                identifier <- model.identifier,
-                remainingWeeklyTime <- model.remainingWeeklyTime,
-                remainingDriveTime <- model.remainingDriveTime,
-                remainingDutyTime <- model.remainingDutyTime,
-                remainingSleepTime <- model.remainingSleepTime,
-                lastSleepTime <- model.lastSleepTime,
-                isSplit <- model.isSplit,
-                engineStatus <- model.engineStatus
-            )
+    func insertLog(from model: DriverLogModel)
 
-            try db?.run(insert)
-            print("✅ Log inserted into SQLite: \(model.status) at \(model.startTime)")
+    {
+            do {
+                let insert = driverLogs.insert(
+                    status <- model.status,
+                    startTime <- model.startTime,
+                    userId <- model.userId,
+                    day <- model.day,
+                    isVoilation <- model.isVoilation,
+                    dutyType <- model.dutyType,
+                    shift <- model.shift,
+                    vehicleName <- model.vehicle,
+                    odometer <- model.odometer,
+                    engineHours <- model.engineHours,
+                    location <- model.location,
+                    lat <- model.lat,
+                    long <- model.long,
+                    origin <- model.origin,
+                    isSynced <- model.isSynced,
+                    vehicleId <- model.vehicleId,
+                    trailers <- model.trailers,
+                    notes <- model.notes,
+                    serverId <- model.serverId,
+                    timestamp <- model.timestamp,
+                    identifier <- model.identifier,
+                    remainingWeeklyTime <- model.remainingWeeklyTime ?? "NA",
+                    remainingDriveTime <- model.remainingDriveTime ?? "NA",
+                    remainingDutyTime <- model.remainingDutyTime ?? "NA",
+                    remainingSleepTime <- model.remainingSleepTime ?? "NA",
+                    lastSleepTime <- model.lastSleepTime,
+                    isSplit <- model.isSplit,
+                    engineStatus <- model.engineStatus
+                )
+
+                // Run insert and capture the auto-incremented ID
+                let rowID = try db?.run(insert) ?? 0
+                print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
+
+            } catch {
+                print(" Insert Log Error: \(error.localizedDescription)")
+            }
+        }
+    
+    //MARK: -  TO DELETE ALL SAVED DATA IN DBMS
+    func deleteAllTimerLogs() {
+        do {
+            let docDir = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let path = docDir.appendingPathComponent("local.db").path
+            let db = try Connection(path)
+            let logs = driverLogs
+            try db.run(logs.delete())
+            print(" All timer logs deleted successfully.")
         } catch {
-            print("❌ Insert Log Error: \(error.localizedDescription)")
+            print(" Failed to delete timer logs: \(error.localizedDescription)")
         }
     }
-
 
 
 }
 
+//MARK: -  to save a  Each timer funcationality in DataBase Management
+extension DatabaseManager {
+    func saveTimerLog(
+        status: String,
+        startTime: String,
+        remainingWeeklyTime: String,
+        remainingDriveTime: String,
+        remainingDutyTime: String,
+        remainingSleepTime: String,
+        lastSleepTime: String
+    ) {
+        let log = DriverLogModel(
+            id: nil,
+            status: status,
+            startTime: startTime,
+            userId: UserDefaults.standard.integer(forKey: "userId"),
+            day: Calendar.current.component(.day, from: Date()),
+            isVoilation: 0,
+            dutyType: "log",
+            shift: 1,
+            vehicle: "Unknown",
+            odometer: 0.0,
+            engineHours: "0",
+            location: "Unknown",
+            lat: 0.0,
+            long: 0.0,
+            origin: "App",
+            isSynced: false,
+            vehicleId: 0,
+            trailers: "",
+            notes: "",
+            serverId: nil,
+            timestamp: Int64(Date().timeIntervalSince1970),
+            identifier: Int.random(in: 1000...9999),
+            remainingWeeklyTime: remainingWeeklyTime,
+            remainingDriveTime: remainingDriveTime,
+            remainingDutyTime: remainingDutyTime,
+            remainingSleepTime: remainingSleepTime,
+            lastSleepTime: lastSleepTime,
+            isSplit: 0,
+            engineStatus: "Off"
+        )
+        insertLog(from: log)
+    }
+}
 
 
 //MARK: -  DriverLogModel for DataBase struct DriverLogModel: Identifiable {
 struct DriverLogModel: Identifiable {
-    var id = UUID()
-
+    
+    var id: Int64?
     let status: String
     let startTime: String
     let userId: Int
@@ -254,10 +317,10 @@ struct DriverLogModel: Identifiable {
     let serverId: String?
     let timestamp: Int64
     let identifier: Int
-    let remainingWeeklyTime: String
-    let remainingDriveTime: String
-    let remainingDutyTime: String
-    let remainingSleepTime: String
+    let remainingWeeklyTime: String?
+    let remainingDriveTime: String?
+    let remainingDutyTime: String?
+    let remainingSleepTime: String?
     let lastSleepTime: String
     let isSplit: Int
     let engineStatus: String
