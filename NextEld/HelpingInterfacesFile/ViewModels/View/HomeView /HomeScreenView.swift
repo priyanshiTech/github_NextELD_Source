@@ -359,10 +359,7 @@ struct HomeScreenView: View {
     @StateObject private var cycleTimerOn = CountdownTimer(startTime: 70 * 3600)
     @StateObject private var sleepTimer = CountdownTimer(startTime: 10 * 3600)
     @StateObject private var DutyTime =  CountdownTimer(startTime: 8 * 3600)
-    
-    //@StateObject private var driveTimer = CountdownTimer(startTime: 60) // 60 seconds  testing voilation test
-    //@StateObject private var driveTimer = CountdownTimer(startTime: 20) // 20 seconds total // 15 min testing
-    //@StateObject private var driveTimer = CountdownTimer(startTime: 65) // 65 seconds total 30 min test
+
 
     let session: SessionManager
 
@@ -390,6 +387,418 @@ struct HomeScreenView: View {
     @State private var driveStopPromptTimer: Timer? = nil
 
     
+//    var body: some View {
+//        ZStack(alignment: .leading) {
+//            
+//            VStack {
+//                // Top colored bar
+//                ZStack(alignment: .topLeading) {
+//                    Color(UIColor.colorPrimary)
+//                        .edgesIgnoringSafeArea(.top)
+//                        .frame(height: 0)
+//                }
+//                
+//                // TopBarView(presentSideMenu: $presentSideMenu, labelValue: labelValue)
+//                TopBarView(
+//                    presentSideMenu: $presentSideMenu,
+//                    labelValue: labelValue,
+//                    showDeviceSelector: $showDeviceSelector
+//                )
+//                
+//                UniversalScrollView {
+//                    VStack {
+//                        Text("Disconnected")
+//                            .font(.title2)
+//                            .foregroundColor(.red)
+//                        
+//                        VehicleInfoView()
+//                        
+//                        StatusView(
+//                            confirmedStatus: $confirmedStatus,
+//                            selectedStatus: $selectedStatus,
+//                            showAlert: $showAlert
+//                        )
+//                        
+//                        AvailableHoursView(
+//                            driveTimer: driveTimer,
+//                            ONDuty: ONDuty,
+//                            cycleTimer: cycleTimerOn,
+//                            sleepTimer: sleepTimer,
+//                            // DutyTime: DutyTime
+//                            
+//                            
+//                        )
+//                        
+//                        HOSEventsChartScreen()
+//                        
+//                        VStack(alignment: .leading) {
+//                            Text("Version - OS/02/May")
+//                        }
+//                    }
+//                }
+//                .scrollIndicators(.hidden)
+//            }
+//            .disabled(presentSideMenu || showLogoutPopup)
+//            
+//            if presentSideMenu {
+//                Color.black.opacity(0.3)
+//                    .ignoresSafeArea()
+//                    .onTapGesture {
+//                        withAnimation(.easeOut(duration: 0.2)) {
+//                            presentSideMenu = false
+//                        }
+//                    }
+//                    .zIndex(1)
+//                
+//                SideMenuView(
+//                    selectedSideMenuTab: $selectedSideMenuTab,
+//                    presentSideMenu: $presentSideMenu,
+//                    showLogoutPopup: $showLogoutPopup
+//                )
+//                .frame(width: 250)
+//                .background(Color.white)
+//                .transition(.move(edge: .leading))
+//                .zIndex(1)
+//            }
+//            
+//            
+//            //MARK: -  Add a new Updated Timer in my screen if showAlert, let selected = selectedStatus {
+//            
+//            
+//            if showAlert, let selected = selectedStatus{
+//                ZStack {
+//                    Color.black.opacity(0.5)
+//                        .ignoresSafeArea()
+//                        .zIndex(2)
+//                    
+//                    
+//                    if selected == "Sleep" || selected == "Off-Duty" || selected == "Personal Use" || selected == "Yard Move" || selected == "On-Duty" {
+//                        StatusDetailsPopup(
+//                            statusTitle: selected,
+//                            onClose: {
+//                                showAlert = false
+//                            },
+//                            onSubmit: { note in
+//                                confirmedStatus = selected
+//                                print("Note for \(selected): \(note)")
+//                                
+//                                //MARK: -  OnDuty Timer According to eld Rule
+//                                if selected == "On-Duty" {
+//                                    sleepTimer.stop()
+//                                    let totalWorked = totalDutyLast7or8Days()
+//                                    let weeklyLimit = (cycleType == "7/60") ? 60 * 3600 : 70 * 3600
+//                                    if Int(totalWorked) >= weeklyLimit {
+//                                        activeTimerAlert = TimerAlert(
+//                                            title: "Cycle Violation",
+//                                            message: "You’ve exceeded your \(cycleType) duty hour limit.",
+//                                            backgroundColor: .red.opacity(0.9),
+//                                            isViolation: true
+//                                        )
+//                                        showAlert = false
+//                                        return
+//                                    }
+//                                    
+//                                    ONDuty.start()
+//                                    cycleTimerOn.start()
+//                                    isOnDutyActive = true
+//                                    checkAndStartCycleTimer()
+//                                }
+//                                
+//                                else if selected == "Sleep" {
+//                                    sleepTimer.start()     //  starts when sleep note is submitted
+//                                    cycleTimerOn.stop()
+//                                    driveTimer.stop()
+//                                    ONDuty.stop()
+//                                    DutyTime.stop()
+//                                    
+//                                }
+//                                
+//                                
+//                                else if selected == "Off-Duty" {
+//                                    
+//                                    let dutyTime = ONDuty.elapsed
+//                                    
+//                                    saveDailyDutyLog(duration: dutyTime)
+//                                    //  Stop all timers
+//                                    driveTimer.stop()
+//                                    ONDuty.stop()
+//                                    sleepTimer.stop()
+//                                    cycleTimerOn.stop()
+//                                    DutyTime.stop()
+//                                    
+//                                    // MARK:  Clear flags
+//                                    isDriveActive = false
+//                                    isOnDutyActive = false
+//                                    checkAndStartCycleTimer()
+//                                }
+//                                
+//                                showAlert = false
+//                                //MARK: -  to save a Timer Data IN DB
+//                                let formatter = DateFormatter()
+//                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//                                let now = formatter.string(from: Date())
+//                                
+//                                DatabaseManager.shared.saveTimerLog(
+//                                    status: selected,
+//                                    startTime: now,
+//                                    remainingWeeklyTime: cycleTimerOn.timeString,
+//                                    remainingDriveTime: driveTimer.timeString,
+//                                    remainingDutyTime: ONDuty.timeString,
+//                                    remainingSleepTime: sleepTimer.timeString,
+//                                    lastSleepTime: selected == "Sleep" ? now : ""
+//                                    
+//                                )
+//                                
+//                                print(" Saved \(selected) timer to DB at \(now)")
+//                            }
+//                        )
+//                        .zIndex(3)
+//                    }
+//                    else if selected == "Drive" {
+//                        CustomPopupAlert(
+//                            title: "Certify Log",
+//                            message: "please add DVIR before going to On-Drive",
+//                            onOK: {
+//                                confirmedStatus = selected
+//                                
+//                                //MARK: -   Start "Drive" timer
+//                                isDriveActive = true
+//                                driveTimer.start()
+//                                showAlert = false
+//                                startCycleTimer()
+//                                sleepTimer.stop()
+//                                //MARK: -  Add saving here also
+//                                let formatter = DateFormatter()
+//                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//                                let now = formatter.string(from: Date())
+//                                
+//                                DatabaseManager.shared.saveTimerLog(
+//                                    status: "Drive",
+//                                    startTime: now,
+//                                    remainingWeeklyTime: cycleTimerOn.timeString,
+//                                    remainingDriveTime: driveTimer.timeString,
+//                                    remainingDutyTime: ONDuty.timeString,
+//                                    remainingSleepTime: sleepTimer.timeString,
+//                                    lastSleepTime: ""
+//                                )
+//                                
+//                                print(" Saved Drive timer to DB at \(now)")
+//                                showAlert = false
+//                                
+//                            },
+//                            onCancel: {
+//                                showAlert = false
+//                            }
+//                        )
+//                        .zIndex(3)
+//                    }
+//                }
+//            }
+//            
+//            // Logout Popup
+//            if showLogoutPopup {
+//                Color.black.opacity(0.5)
+//                    .ignoresSafeArea()
+//                    .zIndex(2)
+//                
+//                PopupContainer(isPresented: $showLogoutPopup) {
+//                    LogOutPopup(
+//                        isCycleCompleted: $isCycleCompleted,
+//                        currentStatus: "OffDuty",
+//                        onLogout: {
+//                            print("Logging out…")
+//                            showLogoutPopup = false
+//                            presentSideMenu = false
+//                            UserDefaults.standard.set(false, forKey: "isLoggedIn")
+//                            UserDefaults.standard.removeObject(forKey: "userEmail")
+//                            UserDefaults.standard.removeObject(forKey: "authToken")
+//                            UserDefaults.standard.removeObject(forKey: "driverName")
+//                            
+//                            session.logOut()
+//                            SessionManagerClass.shared.clearToken()
+//                            navmanager.navigate(to: .Login)
+//                        },
+//                        onCancel: {
+//                            print("Cancel logout")
+//                            showLogoutPopup = false
+//                        }
+//                    )
+//                }
+//                .zIndex(3)
+//            }
+//            
+//            // Device Popup - Show centered, non-intrusive
+//            if showDeviceSelector {
+//                ZStack {
+//                    Color.black.opacity(0.4)
+//                        .ignoresSafeArea()
+//                        .onTapGesture {
+//                            showDeviceSelector = false
+//                        }
+//                    
+//                    DeviceSelectorPopup(
+//                        selectedDevice: $selectedDevice,
+//                        isPresented: $showDeviceSelector,
+//                        onConnect: {
+//                            showDeviceSelector = false
+//                            if selectedDevice == "NT-11" {
+//                                navmanager.navigate(to: .NT11Connection)
+//                            } else if selectedDevice == "PT30" {
+//                                navmanager.navigate(to: .PT30Connection)
+//                            }
+//                        }
+//                    )
+//                    .transition(.scale)
+//                    .zIndex(10)
+//                    
+//                    .zIndex(10)
+//                }
+//                
+//                
+//                if let alert = activeTimerAlert {
+//                    CommonTimerAlertView(alert: alert) {
+//                        activeTimerAlert = nil
+//                    }
+//                }
+//                
+//                
+//                
+//                
+//                //MARK: - UPDate NAME
+//                    .onAppear {
+//                        // Load full name or fallback to email
+//                        if let driverName = UserDefaults.standard.string(forKey: "driverName") {
+//                            labelValue = driverName
+//                            print(" Loaded full name: \(driverName)")
+//                        }
+//                        else {
+//                            labelValue = "Unknown User"
+//                            print(" No user info found in UserDefaults")
+//                        }
+//                        
+//                        //MARK: -  Automatically select Off-Duty on first appear
+//                        if confirmedStatus == nil {
+//                            selectedStatus = "Off-Duty"
+//                            //  Stop all timers
+//                            driveTimer.stop()
+//                            ONDuty.stop()
+//                            sleepTimer.stop()
+//                            cycleTimerOn.stop()
+//                            DutyTime.stop()
+//                            confirmedStatus = "Off-Duty"
+//                        }
+//                        
+//                        offDutyStartTime = Date()
+//                        checkFor34HourReset()
+//                        
+//                        
+//                    }
+//                
+//                
+//            }
+//        
+//        //MARK: -  ALERTON ON-DUTY
+//        
+//            .onReceive(ONDuty.$remainingTime) { remaining in
+//                if remaining <= 1800 && remaining > 1790 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(title: "On-Duty Reminder", message: "30 minutes left in your 14-hour window.", backgroundColor: .blue.opacity(0.6))
+//                }
+//                if remaining <= 900 && remaining > 890 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(title: "On-Duty Alert", message: "15 minutes left to complete 14-hour On-Duty limit.", backgroundColor: .orange)
+//                }
+//                if remaining <= 0 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(title: "On-Duty Violation", message: "You’ve exceeded your 14-hour on-duty time limit.", backgroundColor: .red.opacity(0.9), isViolation: true)
+//                }
+//            }
+//
+//        //MARK: -  ALERT DRIVE
+//            .onReceive(driveTimer.$remainingTime) { remaining in
+//                if remaining <= 1800 && remaining > 1790 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(title: "Drive Reminder", message: "30 minutes left before mandatory break.", backgroundColor: .yellow)
+//                }
+//                if remaining <= 900 && remaining > 890 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(title: "Drive Alert", message: "15 minutes left to complete 8-hour driving limit.", backgroundColor: .orange)
+//                }
+//                if remaining <= 0 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(title: "Drive Violation", message: "Exceeded 8-hour driving limit.", backgroundColor: .red.opacity(0.9), isViolation: true)
+//                }
+//            }
+//  //MARK: - CYCLE TIMER ALERT
+//        
+//            .onReceive(cycleTimerOn.$remainingTime) { remaining in
+//                if remaining <= 1800 && remaining > 1790 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(title: "Cycle Alert", message: "30 minutes left in your 70-hour cycle.", backgroundColor: .purple.opacity(0.7))
+//                }
+//                if remaining <= 900 && remaining > 890 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(title: "Cycle Alert", message: "15 minutes left to complete 70-hour Cycle limit.", backgroundColor: .orange)
+//                }
+//                if remaining <= 0 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(title: "Cycle Violation", message: "You’ve exceeded the 70-hour cycle limit.", backgroundColor: .red.opacity(0.9), isViolation: true)
+//                }
+//            }
+//
+//        
+//            // MARK: -  NEW: Detect valid 30-minute break and reset drive time
+//            if confirmedStatus == "Off-Duty" || confirmedStatus == "Sleep" || confirmedStatus == "Yard Move" || confirmedStatus == "Personal Use" {
+//                if let start = offDutyStartTime {
+//                    let duration = Date().timeIntervalSince(start)
+//                    if duration >= 1800 && !isOnBreak {
+//                        isOnBreak = true
+//                        cumulativeDriveTime = 0
+//                        print(" 30-minute break satisfied. Drive time reset.")
+//                    }
+//                } else {
+//                    offDutyStartTime = Date()
+//                }
+//
+//                
+//            } else {
+//                // Reset offDuty tracking if back to On-Duty or Drive
+//                offDutyStartTime = nil
+//                isOnBreak = false
+//            }
+//
+//            // MARK: -  NEW: Detect 15-minute stop in Drive mode    
+//            if isDriveActive {
+//                let mockSpeed = 0.0 // TODO: replace with real vehicleSpeed
+//                if mockSpeed <= 5 {
+//                    if driveStopStartTime == nil {
+//                        driveStopStartTime = Date()
+//                    } else if Date().timeIntervalSince(driveStopStartTime!) >= 900 && !showDriveStopPrompt {
+//                        showDriveStopPrompt = true
+//                        print(" 15-minute stop in Drive detected. Prompting driver...")
+//                        driveStopPromptTimer?.invalidate()
+//                        driveStopPromptTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false) { _ in
+//                            // Auto switch to On-Duty after 1 minute if no response
+//                            if showDriveStopPrompt {
+//                                confirmedStatus = "On-Duty"
+//                                isDriveActive = false
+//                                isOnDutyActive = true
+//                                driveTimer.stop()
+//                                ONDuty.start()
+//                                driveStopStartTime = nil
+//                                showDriveStopPrompt = false
+//                                print(" Auto-switched to On-Duty after no response.")
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    // Vehicle is moving again
+//                    driveStopStartTime = nil
+//                    showDriveStopPrompt = false
+//                    driveStopPromptTimer?.invalidate()
+//                }
+//            }
+//  
+//        
+//        
+//        .onAppear {
+//            restoreAllTimers()
+//        }
+//        }.navigationBarBackButtonHidden()
+//      
+//    }
+    
     var body: some View {
         ZStack(alignment: .leading) {
             
@@ -401,7 +810,6 @@ struct HomeScreenView: View {
                         .frame(height: 0)
                 }
                 
-                // TopBarView(presentSideMenu: $presentSideMenu, labelValue: labelValue)
                 TopBarView(
                     presentSideMenu: $presentSideMenu,
                     labelValue: labelValue,
@@ -426,10 +834,7 @@ struct HomeScreenView: View {
                             driveTimer: driveTimer,
                             ONDuty: ONDuty,
                             cycleTimer: cycleTimerOn,
-                            sleepTimer: sleepTimer,
-                           // DutyTime: DutyTime
-                            
-                            
+                            sleepTimer: sleepTimer
                         )
                         
                         HOSEventsChartScreen()
@@ -463,30 +868,24 @@ struct HomeScreenView: View {
                 .transition(.move(edge: .leading))
                 .zIndex(1)
             }
-
-
-            //MARK: -  Add a new Updated Timer in my screen if showAlert, let selected = selectedStatus {
             
-            
-            if showAlert, let selected = selectedStatus{
+            // Status Alert / Drive Prompt
+            if showAlert, let selected = selectedStatus {
                 ZStack {
                     Color.black.opacity(0.5)
                         .ignoresSafeArea()
                         .zIndex(2)
                     
-                    
                     if selected == "Sleep" || selected == "Off-Duty" || selected == "Personal Use" || selected == "Yard Move" || selected == "On-Duty" {
                         StatusDetailsPopup(
                             statusTitle: selected,
-                            onClose: {
-                                showAlert = false
-                            },
+                            onClose: { showAlert = false },
                             onSubmit: { note in
                                 confirmedStatus = selected
                                 print("Note for \(selected): \(note)")
-
-                                //MARK: -  OnDuty Timer According to eld Rule
+                                
                                 if selected == "On-Duty" {
+                                    sleepTimer.stop()
                                     let totalWorked = totalDutyLast7or8Days()
                                     let weeklyLimit = (cycleType == "7/60") ? 60 * 3600 : 70 * 3600
                                     if Int(totalWorked) >= weeklyLimit {
@@ -499,41 +898,34 @@ struct HomeScreenView: View {
                                         showAlert = false
                                         return
                                     }
-
                                     ONDuty.start()
+                                    cycleTimerOn.start()
                                     isOnDutyActive = true
                                     checkAndStartCycleTimer()
-                                }
-
-                                else if selected == "Sleep" {
-                                    sleepTimer.start() //  starts when sleep note is submitted
-                                }
-                                
-                                
-                                else if selected == "Off-Duty" {
-                                    
+                                } else if selected == "Sleep" {
+                                    sleepTimer.start()
+                                    cycleTimerOn.stop()
+                                    driveTimer.stop()
+                                    ONDuty.stop()
+                                    DutyTime.stop()
+                                } else if selected == "Off-Duty" {
                                     let dutyTime = ONDuty.elapsed
-                  
-                                      saveDailyDutyLog(duration: dutyTime)
-                                    //  Stop all timers
+                                    saveDailyDutyLog(duration: dutyTime)
                                     driveTimer.stop()
                                     ONDuty.stop()
                                     sleepTimer.stop()
                                     cycleTimerOn.stop()
                                     DutyTime.stop()
-                                    
-                                    // MARK:  Clear flags
                                     isDriveActive = false
                                     isOnDutyActive = false
                                     checkAndStartCycleTimer()
                                 }
                                 
                                 showAlert = false
-                                //MARK: -  to save a Timer Data IN DB
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                                 let now = formatter.string(from: Date())
-
+                                
                                 DatabaseManager.shared.saveTimerLog(
                                     status: selected,
                                     startTime: now,
@@ -542,44 +934,37 @@ struct HomeScreenView: View {
                                     remainingDutyTime: ONDuty.timeString,
                                     remainingSleepTime: sleepTimer.timeString,
                                     lastSleepTime: selected == "Sleep" ? now : ""
-
                                 )
-
-                                print(" Saved \(selected) timer to DB at \(now)")
+                                print("Saved \(selected) timer to DB at \(now)")
                             }
                         )
                         .zIndex(3)
-                    }
-                    else if selected == "Drive" {
+                    } else if selected == "Drive" {
                         CustomPopupAlert(
                             title: "Certify Log",
                             message: "please add DVIR before going to On-Drive",
                             onOK: {
                                 confirmedStatus = selected
-                                
-                                //  Start "Drive" timer
                                 isDriveActive = true
                                 driveTimer.start()
-                                showAlert = false
                                 startCycleTimer()
-                                //MARK: -  Add saving here also
-                                          let formatter = DateFormatter()
-                                          formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                          let now = formatter.string(from: Date())
-
-                                          DatabaseManager.shared.saveTimerLog(
-                                              status: "Drive",
-                                              startTime: now,
-                                              remainingWeeklyTime: cycleTimerOn.timeString,
-                                              remainingDriveTime: driveTimer.timeString,
-                                              remainingDutyTime: ONDuty.timeString,
-                                              remainingSleepTime: sleepTimer.timeString,
-                                              lastSleepTime: ""
-                                          )
-
-                                          print(" Saved Drive timer to DB at \(now)")
-                                          showAlert = false
+                                sleepTimer.stop()
+                                showAlert = false
                                 
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                let now = formatter.string(from: Date())
+                                
+                                DatabaseManager.shared.saveTimerLog(
+                                    status: "Drive",
+                                    startTime: now,
+                                    remainingWeeklyTime: cycleTimerOn.timeString,
+                                    remainingDriveTime: driveTimer.timeString,
+                                    remainingDutyTime: ONDuty.timeString,
+                                    remainingSleepTime: sleepTimer.timeString,
+                                    lastSleepTime: ""
+                                )
+                                print("Saved Drive timer to DB at \(now)")
                             },
                             onCancel: {
                                 showAlert = false
@@ -590,7 +975,6 @@ struct HomeScreenView: View {
                 }
             }
             
-            // Logout Popup
             if showLogoutPopup {
                 Color.black.opacity(0.5)
                     .ignoresSafeArea()
@@ -601,28 +985,25 @@ struct HomeScreenView: View {
                         isCycleCompleted: $isCycleCompleted,
                         currentStatus: "OffDuty",
                         onLogout: {
-                            print("Logging out…")
                             showLogoutPopup = false
                             presentSideMenu = false
                             UserDefaults.standard.set(false, forKey: "isLoggedIn")
                             UserDefaults.standard.removeObject(forKey: "userEmail")
                             UserDefaults.standard.removeObject(forKey: "authToken")
                             UserDefaults.standard.removeObject(forKey: "driverName")
-
+                            
                             session.logOut()
                             SessionManagerClass.shared.clearToken()
                             navmanager.navigate(to: .Login)
                         },
                         onCancel: {
-                            print("Cancel logout")
                             showLogoutPopup = false
                         }
                     )
                 }
                 .zIndex(3)
             }
-  
-            // Device Popup - Show centered, non-intrusive
+            
             if showDeviceSelector {
                 ZStack {
                     Color.black.opacity(0.4)
@@ -646,205 +1027,69 @@ struct HomeScreenView: View {
                     .transition(.scale)
                     .zIndex(10)
                 }
-                .zIndex(10)
             }
-
             
             if let alert = activeTimerAlert {
                 CommonTimerAlertView(alert: alert) {
                     activeTimerAlert = nil
                 }
             }
-   
-
-        }.navigationBarBackButtonHidden()
-        
-        //MARK: - UPDate NAME
-            .onAppear {
-                // Load full name or fallback to email
-                if let driverName = UserDefaults.standard.string(forKey: "driverName") {
-                    labelValue = driverName
-                    print(" Loaded full name: \(driverName)")
-                }
-                else {
-                    labelValue = "Unknown User"
-                    print(" No user info found in UserDefaults")
-                }
-                
-                // A//MARK: -  Automatically select Off-Duty on first appear
-                if confirmedStatus == nil {
-                    selectedStatus = "Off-Duty"
-                    confirmedStatus = "Off-Duty"
-                }
- 
-                offDutyStartTime = Date()
-                checkFor34HourReset()
-                
-                
-            }
-        
-
-        // MARK: - DRIVE ALERT + ELD LOGIC
-        .onReceive(driveTimer.$remainingTime) { remaining in
-            // MARK: - Standard Drive Alerts (Your existing code)
-            if remaining == 17 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "Drive Reminder",
-                    message: "30 minutes left before mandatory 30-minute break.",
-                    backgroundColor: .yellow
-        
-                )
-
-            }
-
-
-            if remaining == 900 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "Drive Alert",
-                    message: "15 minutes left to complete 8-hour driving limit.",
-                    backgroundColor: .orange
-                )
-            }
-        
-
-            if remaining == 0 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "Drive Violation",
-                    message: "You have exceeded your 8-hour driving limit without a 30-minute break.",
-                    backgroundColor: .red.opacity(0.9),
-                    isViolation: true
-                )
-            }
-
-            // MARK: - On-Duty Alerts (Already present)
-            if remaining == 1800 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "On-Duty Reminder",
-                    message: "30 minutes left in your 14-hour on-duty window.",
-                    backgroundColor: .blue.opacity(0.6)
-                )
-            }
-
-            
-            if remaining == 900 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "On-Duty Alert",
-                    message: "15 minutes left to complete 14-hour ON-Duty limit.",
-                    backgroundColor: .orange
-                )
-            }
-
-            if remaining == 0 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "On-Duty Violation",
-                    message: "You have exceeded your 14-hour on-duty time limit.",
-                    backgroundColor: .red.opacity(0.9),
-                    isViolation: true
-                )
-            }
-
-            // MARK: - Cycle Timer Alerts CYCLETIMER
-            if remaining == 1800 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "Cycle Alert",
-                    message: "30 minutes left in your 70-hour cycle.",
-                    backgroundColor: .purple.opacity(0.7)
-                )
-            }
-
-            
-            if remaining == 900 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "Cycle Alert",
-                    message: "15 minutes left to complete 70-hour Cycle limit.",
-                    backgroundColor: .orange
-                )
-            }
-
-            if remaining == 0 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "Cycle Violation",
-                    message: "You have exceeded the 70-hour driving cycle limit.",
-                    backgroundColor: .red.opacity(0.9),
-                    isViolation: true
-                )
-            }
-
-            // MARK: -  NEW: Track Cumulative Driving Time
-            if isDriveActive && !isOnBreak {
-                cumulativeDriveTime += 1
-            }
-
-            // MARK: -  NEW: 8-hour Cumulative Violation Check
-            if cumulativeDriveTime >= 8 * 3600 && activeTimerAlert == nil {
-                activeTimerAlert = TimerAlert(
-                    title: "Break Required",
-                    message: "You’ve driven 8 cumulative hours without a 30-minute break.",
-                    backgroundColor: .red.opacity(0.9),
-                    isViolation: true
-                )
-            }
-
-            // MARK: -  NEW: Detect valid 30-minute break and reset drive time
-            if confirmedStatus == "Off-Duty" || confirmedStatus == "Sleep" || confirmedStatus == "Yard Move" || confirmedStatus == "Personal Use" {
-                if let start = offDutyStartTime {
-                    let duration = Date().timeIntervalSince(start)
-                    if duration >= 1800 && !isOnBreak {
-                        isOnBreak = true
-                        cumulativeDriveTime = 0
-                        print(" 30-minute break satisfied. Drive time reset.")
-                    }
-                } else {
-                    offDutyStartTime = Date()
-                }
-
-                
-            } else {
-                // Reset offDuty tracking if back to On-Duty or Drive
-                offDutyStartTime = nil
-                isOnBreak = false
-            }
-
-            // MARK: -  NEW: Detect 15-minute stop in Drive mode    
-            if isDriveActive {
-                let mockSpeed = 0.0 // TODO: replace with real vehicleSpeed
-                if mockSpeed <= 5 {
-                    if driveStopStartTime == nil {
-                        driveStopStartTime = Date()
-                    } else if Date().timeIntervalSince(driveStopStartTime!) >= 900 && !showDriveStopPrompt {
-                        showDriveStopPrompt = true
-                        print(" 15-minute stop in Drive detected. Prompting driver...")
-                        driveStopPromptTimer?.invalidate()
-                        driveStopPromptTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false) { _ in
-                            // Auto switch to On-Duty after 1 minute if no response
-                            if showDriveStopPrompt {
-                                confirmedStatus = "On-Duty"
-                                isDriveActive = false
-                                isOnDutyActive = true
-                                driveTimer.stop()
-                                ONDuty.start()
-                                driveStopStartTime = nil
-                                showDriveStopPrompt = false
-                                print(" Auto-switched to On-Duty after no response.")
-                            }
-                        }
-                    }
-                } else {
-                    // Vehicle is moving again
-                    driveStopStartTime = nil
-                    showDriveStopPrompt = false
-                    driveStopPromptTimer?.invalidate()
-                }
-            }
-  
         }
-        
+        // ✅ All modifiers applied *on ZStack*
         .onAppear {
+            if let driverName = UserDefaults.standard.string(forKey: "driverName") {
+                labelValue = driverName
+            } else {
+                labelValue = "Unknown User"
+            }
+
+            if confirmedStatus == nil {
+                selectedStatus = "Off-Duty"
+                driveTimer.stop()
+                ONDuty.stop()
+                sleepTimer.stop()
+                cycleTimerOn.stop()
+                DutyTime.stop()
+                confirmedStatus = "Off-Duty"
+            }
+
+            offDutyStartTime = Date()
+            checkFor34HourReset()
             restoreAllTimers()
         }
-   
-      
+        .onReceive(ONDuty.$remainingTime) { remaining in
+            if remaining <= 1800 && remaining >= 1700 && activeTimerAlert == nil {
+                activeTimerAlert = TimerAlert(title: "On-Duty Reminder", message: "30 minutes left", backgroundColor: .blue.opacity(0.6))
+            } else if remaining <= 900 && remaining >= 800 && activeTimerAlert == nil {
+                activeTimerAlert = TimerAlert(title: "On-Duty Alert", message: "15 minutes left", backgroundColor: .orange)
+            } else if remaining <= 0 && activeTimerAlert == nil {
+                activeTimerAlert = TimerAlert(title: "On-Duty Violation", message: "Time exceeded", backgroundColor: .red.opacity(0.9), isViolation: true)
+            }
+        }
+
+        .onReceive(driveTimer.$remainingTime) { remaining in
+            if remaining <= 1800 && remaining >= 1700 && activeTimerAlert == nil {
+                activeTimerAlert = TimerAlert(title: "Drive Reminder", message: "30 minutes left", backgroundColor: .yellow)
+            } else if remaining <= 900 && remaining >= 800 && activeTimerAlert == nil {
+                activeTimerAlert = TimerAlert(title: "Drive Alert", message: "15 minutes left", backgroundColor: .orange)
+            } else if remaining <= 0 && activeTimerAlert == nil {
+                activeTimerAlert = TimerAlert(title: "Drive Violation", message: "Drive limit exceeded", backgroundColor: .red.opacity(0.9), isViolation: true)
+            }
+        }
+
+        .onReceive(cycleTimerOn.$remainingTime) { remaining in
+            if remaining <= 1800 && remaining >= 1700 && activeTimerAlert == nil {
+                activeTimerAlert = TimerAlert(title: "Cycle Alert", message: "30 minutes left in cycle", backgroundColor: .purple.opacity(0.7))
+            } else if remaining <= 900 && remaining >= 800 && activeTimerAlert == nil {
+                activeTimerAlert = TimerAlert(title: "Cycle Alert", message: "15 minutes left", backgroundColor: .orange)
+            } else if remaining <= 0 && activeTimerAlert == nil {
+                activeTimerAlert = TimerAlert(title: "Cycle Violation", message: "Cycle limit exceeded", backgroundColor: .red.opacity(0.9), isViolation: true)
+            }
+        }
+
+        .navigationBarBackButtonHidden()
     }
+
     //MARK: - #$ HOURS RESET WHEN  SHIFT IS START NEW
     func checkFor34HourReset() {
         if let lastOffDuty = offDutyStartTime {
@@ -902,7 +1147,7 @@ struct HomeScreenView: View {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let daysToInclude = (cycleType == "7/60") ? 7 : 8
-        
+         
         var total: TimeInterval = 0
         
         for i in 0..<daysToInclude {
@@ -1390,7 +1635,108 @@ struct HomeScreenView: View {
      }
  }
 
-
+ // MARK: - DRIVE ALERT + ELD LOGIC
+//            .onReceive(driveTimer.$remainingTime) { remaining in
+//                // MARK: - Standard Drive Alerts (Your existing code)
+//                if remaining == 17 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "Drive Reminder",
+//                        message: "30 minutes left before mandatory 30-minute break.",
+//                        backgroundColor: .yellow
+//
+//                    )
+//
+//                }
+//
+//
+//                if remaining == 900 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "Drive Alert",
+//                        message: "15 minutes left to complete 8-hour driving limit.",
+//                        backgroundColor: .orange
+//                    )
+//                }
+//
+//
+//                if remaining == 0 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "Drive Violation",
+//                        message: "You have exceeded your 8-hour driving limit without a 30-minute break.",
+//                        backgroundColor: .red.opacity(0.9),
+//                        isViolation: true
+//                    )
+//                }
+//
+//                // MARK: - On-Duty Alerts (Already present)
+//                if remaining == 1800 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "On-Duty Reminder",
+//                        message: "30 minutes left in your 14-hour on-duty window.",
+//                        backgroundColor: .blue.opacity(0.6)
+//                    )
+//                }
+//
+//
+//                if remaining == 900 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "On-Duty Alert",
+//                        message: "15 minutes left to complete 14-hour ON-Duty limit.",
+//                        backgroundColor: .orange
+//                    )
+//                }
+//
+//                if remaining == 0 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "On-Duty Violation",
+//                        message: "You have exceeded your 14-hour on-duty time limit.",
+//                        backgroundColor: .red.opacity(0.9),
+//                        isViolation: true
+//                    )
+//                }
+//
+//                // MARK: - Cycle Timer Alerts CYCLETIMER
+//                if remaining == 1800 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "Cycle Alert",
+//                        message: "30 minutes left in your 70-hour cycle.",
+//                        backgroundColor: .purple.opacity(0.7)
+//                    )
+//                }
+//
+//
+//                if remaining == 900 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "Cycle Alert",
+//                        message: "15 minutes left to complete 70-hour Cycle limit.",
+//                        backgroundColor: .orange
+//                    )
+//                }
+//
+//                if remaining == 0 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "Cycle Violation",
+//                        message: "You have exceeded the 70-hour driving cycle limit.",
+//                        backgroundColor: .red.opacity(0.9),
+//                        isViolation: true
+//                    )
+//                }
+//
+//                // MARK: -  NEW: Track Cumulative Driving Time
+//                if isDriveActive && !isOnBreak {
+//                    cumulativeDriveTime += 1
+//                }
+//
+//                // MARK: -  NEW: 8-hour Cumulative Violation Check
+//                if cumulativeDriveTime >= 8 * 3600 && activeTimerAlert == nil {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "Break Required",
+//                        message: "You’ve driven 8 cumulative hours without a 30-minute break.",
+//                        backgroundColor: .red.opacity(0.9),
+//                        isViolation: true
+//                    )
+//                }
+//            }
+ 
  // MARK: - Main View
  struct HomeScreenView: View {
      @State private var labelValue = "Mark Joseph"

@@ -5,13 +5,89 @@
 //  Created by priyanshi   on 28/06/25.
 //
 
-import SwiftUI
-import Combine
-
 import Foundation
 import Combine
 
 class CountdownTimer: ObservableObject {
+    @Published var remainingTime: TimeInterval = 0
+    private var timer: Timer?
+    private var endDate: Date?
+    var isRunning: Bool = false
+
+    let startDuration: TimeInterval  // original duration (e.g. 14 * 3600)
+
+    // MARK: - Init
+    init(startTime: TimeInterval) {
+        self.startDuration = startTime
+        self.remainingTime = startTime
+    }
+
+    // MARK: - Timer Display
+    var timeString: String {
+        let hours = Int(remainingTime) / 3600
+        let minutes = (Int(remainingTime) % 3600) / 60
+        let seconds = Int(remainingTime) % 60
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
+    // MARK: - Start Timer
+    func start() {
+        endDate = Date().addingTimeInterval(remainingTime)
+        isRunning = true
+        startTimer()
+    }
+
+    // MARK: - Stop Timer
+    func stop() {
+        timer?.invalidate()
+        isRunning = false
+    }
+
+    // MARK: - Timer Loop
+    private func startTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            guard let endDate = self.endDate else { return }
+
+            let timeLeft = endDate.timeIntervalSinceNow
+            if timeLeft > 0 {
+                self.remainingTime = timeLeft
+            } else {
+                self.remainingTime = 0
+                self.stop()
+            }
+        }
+    }
+
+    // MARK: - Restore from DB
+    func restore(from remaining: TimeInterval, startedAt: Date?) {
+        guard let startedAt = startedAt else {
+            self.remainingTime = remaining
+            return
+        }
+
+        let elapsed = Date().timeIntervalSince(startedAt)
+        let newRemaining = max(remaining - elapsed + 10, 0) // add buffer
+        self.remainingTime = newRemaining
+
+        if newRemaining > 0 {
+            start()
+        }
+    }
+
+    // MARK: - Save state
+    func getState() -> (remaining: TimeInterval, startedAt: Date?) {
+        return (remainingTime, Date())
+    }
+
+    // MARK: - Elapsed time
+    var elapsed: TimeInterval {
+        return startDuration - remainingTime
+    }
+}
+
+
+/*class CountdownTimer: ObservableObject {
     @Published var remainingTime: TimeInterval
     let startTime: TimeInterval
     private var timer: Timer?
@@ -82,7 +158,7 @@ class CountdownTimer: ObservableObject {
             start()
         }
     }
-}
+}*/
 
 
 
@@ -114,44 +190,6 @@ extension String {
 
 
 
-
-
-
-/*class CountdownTimer: ObservableObject {
-    @Published var remainingTime: TimeInterval
-    private var timer: AnyCancellable?
-    private var isRunning = false
-
-    init(startTime: TimeInterval) {
-        self.remainingTime = startTime
-    }
-
-    func start() {
-        guard !isRunning else { return }
-        isRunning = true
-
-        timer = Timer.publish(every: 1, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                if self.remainingTime > 0 {
-                    self.remainingTime -= 1
-                } else {
-                    self.stop()
-                }
-            }
-    }
-
-    func stop() {
-        timer?.cancel()
-        timer = nil
-        isRunning = false
-    }
-
-    deinit {
-        stop()
-    }
-}*/
 
 
 func formatTime(_ time: TimeInterval) -> String {

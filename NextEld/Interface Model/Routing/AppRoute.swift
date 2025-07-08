@@ -91,10 +91,8 @@ struct RootView: View {
                     ForgetUserName(title: title)
                 case .Scanner:
                     DeviceScannerView(tittle: "", checkboxClick: false, macaddress: "")
-               
                 case .Login:
                     LoginScreen(isLoggedIn: $isLoggedIn)  //Correct
-                    
                 case .Home:
                     HomeScreenView(presentSideMenu: $presentSideMenu, selectedSideMenuTab: $selectedSideMenuTab, session: session)
                 case .NT11Connection:
