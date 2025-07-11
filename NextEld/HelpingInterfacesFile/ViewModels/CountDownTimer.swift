@@ -13,7 +13,7 @@ class CountdownTimer: ObservableObject {
     private var timer: Timer?
     private var endDate: Date?
     var isRunning: Bool = false
-
+    
     let startDuration: TimeInterval  // original duration (e.g. 14 * 3600)
 
     // MARK: - Init
@@ -60,30 +60,69 @@ class CountdownTimer: ObservableObject {
     }
 
     // MARK: - Restore from DB
-    func restore(from remaining: TimeInterval, startedAt: Date?) {
+    func restore(from remaining: TimeInterval, startedAt: Date?, wasRunning: Bool) {
         guard let startedAt = startedAt else {
             self.remainingTime = remaining
             return
         }
 
         let elapsed = Date().timeIntervalSince(startedAt)
-        let newRemaining = max(remaining - elapsed + 10, 0) // add buffer
+        let newRemaining = max(remaining - elapsed + 10, 0) // buffer
+
         self.remainingTime = newRemaining
 
-        if newRemaining > 0 {
+        if wasRunning && newRemaining > 0 {
             start()
+        } else {
+            stop()
         }
     }
 
+    
+    
+    
+//    func restore(from remaining: TimeInterval, startedAt: Date?) {
+//        guard let startedAt = startedAt else {
+//            self.remainingTime = remaining
+//            return
+//        }
+//
+//        let elapsed = Date().timeIntervalSince(startedAt)
+//        let newRemaining = max(remaining - elapsed + 10, 0) // add buffer
+//        self.remainingTime = newRemaining
+//
+//        if newRemaining > 0 {
+//            start()
+//        }
+//    }
+
     // MARK: - Save state
-    func getState() -> (remaining: TimeInterval, startedAt: Date?) {
-        return (remainingTime, Date())
+    // MARK: - Save state
+    func getState() -> (remaining: TimeInterval, startedAt: Date?, isRunning: Bool) {
+        return (remainingTime, Date(), isRunning)
     }
+
 
     // MARK: - Elapsed time
     var elapsed: TimeInterval {
         return startDuration - remainingTime
     }
+    
+    static func timeStringToSeconds(_ timeString: String) -> TimeInterval {
+        let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
+        guard parts.count == 3 else { return 0 }
+        let hours = parts[0], minutes = parts[1], seconds = parts[2]
+        return TimeInterval(hours * 3600 + minutes * 60 + seconds)
+    }
+    
+   
+    func reset(startTime: TimeInterval) {
+        stop()
+        self.remainingTime = startTime
+        self.endDate = Date().addingTimeInterval(startTime)
+    }
+
+
 }
 
 

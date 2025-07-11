@@ -8,6 +8,14 @@
 import Foundation
 import SQLite3
 import SQLite
+import Foundation
+
+struct DutyLog {
+    let id: Int
+    let status: String         // "ON_DUTY", "DRIVE", "SLEEP", "OFF_DUTY"
+    let startTime: Date
+    let endTime: Date
+}
 
 class DatabaseManager {
     static let shared = DatabaseManager()
@@ -112,6 +120,7 @@ class DatabaseManager {
                     dutyType: row[dutyType],
                     shift: row[shift],
                     vehicle: row[vehicleName] ,
+                    isRunning: true,
                     odometer: row[odometer],
                     engineHours: row[engineHours],
                     location: row[location],
@@ -155,6 +164,7 @@ class DatabaseManager {
                 dutyType: log.logType ?? "log",
                 shift: log.shift ?? 0,
                 vehicle: log.truckNo ?? "",
+                isRunning: true,
                 odometer: log.odometer ?? 0.0,
                 engineHours: log.engineHour ?? "0",
                 location: log.customLocation ?? "",
@@ -242,6 +252,48 @@ class DatabaseManager {
         }
     }
 
+    func fetchDutyEventsForToday() -> [DutyLog] {
+        var logs: [DutyLog] = []
+
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: Date())
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        do {
+            guard let db = self.db else { return [] }
+
+            // No filter here because startTime is stored as string; filter manually after parsing
+            for row in try db.prepare(driverLogs) {
+                let idValue = Int(row[id])
+                let statusValue = row[status]
+                let startString = row[startTime]
+                let endString = row[startTime] // You don’t have separate endTime, so calculate it
+
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Adjust based on your saved format
+                
+//                if let timestamp = Double(startString) {
+//                    let startDate = Date(timeIntervalSince1970: timestamp)
+//                }
+
+                if let startDate = dateFormatter.date(from: startString) {
+                    // Use timestamp or calculate +2 hours if no end field
+                    let endDate = startDate.addingTimeInterval(2 * 60 * 60) // assume 2 hr default
+
+                    // Only use logs from today
+                    if startDate >= startOfDay && startDate < endOfDay {
+                        let log = DutyLog(id: idValue, status: statusValue, startTime: startDate, endTime: endDate)
+                        logs.append(log)
+                    }
+                }
+            }
+        } catch {
+            print("Failed to fetch duty logs: \(error)")
+        }
+
+        return logs
+    }
+
 
 }
 
@@ -254,7 +306,8 @@ extension DatabaseManager {
         remainingDriveTime: String,
         remainingDutyTime: String,
         remainingSleepTime: String,
-        lastSleepTime: String
+        lastSleepTime: String,
+        isruning: Bool
     ) {
         let log = DriverLogModel(
             id: nil,
@@ -266,6 +319,7 @@ extension DatabaseManager {
             dutyType: "log",
             shift: 1,
             vehicle: "Unknown",
+            isRunning: true,
             odometer: 0.0,
             engineHours: "0",
             location: "Unknown",
@@ -304,6 +358,7 @@ struct DriverLogModel: Identifiable {
     let dutyType: String
     let shift: Int
     let vehicle: String
+    let isRunning: Bool
     let odometer: Double
     let engineHours: String
     let location: String

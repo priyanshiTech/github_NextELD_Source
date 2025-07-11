@@ -68,6 +68,7 @@ class LoginViewModel: ObservableObject {
                 // Save login session
                 UserDefaults.standard.set(token, forKey: "authToken")
                 UserDefaults.standard.set(email, forKey: "userEmail")
+              
 
                 // Saving  Driver Username
 
@@ -78,6 +79,19 @@ class LoginViewModel: ObservableObject {
                     print(" Full name not found in API response.")
                 }
 
+                //MARK: -  Saving data into Static for Timers
+                
+                if let OndutyTIme =  response.result?.onDutyTime {
+                    UserDefaults.standard.set(OndutyTIme, forKey: "OndutyTIme")
+                }
+                if let OndriveTime =  response.result?.onDriveTime {
+                    UserDefaults.standard.set(OndriveTime, forKey: "onDriveTime")
+                }
+                if let OnsleepTime =  response.result?.onSleepTime {
+                    UserDefaults.standard.set(OnsleepTime, forKey: "onSleepTime")
+                }else  {
+                    print(" Full name not found in API response.")
+                }
 
                 session.logIn(token: token)
             }
