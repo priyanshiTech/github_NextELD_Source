@@ -3,6 +3,7 @@
 //  Created by priyanshi on 07/05/25.
 //
 
+
 import SwiftUI
 
 // MARK: - Subviews
@@ -11,7 +12,7 @@ struct TopBarView: View {
     @EnvironmentObject var navManager: NavigationManager
     var labelValue: String
     @Binding var showDeviceSelector: Bool
-
+    
     var body: some View {
         ZStack(alignment: .top) {
             Color.white.frame(height: 50).shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
@@ -19,14 +20,13 @@ struct TopBarView: View {
             HStack {
                 HStack(spacing: 80) {
                     IconButton(iconName: "line.horizontal.3", action: {
-                  presentSideMenu.toggle()
+                        presentSideMenu.toggle()
                         print(" Hamburger tapped, presentSideMenu is now: \(presentSideMenu)")
-
+                        
                     }, iconColor: .black, iconSize:20)
                     .bold()
                     .padding()
                     Button(action: {
-                       //showDeviceSelector = true
                         navManager.navigate(to: AppRoute.DriverLogListView)
                     }) {
                         Text(labelValue)
@@ -37,7 +37,7 @@ struct TopBarView: View {
                     .padding()
                     .foregroundColor(.blue)
                     .buttonStyle(PlainButtonStyle()) // prevents default blue tint on iOS
-
+                    
                 }
                 Spacer()
                 HStack(spacing: 5) {
@@ -246,11 +246,8 @@ struct AvailableHoursView: View {
     @ObservedObject var ONDuty: CountdownTimer
     @ObservedObject var cycleTimer: CountdownTimer
     @ObservedObject var sleepTimer: CountdownTimer
-  //@ObservedObject var DutyTime: CountdownTimer
     
-
-   // @StateObject private var sleepTimer = CountdownTimer(startTime: 10 * 3600)
-
+    
     var body: some View {
         CardContainer {
             VStack(spacing: 2) {
@@ -282,11 +279,10 @@ struct AvailableHoursView: View {
                         TimeBox(title: "On-Duty", timer: ONDuty)
                         TimeBox(title: "Drive", timer: driveTimer)
                     }
-
+                    
                     HStack(spacing: 2) {
                         TimeBox(title: "Cycle / 7 Days", timer: cycleTimer)
                         TimeBox(title: "Sleep", timer: sleepTimer)
-                      //  TimeBox(title: "Continous Drive", timer: DutyTime)
                     }
                 }
             }
@@ -298,7 +294,7 @@ struct AvailableHoursView: View {
 struct TimeBox: View {
     let title: String
     @ObservedObject var timer: CountdownTimer
-
+    
     var body: some View {
         ZStack {
             VStack {
@@ -342,9 +338,9 @@ struct TimeBox: View {
 
 // MARK: - Main View
 struct HomeScreenView: View {
+    
     @State private var labelValue = ""
     @State private var OnDutyvalue: Int = 0
-
     @State private var selectedStatus: String? = nil
     @State private var confirmedStatus: String? = nil
     @State private var showAlert: Bool = false
@@ -361,56 +357,59 @@ struct HomeScreenView: View {
     
     
     //MARK: -  To show a static Data
-//    @StateObject private var driveTimer = CountdownTimer(startTime: 11 * 3600)
-//    @StateObject private var ONDuty = CountdownTimer(startTime: 14 * 3600)
-//    @StateObject private var cycleTimerOn = CountdownTimer(startTime: 70 * 3600)
-//    @StateObject private var sleepTimer = CountdownTimer(startTime: 10 * 3600)
-//    @StateObject private var DutyTime =  CountdownTimer(startTime: 8 * 3600)
-   
-
+    //    @StateObject private var driveTimer = CountdownTimer(startTime: 11 * 3600)
+    //    @StateObject private var ONDuty = CountdownTimer(startTime: 14 * 3600)
+    //    @StateObject private var cycleTimerOn = CountdownTimer(startTime: 70 * 3600)
+    //    @StateObject private var sleepTimer = CountdownTimer(startTime: 10 * 3600)
+    //    @StateObject private var DutyTime =  CountdownTimer(startTime: 8 * 3600)
+    
+    
     @State private var onDutyTimer = CountdownTimer(startTime: 0)
     @StateObject private var ONDuty: CountdownTimer
-
+    
     @State private var driveTimerState = CountdownTimer(startTime: 0)
     @StateObject private var driveTimer: CountdownTimer
-
+    
     @State private var cycleTimerState = CountdownTimer(startTime: 0)
     @StateObject private var cycleTimerOn: CountdownTimer
-
+    
     @State private var sleepTimerState = CountdownTimer(startTime: 0)
     @StateObject private var sleepTimer: CountdownTimer
     
     @State private var DutyTime =  CountdownTimer(startTime: 0)
     @StateObject private var dutyTimerOn: CountdownTimer
-
-        
-
+    
+    @State private var savedTimeZone: String = ""
+    @State private var savedTimeZoneOffset: String = ""
+ 
+    
+    
     init(presentSideMenu: Binding<Bool>, selectedSideMenuTab: Binding<Int>, session: SessionManager) {
         self._presentSideMenu = presentSideMenu
         self._selectedSideMenuTab = selectedSideMenuTab
         self.session = session
-
+        
         let onDutySeconds = CountdownTimer.timeStringToSeconds("14:00:00")
         let driveSeconds = CountdownTimer.timeStringToSeconds("11:00:00")
         let cycleSeconds = CountdownTimer.timeStringToSeconds("70:00:00")
         let sleepSeconds = CountdownTimer.timeStringToSeconds("10:00:00")
         let dutyTimeSeconds = CountdownTimer.timeStringToSeconds("08:00:00")
-
+        
         _ONDuty = StateObject(wrappedValue: CountdownTimer(startTime: onDutySeconds))
         _driveTimer = StateObject(wrappedValue: CountdownTimer(startTime: driveSeconds))
         _cycleTimerOn = StateObject(wrappedValue: CountdownTimer(startTime: cycleSeconds))
         _sleepTimer = StateObject(wrappedValue: CountdownTimer(startTime: sleepSeconds))
         _dutyTimerOn = StateObject(wrappedValue: CountdownTimer(startTime: dutyTimeSeconds))
     }
-
-
-
+    
+    
+    
     let session: SessionManager
-
+    
     @State private var activeTimerAlert: TimerAlert?
     @EnvironmentObject var navmanager: NavigationManager
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
-
+    
     
     //MARK: -  to show a Cycle state
     @State private var isOnDutyActive = false
@@ -418,8 +417,8 @@ struct HomeScreenView: View {
     @State private var isCycleTimerActive = false
     @State private var cycleTimeElapsed = 0
     @State private var cycleTimer: Timer?
-
-//MARK: -  to manage a cycle timer
+    
+    //MARK: -  to manage a cycle timer
     // ELD Additions
     @AppStorage("cycleType") var cycleType: String = "8/70" // or "7/60"
     @State private var cumulativeDriveTime: TimeInterval = 0
@@ -429,7 +428,7 @@ struct HomeScreenView: View {
     @State private var driveStopStartTime: Date? = nil
     @State private var showDriveStopPrompt: Bool = false
     @State private var driveStopPromptTimer: Timer? = nil
-
+    
     
     var body: some View {
         
@@ -471,7 +470,7 @@ struct HomeScreenView: View {
                         
                         HOSEventsChartScreen()
                             .environmentObject(hoseChartViewModel)
-
+                        
                         
                         VStack(alignment: .leading) {
                             Text("Version - OS/02/May")
@@ -558,18 +557,10 @@ struct HomeScreenView: View {
                                 showAlert = false
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                formatter.timeZone = TimeZone(secondsFromGMT: 19800) // IST = GMT+5:30
                                 let now = formatter.string(from: Date())
                                 
-//                                DatabaseManager.shared.saveTimerLog(
-//                                    status: selected,
-//                                    startTime: now,
-//                                    remainingWeeklyTime: cycleTimerOn.timeString,
-//                                    remainingDriveTime: driveTimer.timeString,
-//                                    remainingDutyTime: ONDuty.timeString,
-//                                    remainingSleepTime: sleepTimer.timeString,
-//                                    lastSleepTime: selected == "Sleep" ? now : ""
-//                                )
-                                
+                                updatePreviousEventEndTime()
                                 DatabaseManager.shared.saveTimerLog(
                                     status: selected,
                                     startTime: now,
@@ -580,9 +571,9 @@ struct HomeScreenView: View {
                                     lastSleepTime: selected == "Sleep" ? now : "",
                                     isruning: selected == "Drive" || selected == "On-Duty" || selected == "Sleep"
                                 )
-
+                                
                                 hoseChartViewModel.loadEventsFromDatabase()
-
+                                
                                 print("Saved \(selected) timer to DB at \(now)")
                             }
                             
@@ -603,8 +594,10 @@ struct HomeScreenView: View {
                                 
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                formatter.timeZone = TimeZone(secondsFromGMT: 19800) // IST = GMT+5:30
                                 let now = formatter.string(from: Date())
                                 
+                                updatePreviousEventEndTime()
                                 DatabaseManager.shared.saveTimerLog(
                                     status: "Drive",
                                     startTime: now,
@@ -614,7 +607,7 @@ struct HomeScreenView: View {
                                     remainingSleepTime: sleepTimer.timeString,
                                     lastSleepTime: "", isruning: false,
                                     
-                             
+                                    
                                     
                                 )
                                 //MARK: -  RELOAD THE CHART DATA INSTANTLY
@@ -647,6 +640,8 @@ struct HomeScreenView: View {
                             UserDefaults.standard.removeObject(forKey: "userEmail")
                             UserDefaults.standard.removeObject(forKey: "authToken")
                             UserDefaults.standard.removeObject(forKey: "driverName")
+                            UserDefaults.standard.removeObject(forKey: "timezone")
+                            UserDefaults.standard.removeObject(forKey: "timezoneOffSet")
                             
                             session.logOut()
                             SessionManagerClass.shared.clearToken()
@@ -690,11 +685,11 @@ struct HomeScreenView: View {
                     activeTimerAlert = nil
                 }
             }
-  
+            
         }
         .onAppear {
-                   loadTodayHOSEvents()
-               }
+            loadTodayHOSEvents()
+        }
         //  All modifiers applied *on ZStack*
         .onAppear {
             if let driverName = UserDefaults.standard.string(forKey: "driverName") {
@@ -702,7 +697,7 @@ struct HomeScreenView: View {
             } else {
                 labelValue = "Unknown User"
             }
-
+            
             if confirmedStatus == nil {
                 selectedStatus = "Off-Duty"
                 driveTimer.stop()
@@ -712,37 +707,13 @@ struct HomeScreenView: View {
                 DutyTime.stop()
                 confirmedStatus = "Off-Duty"
             }
-
-           // offDutyStartTime = Date()
+            
             checkFor34HourReset()
             restoreAllTimers()
             
             
-            //MARK: -  TO SHow In Homescreen
-            let onDutyAPI = "14:00:00"
-            let driveAPI = "11:00:00"
-            let cycleAPI = "70:00:00"
-            let sleepAPI = "08:00:00"
-
-            let onDutySeconds = CountdownTimer.timeStringToSeconds(onDutyAPI)
-            let driveSeconds = CountdownTimer.timeStringToSeconds(driveAPI)
-            let cycleSeconds = CountdownTimer.timeStringToSeconds(cycleAPI)
-            let sleepSeconds = CountdownTimer.timeStringToSeconds(sleepAPI)
-
-           /* ONDuty.reset(startTime: onDutySeconds)
-            ONDuty.start()
-
-            driveTimer.reset(startTime: driveSeconds)
-            driveTimer.start()
-
-            cycleTimerOn.reset(startTime: cycleSeconds)
-            cycleTimerOn.start()
-
-            sleepTimer.reset(startTime: sleepSeconds)
-            sleepTimer.start()*/
-
             
-           
+            
         }
         .onReceive(ONDuty.$remainingTime) { remaining in
             if remaining <= 1800 && remaining >= 1700 && activeTimerAlert == nil {
@@ -753,7 +724,7 @@ struct HomeScreenView: View {
                 activeTimerAlert = TimerAlert(title: "On-Duty Violation", message: " ON Duty limit  exceeded", backgroundColor: .red.opacity(0.9), isViolation: true)
             }
         }
-
+        
         .onReceive(driveTimer.$remainingTime) { remaining in
             if remaining <= 1800 && remaining >= 1700 && activeTimerAlert == nil {
                 activeTimerAlert = TimerAlert(title: "Drive Reminder", message: "30 min left for completing your On Drive cycle for a day", backgroundColor: .yellow)
@@ -763,7 +734,7 @@ struct HomeScreenView: View {
                 activeTimerAlert = TimerAlert(title: "Drive Violation", message: "Drive limit exceeded", backgroundColor: .red.opacity(0.9), isViolation: true)
             }
         }
-
+        
         .onReceive(cycleTimerOn.$remainingTime) { remaining in
             if remaining <= 1800 && remaining >= 1700 && activeTimerAlert == nil {
                 activeTimerAlert = TimerAlert(title: "Cycle Alert", message: "30 min left for completing your cycle for a day", backgroundColor: .purple.opacity(0.7))
@@ -773,37 +744,46 @@ struct HomeScreenView: View {
                 activeTimerAlert = TimerAlert(title: "Cycle Violation", message: "Cycle limit exceeded", backgroundColor: .red.opacity(0.9), isViolation: true)
             }
         }
-
+        
         .navigationBarBackButtonHidden()
     }
+ 
 
     private func loadTodayHOSEvents() {
         let todayLogs = DatabaseManager.shared.fetchDutyEventsForToday()
-        print("📊 Logs fetched from DB: \(todayLogs.count)")
-           for log in todayLogs {
-               print("→ \(log.status) from \(log.startTime) to \(log.endTime)")
-           }
+        print(" Logs fetched from DB: \(todayLogs.count)")
+
+        
         let converted = todayLogs.enumerated().compactMap { index, log -> HOSEvent? in
-            HOSEvent(
+            let start = adjustedDate(from: log.startTime)
+            let end = adjustedDate(from: log.endTime)
+
+
+            return HOSEvent(
                 id: index,
-                x: log.startTime,
-                event_end_time: log.endTime,
+                x: start,
+                event_end_time: end,
                 label: log.status,
                 dutyType: log.status
             )
         }
+
         hoseEvents = converted
     }
+
+    func adjustedDate(from original: Date) -> Date {
+        print("🕓 Raw: \(original) — Local: \(original.toLocalString())")
+        return original
+    }
+
+    
     func timeStringToSeconds(_ timeString: String) -> TimeInterval {
         let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
         guard parts.count == 3 else { return 0 }
         let hours = parts[0], minutes = parts[1], seconds = parts[2]
         return TimeInterval(hours * 3600 + minutes * 60 + seconds)
     }
-
-
-
-
+    
     //MARK: - #$ HOURS RESET WHEN  SHIFT IS START NEW
     func checkFor34HourReset() {
         if let lastOffDuty = offDutyStartTime {
@@ -814,7 +794,7 @@ struct HomeScreenView: View {
             }
         }
     }
-//MARK: TO RELOAD DATA
+    //MARK: TO RELOAD DATA
     
     func loadLatestLog(for status: String) -> DriverLogModel? {
         return DatabaseManager.shared.fetchLogs()
@@ -822,46 +802,46 @@ struct HomeScreenView: View {
             .sorted { $0.timestamp > $1.timestamp }
             .first
     }
-
+    
     //MARK: -  Restore & save time
-     func restoreAllTimers() {
-         if let drive = loadLatestLog(for: "Drive"),
-            let remaining = drive.remainingDriveTime?.asTimeInterval(),
-            remaining > 0,
-            let startDate = drive.startTime.asDate() {
-             driveTimer.restore(from: remaining, startedAt: startDate, wasRunning: drive.isRunning)
-         }
-
-         if let duty = loadLatestLog(for: "On-Duty"),
-            let remaining = duty.remainingDutyTime?.asTimeInterval(),
-            remaining > 0,  // Only restore if non-zero
-            let started = duty.startTime.asDate() {
-             ONDuty.restore(from: remaining, startedAt: started, wasRunning: duty.isRunning)
-         }
-
-
-         if let cycle = loadLatestLog(for: "Cycle"),
-            let remaining = cycle.remainingWeeklyTime?.asTimeInterval(),
-            remaining > 0,
-            let started = cycle.startTime.asDate() {
-             cycleTimerOn.restore(from: remaining, startedAt: started, wasRunning: cycle.isRunning)
-         }
-
-         if let sleep = loadLatestLog(for: "Sleep"),
-            let remaining = sleep.remainingSleepTime?.asTimeInterval(),
-            remaining > 0,
-            let startDate = sleep.startTime.asDate() {
-             sleepTimer.restore(from: remaining, startedAt: startDate, wasRunning: sleep.isRunning)
-         }
-     }
-
-
+    func restoreAllTimers() {
+        if let drive = loadLatestLog(for: "Drive"),
+           let remaining = drive.remainingDriveTime?.asTimeInterval(),
+           remaining > 0,
+           let startDate = drive.startTime.asDate() {
+            driveTimer.restore(from: remaining, startedAt: startDate, wasRunning: drive.isRunning)
+        }
+        
+        if let duty = loadLatestLog(for: "On-Duty"),
+           let remaining = duty.remainingDutyTime?.asTimeInterval(),
+           remaining > 0,  // Only restore if non-zero
+           let started = duty.startTime.asDate() {
+            ONDuty.restore(from: remaining, startedAt: started, wasRunning: duty.isRunning)
+        }
+        
+        
+        if let cycle = loadLatestLog(for: "Cycle"),
+           let remaining = cycle.remainingWeeklyTime?.asTimeInterval(),
+           remaining > 0,
+           let started = cycle.startTime.asDate() {
+            cycleTimerOn.restore(from: remaining, startedAt: started, wasRunning: cycle.isRunning)
+        }
+        
+        if let sleep = loadLatestLog(for: "Sleep"),
+           let remaining = sleep.remainingSleepTime?.asTimeInterval(),
+           remaining > 0,
+           let startDate = sleep.startTime.asDate() {
+            sleepTimer.restore(from: remaining, startedAt: startDate, wasRunning: sleep.isRunning)
+        }
+    }
+    
+    
     //MARK: -  6 add funct to calculate 70 hour cycle
     func totalDutyLast7or8Days() -> TimeInterval {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let daysToInclude = (cycleType == "7/60") ? 7 : 8
-         
+        
         var total: TimeInterval = 0
         
         for i in 0..<daysToInclude {
@@ -872,24 +852,24 @@ struct HomeScreenView: View {
         }
         return total
     }
-
+    
     func saveDailyDutyLog(duration: TimeInterval) {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         pastDutyLog[today, default: 0] += duration
-      //  print(" Saved \(duration / 3600, specifier: "%.2f") hrs for \(formattedDate(today))")
+        //  print(" Saved \(duration / 3600, specifier: "%.2f") hrs for \(formattedDate(today))")
     }
-
+    //MARK:   CONVERT TIME
     func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "E - MMM d HH:mm:ss 'GMT+05:30 yyyy'"
-        formatter.timeZone = TimeZone(identifier: "Asia/Kolkata")
+        formatter.timeZone = Foundation.TimeZone(identifier: "Asia/Kolkata")
         return formatter.string(from: date)
     }
-
+    
     func checkAndStartCycleTimer() {
         print(" Checking Cycle Timer: Drive=\(isDriveActive), Duty=\(isOnDutyActive)")
-
+        
         if isOnDutyActive {
             startCycleTimer()
         }else if   isDriveActive {
@@ -899,7 +879,7 @@ struct HomeScreenView: View {
             stopCycleTimer()
         }
     }
-
+    
     func startCycleTimer() {
         guard !isCycleTimerActive else { return }
         print(" Starting Cycle Timer")
@@ -909,8 +889,10 @@ struct HomeScreenView: View {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.timeZone = TimeZone(secondsFromGMT: 19800) // IST = GMT+5:30
         let now = formatter.string(from: Date())
-
+        
+        updatePreviousEventEndTime()
         DatabaseManager.shared.saveTimerLog(
             status: "Cycle",
             startTime: now,
@@ -922,19 +904,32 @@ struct HomeScreenView: View {
         )
         
         print(" Saved Cycle timer to DB at \(now)")
-    
+        
     }
-
-
+    
+    
     func stopCycleTimer() {
         guard isCycleTimerActive else { return }
         isCycleTimerActive = false
         cycleTimerOn.stop() //  stop your cycle countdown
         print(" Cycle Timer Stopped")
     }
-
-
+    
+    
+    func updatePreviousEventEndTime() {
+        DatabaseManager.shared.updateLastEventEndTime(to: Date())
+    }
 }
+
+extension String {
+    func asDate(format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        formatter.timeZone = .current // or use saved time zone if needed
+        return formatter.date(from: self)
+    }
+}
+
    //#Preview {
    //    HomeScreenView()
   //}

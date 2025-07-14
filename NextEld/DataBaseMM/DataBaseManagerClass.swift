@@ -270,15 +270,15 @@ class DatabaseManager {
                 let endString = row[startTime] // You don’t have separate endTime, so calculate it
 
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Adjust based on your saved format
-                
-//                if let timestamp = Double(startString) {
-//                    let startDate = Date(timeIntervalSince1970: timestamp)
-//                }
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                dateFormatter.timeZone = TimeZone(secondsFromGMT: 19800) // IST = GMT+5:30
+
 
                 if let startDate = dateFormatter.date(from: startString) {
                     // Use timestamp or calculate +2 hours if no end field
-                    let endDate = startDate.addingTimeInterval(2 * 60 * 60) // assume 2 hr default
+                    let endDate = startDate.addingTimeInterval(00 * 60 * 60) // assume 2 hr default
+                    
+                 
 
                     // Only use logs from today
                     if startDate >= startOfDay && startDate < endOfDay {
@@ -292,6 +292,26 @@ class DatabaseManager {
         }
 
         return logs
+    }
+
+    // Update the end time of the last event
+    func updateLastEventEndTime(to endTime: Date) {
+        guard let db = self.db else { return }
+        let logs = fetchLogs().sorted { $0.timestamp < $1.timestamp }
+        guard let lastLog = logs.last, let lastId = lastLog.id else { return }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let endTimeString = dateFormatter.string(from: endTime)
+        let logRow = driverLogs.filter(id == lastId)
+        do {
+            // There is no explicit endTime column, so you may need to add one if you want to persist this.
+            // For now, just print for demonstration:
+            print("Updating last event (id: \(lastId), status: \(lastLog.status)) end time to: \(endTimeString)")
+            // TODO: If you add an endTime column, update it here:
+            // try db.run(logRow.update(endTime <- endTimeString))
+        } catch {
+            print("Failed to update last event end time: \(error)")
+        }
     }
 
 
@@ -380,4 +400,3 @@ struct DriverLogModel: Identifiable {
     let isSplit: Int
     let engineStatus: String
 }
-

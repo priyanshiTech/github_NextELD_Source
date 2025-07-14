@@ -78,25 +78,7 @@ class CountdownTimer: ObservableObject {
         }
     }
 
-    
-    
-    
-//    func restore(from remaining: TimeInterval, startedAt: Date?) {
-//        guard let startedAt = startedAt else {
-//            self.remainingTime = remaining
-//            return
-//        }
-//
-//        let elapsed = Date().timeIntervalSince(startedAt)
-//        let newRemaining = max(remaining - elapsed + 10, 0) // add buffer
-//        self.remainingTime = newRemaining
-//
-//        if newRemaining > 0 {
-//            start()
-//        }
-//    }
 
-    // MARK: - Save state
     // MARK: - Save state
     func getState() -> (remaining: TimeInterval, startedAt: Date?, isRunning: Bool) {
         return (remainingTime, Date(), isRunning)
@@ -107,7 +89,7 @@ class CountdownTimer: ObservableObject {
     var elapsed: TimeInterval {
         return startDuration - remainingTime
     }
-    
+    //MARK: -  Convert Into Second
     static func timeStringToSeconds(_ timeString: String) -> TimeInterval {
         let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
         guard parts.count == 3 else { return 0 }
@@ -124,83 +106,6 @@ class CountdownTimer: ObservableObject {
 
 
 }
-
-
-/*class CountdownTimer: ObservableObject {
-    @Published var remainingTime: TimeInterval
-    let startTime: TimeInterval
-    private var timer: Timer?
-    var isRunning: Bool = false
-    private var startDate: Date?
-
-    
-    //MARK: - TO SAVE TIMER
-    var timeString: String {
-        let hours = Int(remainingTime) / 3600
-        let minutes = (Int(remainingTime) % 3600) / 60
-        let seconds = Int(remainingTime) % 60
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-    }
-
-    
-    
-    
-    
-    
-    var elapsed: TimeInterval {
-        return startTime - remainingTime
-    }
-
-    init(startTime: TimeInterval) {
-        self.startTime = startTime
-        self.remainingTime = startTime
-    }
-
-    func start() {
-        startDate = Date()
-        isRunning = true
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if self.remainingTime > 0 {
-                self.remainingTime -= 1
-            } else {
-                self.timer?.invalidate()
-                self.isRunning = false
-            }
-        }
-    }
-
-    func stop() {
-        timer?.invalidate()
-        isRunning = false
-    }
-
-    /// Get current timer state for persistence
-    func getState() -> (remaining: TimeInterval, startedAt: Date?) {
-        return (remainingTime, startDate)
-    }
-
-    /// Restore a timer from persisted state with a 10-second grace buffer
-    func restore(from remaining: TimeInterval, startedAt: Date?) {
-        guard let startedAt = startedAt else {
-            self.remainingTime = remaining
-            return
-        }
-
-        let elapsed = Date().timeIntervalSince(startedAt)
-        let adjustedRemaining = max(remaining - elapsed + 10, 0) // ⏱ Add 10-second grace
-
-        self.remainingTime = adjustedRemaining
-        print(" Restoring timer: Remaining adjusted to \(Int(adjustedRemaining))s")
-
-        if adjustedRemaining > 0 {
-            start()
-        }
-    }
-}*/
-
-
-
 
 
 

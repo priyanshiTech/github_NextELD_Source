@@ -377,7 +377,6 @@
 			children = (
 				AFCE29E12E129C61001C6729 /* HelpingGroup */,
 				AFA98C832E0146C200E87802 /* Info.plist */,
-				AF72E4452DFD557700626DC0 /* LocationManager.swift */,
 				AFC535552E0D5D5700AD10C9 /* DataBaseMM */,
 				AFFC64A32DCE1F73008D1CC0 /* Extensions */,
 				1065860B2DCCC71A003CE502 /* LiveCharts */,
@@ -738,6 +737,7 @@
 				AF72E4472DFD579500626DC0 /* BluetoothViewModel.swift */,
 				AFC1B5592E155BFA00C57620 /* ForgetNmeModelView.swift */,
 				AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */,
+				AF72E4452DFD557700626DC0 /* LocationManager.swift */,
 				AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */,
 				108FF82D2DC89C6F0051671B /* View */,
 				108FF82C2DC89C620051671B /* Model */,

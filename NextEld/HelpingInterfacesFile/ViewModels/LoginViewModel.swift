@@ -1,4 +1,4 @@
-//
+////
 //  LoginViewModel.swift
 //  NextEld
 //
@@ -70,7 +70,7 @@ class LoginViewModel: ObservableObject {
                 UserDefaults.standard.set(email, forKey: "userEmail")
               
 
-                // Saving  Driver Username
+                //Saving  Driver Username
 
                 if let driverName = response.result?.driverLog?.first?.driverName {
                     UserDefaults.standard.set(driverName, forKey: "driverName")
@@ -78,7 +78,24 @@ class LoginViewModel: ObservableObject {
                 } else {
                     print(" Full name not found in API response.")
                 }
+                //MARK: -  SAVE Timer ZONE / OFFSET IN API
+                if let timeZone = response.result?.timezone{
+                    UserDefaults.standard.set(timeZone, forKey: "timezone")
+                    print(" Saved Timezone in UD: \(timeZone)")
+                    
+                    
+                } else if let timeZoneOffSet  =  response.result?.timezoneOffSet{
+                    UserDefaults.standard.set(timeZoneOffSet, forKey: "timezoneOffSet")
+                    print(" Saved TimezoneOffset in UD: \(timeZoneOffSet)")
 
+                    
+                }else {
+                    print(" Full name not found in API response.")
+                }
+                // Optional I  Print current values from UserDefaults to confirm
+                let tz = UserDefaults.standard.string(forKey: "timezone") ?? "nil"
+                let tzOffset = UserDefaults.standard.string(forKey: "timezoneOffSet") ?? "nil"
+                print(" Current UD Values → timezone: \(tz), timezoneOffSet: \(tzOffset)")
                 //MARK: -  Saving data into Static for Timers
                 
                 if let OndutyTIme =  response.result?.onDutyTime {
@@ -152,6 +169,42 @@ class LoginViewModel: ObservableObject {
         return components.query?.data(using: .utf8)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
