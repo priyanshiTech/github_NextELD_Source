@@ -571,9 +571,11 @@ struct HomeScreenView: View {
                                     lastSleepTime: selected == "Sleep" ? now : "",
                                     isruning: selected == "Drive" || selected == "On-Duty" || selected == "Sleep"
                                 )
-                                
+                                //MARK:  to reactive
+                              //  UserDefaults.standard.set(selected, forKey: "lastActiveStatus")
+
                                 hoseChartViewModel.loadEventsFromDatabase()
-                                
+                        
                                 print("Saved \(selected) timer to DB at \(now)")
                             }
                             
@@ -835,6 +837,8 @@ struct HomeScreenView: View {
         }
     }
     
+    
+
     
     //MARK: -  6 add funct to calculate 70 hour cycle
     func totalDutyLast7or8Days() -> TimeInterval {

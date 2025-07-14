@@ -94,6 +94,12 @@ class HOSEventsChartViewModel: ObservableObject {
         }
     }
 
+    
+
+    
+
+
+
     private func normalizeStatus(_ status: String) -> String {
         switch status.uppercased() {
         case "ON-DUTY": return "ON_DUTY"
