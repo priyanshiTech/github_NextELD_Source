@@ -32,7 +32,7 @@ class HOSEventsChartViewModel: ObservableObject {
             loadEventsFromDatabase()
         }
 
-        // 🔁 Start live refresh
+        //MARK: -   Start live refresh
         startLiveUpdateTimer()
     }
 
@@ -40,7 +40,7 @@ class HOSEventsChartViewModel: ObservableObject {
         var logs = DatabaseManager.shared.fetchDutyEventsForToday()
         logs.sort { $0.startTime < $1.startTime }
 
-        // 🟧 Add dummy OFF_DUTY if needed
+        //  Add dummy OFF_DUTY if needed
         if let first = logs.first {
             let startOfDay = Calendar.current.startOfDay(for: Date())
             if first.startTime > startOfDay {
@@ -58,7 +58,7 @@ class HOSEventsChartViewModel: ObservableObject {
             return HOSEvent(
                 id: log.id,
                 x: log.startTime,
-                event_end_time: log.endTime ?? Date(), // 🔁 for last active event
+                event_end_time: log.endTime ?? Date(),   //  for last active event
                 label: normalizedStatus,
                 dutyType: normalizedStatus
             )
@@ -67,7 +67,7 @@ class HOSEventsChartViewModel: ObservableObject {
         refreshTrigger = UUID()
     }
 
-    /// 🔁 Timer that updates the last event's end_time every second
+    ///  Timer that updates the last event's end_time every second
     func startLiveUpdateTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             guard !self.events.isEmpty else { return }

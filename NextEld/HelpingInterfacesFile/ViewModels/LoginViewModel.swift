@@ -249,46 +249,46 @@ class LoginViewModel: ObservableObject {
 
 
      func login(email: String, password: String) async {
-         print("🚀 Starting login...")
+         print(" Starting login...")
          isLoading = true
          errorMessage = nil
 
-         // 1️⃣ Create request body
+         //  Create request body
          let requestBody = LoginRequestModel(
              username: email,
              password: password,
              mobileDeviceId: "jay12345",
              isCoDriver: true
          )
-         print("📤 Request Body: \(requestBody)")
+         print(" Request Body: \(requestBody)")
          do {
-             // 2️⃣ Call API
+             //  Call API
              let response: TokenModelLog = try await NetworkManager.shared.post(
                  .login,
                  body: requestBody
              )
              print("📬 API Response: \(response)")
-             // 3️⃣ Store token if present
+             //  Store token if present
              if let token = response.token {
                  self.token = token
-                 print("✅ Token received: \(token)")
+                 print(" Token received: \(token)")
              }
-             // 4️⃣ Save driver logs to SQLite
+             //  Save driver logs to SQLite
              if let logs = response.result?.driverLog {
-                 print("🧩 Driver logs received from API: \(logs.count)")
-                 // ✅ Print each log before saving
+                 print(" Driver logs received from API: \(logs.count)")
+                 //  Print each log before saving
                  for (index, log) in logs.enumerated() {
-                     print("📄 Log \(index + 1): Status: \(log.status ?? "nil"), StartTime: \(log.dateTime ?? "nil")")
+                     print(" Log \(index + 1): Status: \(log.status ?? "nil"), StartTime: \(log.dateTime ?? "nil")")
                  }
-                 // ✅ Save into SQLite
+                 //  Save into SQLite
                  DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
              } else {
-                 print("❌ No driver logs found in API response.")
+                 print(" No driver logs found in API response.")
              }
          } catch {
-             // 5️⃣ Handle error
+             //  Handle error
              self.errorMessage = error.localizedDescription
-             print("❌ Network error: \(error.localizedDescription)")
+             print(" Network error: \(error.localizedDescription)")
          }
 
          isLoading = false

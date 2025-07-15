@@ -32,7 +32,7 @@ class DatabaseManager {
     let isVoilation = Expression<Int>("isVoilation")
     let dutyType = Expression<String>("dutyType")
     let shift = Expression<Int>("shift")
-    let vehicleName = Expression<String>("vehicleName") // instead of vehicle
+    let vehicleName = Expression<String>("vehicleName") //instead of vehicle
     let odometer = Expression<Double>("odometer")
     let engineHours = Expression<String>("engineHours")
     let location = Expression<String>("location")

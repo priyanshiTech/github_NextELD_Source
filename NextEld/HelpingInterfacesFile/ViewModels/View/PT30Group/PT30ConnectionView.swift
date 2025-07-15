@@ -269,7 +269,7 @@ struct PT30ConnectionView: View {
 //    var mainContent: some View {
 //        VStack {
 //            if ble.connectedPeripheral != nil {
-//                Text("Connected ✅").padding()
+//                Text("Connected ").padding()
 //            } else {
 //                Text(ble.status).padding()
 //                Spacer()

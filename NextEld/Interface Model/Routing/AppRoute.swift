@@ -173,10 +173,10 @@ struct RootView: View {
     func checkAutoLogin() {
         if SessionManagerClass.shared.isLoggedIn() {
             isLoggedIn = true
-            print("✅ Auto-login: token found. Redirecting to Home.")
+            print(" Auto-login: token found. Redirecting to Home.")
         } else {
             isLoggedIn = false
-            print("🔁 Auto-login: token not found. Showing Login.")
+            print(" Auto-login: token not found. Showing Login.")
         }
     }
     

@@ -17,7 +17,7 @@ struct NextEldApp: App {
 
     var body: some Scene {
         WindowGroup {
-            // 🔁 Create shared LoginVM with same session
+            //  Create shared LoginVM with same session
             let sharedLoginVM = LoginViewModel(session: session)
 
             RootView()

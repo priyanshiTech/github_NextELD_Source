@@ -80,7 +80,7 @@ struct ForgetPasswordView: View {
                 if isfocusState {
                     Button("Continue") {
                         print("Continue tapped with number: \(EntEmail)")
-                        viewModel.username = EntEmail // ✅ pass to ViewModel
+                        viewModel.username = EntEmail //  pass to ViewModel
 
                         Task {
                             await viewModel.submitForgetPassword()

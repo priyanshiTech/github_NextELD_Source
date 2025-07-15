@@ -43,7 +43,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, TrackerS
 
     func startScan(timeout: TimeInterval = 10) {
         devices.removeAll()
-        status = "🔍 Scanning..."
+        status = "Scanning..."
         central.scanForPeripherals(withServices: [
             CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
         ], options: nil)
@@ -57,7 +57,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, TrackerS
 
     func connect(_ tp: TrackerPeripheral) {
         central.connect(tp.peripheral, options: nil)
-        status = "🔗 Connecting..."
+        status = " Connecting..."
     }
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -66,9 +66,9 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, TrackerS
                 withServices: [PT30_SERVICE_UUID],
                 options: nil
             )
-            status = "🔍 Scanning..."
+            status = " Scanning..."
         } else {
-            status = "⚠️ Bluetooth unavailable"
+            status = " Bluetooth unavailable"
         }
     }
 
@@ -81,14 +81,14 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, TrackerS
     }
 
     func centralManager(_ central: CBCentralManager, didConnect p: CBPeripheral) {
-        status = "✅ Connected to \(p.name ?? "device")"
+        status = " Connected to \(p.name ?? "device")"
         connectedPeripheral = p
         tracker.delegate = self
-        // ✅ No explicit connect() call as TrackerService auto-detects connection
+        //  No explicit connect() call as TrackerService auto-detects connection
     }
 
     func centralManager(_ central: CBCentralManager, didFailToConnect p: CBPeripheral, error: Error?) {
-        status = "❌ Connection Failed"
+        status = " Connection Failed"
     }
 
     // MARK: - TrackerServiceDelegate
@@ -97,9 +97,9 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, TrackerS
     func trackerService(_ trackerService: PacificTrack.TrackerService, didReceive event: PacificTrack.EventFrame, processed: (Bool) -> Void) {
         let type = event.eventType
         if type == .bluetoothConnected {
-            status = "🎉 Tracker bluetoothConnected!"
+            status = " Tracker bluetoothConnected!"
         } else if type == .bluetoothDisconnected {
-            status = "🔌 Tracker bluetoothDisconnected!"
+            status = " Tracker bluetoothDisconnected!"
         }
         processed(true)
     }

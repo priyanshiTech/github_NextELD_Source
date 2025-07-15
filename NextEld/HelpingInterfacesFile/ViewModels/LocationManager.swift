@@ -14,7 +14,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     )
     @Published var locationError: String?
-    @Published var currentLocation: CLLocation? = nil // ✅ ADD THIS
+    @Published var currentLocation: CLLocation? = nil //  ADD THIS
     
     override init() {
         super.init()
@@ -37,7 +37,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         isUpdatingLocation = false
     }
 
-    // ✅ Update currentLocation and region on update
+    //  Update currentLocation and region on update
      func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
          guard let location = locations.last else { return }
 
