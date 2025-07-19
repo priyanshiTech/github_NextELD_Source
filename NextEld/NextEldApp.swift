@@ -14,16 +14,18 @@ struct NextEldApp: App {
     @StateObject private var navManager = NavigationManager()
     @StateObject private var session = SessionManager()
     @StateObject private var loginVM = LoginViewModel(session: SessionManager()) // temp placeholder
+    @StateObject private var networkMonitor = NetworkMonitor()
 
     var body: some Scene {
         WindowGroup {
-            //  Create shared LoginVM with same session
+            //Create shared LoginVM with same session
             let sharedLoginVM = LoginViewModel(session: session)
 
             RootView()
                 .environmentObject(navManager)
                 .environmentObject(session)
                 .environmentObject(sharedLoginVM)
+                .environmentObject(networkMonitor)
         }
     }
 }

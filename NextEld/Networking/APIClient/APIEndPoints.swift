@@ -16,6 +16,7 @@ enum API {
         case login
         case ForgetPassword
         case ForgetUserName
+        case ForSavingOfflineData
 
         var url: URL {
             switch self {
@@ -25,6 +26,8 @@ enum API {
                 return API.baseURL.appendingPathComponent("auth/forgot_password")
             case .ForgetUserName:
                 return API.baseURL.appendingPathComponent("auth/forgot_username")
+            case .ForSavingOfflineData:
+                return API.baseURL.appendingPathComponent("dispatch/add_drivering_status_offline")
             }
         }
 
@@ -32,13 +35,15 @@ enum API {
             switch self {
             case .login, .ForgetPassword , .ForgetUserName:
                 return "POST"
+            case .ForSavingOfflineData:
+                return "POST"
             }
         }
     }
 }
 
 
-
+//MARK: -
 
 final class NetworkManager {
     static let shared = NetworkManager()

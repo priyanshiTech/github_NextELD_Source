@@ -3,7 +3,6 @@
 //  Created by priyanshi on 07/05/25.
 //
 
-
 import SwiftUI
 
 // MARK: - Subviews
@@ -362,7 +361,9 @@ struct HomeScreenView: View {
     //    @StateObject private var cycleTimerOn = CountdownTimer(startTime: 70 * 3600)
     //    @StateObject private var sleepTimer = CountdownTimer(startTime: 10 * 3600)
     //    @StateObject private var DutyTime =  CountdownTimer(startTime: 8 * 3600)
-    
+    @AppStorage("didSyncOnLaunch") private var didSyncOnLaunch: Bool = false
+
+
     
     @State private var onDutyTimer = CountdownTimer(startTime: 0)
     @StateObject private var ONDuty: CountdownTimer
@@ -379,9 +380,8 @@ struct HomeScreenView: View {
     @State private var DutyTime =  CountdownTimer(startTime: 0)
     @StateObject private var dutyTimerOn: CountdownTimer
     
-    @State private var savedTimeZone: String = ""
-    @State private var savedTimeZoneOffset: String = ""
- 
+    @State private var  TimeZone : String = ""
+    @State private var  TimeZoneOffSet : String = ""
     
     
     init(presentSideMenu: Binding<Bool>, selectedSideMenuTab: Binding<Int>, session: SessionManager) {
@@ -410,7 +410,7 @@ struct HomeScreenView: View {
     @EnvironmentObject var navmanager: NavigationManager
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
     
-    
+    @StateObject private var syncVM = SyncViewModel()
     //MARK: -  to show a Cycle state
     @State private var isOnDutyActive = false
     @State private var isDriveActive = false
@@ -428,6 +428,13 @@ struct HomeScreenView: View {
     @State private var driveStopStartTime: Date? = nil
     @State private var showDriveStopPrompt: Bool = false
     @State private var driveStopPromptTimer: Timer? = nil
+    
+    
+    //MARK: -  Network
+    @EnvironmentObject var networkMonitor: NetworkMonitor
+    @State private var showBanner: Bool = false
+    @State private var bannerMessage: String = ""
+    @State private var bannerColor: Color = .green
     
     
     var body: some View {
@@ -557,10 +564,8 @@ struct HomeScreenView: View {
                                 showAlert = false
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                formatter.timeZone = TimeZone(secondsFromGMT: 19800) // IST = GMT+5:30
                                 let now = formatter.string(from: Date())
                                 
-                                updatePreviousEventEndTime()
                                 DatabaseManager.shared.saveTimerLog(
                                     status: selected,
                                     startTime: now,
@@ -571,11 +576,9 @@ struct HomeScreenView: View {
                                     lastSleepTime: selected == "Sleep" ? now : "",
                                     isruning: selected == "Drive" || selected == "On-Duty" || selected == "Sleep"
                                 )
-                                //MARK:  to reactive
-                              //  UserDefaults.standard.set(selected, forKey: "lastActiveStatus")
-
+                                
                                 hoseChartViewModel.loadEventsFromDatabase()
-                        
+                                
                                 print("Saved \(selected) timer to DB at \(now)")
                             }
                             
@@ -596,10 +599,8 @@ struct HomeScreenView: View {
                                 
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                formatter.timeZone = TimeZone(secondsFromGMT: 19800) // IST = GMT+5:30
                                 let now = formatter.string(from: Date())
                                 
-                                updatePreviousEventEndTime()
                                 DatabaseManager.shared.saveTimerLog(
                                     status: "Drive",
                                     startTime: now,
@@ -687,11 +688,68 @@ struct HomeScreenView: View {
                     activeTimerAlert = nil
                 }
             }
-            
-        }
+            // MARK: -  Internet Status Banner
+               if showBanner {
+                   VStack {
+                       HStack {
+                           Text(bannerMessage)
+                               .foregroundColor(.white)
+                               .padding(.vertical, 8)
+                               .padding(.horizontal, 16)
+                           Spacer()
+                       }
+                       .frame(maxWidth: .infinity)
+                       .background(bannerColor)
+                       .cornerRadius(8)
+                       .padding(.horizontal)
+                       .shadow(radius: 4)
+                       
+                       Spacer()
+                   }
+                   .transition(.move(edge: .top).combined(with: .opacity))
+                   .animation(.easeInOut, value: showBanner)
+               }
+           }
+           .onChange(of: networkMonitor.isConnected) { newValue in
+               if newValue {
+                   showToast(message: " Internet Connected Successfully", color: .green)
+               } else {
+                   showToast(message: "⚠️ No Internet Connection", color: .red)
+               }
+           }
+  
+
+
+        
+
         .onAppear {
             loadTodayHOSEvents()
         }
+        //(_)(+)_(_+(_+(_+)()_(+)_
+        ZStack {
+           
+            if !syncVM.syncMessage.isEmpty {
+                Text(syncVM.syncMessage)
+                    .padding()
+                    .background(syncVM.syncMessage.contains("Failed") ? Color.red : Color.green)
+                    .cornerRadius(10)
+                    .foregroundColor(.white)
+                    .transition(.scale)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            syncVM.syncMessage = ""
+                        }
+                    }
+            }
+        }
+        .onAppear {
+            Task {
+                await syncVM.syncOfflineData()
+            }
+        }
+        
+        //834589375470-jknkdfg8u09-9-08
+
         //  All modifiers applied *on ZStack*
         .onAppear {
             if let driverName = UserDefaults.standard.string(forKey: "driverName") {
@@ -749,42 +807,46 @@ struct HomeScreenView: View {
         
         .navigationBarBackButtonHidden()
     }
- 
+    
+    //MARK: Function to Show Banner for 3 seconds
+func showToast(message: String, color: Color) {
+        bannerMessage = message
+        bannerColor = color
+        showBanner = true
 
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            withAnimation {
+                showBanner = false
+            }
+        }
+    }
+    
     private func loadTodayHOSEvents() {
         let todayLogs = DatabaseManager.shared.fetchDutyEventsForToday()
         print(" Logs fetched from DB: \(todayLogs.count)")
-
-        
+        for log in todayLogs {
+            print("→ \(log.status) from \(log.startTime) to \(log.endTime)")
+        }
         let converted = todayLogs.enumerated().compactMap { index, log -> HOSEvent? in
-            let start = adjustedDate(from: log.startTime)
-            let end = adjustedDate(from: log.endTime)
-
-
-            return HOSEvent(
+            HOSEvent(
                 id: index,
-                x: start,
-                event_end_time: end,
+                x: log.startTime,
+                event_end_time: log.endTime,
                 label: log.status,
                 dutyType: log.status
             )
         }
-
         hoseEvents = converted
     }
-
-    func adjustedDate(from original: Date) -> Date {
-        print("🕓 Raw: \(original) — Local: \(original.toLocalString())")
-        return original
-    }
-
-    
     func timeStringToSeconds(_ timeString: String) -> TimeInterval {
         let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
         guard parts.count == 3 else { return 0 }
         let hours = parts[0], minutes = parts[1], seconds = parts[2]
         return TimeInterval(hours * 3600 + minutes * 60 + seconds)
     }
+    
+    
+    
     
     //MARK: - #$ HOURS RESET WHEN  SHIFT IS START NEW
     func checkFor34HourReset() {
@@ -838,8 +900,6 @@ struct HomeScreenView: View {
     }
     
     
-
-    
     //MARK: -  6 add funct to calculate 70 hour cycle
     func totalDutyLast7or8Days() -> TimeInterval {
         let calendar = Calendar.current
@@ -863,13 +923,46 @@ struct HomeScreenView: View {
         pastDutyLog[today, default: 0] += duration
         //  print(" Saved \(duration / 3600, specifier: "%.2f") hrs for \(formattedDate(today))")
     }
-    //MARK:   CONVERT TIME
-    func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E - MMM d HH:mm:ss 'GMT+05:30 yyyy'"
-        formatter.timeZone = Foundation.TimeZone(identifier: "Asia/Kolkata")
-        return formatter.string(from: date)
-    }
+/*    //MARK:   CONVERT TIME
+//    func formattedDate(_ date: Date) -> String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "E - MMM d HH:mm:ss yyyy"
+//        
+//        // Use saved timezone information
+//        let timezoneOffset = UserDefaults.standard.string(forKey: "userTimezoneOffset") ?? "+05:30"
+//        let timezone = UserDefaults.standard.string(forKey: "userTimezone") ?? "IST"
+//        
+//        // Get timezone identifier from offset
+//        let timezoneIdentifier = getTimezoneIdentifier(from: timezoneOffset)
+//        formatter.timeZone = Foundation.TimeZone(identifier: timezoneIdentifier) ?? Foundation.TimeZone.current
+//        
+//        let formattedDate = formatter.string(from: date)
+//        return "\(formattedDate) \(timezone)"
+//    }
+
+    // Helper function to get timezone identifier from offset
+//    private func getTimezoneIdentifier(from offset: String) -> String {
+//        switch offset {
+//        case "+05:30": return "Asia/Kolkata"
+//        case "+05:00": return "Asia/Karachi"
+//        case "+08:00": return "Asia/Shanghai"
+//        case "-05:00": return "America/New_York"
+//        case "-08:00": return "America/Los_Angeles"
+//        case "-06:00": return "America/Chicago"
+//        case "+00:00": return "UTC"
+//        case "+01:00": return "Europe/London"
+//        case "+02:00": return "Europe/Berlin"
+//        case "+03:00": return "Europe/Moscow"
+//        case "+04:00": return "Asia/Dubai"
+//        case "+06:00": return "Asia/Almaty"
+//        case "+07:00": return "Asia/Bangkok"
+//        case "+09:00": return "Asia/Tokyo"
+//        case "+10:00": return "Australia/Sydney"
+//        case "+11:00": return "Pacific/Guadalcanal"
+//        case "+12:00": return "Pacific/Auckland"
+//        default: return "UTC"
+//        }
+//    }*/
     
     func checkAndStartCycleTimer() {
         print(" Checking Cycle Timer: Drive=\(isDriveActive), Duty=\(isOnDutyActive)")
@@ -888,15 +981,13 @@ struct HomeScreenView: View {
         guard !isCycleTimerActive else { return }
         print(" Starting Cycle Timer")
         isCycleTimerActive = true
-        cycleTimerOn.start() //  this is the CountdownTimer you passed to AvailableHoursView
+        cycleTimerOn.start()          //MARK: -   this is the CountdownTimer you passed to AvailableHoursView
         
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.timeZone = TimeZone(secondsFromGMT: 19800) // IST = GMT+5:30
         let now = formatter.string(from: Date())
         
-        updatePreviousEventEndTime()
         DatabaseManager.shared.saveTimerLog(
             status: "Cycle",
             startTime: now,
@@ -920,20 +1011,7 @@ struct HomeScreenView: View {
     }
     
     
-    func updatePreviousEventEndTime() {
-        DatabaseManager.shared.updateLastEventEndTime(to: Date())
-    }
 }
-
-extension String {
-    func asDate(format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = format
-        formatter.timeZone = .current // or use saved time zone if needed
-        return formatter.date(from: self)
-    }
-}
-
    //#Preview {
    //    HomeScreenView()
   //}

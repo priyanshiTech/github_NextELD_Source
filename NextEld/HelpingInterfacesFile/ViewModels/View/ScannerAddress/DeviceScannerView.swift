@@ -72,7 +72,7 @@ struct DeviceScannerView: View {
                 }
                 .padding()
                 HStack{
-                    Image("laptop")
+                    Image("")
                         .foregroundColor(.blue)
                     TextField("Type Mac address Here", text: $macaddress)
                 }
