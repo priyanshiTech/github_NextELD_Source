@@ -111,15 +111,18 @@ class DatabaseManager {
         var logs: [DriverLogModel] = []
         do {
             for row in try db!.prepare(driverLogs) {
+                let violationValue = (try? row.get(isVoilationColumn)) ?? 0
+                            
+                            //  Print before appending
+                            print("📌 [DB LOG] Status: \(row[status]), isViolation: \(violationValue)")
                 logs.append(DriverLogModel(
+
                     id: row[id],
                     status: row[status],
                     startTime: row[startTime],
                     userId: row[userId],
                     day: row[day],
                     isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
-
-
                     dutyType: row[dutyType],
                     shift: row[shift],
                     vehicle: row[vehicleName] ,
@@ -157,6 +160,7 @@ class DatabaseManager {
         print("Correct!!!!!!!!!!!!!!!! Saving \(logs.count) logs into SQLite")
 
         for (index, log) in logs.enumerated() {
+
             let model = DriverLogModel(
                 id: nil,
                 status: log.status ?? "Unknown",
@@ -310,7 +314,7 @@ class DatabaseManager {
     
 }
 
-//MARK: -  to save a  Each timer funcationality in DataBase Management
+
 extension DatabaseManager {
     func saveTimerLog(
         status: String,
@@ -320,32 +324,31 @@ extension DatabaseManager {
         remainingDutyTime: String,
         remainingSleepTime: String,
         lastSleepTime: String,
+        RemaningRestBreak: String,
         isruning: Bool,
-        isVoilations: Bool = true
+        isVoilations: Bool = false
     ) {
-        
-        
-        
-        
+        let currentUserId = UserDefaults.standard.integer(forKey: "userId")
+
         let log = DriverLogModel(
             id: nil,
             status: status,
             startTime: startTime,
-            userId: UserDefaults.standard.integer(forKey: "userId"),
-            day:  UserDefaults.standard.integer(forKey: "day"),
-            isVoilations: UserDefaults.standard.integer(forKey: "isVoilation"),
+            userId: currentUserId,
+            day: UserDefaults.standard.integer(forKey: "day"),
+            isVoilations: isVoilations ? 1 : 0,   //  Actual Bool → Int
             dutyType: UserDefaults.standard.string(forKey: "logType") ?? "Null",
             shift: UserDefaults.standard.integer(forKey: "shift"),
-            vehicle:UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
-            isRunning: true,
+            vehicle: UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
+            isRunning: isruning,
             odometer: 0.0,
             engineHours: "0",
-            location:  UserDefaults.standard.string( forKey: "customLocation") ?? "",
+            location: UserDefaults.standard.string(forKey: "customLocation") ?? "",
             lat: Double(UserDefaults.standard.string(forKey: "lattitude") ?? "") ?? 0,
             long: Double(UserDefaults.standard.string(forKey: "longitude") ?? "") ?? 0,
             origin: UserDefaults.standard.string(forKey: "origin") ?? "Null",
             isSynced: false,
-            vehicleId:UserDefaults.standard.integer(forKey: "vehicleId"),
+            vehicleId: UserDefaults.standard.integer(forKey: "vehicleId"),
             trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
             notes: "",
             serverId: nil,
@@ -359,64 +362,61 @@ extension DatabaseManager {
             isSplit: 0,
             engineStatus: "Off"
         )
+        
         insertLog(from: log)
     }
-}
-
-
-//MARK: -  DriverLogModel for DataBase struct DriverLogModel: Identifiable {
-struct DriverLogModel: Identifiable {
     
-    var id: Int64?
-    let status: String
-    let startTime: String
-    let userId: Int
-    let day: Int
-    let isVoilations: Int
-    let dutyType: String
-    let shift: Int
-    let vehicle: String
-    let isRunning: Bool
-    let odometer: Double
-    let engineHours: String
-    let location: String
-    let lat: Double
-    let long: Double
-    let origin: String
-    let isSynced: Bool
-    let vehicleId: Int
-    let trailers: String
-    let notes: String
-    let serverId: String?
-    let timestamp: Int64
-    let identifier: Int
-    let remainingWeeklyTime: String?
-    let remainingDriveTime: String?
-    let remainingDutyTime: String?
-    let remainingSleepTime: String?
-    let lastSleepTime: String
-    let isSplit: Int
-    let engineStatus: String
 }
-
-
-//MARK: -  Upload sync Data
-
-extension DatabaseManager {
-
-    func markLogAsSynced(localId: Int64, serverId: String) {
-        do {
-            let log = driverLogs.filter(id == localId)
-            try db?.run(log.update(isSynced <- true, self.serverId <- serverId))
-            print(" Marked localId \(localId) as synced with serverId \(serverId)")
-        } catch {
-            print(" Update Sync Status Error: \(error)")
+    //MARK: -  DriverLogModel for DataBase struct DriverLogModel: Identifiable {
+    struct DriverLogModel: Identifiable {
+        
+        var id: Int64?
+        let status: String
+        let startTime: String
+        let userId: Int
+        let day: Int
+        let isVoilations: Int
+        let dutyType: String
+        let shift: Int
+        let vehicle: String
+        let isRunning: Bool
+        let odometer: Double
+        let engineHours: String
+        let location: String
+        let lat: Double
+        let long: Double
+        let origin: String
+        let isSynced: Bool
+        let vehicleId: Int
+        let trailers: String
+        let notes: String
+        let serverId: String?
+        let timestamp: Int64
+        let identifier: Int
+        let remainingWeeklyTime: String?
+        let remainingDriveTime: String?
+        let remainingDutyTime: String?
+        let remainingSleepTime: String?
+        let lastSleepTime: String
+        let isSplit: Int
+        let engineStatus: String
+    }
+    
+    
+    //MARK: -  Upload sync Data
+    
+    extension DatabaseManager {
+        
+        func markLogAsSynced(localId: Int64, serverId: String) {
+            do {
+                let log = driverLogs.filter(id == localId)
+                try db?.run(log.update(isSynced <- true, self.serverId <- serverId))
+                print(" Marked localId \(localId) as synced with serverId \(serverId)")
+            } catch {
+                print(" Update Sync Status Error: \(error)")
+            }
         }
     }
-}
-
-
-
 
 
 

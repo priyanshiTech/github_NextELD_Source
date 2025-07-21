@@ -30,6 +30,52 @@ class CountdownTimer: ObservableObject {
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 
+    // Timezone-aware time string
+    var timezoneAwareTimeString: String {
+        let currentTime = Date()
+        let timezoneOffset = UserDefaults.standard.string(forKey: "userTimezoneOffset") ?? "+05:30"
+        
+        // Convert current time to user's timezone
+        let userTime = convertToUserTimezone(currentTime, offset: timezoneOffset)
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        formatter.timeZone = TimeZone(identifier: getTimezoneIdentifier(from: timezoneOffset))
+        
+        return formatter.string(from: userTime)
+    }
+
+    // Helper function to convert time to user's timezone
+    private func convertToUserTimezone(_ date: Date, offset: String) -> Date {
+        let offsetString = offset.replacingOccurrences(of: ":", with: "")
+        let sign = String(offsetString.prefix(1))
+        let hours = Int(offsetString.dropFirst().prefix(2)) ?? 0
+        let minutes = Int(offsetString.dropFirst().dropFirst(2)) ?? 0
+        
+        var totalMinutes = hours * 60 + minutes
+        if sign == "-" {
+            totalMinutes = -totalMinutes
+        }
+        
+        let offsetSeconds = TimeInterval(totalMinutes * 60)
+        return date.addingTimeInterval(offsetSeconds)
+    }
+
+    // Helper function to get timezone identifier from offset
+    private func getTimezoneIdentifier(from offset: String) -> String {
+        // Map common offsets to timezone identifiers
+        switch offset {
+        case "+05:30": return "Asia/Kolkata"
+        case "+05:00": return "Asia/Karachi"
+        case "+08:00": return "Asia/Shanghai"
+        case "-05:00": return "America/New_York"
+        case "-08:00": return "America/Los_Angeles"
+        case "-06:00": return "America/Chicago"
+        case "+00:00": return "UTC"
+        default: return "UTC"
+        }
+    }
+
     // MARK: - Start Timer
     func start() {
         endDate = Date().addingTimeInterval(remainingTime)

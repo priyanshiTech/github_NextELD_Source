@@ -62,7 +62,7 @@ class HOSEventsChartViewModel: ObservableObject {
             return HOSEvent(
                 id: log.id,
                 x: log.startTime,
-                event_end_time: log.endTime ?? Date(), // 🔁 for last active event
+                event_end_time: log.endTime ?? Date(), //  for last active event
                 label: normalizedStatus,
                 dutyType: normalizedStatus
             )
