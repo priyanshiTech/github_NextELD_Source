@@ -58,13 +58,11 @@ class LoginViewModel: ObservableObject {
                 UserDefaults.standard.set(token, forKey: "authToken")
                 UserDefaults.standard.set(email, forKey: "userEmail")
 
-//                //Save Driver Name
-//                if let driverName = response.result?.driverLog?.first?.driverId {
-//                    UserDefaults.standard.set(driverName, forKey: "driverName")
-//                    print(" Saved full name to UserDefaults: \(driverName)")
-//                }
-                // Save Driver Name (driverId as string)
-                
+                //Save Driver Name
+                if let driverName = response.result?.driverLog?.first?.driverName {
+                    UserDefaults.standard.set(driverName, forKey: "driverName")
+                    print(" Saved full name to UserDefaults: \(driverName)")
+                }
                 // Save Driver Name
                 if let driverName = response.result?.driverLog?.first?.driverName {
                     print(" API Returned driverName: \(driverName)")
@@ -79,10 +77,6 @@ class LoginViewModel: ObservableObject {
                 } else {
                     print("❌ No driverName found anywhere, not saving")
                 }
-
-
-
-
 
                 // Save Timezone
                 if let timeZone = response.result?.timezone {
@@ -101,22 +95,13 @@ class LoginViewModel: ObservableObject {
                 if let onSleepTime = response.result?.onSleepTime {
                     UserDefaults.standard.set(onSleepTime, forKey: "onSleepTime")
                 }
-//                if let driverId = response.result?.driverLog?.first?.driverId {
-//                    UserDefaults.standard.set(driverId, forKey: "userId")
-//                    print(" Saved userId to UserDefaults: \(driverId)")
-//                } else {
-//                    print(" No driverId found in API response, defaulting to 0")
-//                }
-                
-                //MARK: -  UserId
                 if let driverId = response.result?.driverLog?.first?.driverId {
                     UserDefaults.standard.set(driverId, forKey: "userId")
-                    UserDefaults.standard.synchronize()
                     print(" Saved userId to UserDefaults: \(driverId)")
-                    print(" UserDefaults now has:", UserDefaults.standard.integer(forKey: "userId"))
+                } else {
+                    print(" No driverId found in API response, defaulting to 0")
                 }
 
-             
                 //Save Shift
                 if let shiftValue = response.result?.driverLog?.first?.shift {
                     UserDefaults.standard.set(shiftValue, forKey: "shift")
@@ -178,6 +163,7 @@ class LoginViewModel: ObservableObject {
             }
 
             isLoading = false
+            
             print(" Login finished successfully")
             return true
 
@@ -264,8 +250,8 @@ class LoginViewModel: ObservableObject {
 
 
 
-
-/*import Foundation
+/*
+import Foundation
 import SwiftUI
 import Foundation
 

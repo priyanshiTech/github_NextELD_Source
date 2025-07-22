@@ -6,6 +6,19 @@
 //
 
 import Foundation
+import SwiftUICore
+
+
+struct AppInfo {
+    static var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+    }
+
+    static var buildNumber: String {
+        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+    }
+}
+
 
 enum SideMenuRowType: Int, CaseIterable{
     
@@ -22,6 +35,7 @@ enum SideMenuRowType: Int, CaseIterable{
     case support
     case FirmWareUpdate
     case logout
+    case version
     // MARK: -  Daily Logs conected Pages
 //    case emailLogs
 //    case RecapHour
@@ -56,10 +70,14 @@ enum SideMenuRowType: Int, CaseIterable{
             return "FirmWare Update"
         case .logout:
             return  "Logout"
-//        case .emailLogs:
-//                return "Daily Logs"
-//        case .RecapHour:
-//            return "Recap Hour"
+
+        case .version:
+            return "Version \(AppInfo.appVersion) (\(AppInfo.buildNumber))"
+            
+            //        case .emailLogs:
+            //                return "Daily Logs"
+            //        case .RecapHour:
+            //            return "Recap Hour"
         }
     }
 
@@ -79,8 +97,11 @@ enum SideMenuRowType: Int, CaseIterable{
         case .ELDConnection: return "eld_connection_ic"
         case .FirmWareUpdate: return "firmawre_update"
         case .logout: return "logout_ic"
-//        case .emailLogs: return "email_icon"
-//        case .RecapHour: return "alarm_icon"
+        case .version: return "AppleIcon"
+            
+            //        case .emailLogs: return "email_icon"
+            //        case .RecapHour: return "alarm_icon"
+            
         }
     }
 }

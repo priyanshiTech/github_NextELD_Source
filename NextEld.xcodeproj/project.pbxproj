@@ -128,6 +128,8 @@
 		AFC535592E0D677C00AD10C9 /* DriverLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC535582E0D677C00AD10C9 /* DriverLogViewModel.swift */; };
 		AFC5355B2E0D67F900AD10C9 /* DriverLogList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */; };
 		AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AFCAF8242DD85D9200D82F29 /* assets .xcassets */; };
+		AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB43662E2F978100363BB6 /* DeleteModelAPI.swift */; };
+		AFCB43692E2F9E2400363BB6 /* DeleteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */; };
 		AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072612DE5889E00C939B0 /* CoDriverLogin.swift */; };
 		AFD072642DE59A9600C939B0 /* SelectedCoDriverPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072632DE59A9600C939B0 /* SelectedCoDriverPopup.swift */; };
 		AFD072662DE5A49000C939B0 /* NewDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */; };
@@ -294,6 +296,8 @@
 		AFC535582E0D677C00AD10C9 /* DriverLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLogViewModel.swift; sourceTree = "<group>"; };
 		AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLogList.swift; sourceTree = "<group>"; };
 		AFCAF8242DD85D9200D82F29 /* assets .xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "assets .xcassets"; sourceTree = "<group>"; };
+		AFCB43662E2F978100363BB6 /* DeleteModelAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteModelAPI.swift; sourceTree = "<group>"; };
+		AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteViewModel.swift; sourceTree = "<group>"; };
 		AFD072612DE5889E00C939B0 /* CoDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoDriverLogin.swift; sourceTree = "<group>"; };
 		AFD072632DE59A9600C939B0 /* SelectedCoDriverPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCoDriverPopup.swift; sourceTree = "<group>"; };
 		AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDriverLogin.swift; sourceTree = "<group>"; };
@@ -385,6 +389,7 @@
 			children = (
 				AFCE29E12E129C61001C6729 /* HelpingGroup */,
 				AFA98C832E0146C200E87802 /* Info.plist */,
+				108FF82C2DC89C620051671B /* Model 2 */,
 				AFC535552E0D5D5700AD10C9 /* DataBaseMM */,
 				AFFC64A32DCE1F73008D1CC0 /* Extensions */,
 				1065860B2DCCC71A003CE502 /* LiveCharts */,
@@ -418,14 +423,15 @@
 			path = NextEldUITests;
 			sourceTree = "<group>";
 		};
-		108FF82C2DC89C620051671B /* Model */ = {
+		108FF82C2DC89C620051671B /* Model 2 */ = {
 			isa = PBXGroup;
 			children = (
+				AFCB43652E2F971D00363BB6 /* DeleteModel */,
 				AFC381782E290A23006FD4E1 /* Offlinedata */,
 				AFC381752E29035C006FD4E1 /* ForgetModel's */,
 				AFDBB17A2E03FAE500D4A2CA /* LoginModel */,
 			);
-			path = Model;
+			path = "Model 2";
 			sourceTree = "<group>";
 		};
 		108FF82D2DC89C6F0051671B /* View */ = {
@@ -757,7 +763,7 @@
 				AF72E4452DFD557700626DC0 /* LocationManager.swift */,
 				AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */,
 				108FF82D2DC89C6F0051671B /* View */,
-				108FF82C2DC89C620051671B /* Model */,
+				AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -850,6 +856,14 @@
 				AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */,
 			);
 			path = DataBaseMM;
+			sourceTree = "<group>";
+		};
+		AFCB43652E2F971D00363BB6 /* DeleteModel */ = {
+			isa = PBXGroup;
+			children = (
+				AFCB43662E2F978100363BB6 /* DeleteModelAPI.swift */,
+			);
+			path = DeleteModel;
 			sourceTree = "<group>";
 		};
 		AFCE29E12E129C61001C6729 /* HelpingGroup */ = {
@@ -1089,6 +1103,7 @@
 				AF72E44A2DFD59E100626DC0 /* DateInfo 2.swift in Sources */,
 				AF8717FA2DFFF97400544383 /* blueModel.swift in Sources */,
 				AFB9434E2E02CD2D00AD19D7 /* DriverLog.swift in Sources */,
+				AFCB43692E2F9E2400363BB6 /* DeleteViewModel.swift in Sources */,
 				AF72E44C2DFD60EF00626DC0 /* NT11ConnectionView.swift in Sources */,
 				AFB9434A2E02CCF900AD19D7 /* Rules.swift in Sources */,
 				AFA98C912E017A1B00E87802 /* PT30DataViewModel.swift in Sources */,
@@ -1167,6 +1182,7 @@
 				AFC3CF992DE5C4A100D83558 /* AddVichleMode.swift in Sources */,
 				10CA6EC32DCC9BA8003B265C /* Reuseable  Label.swift in Sources */,
 				AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */,
+				AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */,
 				108FF8302DC8A8BA0051671B /* LoginScreen.swift in Sources */,
 				AFE146862DEB0498007A4AF0 /* FirmWare Update.swift in Sources */,
 				AFA98C952E017C1F00E87802 /* DeviceManagerView.swift in Sources */,

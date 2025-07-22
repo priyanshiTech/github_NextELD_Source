@@ -1,6 +1,3 @@
-import SwiftUI
-
-
 
 import SwiftUI
 
@@ -36,7 +33,7 @@ class HOSEventsChartViewModel: ObservableObject {
             loadEventsFromDatabase()
         }
 
-        // 🔁 Start live refresh
+        // MARK: -  Start live refresh
         startLiveUpdateTimer()
     }
 
@@ -71,7 +68,7 @@ class HOSEventsChartViewModel: ObservableObject {
         refreshTrigger = UUID()
     }
 
-    /// 🔁 Timer that updates the last event's end_time every second
+    // MARK: - Timer that updates the last event's end_time every second
     func startLiveUpdateTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             guard !self.events.isEmpty else { return }
@@ -487,7 +484,7 @@ struct HOSEventsChartScreen: View {
     
     
     var body: some View {
-        VStack(spacing: 6) {  // Reduced spacing
+        VStack(spacing: 6) {  //MARK: -  Reduced spacing
             Text("Hours Of Service")
                 .font(.title3)
                 .bold()
@@ -497,16 +494,16 @@ struct HOSEventsChartScreen: View {
                 .foregroundColor(.gray)
 
             
-            //   HOSEventsChart(events: viewModel.events)
+            //MARK: -    HOSEventsChart(events: viewModel.events)
             HOSEventsChart(events: viewModel.events)
-                .id(viewModel.refreshTrigger) //  Force redraw when UUID changes
+                .id(viewModel.refreshTrigger) //Force redraw when UUID changes
                 .padding(.horizontal, 4)
             
             HStack {
                 
-                Text("CanvasJS Trial")
+                Text("CanvasSF Trial")
                 Spacer()
-                Text("CanvasJS.com")
+                Text("CanvasSF.com")
                 
             }
             .font(.caption2)

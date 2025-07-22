@@ -12,7 +12,7 @@ import Foundation
 
 struct DutyLog {
     let id: Int
-    let status: String         // "ON_DUTY", "DRIVE", "SLEEP", "OFF_DUTY"
+    let status: String
     let startTime: Date
     let endTime: Date
 }
@@ -160,7 +160,6 @@ class DatabaseManager {
         print("Correct!!!!!!!!!!!!!!!! Saving \(logs.count) logs into SQLite")
 
         for (index, log) in logs.enumerated() {
-
             let model = DriverLogModel(
                 id: nil,
                 status: log.status ?? "Unknown",
@@ -328,13 +327,11 @@ extension DatabaseManager {
         isruning: Bool,
         isVoilations: Bool = false
     ) {
-        let currentUserId = UserDefaults.standard.integer(forKey: "userId")
-
         let log = DriverLogModel(
             id: nil,
             status: status,
             startTime: startTime,
-            userId: currentUserId,
+            userId: UserDefaults.standard.integer(forKey: "userId"),
             day: UserDefaults.standard.integer(forKey: "day"),
             isVoilations: isVoilations ? 1 : 0,   //  Actual Bool → Int
             dutyType: UserDefaults.standard.string(forKey: "logType") ?? "Null",
@@ -417,6 +414,9 @@ extension DatabaseManager {
             }
         }
     }
+    
+    
+    
 
 
 
@@ -437,3 +437,57 @@ extension DatabaseManager {
 
 
 
+
+//MARK: -  to save a  Each timer funcationality in DataBase Management
+//extension DatabaseManager {
+//    func saveTimerLog(
+//        status: String,
+//        startTime: String,
+//        remainingWeeklyTime: String,
+//        remainingDriveTime: String,
+//        remainingDutyTime: String,
+//        remainingSleepTime: String,
+//        lastSleepTime: String,
+//        RemaningRestBreak: String,
+//        isruning: Bool,
+//        isVoilations: Bool = false
+//    ) {
+//
+//
+//
+//
+//        let log = DriverLogModel(
+//            id: nil,
+//            status: status,
+//            startTime: startTime,
+//            userId: UserDefaults.standard.integer(forKey: "userId"),
+//            day:  UserDefaults.standard.integer(forKey: "day"),
+//            isVoilations: isVoilations ? 1 : 0,
+//            dutyType: UserDefaults.standard.string(forKey: "logType") ?? "Null",
+//            shift: UserDefaults.standard.integer(forKey: "shift"),
+//            vehicle:UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
+//            isRunning: true,
+//            odometer: 0.0,
+//            engineHours: "0",
+//            location:  UserDefaults.standard.string( forKey: "customLocation") ?? "",
+//            lat: Double(UserDefaults.standard.string(forKey: "lattitude") ?? "") ?? 0,
+//            long: Double(UserDefaults.standard.string(forKey: "longitude") ?? "") ?? 0,
+//            origin: UserDefaults.standard.string(forKey: "origin") ?? "Null",
+//            isSynced: false,
+//            vehicleId:UserDefaults.standard.integer(forKey: "vehicleId"),
+//            trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
+//            notes: "",
+//            serverId: nil,
+//            timestamp: Int64(Date().timeIntervalSince1970),
+//            identifier: Int.random(in: 1000...9999),
+//            remainingWeeklyTime: remainingWeeklyTime,
+//            remainingDriveTime: remainingDriveTime,
+//            remainingDutyTime: remainingDutyTime,
+//            remainingSleepTime: remainingSleepTime,
+//            lastSleepTime: lastSleepTime,
+//            isSplit: 0,
+//            engineStatus: "Off"
+//        )
+//        insertLog(from: log)
+//    }
+//}

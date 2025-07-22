@@ -17,6 +17,7 @@ enum API {
         case ForgetPassword
         case ForgetUserName
         case ForSavingOfflineData
+        case getAllDatadelete
 
         var url: URL {
             switch self {
@@ -28,6 +29,8 @@ enum API {
                 return API.baseURL.appendingPathComponent("auth/forgot_username")
             case .ForSavingOfflineData:
                 return API.baseURL.appendingPathComponent("dispatch/add_drivering_status_offline")
+            case .getAllDatadelete:
+                return API.baseURL.appendingPathComponent("dispatch/delete_all_driver_status_by_id")
             }
         }
 
@@ -35,8 +38,9 @@ enum API {
             switch self {
             case .login, .ForgetPassword , .ForgetUserName:
                 return "POST"
-            case .ForSavingOfflineData:
+            case .ForSavingOfflineData , .getAllDatadelete:
                 return "POST"
+            
             }
         }
     }

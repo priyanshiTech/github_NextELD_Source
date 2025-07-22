@@ -33,26 +33,52 @@ struct DriverLogListView: View {
     }
 
     var body: some View {
+//        VStack {
+//            // MARK: - Table Section
+//            UniversalScrollView(axis: .horizontal, showsIndicators: true) {
+//                VStack(alignment: .leading, spacing: 0) {
+//                    DriverLogHeader() //  Clean header
+//                        .padding(.vertical, 5)
+//
+//                    UniversalScrollView(axis: .vertical, showsIndicators: true) {
+//                        LazyVStack(spacing: 0) {
+//                            ForEach(paginatedLogs) { log in
+//                                DriverLogRow(log: log) // Clean rows
+//                                Divider().background(Color.white)
+//                            }
+//                        }
+//                    }
+//                }
+//                .padding()
+//            }
+//
+//            Divider()
         VStack {
             // MARK: - Table Section
-            ScrollView(.horizontal, showsIndicators: true) {
+            UniversalScrollView(axis: .horizontal, showsIndicators: true) {
                 VStack(alignment: .leading, spacing: 0) {
-                    DriverLogHeader() //  Clean header
-                        .padding(.vertical, 5)
+                    
+                    // MARK: -  Header
+                    DriverLogHeader()
+                        .background(Color.gray.opacity(0.2))
+                        .padding(.vertical, 0) // No extra padding
 
-                    ScrollView(.vertical, showsIndicators: true) {
+                    // MARK: - Rows (same scroll view for alignment)
+                    UniversalScrollView(axis: .vertical, showsIndicators: true) {
                         LazyVStack(spacing: 0) {
                             ForEach(paginatedLogs) { log in
-                                DriverLogRow(log: log) // Clean rows
-                                Divider().background(Color.white)
+                                DriverLogRow(log: log)
+                                    .background(Color.white)
+                                Divider().background(Color.gray.opacity(0.5))
                             }
                         }
                     }
                 }
-                .padding()
+                .padding(0) // ❌ Remove padding, keeps column widths exact
             }
 
             Divider()
+        
 
             // MARK: - Pagination Controls
             HStack {
@@ -97,60 +123,60 @@ struct DriverLogListView: View {
         }
 
     }
-    
-   
 }
 
 
 struct DriverLogHeader: View {
     var body: some View {
         HStack(spacing: 5) {
-            TableCell(text: "ID", width: 50)
-            TableCell(text: "Status", width: 100)
-            TableCell(text: "Start Time", width: 150)
-            TableCell(text: "UserID", width: 100)
-            TableCell(text: "Day", width: 100)
-            TableCell(text: "isVoilation", width: 100)
-            TableCell(text: "DutyType", width: 100)
-            TableCell(text: "Shift", width: 100)
-            TableCell(text: "Location", width: 250)
-            TableCell(text: "Lat", width: 100)
-            TableCell(text: "Long", width: 100)
-            TableCell(text: "Vehicle", width: 100)
-            TableCell(text: "Odometer", width: 100)
-            TableCell(text: "Engine Hrs", width: 100)
-            TableCell(text: "Origin", width: 100)
-            TableCell(text: "Sync", width: 100)
-            TableCell(text: "VehicleID", width: 100)
-            TableCell(text: "Trailers", width: 100)
-            TableCell(text: "Notes", width: 100)
-            TableCell(text: "ServerId", width: 100)
-            TableCell(text: "Timestamp", width: 100)
-            TableCell(text: "Identifier", width: 100)
-            TableCell(text: "RemainingWeeklyTime", width: 120)
-            TableCell(text: "RemainingDriveTime", width: 120)
-            TableCell(text: "RemainingDutyTime", width: 120)
-            TableCell(text: "RemainingSleepTime", width: 120)
-            TableCell(text: "isSplit", width: 80)
-            TableCell(text: "EngineStatus", width: 120)
+            TableCell(text: "ID", width: 50,isHeader: true)
+            TableCell(text: "Status", width: 180,isHeader: true)
+            TableCell(text: "Start Time", width: 260,isHeader: true)
+            TableCell(text: "UserID", width: 100,isHeader: true)
+            TableCell(text: "Day", width: 100,isHeader: true)
+            TableCell(text: "isVoilation", width: 100,isHeader: true)
+            TableCell(text: "DutyType", width: 150,isHeader: true)
+            TableCell(text: "Shift", width: 100,isHeader: true)
+            TableCell(text: "Location", width: 600,isHeader: true)
+            TableCell(text: "Lat", width: 100,isHeader: true)
+            TableCell(text: "Long", width: 100,isHeader: true)
+            TableCell(text: "Vehicle", width: 100,isHeader: true)
+            TableCell(text: "Odometer", width: 100,isHeader: true)
+            TableCell(text: "Engine Hrs", width: 100,isHeader: true)
+            TableCell(text: "Origin", width: 100,isHeader: true)
+            TableCell(text: "Sync", width: 100,isHeader: true)
+            TableCell(text: "VehicleID", width: 100,isHeader: true)
+            TableCell(text: "Trailers", width: 100,isHeader: true)
+            TableCell(text: "Notes", width: 100,isHeader: true)
+            TableCell(text: "ServerId", width: 100,isHeader: true)
+            TableCell(text: "Timestamp", width: 100,isHeader: true)
+            TableCell(text: "Identifier", width: 100,isHeader: true)
+            TableCell(text: "RemainingWeeklyTime", width: 220,isHeader: true)
+            TableCell(text: "RemainingDriveTime", width: 220,isHeader: true)
+            TableCell(text: "RemainingDutyTime", width: 220,isHeader: true)
+            TableCell(text: "RemainingSleepTime", width: 220,isHeader: true)
+            TableCell(text: "isSplit", width: 80,isHeader: true)
+            TableCell(text: "EngineStatus", width: 120,isHeader: true)
         }
-        .background(Color.gray.opacity(0.2))
+        .padding()
+       // .background(Color.gray.opacity(0.2))
     }
 }
 struct DriverLogRow: View {
     let log: DriverLogModel
 
     var body: some View {
+
         HStack(spacing: 5) {
             TableCell(text: "\(log.id ?? -1)", width: 50)
-            TableCell(text: log.status, width: 100)
-            TableCell(text: log.startTime, width: 150)
+            TableCell(text: log.status, width: 180)
+            TableCell(text: log.startTime, width: 260)
             TableCell(text: String(describing: log.userId), width: 100)
             TableCell(text: "\(log.day)", width: 100)
             TableCell(text: "\(log.isVoilations)", width: 100)
-            TableCell(text: log.dutyType, width: 100)
+            TableCell(text: log.dutyType, width: 150)
             TableCell(text: "\(log.shift)", width: 100)
-            TableCell(text: log.location, width: 250)
+            TableCell(text: log.location, width: 600)
             TableCell(text: "\(log.lat)", width: 100)
             TableCell(text: "\(log.long)", width: 100)
             TableCell(text: log.vehicle, width: 100)
@@ -164,26 +190,32 @@ struct DriverLogRow: View {
             TableCell(text: String(describing: log.serverId), width: 100)
             TableCell(text: "\(log.timestamp)", width: 100)
             TableCell(text: "\(log.identifier)", width: 100)
-            TableCell(text: log.remainingWeeklyTime ?? "", width: 120)
-            TableCell(text: log.remainingDriveTime ?? "", width: 120)
-            TableCell(text: log.remainingDutyTime ?? "", width: 120)
-            TableCell(text: log.remainingSleepTime ?? "", width: 120)
+            TableCell(text: log.remainingWeeklyTime ?? "", width: 220)
+            TableCell(text: log.remainingDriveTime ?? "", width: 220)
+            TableCell(text: log.remainingDutyTime ?? "", width: 220)
+            TableCell(text: log.remainingSleepTime ?? "", width: 220)
             TableCell(text: "\(log.isSplit)", width: 80)
             TableCell(text: log.engineStatus, width: 120)
         }
+     
+        
     }
 }
+
 struct TableCell: View {
     var text: String
     var width: CGFloat
+    var isHeader: Bool = false
 
     var body: some View {
+        
         Text(text)
             .frame(width: width, height: 40)
             .background(Color.white)
             .border(Color.gray, width: 0.5)
             .lineLimit(1)
     }
+
 }
 
 
