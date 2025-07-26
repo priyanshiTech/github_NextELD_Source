@@ -15,6 +15,9 @@ struct NextEldApp: App {
     @StateObject private var session = SessionManager()
     @StateObject private var loginVM = LoginViewModel(session: SessionManager()) // temp placeholder
     @StateObject private var networkMonitor = NetworkMonitor()
+    @StateObject var trailerVM = TrailerViewModel()
+    @StateObject var vehicleVM = VehicleConditionViewModel()
+
 
     var body: some Scene {
         WindowGroup {
@@ -26,6 +29,8 @@ struct NextEldApp: App {
                 .environmentObject(session)
                 .environmentObject(sharedLoginVM)
                 .environmentObject(networkMonitor)
+                .environmentObject(trailerVM)
+                .environmentObject(vehicleVM)
         }
     }
 }

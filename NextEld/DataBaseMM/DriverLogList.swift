@@ -33,26 +33,7 @@ struct DriverLogListView: View {
     }
 
     var body: some View {
-//        VStack {
-//            // MARK: - Table Section
-//            UniversalScrollView(axis: .horizontal, showsIndicators: true) {
-//                VStack(alignment: .leading, spacing: 0) {
-//                    DriverLogHeader() //  Clean header
-//                        .padding(.vertical, 5)
-//
-//                    UniversalScrollView(axis: .vertical, showsIndicators: true) {
-//                        LazyVStack(spacing: 0) {
-//                            ForEach(paginatedLogs) { log in
-//                                DriverLogRow(log: log) // Clean rows
-//                                Divider().background(Color.white)
-//                            }
-//                        }
-//                    }
-//                }
-//                .padding()
-//            }
-//
-//            Divider()
+
         VStack {
             // MARK: - Table Section
             UniversalScrollView(axis: .horizontal, showsIndicators: true) {
@@ -74,7 +55,7 @@ struct DriverLogListView: View {
                         }
                     }
                 }
-                .padding(0) // ❌ Remove padding, keeps column widths exact
+                .padding(0) // Remove padding, keeps column widths exact
             }
 
             Divider()
@@ -103,18 +84,18 @@ struct DriverLogListView: View {
                 }
                 .disabled((currentPage + 1) * logsPerPage >= viewModel.logs.count)
 
-                Button("Clear All Logs") {
-                    showConfirmation = true
-                }
-                .alert("Are you sure?", isPresented: $showConfirmation) {
-                    Button("Delete All", role: .destructive) {
-                       // DatabaseManager.shared.deleteDatabaseFile()
-                        DatabaseManager.shared.deleteAllLogs()
-                         viewModel.logs.removeAll()
-                         currentPage = 0
-                    }
-                    Button("Cancel", role: .cancel) {}
-                }
+//                Button("Clear All Logs") {
+//                    showConfirmation = true
+//                }
+//                .alert("Are you sure?", isPresented: $showConfirmation) {
+//                    Button("Delete All", role: .destructive) {
+//                       // DatabaseManager.shared.deleteDatabaseFile()
+//                        DatabaseManager.shared.deleteAllLogs()
+//                         viewModel.logs.removeAll()
+//                         currentPage = 0
+//                    }
+//                    Button("Cancel", role: .cancel) {}
+//                }
             }
             .padding()
         }
@@ -148,7 +129,7 @@ struct DriverLogHeader: View {
             TableCell(text: "VehicleID", width: 100,isHeader: true)
             TableCell(text: "Trailers", width: 100,isHeader: true)
             TableCell(text: "Notes", width: 100,isHeader: true)
-            TableCell(text: "ServerId", width: 100,isHeader: true)
+            TableCell(text: "ServerId", width: 300,isHeader: true)
             TableCell(text: "Timestamp", width: 100,isHeader: true)
             TableCell(text: "Identifier", width: 100,isHeader: true)
             TableCell(text: "RemainingWeeklyTime", width: 220,isHeader: true)
@@ -187,13 +168,14 @@ struct DriverLogRow: View {
             TableCell(text: String(describing: log.vehicleId), width: 100)
             TableCell(text: log.trailers, width: 100)
             TableCell(text: log.notes, width: 100)
-            TableCell(text: String(describing: log.serverId), width: 100)
+          //  TableCell(text: String(describing: log.serverId), width: 300)
+            TableCell(text: log.serverId.map { String($0) } ?? "-", width: 300)
             TableCell(text: "\(log.timestamp)", width: 100)
             TableCell(text: "\(log.identifier)", width: 100)
-            TableCell(text: log.remainingWeeklyTime ?? "", width: 220)
-            TableCell(text: log.remainingDriveTime ?? "", width: 220)
-            TableCell(text: log.remainingDutyTime ?? "", width: 220)
-            TableCell(text: log.remainingSleepTime ?? "", width: 220)
+            TableCell(text: "\(convertToSeconds(log.remainingWeeklyTime))", width: 220)
+            TableCell(text: "\(convertToSeconds(log.remainingDriveTime))", width: 220)
+            TableCell(text: "\(convertToSeconds(log.remainingDutyTime))", width: 220)
+            TableCell(text: "\(convertToSeconds(log.remainingSleepTime))", width: 220)
             TableCell(text: "\(log.isSplit)", width: 80)
             TableCell(text: log.engineStatus, width: 120)
         }
@@ -216,6 +198,23 @@ struct TableCell: View {
             .lineLimit(1)
     }
 
+}
+
+func convertToSeconds(_ value: String?) -> Int {
+    guard let timeString = value, !timeString.isEmpty else { return 0 }
+    
+    if let seconds = Int(timeString) {
+        return seconds
+    }
+    let components = timeString.split(separator: ":").map { Int($0) ?? 0 }
+    switch components.count {
+    case 3: // HH:mm:ss
+        return components[0] * 3600 + components[1] * 60 + components[2]
+    case 2: // HH:mm
+        return components[0] * 3600 + components[1] * 60
+    default:
+        return 0
+    }
 }
 
 

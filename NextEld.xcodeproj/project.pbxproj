@@ -27,6 +27,8 @@
 		AF04B1B62DE986F300A5F3D1 /* SupportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04B1B52DE986F300A5F3D1 /* SupportView.swift */; };
 		AF04B1B92DE9873600A5F3D1 /* SettingsLanguageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04B1B82DE9873600A5F3D1 /* SettingsLanguageView.swift */; };
 		AF04B1BB2DE98DA600A5F3D1 /* SelectLanguagepopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */; };
+		AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */; };
+		AF0F71AF2E34FAA2005F950C /* TrailerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AD2E34FAA2005F950C /* TrailerView.swift */; };
 		AF72E4312DFD54B400626DC0 /* DataRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72E4292DFD54B400626DC0 /* DataRow.swift */; };
 		AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72E41C2DFD54B400626DC0 /* SignaturePad.swift */; };
 		AF72E4332DFD54B400626DC0 /* PT30ConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72E42D2DFD54B400626DC0 /* PT30ConnectionView.swift */; };
@@ -135,6 +137,7 @@
 		AFD072662DE5A49000C939B0 /* NewDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */; };
 		AFDBB1792E03FAC000D4A2CA /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */; };
 		AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */; };
+		AFDFD4822E32301700F81B24 /* VoilationBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDFD4812E32301700F81B24 /* VoilationBox.swift */; };
 		AFE146862DEB0498007A4AF0 /* FirmWare Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE146852DEB0498007A4AF0 /* FirmWare Update.swift */; };
 		AFEEDF822DE6DD06005675C2 /* HOSEventChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */; };
 		AFFC64A22DCE1EE2008D1CC0 /* AlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */; };
@@ -196,6 +199,8 @@
 		AF04B1B52DE986F300A5F3D1 /* SupportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportView.swift; sourceTree = "<group>"; };
 		AF04B1B82DE9873600A5F3D1 /* SettingsLanguageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLanguageView.swift; sourceTree = "<group>"; };
 		AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLanguagepopup.swift; sourceTree = "<group>"; };
+		AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerViewModel.swift; sourceTree = "<group>"; };
+		AF0F71AD2E34FAA2005F950C /* TrailerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerView.swift; sourceTree = "<group>"; };
 		AF72E41A2DFD54B400626DC0 /* CertifySelectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifySelectedView.swift; sourceTree = "<group>"; };
 		AF72E41B2DFD54B400626DC0 /* DriverSignatiureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverSignatiureView.swift; sourceTree = "<group>"; };
 		AF72E41C2DFD54B400626DC0 /* SignaturePad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignaturePad.swift; sourceTree = "<group>"; };
@@ -303,6 +308,7 @@
 		AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDriverLogin.swift; sourceTree = "<group>"; };
 		AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerClass.swift; sourceTree = "<group>"; };
+		AFDFD4812E32301700F81B24 /* VoilationBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoilationBox.swift; sourceTree = "<group>"; };
 		AFE146852DEB0498007A4AF0 /* FirmWare Update.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirmWare Update.swift"; sourceTree = "<group>"; };
 		AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HOSEventChartView.swift; sourceTree = "<group>"; };
 		AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModifier.swift; sourceTree = "<group>"; };
@@ -426,10 +432,10 @@
 		108FF82C2DC89C620051671B /* Model 2 */ = {
 			isa = PBXGroup;
 			children = (
-				AFCB43652E2F971D00363BB6 /* DeleteModel */,
 				AFC381782E290A23006FD4E1 /* Offlinedata */,
 				AFC381752E29035C006FD4E1 /* ForgetModel's */,
 				AFDBB17A2E03FAE500D4A2CA /* LoginModel */,
+				AFCB43652E2F971D00363BB6 /* DeleteModel */,
 			);
 			path = "Model 2";
 			sourceTree = "<group>";
@@ -437,6 +443,7 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AF0F71AE2E34FAA2005F950C /* TraillerView */,
 				AFC448D72DD323E000D53D96 /* LoginView */,
 				AFA98C8D2E01716100E87802 /* PT30Group */,
 				AF72E45F2DFD843E00626DC0 /* ScannerAddress */,
@@ -518,6 +525,14 @@
 				AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */,
 			);
 			path = Frimware;
+			sourceTree = "<group>";
+		};
+		AF0F71AE2E34FAA2005F950C /* TraillerView */ = {
+			isa = PBXGroup;
+			children = (
+				AF0F71AD2E34FAA2005F950C /* TrailerView.swift */,
+			);
+			path = TraillerView;
 			sourceTree = "<group>";
 		};
 		AF72E41D2DFD54B400626DC0 /* CertifyForms */ = {
@@ -757,13 +772,14 @@
 			isa = PBXGroup;
 			children = (
 				AF72E4472DFD579500626DC0 /* BluetoothViewModel.swift */,
+				AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */,
+				AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */,
 				AFC1B5592E155BFA00C57620 /* ForgetNmeModelView.swift */,
 				AFC381762E29067B006FD4E1 /* OfflineSavingDataModel.swift */,
 				AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */,
 				AF72E4452DFD557700626DC0 /* LocationManager.swift */,
 				AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */,
 				108FF82D2DC89C6F0051671B /* View */,
-				AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -873,6 +889,7 @@
 				AFC0386A2E0FF10600944204 /* CountDownTimer.swift */,
 				AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */,
 				AFC1B55C2E1566E300C57620 /* KeyChainSwift.swift */,
+				AFDFD4812E32301700F81B24 /* VoilationBox.swift */,
 			);
 			path = HelpingGroup;
 			sourceTree = "<group>";
@@ -1122,6 +1139,7 @@
 				AFA98C8C2E015FD200E87802 /* PT30BluetoothManager.swift in Sources */,
 				AF9593B02DDE0AC800C5FCC1 /* CalanderView.swift in Sources */,
 				AF8E3A032DD1D646004AE777 /* SideMenuRowEnum.swift in Sources */,
+				AF0F71AF2E34FAA2005F950C /* TrailerView.swift in Sources */,
 				AFD072642DE59A9600C939B0 /* SelectedCoDriverPopup.swift in Sources */,
 				AFFC64A22DCE1EE2008D1CC0 /* AlertModifier.swift in Sources */,
 				AF9DD4F12DDDB1FF0034FA8E /* DvirField.swift in Sources */,
@@ -1139,6 +1157,7 @@
 				10CA6EC02DCC9103003B265C /* ScrollViewUniversal.swift in Sources */,
 				AFA98C8F2E01748000E87802 /* VariablesView.swift in Sources */,
 				AF72E4462DFD557700626DC0 /* LocationManager.swift in Sources */,
+				AFDFD4822E32301700F81B24 /* VoilationBox.swift in Sources */,
 				AF9DD4F32DDDB25F0034FA8E /* DvirEditField.swift in Sources */,
 				AFB943542E02D43600AD19D7 /* APIClient.swift in Sources */,
 				AFC3CF9F2DE5D6BE00D83558 /* InformationPacket.swift in Sources */,
@@ -1167,6 +1186,7 @@
 				AFC535592E0D677C00AD10C9 /* DriverLogViewModel.swift in Sources */,
 				AFB9431D2E029C9500AD19D7 /* EventTableViewCell.swift in Sources */,
 				AFB9431E2E029C9500AD19D7 /* DeviceInfoView.swift in Sources */,
+				AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */,
 				AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */,
 				106586132DCCE182003CE502 /* ColourExtensions.swift in Sources */,
 				108FF8022DC895E10051671B /* NextEldApp.swift in Sources */,

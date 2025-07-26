@@ -20,6 +20,7 @@ enum AppRoute: Hashable {
     case CertifySelectedView(tittle: String)
     case AddDvirPriTrip
     case DvirHostory(tittle: String)
+    case trailer
     case NT11Connection
     case PT30Connection
     // Side Menu Screens
@@ -161,6 +162,8 @@ struct RootView: View {
                     
                 case .DriverLogListView:
                     DriverLogListView()
+                case .trailer:
+                    TrailerView(tittle:"Trailer")
                 }
                 
             }

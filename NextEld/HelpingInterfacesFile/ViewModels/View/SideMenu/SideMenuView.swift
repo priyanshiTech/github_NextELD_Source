@@ -15,7 +15,6 @@ struct SideMenuView: View {
     @Binding var showLogoutPopup: Bool
     @Binding var showDeleteConfirm: Bool
     
-//    @State private var showDeleteConfirm = false
     
     
     var body: some View {
@@ -41,31 +40,14 @@ struct SideMenuView: View {
                             }
                         }
                     }
-                    // MARK: -  Show API message after delete
-//                                   if !deleteViewModel.apiMessage.isEmpty {
-//                                       Text(deleteViewModel.apiMessage)
-//                                           .font(.caption)
-//                                           .foregroundColor(deleteViewModel.apiMessage.contains("Deleted") ? .green : .red)
-//                                           .padding(.leading, 16)
-//                                   }
-                    
-                    
+
                     Spacer()
                 }
                 .frame(width: 270)
                 .background(Color.white)
             }
         }
-//        .alert("Delete all data?", isPresented: $showDeleteConfirm) {
-//                    Button("Delete", role: .destructive) {
-//                        Task {
-//                            await deleteViewModel.deleteAllDataOnVersionClick(driverId: 12)
-//                        }
-//                    }
-//                    Button("Cancel", role: .cancel) {}
-//                } message: {
-//                    Text("This will permanently delete all local logs.")
-//                }
+
         
         
         .scrollIndicators(.hidden)

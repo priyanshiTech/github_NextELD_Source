@@ -167,7 +167,7 @@ class DatabaseManager {
                 userId: log.driverId ?? 0,
                 day: log.days ?? 0,
                 isVoilations: log.isVoilation ?? 1,
-                dutyType: log.logType ?? "log",
+                dutyType: log.logType ?? "",
                 shift: log.shift ?? 0,
                 vehicle: log.truckNo ?? "",
                 isRunning: true,
@@ -253,17 +253,14 @@ class DatabaseManager {
     
     //MARK: -  TO DELETE ALL SAVED DATA IN DBMS
 
-
     func deleteAllLogs() {
-        let driverLogs = Table("DriverLogs")
         do {
-            try db?.run(driverLogs.delete())
+            try db?.run(driverLogs.delete()) //  Uses the same table instance you declared at top
             print("All logs deleted successfully")
         } catch {
             print("Error deleting logs: \(error)")
         }
     }
-
 
     
     func fetchDutyEventsForToday() -> [DutyLog] {
@@ -334,7 +331,7 @@ extension DatabaseManager {
             userId: UserDefaults.standard.integer(forKey: "userId"),
             day: UserDefaults.standard.integer(forKey: "day"),
             isVoilations: isVoilations ? 1 : 0,   //  Actual Bool → Int
-            dutyType: UserDefaults.standard.string(forKey: "logType") ?? "Null",
+            dutyType: status,
             shift: UserDefaults.standard.integer(forKey: "shift"),
             vehicle: UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
             isRunning: isruning,

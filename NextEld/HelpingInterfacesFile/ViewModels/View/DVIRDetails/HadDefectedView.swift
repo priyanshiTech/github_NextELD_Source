@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+
 struct DefectPopupView: View {
     @Binding var isPresented: Bool
     @State private var selected: Set<String> = []
@@ -57,9 +58,8 @@ struct DefectPopupView: View {
             }
         }
         .padding()
-        .background(Color.white)
+        .background(Color.clear)  //  Only one background
         .cornerRadius(20)
-        .padding(.horizontal, 20)
         .shadow(radius: 10)
     }
 
@@ -71,3 +71,103 @@ struct DefectPopupView: View {
         }
     }
 }
+
+
+
+
+
+
+
+//MARK: -  show's in Vechicle condition
+
+struct VehicleConditionPopupView: View {
+    @Binding var isPresented: Bool
+    @State private var selected: Set<String> = []
+    @EnvironmentObject var vehicleVM: VehicleConditionViewModel
+    let Condition = [
+        "vehicle Condition Satisfactory" , "Vechicle Condition Unsatisfactory"
+    ]
+
+    var body: some View {
+        VStack(spacing: 15) {
+            HStack {
+                Spacer()
+                Text("Select Vechicle Condition")
+                    .font(.headline)
+                    .foregroundColor(.blue)
+                Spacer()
+                Button(action: { isPresented = false }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.red)
+                        .font(.title2)
+                }
+            }
+
+            ForEach(Condition, id: \.self) { defect in
+                HStack {
+                    Text(defect)
+                    Spacer()
+                    Button(action: { toggle(defect) }) {
+                        Image(systemName: selected.contains(defect) ? "checkmark.circle.fill" : "circle")
+                            .foregroundColor(.blue)
+                    }
+                }
+                .padding(.horizontal)
+            }
+
+            Button(action: {
+                vehicleVM.selectedCondition = selected.first
+                isPresented = false
+                
+            }) {
+                Text("Add Condition")
+                    .frame(maxWidth: 250)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+        }
+        .padding()
+        .background(Color.white)  //  Only one background
+        .cornerRadius(20)
+        .shadow(radius: 10)
+    }
+
+    private func toggle(_ defect: String) {
+        if selected.contains(defect) {
+            selected.remove(defect)
+        } else {
+            selected.insert(defect)
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

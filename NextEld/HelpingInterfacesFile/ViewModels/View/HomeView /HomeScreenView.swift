@@ -13,7 +13,10 @@ struct TopBarView: View {
     @Binding var showDeviceSelector: Bool
     
     var body: some View {
+        
+        
         ZStack(alignment: .top) {
+            
             Color.white.frame(height: 50).shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
             
             HStack {
@@ -32,7 +35,7 @@ struct TopBarView: View {
                         Text(labelValue)
                             .font(.system(size: 20))
                             .bold()
-                            .foregroundColor(.blue    ) // MARK: -  DynamicLabel style
+                            .foregroundColor(.blue) // MARK: -  DynamicLabel style
                     }
                     .padding(2)
                     .foregroundColor(.blue)
@@ -122,14 +125,11 @@ struct StatusView: View {
                 //MARK: - Status boxes
                 HStack(spacing: 10) {
 
-                    
                     StatusBox(title: "Continue drive", time: ContiueDrive.timeString)
                     StatusBox(title: "Rest break", time: RestBreak.timeString)
 
                 }
-                
                 .padding()
-                
                 //MARK: -  Status checkboxes
                 VStack(alignment: .center, spacing: 0) {
                     HStack {
@@ -142,7 +142,6 @@ struct StatusView: View {
                             })
                         
                         Spacer()
-                        
                         StatusCheckBox(
                             isClick: confirmedStatus == "Drive",
                             labelText: "Drive",
@@ -152,7 +151,6 @@ struct StatusView: View {
                             })
                     }
                     .padding()
-                    
                     HStack {
                         StatusCheckBox(
                             isClick: confirmedStatus == "Off-Duty",
@@ -163,7 +161,6 @@ struct StatusView: View {
                             })
                         
                         Spacer()
-                        
                         StatusCheckBox(
                             isClick: confirmedStatus == "Sleep",
                             labelText: "Sleep",
@@ -187,7 +184,6 @@ struct StatusView: View {
                     )
                     
                     Spacer()
-                    
                     StatusButton(
                         title: "Yard Move",
                         action: {
@@ -258,6 +254,8 @@ struct AvailableHoursView: View {
     @ObservedObject var sleepTimer: CountdownTimer
     
     
+    
+    
     var body: some View {
         CardContainer {
             VStack(spacing: 2) {
@@ -288,6 +286,7 @@ struct AvailableHoursView: View {
                     HStack(spacing: 2) {
                         TimeBox(title: "On-Duty", timer: ONDuty)
                         TimeBox(title: "Drive", timer: driveTimer)
+                    
                     }
                     
                     HStack(spacing: 2) {
@@ -364,7 +363,7 @@ struct HomeScreenView: View {
     
     @State private var hoseEvents: [HOSEvent] = []
     @StateObject private var hoseChartViewModel = HOSEventsChartViewModel()
-    
+
     
     //MARK: -  To show a static Data
     @State private var didShowOnDutyViolation = false
@@ -454,11 +453,13 @@ struct HomeScreenView: View {
     //MARK: -  Last Status Track
     @State private var offDutySleepAccumulated: TimeInterval = 0
     @State private var lastStatusChangeTime: Date? = nil
+    @State private var timer: Timer? = nil
 
 //MARK: -  For Delete API's
     @State private var showDeleteConfirm = false
     @StateObject private var deleteViewModel = DeleteViewModel()
     @State private var showSuccessAlert = false
+    @State private var showViolation = true
 
     
     
@@ -504,10 +505,32 @@ struct HomeScreenView: View {
                             cycleTimer: cycleTimerOn,
                             sleepTimer: sleepTimer
                         )
+                    
+
                         
                         HOSEventsChartScreen()
                             .environmentObject(hoseChartViewModel)
-                        
+                 //MARK for voilation box
+                        ZStack(alignment: .top) {
+                                   // Your existing home screen UI here...
+
+                                   if showViolation {
+                                       ViolationBox(
+                                           text: "14-hour rule exceeded",
+                                           date: "2025-07-25",
+                                           time: "12:15 PM"
+                                       )
+                                       .transition(.move(edge: .top).combined(with: .opacity))
+                                       .animation(.spring(), value: showViolation)
+                                   }
+                               }
+                               .onAppear {
+                                   // Hide after 25 seconds
+                                   DispatchQueue.main.asyncAfter(deadline: .now() + 25) {
+                                       showViolation = false
+                                   }
+                               }
+                           
                         
                         VStack(alignment: .leading) {
                             Text("Version - OS/02/May")
@@ -633,7 +656,7 @@ struct HomeScreenView: View {
                         CustomPopupAlert(
                             title: "Certify Log",
                             message: "please add DVIR before going to On-Drive",
-                            onOK: {
+                            onOK: { 
                                 confirmedStatus = selected
                                 isDriveActive = true
                                 driveTimer.start()
@@ -801,14 +824,22 @@ struct HomeScreenView: View {
                     }
             }
         }
+        //MARK: -  call sync API In every 10 sec 
         .onAppear {
+            timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+                Task {
+                    await syncVM.syncOfflineData()
+                }
+            }
             Task {
                 await syncVM.syncOfflineData()
             }
         }
-        
-        
-        //  All modifiers applied *on ZStack*
+        .onDisappear {
+            timer?.invalidate()
+            timer = nil
+        }
+
                 .onAppear {
                     if let driverName = UserDefaults.standard.string(forKey: "driverName") {
                         labelValue = driverName
@@ -819,12 +850,13 @@ struct HomeScreenView: View {
         
                     if confirmedStatus == nil {
                         selectedStatus = "Off-Duty"
+                    confirmedStatus = "Off-Duty"
                         driveTimer.stop()
                         ONDuty.stop()
                         sleepTimer.stop()
                         cycleTimerOn.stop()
                         DutyTime.stop()
-                        confirmedStatus = "Off-Duty"
+
                     }
         
                     checkFor34HourReset()
@@ -918,6 +950,10 @@ struct HomeScreenView: View {
                 )
                 didShowDriveViolation = true
             }
+        }
+        //MARK: -  to show latest db time
+        .onAppear {
+            loadLatestTimersFromDB()
         }
 
         
@@ -1112,6 +1148,41 @@ func showToast(message: String, color: Color) {
             sleepTimer.restore(from: remaining, startedAt: startDate, wasRunning: sleep.isRunning)
         }
     }
+
+    
+    //MARK: - load last timer from DB
+    private func loadLatestTimersFromDB() {
+        if let lastLog = DatabaseManager.shared.fetchLogs().last {
+
+            //  Convert DB saved strings safely
+            let dutyRemaining = lastLog.remainingDutyTime?.asTimeInterval() ?? 0
+            let driveRemaining = lastLog.remainingDriveTime?.asTimeInterval() ?? 0
+            let cycleRemaining = lastLog.remainingWeeklyTime?.asTimeInterval() ?? 0
+            let sleepRemaining = lastLog.remainingSleepTime?.asTimeInterval() ?? 0
+
+            //  Get start time as Date
+            let startedAt = lastLog.startTime.asDate()
+
+            // Restore timers (safe unwrapping)
+            ONDuty.restore(from: dutyRemaining, startedAt: startedAt, wasRunning: true)
+            driveTimer.restore(from: driveRemaining, startedAt: startedAt, wasRunning: true)
+            cycleTimerOn.restore(from: cycleRemaining, startedAt: startedAt, wasRunning: true)
+            sleepTimer.restore(from: sleepRemaining, startedAt: startedAt, wasRunning: true)
+
+            print("""
+             Timers restored:
+            Duty \(ONDuty.timeString)
+            Drive \(driveTimer.timeString)
+            Cycle \(cycleTimerOn.timeString)
+            Sleep \(sleepTimer.timeString)
+            """)
+        } else {
+            print("⚠️ No timer logs found in DB")
+        }
+    }
+
+
+
     
     
     //MARK: -  6 add funct to calculate 70 hour cycle
