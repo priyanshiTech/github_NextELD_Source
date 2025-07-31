@@ -10,6 +10,8 @@ import SwiftUI
 
 struct SignatureCertifyView: View {
     @Binding var signaturePath: Path
+    @State private var showAlert = false
+
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -20,7 +22,7 @@ struct SignatureCertifyView: View {
                 .padding(.leading)
             
             SignaturePad(path: $signaturePath)
-                .frame(height: 300)
+                .frame(height: 250)
                 .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 10)) // restrict drawing to shape
                 .overlay(
@@ -54,7 +56,49 @@ struct SignatureCertifyView: View {
                 )
 
                 Button("Agree") {
-                    print("Signature confirmed")
+                    // 1. Verify there's actually a signature
+                    guard !signaturePath.isEmpty else {
+                        showAlert = true
+                        return
+                    }
+                    
+                    // 2. Render the signature as image
+                    let size = CGSize(width: 300, height: 250)
+                    let image = renderSignatureAsImage(path: signaturePath, size: size)
+                    
+                    // 3. Convert to PNG data
+                    guard let imageData = image.pngData() else {
+                        print("Failed to convert signature to PNG data")
+                        return
+                    }
+                    
+                    // 4. Create a complete DVIR record with signature
+                    let record = DvirRecord(
+                        driver: "Driver Name", // Replace with actual values
+                        time: "Current Time",
+                        date: "Current Date",
+                        odometer: "Odometer Reading",
+                        company: "Company Name",
+                        location: "Location",
+                        vehicle: "Vehicle Number",
+                        trailer: "Trailer Number",
+                        truckDefect: "Truck Defects",
+                        trailerDefect: "Trailer Defects",
+                        vehicleCondition: "Vehicle Condition",
+                        notes: "Additional Notes",
+                        signature: imageData
+                    )
+                    
+                    // 5. Save to database
+                    DvirDatabaseManager.shared.insertRecord(record)
+                    
+                    showAlert = true
+                }
+
+                .alert("Image Saved", isPresented: $showAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text("Signature image saved successfully.")
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -70,6 +114,8 @@ struct SignatureCertifyView: View {
         }
         .transition(.slide)
     }
+    
+    
 }
 
 #Preview {
@@ -112,7 +158,7 @@ struct PopupContainer<Content: View>: View {
                         .background(Color.white)
                         .cornerRadius(16)
                         .shadow(radius: 10)
-                        .frame(maxWidth: 300)
+                        .frame(maxWidth: 250)
                         .fixedSize(horizontal: false, vertical: true)
 
                         Button(action: {
@@ -129,5 +175,18 @@ struct PopupContainer<Content: View>: View {
             }
             .zIndex(10)
         }
+    }
+}
+
+//MARK: -  to save a  signature path into DB
+
+
+func renderSignatureAsImage(path: Path, size: CGSize) -> UIImage {
+    let controller = UIHostingController(rootView: SignaturePad(path: .constant(path)))
+    controller.view.bounds = CGRect(origin: .zero, size: size)
+
+    let renderer = UIGraphicsImageRenderer(size: size)
+    return renderer.image { _ in
+        controller.view.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
     }
 }

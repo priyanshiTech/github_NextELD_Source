@@ -19,8 +19,10 @@ enum AppRoute: Hashable {
     case Login
     case CertifySelectedView(tittle: String)
     case AddDvirPriTrip
-    case DvirHostory(tittle: String)
+    //MARK: -  Cases of Add dvirPri trip
+    
     case trailer
+    case DvirHostory(tittle: String)
     case NT11Connection
     case PT30Connection
     // Side Menu Screens
@@ -46,6 +48,7 @@ enum AppRoute: Hashable {
     case Logout
     case FirmWare_Update
     case DriverLogListView
+   case  DvirDataListView
     
 }
 
@@ -63,8 +66,14 @@ struct RootView: View {
     @State private var hasCheckedSession = false
     @EnvironmentObject var loginVM: LoginViewModel
     @StateObject var session = SessionManager()
-    @State private var isLoggedIn = SessionManagerClass.shared.isLoggedIn()
+
+
+
     
+ 
+    @State private var isLoggedIn = SessionManagerClass.shared.isLoggedIn()
+   
+
     
     var body: some View {
         
@@ -162,8 +171,12 @@ struct RootView: View {
                     
                 case .DriverLogListView:
                     DriverLogListView()
+                    
                 case .trailer:
                     TrailerView(tittle:"Trailer")
+                    
+                case .DvirDataListView:
+                    DvirListView()
                 }
                 
             }

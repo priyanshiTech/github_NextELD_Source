@@ -24,9 +24,22 @@ struct AddDvirScreenView: View  {
     
     @State private var showPopupVechicle = false
     @EnvironmentObject var vehicleVM: VehicleConditionViewModel
+    @EnvironmentObject var dvirVM: DvirViewModel
+  
+    
+    @State  var driverName:String = ""
+   // @State  var time: String
+   // @State  var date: String
+    @State  var odometer : String = ""
+    @State  var  companyName: String = ""
+    @State  var Location: String  = ""
+    
+
+
     
     
     var body: some View {
+       
         ZStack {
             VStack(spacing: 0) {
                 
@@ -46,6 +59,7 @@ struct AddDvirScreenView: View  {
                     HStack {
                         Button(action: {
                             navmanager.goBack()
+                            
                         }) {
                             Image(systemName: "arrow.left")
                                 .bold()
@@ -266,12 +280,38 @@ struct AddDvirScreenView: View  {
                         }
                         .frame(width: 350, height: 80)
                     }
-                    //                        .padding()
+        
                     
                     // Add DVIR Button
                     HStack {
                         Button(action: {
-                            print("Add Dvir tapped")
+                            //  Convert Signature Path to PNG Data
+                            let signatureImage = signatureToImage(path: signaturePath, size: CGSize(width: 300, height: 150))
+                            let signatureData = signatureImage.pngData()
+                            
+                            //  Create DVIR Record
+                            let record = DvirRecord(
+                                driver: driverName,
+                               time: "15:20:30" ,//  only one space
+                                date: "2025-05-21",
+                                odometer: odometer,
+                                company: companyName,
+                                location: Location,
+                                vehicle: selectedVehicle,
+                                trailer: trailerVM.trailers.first ?? "None",
+                                truckDefect: truckDefectSelection ?? "no",
+                                trailerDefect: trailerDefectSelection ?? "no",
+                                vehicleCondition: vehicleVM.selectedCondition ?? "None",
+                                notes: notesText,
+                                signature: signatureData //  SAVE SIGNATURE
+                            )
+
+                            //  Save to Database
+                            DvirDatabaseManager.shared.insertRecord(record)
+                            print(" DVIR Record Saved Successfully")
+                            dvirVM.uploadRecord(record)
+                            // navmanager.goBack()
+                            navmanager.navigate(to: AppRoute.DvirDataListView)
                             
                         }) {
                             Text("Add Dvir")
@@ -289,7 +329,6 @@ struct AddDvirScreenView: View  {
                 .padding(.horizontal, 5)
             }
             .navigationBarBackButtonHidden()
-            
             
             // MARK: - Signature Popup Overlay
             if showSignaturePopup {
@@ -328,11 +367,26 @@ struct AddDvirScreenView: View  {
         .animation(.easeInOut, value: Showpopup)
         .animation(.easeInOut, value: showPopupVechicle)
     }
-    
+    // MARK:   Convert the SwiftUI Path to UIImage, then to PNG Data
+    func signatureToImage(path: Path, size: CGSize) -> UIImage {
+        let controller = UIHostingController(rootView:
+            path
+                .stroke(Color.black, lineWidth: 2)
+                .background(Color.white)
+                .frame(width: size.width, height: size.height)
+        )
+        let view = controller.view
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { _ in
+            view?.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
+        }
+    }
 }
-//
+
+
 //#Preview {
 //    AddDvirScreenView()
 //        .environmentObject(NavigationManager())
 //}
 //
+

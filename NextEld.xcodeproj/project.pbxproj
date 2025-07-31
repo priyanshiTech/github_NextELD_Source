@@ -53,6 +53,10 @@
 		AF72E44C2DFD60EF00626DC0 /* NT11ConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72E44B2DFD60EF00626DC0 /* NT11ConnectionView.swift */; };
 		AF72E4612DFD845800626DC0 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72E4602DFD845800626DC0 /* QRScanner.swift */; };
 		AF72E4632DFD84B100626DC0 /* HelperScaneer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72E4622DFD84B100626DC0 /* HelperScaneer.swift */; };
+		AF7951182E3BA7B5005FFFBF /* DVIRDataTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7951162E3BA7B5005FFFBF /* DVIRDataTableView.swift */; };
+		AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7951142E3BA7B5005FFFBF /* DVIRModel.swift */; };
+		AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7951152E3BA7B5005FFFBF /* DvirdataBaseManager.swift */; };
+		AF79511C2E3BA83D005FFFBF /* DVIRViewModelUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF79511B2E3BA83D005FFFBF /* DVIRViewModelUpload.swift */; };
 		AF80FFA92DDF64DE00CC6A3D /* DotInspection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF80FFA82DDF64DE00CC6A3D /* DotInspection.swift */; };
 		AF8717FA2DFFF97400544383 /* blueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8717F92DFFF97400544383 /* blueModel.swift */; };
 		AF8E3A032DD1D646004AE777 /* SideMenuRowEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */; };
@@ -225,6 +229,10 @@
 		AF72E44B2DFD60EF00626DC0 /* NT11ConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NT11ConnectionView.swift; sourceTree = "<group>"; };
 		AF72E4602DFD845800626DC0 /* QRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		AF72E4622DFD84B100626DC0 /* HelperScaneer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperScaneer.swift; sourceTree = "<group>"; };
+		AF7951142E3BA7B5005FFFBF /* DVIRModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRModel.swift; sourceTree = "<group>"; };
+		AF7951152E3BA7B5005FFFBF /* DvirdataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirdataBaseManager.swift; sourceTree = "<group>"; };
+		AF7951162E3BA7B5005FFFBF /* DVIRDataTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRDataTableView.swift; sourceTree = "<group>"; };
+		AF79511B2E3BA83D005FFFBF /* DVIRViewModelUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRViewModelUpload.swift; sourceTree = "<group>"; };
 		AF80FFA82DDF64DE00CC6A3D /* DotInspection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotInspection.swift; sourceTree = "<group>"; };
 		AF8717F92DFFF97400544383 /* blueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blueModel.swift; sourceTree = "<group>"; };
 		AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuRowEnum.swift; sourceTree = "<group>"; };
@@ -586,6 +594,26 @@
 			path = ScannerAddress;
 			sourceTree = "<group>";
 		};
+		AF7951122E3BA766005FFFBF /* HomeScreenDataBase */ = {
+			isa = PBXGroup;
+			children = (
+				AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */,
+				AFC535582E0D677C00AD10C9 /* DriverLogViewModel.swift */,
+				AFC535562E0D631900AD10C9 /* DataBaseManagerClass.swift */,
+			);
+			path = HomeScreenDataBase;
+			sourceTree = "<group>";
+		};
+		AF7951172E3BA7B5005FFFBF /* DvirProDatabase */ = {
+			isa = PBXGroup;
+			children = (
+				AF7951142E3BA7B5005FFFBF /* DVIRModel.swift */,
+				AF7951152E3BA7B5005FFFBF /* DvirdataBaseManager.swift */,
+				AF7951162E3BA7B5005FFFBF /* DVIRDataTableView.swift */,
+			);
+			path = DvirProDatabase;
+			sourceTree = "<group>";
+		};
 		AF8E39FF2DD1D201004AE777 /* SideMenu */ = {
 			isa = PBXGroup;
 			children = (
@@ -775,6 +803,7 @@
 				AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */,
 				AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */,
 				AFC1B5592E155BFA00C57620 /* ForgetNmeModelView.swift */,
+				AF79511B2E3BA83D005FFFBF /* DVIRViewModelUpload.swift */,
 				AFC381762E29067B006FD4E1 /* OfflineSavingDataModel.swift */,
 				AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */,
 				AF72E4452DFD557700626DC0 /* LocationManager.swift */,
@@ -867,9 +896,8 @@
 		AFC535552E0D5D5700AD10C9 /* DataBaseMM */ = {
 			isa = PBXGroup;
 			children = (
-				AFC535562E0D631900AD10C9 /* DataBaseManagerClass.swift */,
-				AFC535582E0D677C00AD10C9 /* DriverLogViewModel.swift */,
-				AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */,
+				AF7951172E3BA7B5005FFFBF /* DvirProDatabase */,
+				AF7951122E3BA766005FFFBF /* HomeScreenDataBase */,
 			);
 			path = DataBaseMM;
 			sourceTree = "<group>";
@@ -1091,6 +1119,9 @@
 			files = (
 				AF72E4312DFD54B400626DC0 /* DataRow.swift in Sources */,
 				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
+				AF7951182E3BA7B5005FFFBF /* DVIRDataTableView.swift in Sources */,
+				AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */,
+				AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */,
 				AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */,
 				AF72E4332DFD54B400626DC0 /* PT30ConnectionView.swift in Sources */,
 				AF72E4342DFD54B400626DC0 /* PT30ModelView.swift in Sources */,
@@ -1104,6 +1135,7 @@
 				AFB943412E029D3100AD19D7 /* AppConfig.swift in Sources */,
 				AFA98C972E017F6700E87802 /* StoreEventView.swift in Sources */,
 				AF72E4482DFD579500626DC0 /* BluetoothViewModel.swift in Sources */,
+				AF79511C2E3BA83D005FFFBF /* DVIRViewModelUpload.swift in Sources */,
 				AFB943462E02C9D300AD19D7 /* LoginModel.swift in Sources */,
 				AFC3817A2E290A3B006FD4E1 /* ofParamDataModel.swift in Sources */,
 				AF72E4392DFD54B400626DC0 /* DriverSignatiureView.swift in Sources */,

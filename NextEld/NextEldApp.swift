@@ -17,6 +17,8 @@ struct NextEldApp: App {
     @StateObject private var networkMonitor = NetworkMonitor()
     @StateObject var trailerVM = TrailerViewModel()
     @StateObject var vehicleVM = VehicleConditionViewModel()
+    @StateObject var dvirVM = DvirViewModel()
+
 
 
     var body: some Scene {
@@ -31,6 +33,7 @@ struct NextEldApp: App {
                 .environmentObject(networkMonitor)
                 .environmentObject(trailerVM)
                 .environmentObject(vehicleVM)
+                .environmentObject(dvirVM)
         }
     }
 }
