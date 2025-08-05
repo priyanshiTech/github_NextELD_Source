@@ -100,3 +100,11 @@ struct LoginLogoutLog : Codable {
     }
 
 }
+//MARK: Refresh APi Model
+
+
+struct EmployeeToken: Codable {
+    let employeeId: Int
+    let tokenNo: String
+}
+

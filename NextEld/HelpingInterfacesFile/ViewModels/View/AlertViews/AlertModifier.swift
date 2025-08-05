@@ -32,7 +32,7 @@ struct CustomPopupAlert: View {
                 Button("OK", action: onOK)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue)
+                    .background( Color(uiColor: .wine))
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }
@@ -83,7 +83,7 @@ struct StatusDetailsPopup: View {
                     
 
                 Text("390, vijay Nagar , Scheme 54 PU4, indore,Madhya Pradesh 452010, india")
-                    .foregroundColor(.blue)
+                    .foregroundColor( Color(uiColor: .wine))
                     .font(.body)
                           }
 
@@ -93,7 +93,7 @@ struct StatusDetailsPopup: View {
                     .font(.subheadline)
 
                 Text("0.00")
-                    .foregroundColor(.blue)
+                    .foregroundColor( Color(uiColor: .wine))
                     .font(.body)
             }
 
@@ -105,7 +105,7 @@ struct StatusDetailsPopup: View {
 
                 TextField("Enter note", text: $note)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .border(Color.blue,width: 1)
+                    .border( Color(uiColor: .wine),width: 1)
                     .frame(height: 40)
                     .cornerRadius(5)
                     .padding()
@@ -119,7 +119,7 @@ struct StatusDetailsPopup: View {
                 Text("Submit")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue)
+                    .background( Color(uiColor: .wine))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
@@ -146,7 +146,7 @@ struct BluetothPopupview: View {
             }) {
                 Text("Select Device")
                     .padding()
-                    .background(Color.blue)
+                    .background( Color(uiColor: .wine))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }

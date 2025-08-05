@@ -7,16 +7,16 @@ struct DVIRHistory: View {
     @State private var toDate = Date()
     @State private var showFromDatePicker = false
     @State private var isFromDateSelected = false
-
-   @State var title: String
-
+    
+    @State var title: String
+    
     var body: some View {
         VStack(spacing:0) {
             // Top Bar Strip
-            Color(.blue)
+            Color(uiColor: .wine)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 2)
-
+            
             // Header Bar
             HStack {
                 Button(action: {
@@ -27,27 +27,27 @@ struct DVIRHistory: View {
                         .foregroundColor(.white)
                         .imageScale(.large)
                 }
-
+                
                 Text(title)
                     .font(.headline)
                     .foregroundColor(.white)
                     .fontWeight(.semibold)
-
+                
                 Spacer()
             }
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             .frame(height: 50) // increased for better spacing
-   
+            
             // 🟦 Email DVIR Title & Icon - Moved to top just below header
             
             HStack(spacing: 10) {
-            
+                
                 Text("Email Dvir")
                     .font(.system(size: 30))
                     .bold()
-                    .foregroundColor(.blue)
-
+                    .foregroundColor(Color(uiColor: .wine))
+                
                 Image("email_icon_blue")
                     .resizable()
                     .scaledToFit()
@@ -55,12 +55,12 @@ struct DVIRHistory: View {
             }
             .padding(.top, 16)
             .padding(.horizontal)
-
+            
             .padding(.horizontal)
             .padding(.top, 12)
             // Date Filter Buttons
             HStack(spacing: 16) {
-         
+                
                 Button(action: {
                     showFromDatePicker = true
                 }) {
@@ -70,7 +70,7 @@ struct DVIRHistory: View {
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .overlay(
                             RoundedRectangle(cornerRadius: 5)
-                                .stroke(Color.blue, lineWidth: 2)
+                                .stroke(Color(uiColor: .wine), lineWidth: 2)
                         )
                 }
                 .sheet(isPresented: $showFromDatePicker) {
@@ -82,7 +82,7 @@ struct DVIRHistory: View {
                         }
                     )
                 }
-
+                
                 Button(action: {
                     showFromDatePicker = true
                 }) {
@@ -92,7 +92,7 @@ struct DVIRHistory: View {
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .overlay(
                             RoundedRectangle(cornerRadius: 5)
-                                .stroke(Color.blue, lineWidth: 2)
+                                .stroke(Color(uiColor: .wine), lineWidth: 2)
                         )
                 }
                 .sheet(isPresented: $showFromDatePicker) {
@@ -104,7 +104,7 @@ struct DVIRHistory: View {
                         }
                     )
                 }
-
+                
             }
             .padding(.horizontal)
             .padding(.top, 12)
@@ -123,32 +123,33 @@ struct DVIRHistory: View {
                 .frame(height: 50)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.blue, lineWidth: 2)
+                        .stroke(Color(uiColor: .wine), lineWidth: 2)
                 )
-
+                
                 Button(action: {
-                    // Send email action
-                }) {
-                    Text("Send")
-                        .foregroundColor(.white)
-                        .font(.title3)
-                        .frame(width: 90, height: 40)
-                }
-                .buttonStyle(.borderedProminent)
+                       // Send email action
+                   }) {
+                       Text("Send")
+                           .font(.title3)
+                           .frame(width: 90, height: 40)
+                   }
+                   .buttonStyle(.borderedProminent)
+                   .tint(Color(uiColor: .wine)) //  Full wine color
+                   .foregroundColor(.white)
+               }
+         
+               .padding(.horizontal)
+               .padding(.top, 12)
             }
-            .padding(.horizontal)
-            .padding(.top, 12)
-
-            Spacer() // pushes everything to the top
+        Spacer()
+            .navigationBarBackButtonHidden()
         }
-        .navigationBarBackButtonHidden()
     }
-}
-private func dateFormatted(_ date: Date) -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd-MM-yyyy"
-    return formatter.string(from: date)
-}
+    private func dateFormatted(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        return formatter.string(from: date)
+    }
 
 #Preview {
     DVIRHistory( title: "")

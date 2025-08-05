@@ -20,13 +20,13 @@ struct LogOutPopup: View {
             
             Text("Log Out")
                 .font(.title.bold())
-                .foregroundColor(.blue)
+                .foregroundColor(Color(uiColor: .wine))
 
             VStack(spacing: 20) {
                 HStack {
                     Text("Your current status is:")
                     Text(currentStatus)
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color(uiColor: .wine))
                         //.underline()
                 }
 
@@ -49,7 +49,7 @@ struct LogOutPopup: View {
             Button("Log-out", action: onLogout)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.blue)
+                .background(Color(uiColor: .wine))
                 .foregroundColor(.white)
                 .cornerRadius(10)
 

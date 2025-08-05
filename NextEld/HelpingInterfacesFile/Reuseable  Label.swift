@@ -13,7 +13,7 @@ import SwiftUI
 struct DynamicLabel: View {
     var text: String
     var systemImage: String?
-    var textColor: Color = .blue
+    var textColor: Color = (Color(uiColor: .wine))
     var font: Font = .body
 
     var body: some View {

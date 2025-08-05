@@ -64,7 +64,7 @@ struct NT11ConnectionView: View {
      
     var body: some View {
         VStack(spacing: 0) {
-            Color(.blue)
+            Color(uiColor: .wine)
                 .ignoresSafeArea()
                 .frame(height: 2)
             
@@ -158,7 +158,7 @@ struct NT11ConnectionView: View {
 
         }
         .padding()
-        .background(Color.blue)
+        .background( Color(uiColor: .wine))
         .frame(height: 50)
         .zIndex(2)
     }
@@ -195,7 +195,7 @@ struct NT11ConnectionView: View {
                     UIApplication.shared.open(settingsUrl)
                 }
             }
-            .foregroundColor(.blue)
+            .foregroundColor( Color(uiColor: .wine))
             .padding()
         }
         .frame(height: 200)
@@ -239,7 +239,7 @@ struct NT11ConnectionView: View {
                 .foregroundColor(.white)
                 .padding()
                 .frame(maxWidth: 150)
-                .background(Color.blue)
+                .background( Color(uiColor: .wine))
                 .cornerRadius(12)
         }
         .padding(.horizontal)

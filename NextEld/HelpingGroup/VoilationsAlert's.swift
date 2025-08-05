@@ -42,7 +42,7 @@ struct CommonTimerAlertView: View {
                         .padding(.horizontal, 30)
                         .background(Color.white)
                         .cornerRadius(8)
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color(uiColor: .wine))
                 }
             }
             .padding()

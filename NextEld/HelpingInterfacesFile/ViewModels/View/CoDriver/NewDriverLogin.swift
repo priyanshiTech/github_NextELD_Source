@@ -45,7 +45,7 @@ struct NewDriverLogin: View {
                        Spacer()
                    }
                    .padding()
-                   .background(Color.blue.shadow(radius: 1))
+                   .background(Color(uiColor: .wine).shadow(radius: 1))
                    .frame(height: 1) // increased for better spacing
                    
                    
@@ -62,7 +62,7 @@ struct NewDriverLogin: View {
                    
                    HStack {
                        Image(systemName: "gmail")
-                           .foregroundColor(.blue)
+                           .foregroundColor( Color(uiColor: .wine))
                        TextField("Email", text: $email)
                            .autocapitalization(.none)
                    }
@@ -75,7 +75,7 @@ struct NewDriverLogin: View {
                    
                    HStack {
                        Image(systemName: "lock")
-                           .foregroundColor(.blue)
+                           .foregroundColor( Color(uiColor: .wine))
 
                 
                        if isPasswordShowing {
@@ -91,7 +91,7 @@ struct NewDriverLogin: View {
                            isPasswordShowing.toggle()
                        }) {
                            Image(systemName: isPasswordShowing ? "eye.fill" : "eye.slash.fill")
-                               .foregroundColor(.blue)
+                               .foregroundColor( Color(uiColor: .wine))
                        }
                    }
                    .padding(.horizontal)
@@ -125,7 +125,7 @@ struct NewDriverLogin: View {
                       
                        Text("Log - In")
                            .font(.callout)
-                           .foregroundColor(.blue)
+                           .foregroundColor( Color(uiColor: .wine))
                            .frame(width: txtFieldWidth, height: txtFieldHeight)
                            .background(Color.white)
                            .cornerRadius(10)
@@ -144,7 +144,7 @@ struct NewDriverLogin: View {
                    Spacer()
                }
                .frame(maxWidth: .infinity, maxHeight: .infinity)
-               .background(Color.blue)
+               .background( Color(uiColor: .wine))
                .navigationBarTitleDisplayMode(.inline)
         
        }

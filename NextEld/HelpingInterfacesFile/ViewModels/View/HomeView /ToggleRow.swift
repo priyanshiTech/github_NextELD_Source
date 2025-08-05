@@ -42,13 +42,13 @@ struct ToggleRow: View {
 
             Toggle("", isOn: $toggleValue)
                 .labelsHidden()
-                .tint(.blue)
+                .tint(Color(uiColor: .wine))
 
             Spacer()
 
             Text(displayValue)
                 .font(.subheadline)
-                .foregroundColor(.blue)
+                .foregroundColor(Color(uiColor: .wine))
                 .frame(width: 60, alignment: .trailing)
         }
     }

@@ -25,7 +25,7 @@ struct DefectPopupView: View {
                 Spacer()
                 Text("Select Defect")
                     .font(.headline)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color(uiColor: .wine))
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark.circle.fill")
@@ -40,7 +40,7 @@ struct DefectPopupView: View {
                     Spacer()
                     Button(action: { toggle(defect) }) {
                         Image(systemName: selected.contains(defect) ? "checkmark.circle.fill" : "circle")
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color(uiColor: .wine))
                     }
                 }
                 .padding(.horizontal)
@@ -52,7 +52,7 @@ struct DefectPopupView: View {
                 Text("Submit Defects")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
@@ -94,7 +94,7 @@ struct VehicleConditionPopupView: View {
                 Spacer()
                 Text("Select Vechicle Condition")
                     .font(.headline)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color(uiColor: .wine))
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark.circle.fill")
@@ -109,7 +109,7 @@ struct VehicleConditionPopupView: View {
                     Spacer()
                     Button(action: { toggle(defect) }) {
                         Image(systemName: selected.contains(defect) ? "checkmark.circle.fill" : "circle")
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color(uiColor: .wine))
                     }
                 }
                 .padding(.horizontal)
@@ -123,7 +123,7 @@ struct VehicleConditionPopupView: View {
                 Text("Add Condition")
                     .frame(maxWidth: 250)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }

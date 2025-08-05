@@ -27,14 +27,14 @@ struct DailyLogView: View {
         //MARK: top Header Colour
         VStack(spacing: 0) {
             ZStack(alignment: .topLeading){
-                Color.blue
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height:0)
                 
             }
             //MARK: -  Header
             ZStack(alignment: .top) {
-                Color.blue
+                Color(uiColor: .wine)
                     .frame(height: 50)
                     .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
                 HStack {
@@ -68,7 +68,7 @@ struct DailyLogView: View {
                 
                 Image(systemName: "exclamationmark.circle.fill")
                     .symbolRenderingMode(.palette)
-                    .foregroundStyle(.white, .blue) // mark = white, circle = blue
+                    .foregroundStyle(.white, Color(uiColor: .wine)) // mark = white, circle = blue
                     .font(.system(size: 25))
                 
                 Text("Please display required logs as per FMCSA and CCATM")

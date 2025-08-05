@@ -24,7 +24,7 @@ struct DeviceSelectorPopup: View {
             HStack {
                 Text("Select a device")
                     .font(.headline)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color(uiColor: .wine))
                 Spacer()
                 Button(action: {
                     isPresented = false
@@ -39,7 +39,7 @@ struct DeviceSelectorPopup: View {
                 HStack {
                     Circle()
                         .strokeBorder(Color.gray, lineWidth: 1)
-                        .background(Circle().fill(selectedDevice == device ? Color.blue : Color.white))
+                        .background(Circle().fill(selectedDevice == device ?Color(uiColor: .wine) : Color.white))
                         .frame(width: 20, height: 20)
                     Text(device)
                         .foregroundColor(.black)
@@ -56,7 +56,7 @@ struct DeviceSelectorPopup: View {
                 Text("Connect Now")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }

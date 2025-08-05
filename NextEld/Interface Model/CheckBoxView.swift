@@ -18,7 +18,7 @@ struct CheckboxButton: View {
             Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
                 .resizable()
                 .frame(width: 20, height: 20)
-                .foregroundColor(isChecked ? .blue : .gray)
+                .foregroundColor(isChecked ?  Color(uiColor: .wine) : .gray)
         }
         .buttonStyle(PlainButtonStyle())
     }
@@ -38,7 +38,7 @@ struct StatusCheckBox: View {
                     .shadow(radius: 4)
 
                 Text(labelText)
-                    .foregroundColor(isClick ? .white : .blue)
+                    .foregroundColor(isClick ? .white :  Color(uiColor: .wine))
                     .font(.headline)
             }
         }

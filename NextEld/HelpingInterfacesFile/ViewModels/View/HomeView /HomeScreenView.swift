@@ -6,12 +6,17 @@
 import SwiftUI
 
 // MARK: - Subviews
+import SwiftUI
+
+// MARK: - Subviews
 struct TopBarView: View {
     @Binding var presentSideMenu: Bool
     @EnvironmentObject var navManager: NavigationManager
     var labelValue: String
     @Binding var showDeviceSelector: Bool
-    
+    @StateObject private var deleteViewModel = DeleteViewModel()
+    @StateObject private var viewModel = RefreshViewModel()
+    @State private var showConfirmation = false   //MARK: -  For Refresh Alert
     var body: some View {
         
         
@@ -35,10 +40,11 @@ struct TopBarView: View {
                         Text(labelValue)
                             .font(.system(size: 20))
                             .bold()
-                            .foregroundColor(.blue) // MARK: -  DynamicLabel style
+                            .foregroundColor(Color(UIColor.wine))
+                        // MARK: -  DynamicLabel style
                     }
                     .padding(2)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color(UIColor.wine))
                     .buttonStyle(PlainButtonStyle()) // MARK: -  prevents default blue tint on iOS
                     
                 }
@@ -52,13 +58,28 @@ struct TopBarView: View {
                             .resizable()
                             .frame(width: 30, height: 30)
                     }
-                    IconButton(iconName: "arrow.2.circlepath", action: {})
+
+             
+                               IconButton(iconName: "arrow.2.circlepath") {
+                                   showConfirmation = true
+                               }
+                               .alert("Are you sure you want to refresh all logs?", isPresented: $showConfirmation) {
+                                   Button("Cancel", role: .cancel) {}
+                                   Button("OK", role: .destructive) {
+                                       Task {
+                                           await viewModel.refresh()
+                                           await deleteViewModel.deleteAllDataOnVersionClick(driverId: 17)
+                                       }
+                                   }
+                               }
+             
                         .padding()
                 }
             }
         }
     }
 }
+
 
 
 
@@ -77,12 +98,12 @@ struct VehicleInfoView: View {
                     .bold()
                 
                 Label(GadiNo, systemImage: "")
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color(uiColor: .wine))
                     .bold()
             }
             .padding()
             .frame(maxWidth: .infinity, minHeight: 80)
-            .background(Color(UIColor.lightBlue))
+            .background(Color(UIColor.lightWine))
             .cornerRadius(5)
             
             Spacer()
@@ -94,12 +115,12 @@ struct VehicleInfoView: View {
                     .bold()
                 
                 Label(trailer, systemImage: "")
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color(uiColor: .wine))
                     .bold()
             }
             .padding()
             .frame(maxWidth: .infinity, minHeight: 80)
-            .background(Color(UIColor.lightBlue))
+            .background(Color(UIColor.lightWine))
             .cornerRadius(5)
         }
         .padding(.horizontal)
@@ -213,11 +234,11 @@ struct StatusBox: View {
                 .frame(maxWidth: .infinity, alignment: .center)
             
             Label(time, systemImage: "")
-                .foregroundColor(.blue)
+                .foregroundColor(Color(uiColor: .wine))
                 .bold()
         }
         .frame(maxWidth: .infinity, minHeight: 80)
-        .background(Color(UIColor.lightBlue))
+        .background(Color(UIColor.lightWine))
         .cornerRadius(5)
     }
 }
@@ -232,14 +253,14 @@ struct StatusButton: View {
             Text(title)
                 .padding(.vertical, 6)
                 .padding(.horizontal, 12)
-                .foregroundColor(isSelected ? .white : .blue)
+                .foregroundColor(isSelected ? .white : Color(uiColor: .wine))
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(isSelected ? Color.green : Color.clear)
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(isSelected ? Color.green : Color.blue, lineWidth: 2)
+                        .stroke(isSelected ? Color.green : Color(uiColor: .wine), lineWidth: 2)
                 )
         }
     }
@@ -338,7 +359,7 @@ struct TimeBox: View {
         }
         .frame(height: 35)
         .padding()
-        .background(Color.blue)
+        .background(Color(uiColor: .wine))
         .cornerRadius(10)
         .frame(maxWidth: .infinity)
     }
@@ -469,7 +490,7 @@ struct HomeScreenView: View {
             VStack {
                 //MARK: -  Top colored bar
                 ZStack(alignment: .topLeading) {
-                    Color(UIColor.colorPrimary)
+                    Color(uiColor: .wine)
                         .edgesIgnoringSafeArea(.top)
                         .frame(height: 0)
                     
@@ -871,7 +892,7 @@ struct HomeScreenView: View {
                 activeTimerAlert = TimerAlert(
                     title: "Continue Drive",
                     message: "30 min left for completing your ONDuty cycle for a day",
-                    backgroundColor: .blue.opacity(0.6)
+                    backgroundColor: Color(uiColor: .wine).opacity(0.6)
                 )
                 didShowContinusDrivingVoilation = true
             }
@@ -899,7 +920,7 @@ struct HomeScreenView: View {
                 activeTimerAlert = TimerAlert(
                     title: "On-Duty Reminder",
                     message: "30 min left for completing your ONDuty cycle for a day",
-                    backgroundColor: .blue.opacity(0.6)
+                    backgroundColor: Color(uiColor: .wine).opacity(0.6)
                 )
                 didShowOnDutyViolation = true
             }

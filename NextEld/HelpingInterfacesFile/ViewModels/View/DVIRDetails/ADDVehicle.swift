@@ -29,7 +29,7 @@ struct ADDVehicle: View {
     var body: some View {
         VStack(spacing: 5) {
             // Header
-            Color(.blue)
+            Color(uiColor: .wine)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 50)
 
@@ -40,7 +40,7 @@ struct ADDVehicle: View {
                     .frame(height: 56)
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(.white)
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                 
             }
             // Search Bar
@@ -48,7 +48,7 @@ struct ADDVehicle: View {
             
              
                 Image(systemName: "envelope.fill")
-                    .foregroundColor(.blue)
+                    .foregroundColor( Color(uiColor: .wine))
                     .bold()
                 TextField("Search vehicle", text: $searchText)
                     .textFieldStyle(PlainTextFieldStyle())
@@ -66,7 +66,7 @@ struct ADDVehicle: View {
                             Spacer()
                             if vehicle == selectedVehicleNumber {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor( Color(uiColor: .wine))
                             } else {
                                 Image(systemName: "checkmark.circle")
                                     .foregroundColor(.gray.opacity(0.5))
@@ -94,7 +94,7 @@ struct ADDVehicle: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                     .foregroundColor(.white)
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                     .cornerRadius(8)
                     .padding(.horizontal)
             }

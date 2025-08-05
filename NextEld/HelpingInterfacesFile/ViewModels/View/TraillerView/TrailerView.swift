@@ -23,7 +23,7 @@ struct TrailerView: View {
             
             // MARK: - Top Bar
             ZStack(alignment: .topLeading){
-                Color.blue
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height:0.1)
             }
@@ -43,7 +43,7 @@ struct TrailerView: View {
                 Spacer()
             }
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             .frame(height: 30, alignment: .topLeading)
 
             
@@ -67,7 +67,7 @@ struct TrailerView: View {
                         Text("Add")
                             .padding(.vertical, 8)
                             .padding(.horizontal, 15)
-                            .background(Color.blue)
+                            .background(Color(uiColor: .wine))
                             .foregroundColor(.white)
                             .cornerRadius(8)
                     }
@@ -86,7 +86,7 @@ struct TrailerView: View {
                             }
                             .padding(.vertical, 8)
                             .padding(.horizontal, 15)
-                            .background(Color.blue)
+                            .background(Color(uiColor: .wine))
                             .foregroundColor(.white)
                             .cornerRadius(8)
                         }

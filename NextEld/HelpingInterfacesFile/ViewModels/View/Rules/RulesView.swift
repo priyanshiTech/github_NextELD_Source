@@ -17,7 +17,7 @@ struct RulesView: View {
         VStack(spacing:0){
             
             
-            Color(.blue)
+            Color(uiColor: .wine)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 1)
 
@@ -39,7 +39,7 @@ struct RulesView: View {
                 Spacer()
             }
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             
             VStack(spacing:15){
 
@@ -78,7 +78,7 @@ struct RulesView: View {
                 
                                 Toggle(isOn: $isShortHaulEnabled) {
                                     Text("16Hr Short Haul Exception")
-                                }.tint(.blue)
+                                }.tint(Color(uiColor: .wine))
                 Divider().background(Color.gray)
 
                                 HStack {

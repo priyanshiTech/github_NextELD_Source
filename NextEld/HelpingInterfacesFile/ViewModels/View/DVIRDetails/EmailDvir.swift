@@ -7,79 +7,153 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct EmailDvir: View {
     @EnvironmentObject var navmanager: NavigationManager
-   @State var tittle: String
-
+    @State var tittle: String
+    @State private var records: [DvirRecord] = []
+    let updateRecords: [DvirRecord]
+    var onSelect: (DvirRecord) -> Void
+    @State private var selectedVehicle: String = ""
+    
     var body: some View {
-        VStack(spacing: 0) {
-            // Top Color Bar
-            Color(UIColor.colorPrimary)
-                .edgesIgnoringSafeArea(.top)
-                .frame(height: 5)
-
-            // MARK: - Header
-            ZStack {
-                Color.white
-                    .frame(height: 50)
-                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
-
+        NavigationView {
+            VStack(spacing: 0) {
+                ZStack(alignment: .topLeading){
+                    Color(UIColor.wine)
+                        .edgesIgnoringSafeArea(.top)
+                        .frame(height:40)
+                }
+                // MARK: - Header
                 HStack {
                     Button(action: {
                         navmanager.goBack()
                     }) {
                         Image(systemName: "arrow.left")
-                            .bold()
                             .foregroundColor(.white)
                             .imageScale(.large)
                     }
-
-                    Text("Email Dvir")
-                        .bold()
+                    
+                    Spacer()
+                    
+                    Text("Email DVIR")
                         .font(.headline)
                         .foregroundColor(.white)
-                        .fontWeight(.semibold)
-
+                        .bold()
+                    
                     Spacer()
+                    
+                    HStack(spacing: 16) {
+                        Button(action: {
+                            selectedVehicle = ""
+                            navmanager.navigate(to: .AddDvirScreenView(
+                                selectedVehicle: selectedVehicle,
+                                selectedRecord: emptyDvirRecord
 
-                    Button(action: {
-                        navmanager.navigate(to: .AddDvirScreenView(selectedVehicle: ""))
-                    }) {
-                        Image(systemName: "plus")
-                            .bold()
-                            .foregroundColor(.white)
-                            .imageScale(.large)
-                            
-                    }
-                    .padding(5 )
-                    Button(action: {
-                      //  navmanager.goBack()
-                        navmanager.navigate(to: .DvirHostory(tittle: "Dvir History"))
-                    }) {
-                        Image("email_icon")
-                            .bold()
-                            .foregroundColor(.white)
-                            .imageScale(.large)
+                            ))
+                        }) {
+                            Image(systemName: "plus")
+                                .foregroundColor(.white)
+                                .imageScale(.large)
+                        }
+                        
+                        //}
+                        Button(action: {
+                            navmanager.navigate(to: .DvirHostory(tittle: "Dvir History"))
+                        }) {
+                            Image("email_icon")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                        }
                     }
                 }
                 .padding()
-                .background(Color.blue)
+                .background(Color(UIColor.wine))
+                .shadow(radius: 2)
+                
+                Divider()
+                
+                // MARK: - Main Content
+                if updateRecords.isEmpty {
+                    Spacer()
+                    VStack(spacing: 12) {
+                        Image(systemName: "doc.text.magnifyingglass")
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(.gray.opacity(0.4))
+                        
+                        Text("No DVIR Records Available.")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                    Spacer()
+                } else {
+                    List {
+                        ForEach(updateRecords, id: \.id) { record in
+                            NavigationLink(
+                                destination:AddDvirScreenView(
+                                    selectedVehicle: $selectedVehicle,
+                                    selectedVehicleupdated: $selectedVehicle,
+                                    selectedRecord: record
+                                )
+                                
+                                
+                            ) {
+                                HStack(alignment: .top, spacing: 10) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(Color(UIColor.wine))
+                                        .padding(.top, 2)
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("\(record.date) \(record.time)")
+                                            .fontWeight(.semibold)
+                                        
+                                        Text(record.vehicleCondition)
+                                            .foregroundColor(.green)
+                                            .font(.subheadline)
+                                    }
+                                }
+                                .padding(.vertical, 6)
+                            }
+                            .simultaneousGesture(
+                                TapGesture().onEnded {
+                                    selectedVehicle = record.vehicle
+                                }
+                            )
+                        }
+                    }
+                    .listStyle(PlainListStyle())
+                }
             }
-
-            // Centered Text
-            Spacer()
-            Text("No Records Available for DVIR.")
-                .foregroundColor(.gray)
-                .font(.subheadline)
-                .multilineTextAlignment(.center)
-            Spacer()
+            
+            .edgesIgnoringSafeArea(.top)
+            .onAppear {
+                records = DvirDatabaseManager.shared.fetchAllRecords()
+            }
         }
+        .navigationBarHidden(true)
         .navigationBarBackButtonHidden()
+        .navigationViewStyle(StackNavigationViewStyle()) // iPhone/iPad friendly
     }
+    
+    
+    private var emptyDvirRecord: DvirRecord {
+        DvirRecord(
+            id: nil,
+            driver: "",
+            time: DateTimeHelper.currentTime(),
+            date: DateTimeHelper.currentDate(),
+            odometer: "",
+            company: "",
+            location: "",
+            vehicle: "",
+            trailer: "",
+            truckDefect: "",
+            trailerDefect: "",
+            vehicleCondition: "",
+            notes: "",
+            signature: nil
+        )
+    }
+    
 }
 
-#Preview {
-    EmailDvir(tittle: "Email Dvir")
-}

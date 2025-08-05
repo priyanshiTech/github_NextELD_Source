@@ -167,22 +167,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "133A2B17-2DD1-44A3-8B9E-8ECB95A815A2"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "NextEld/HelpingInterfacesFile/ViewModels/View/LoginView/LoginScreen.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "347"
-            endingLineNumber = "347"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "89CAD288-8A87-4026-AE90-7241F506FA2A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -318,8 +302,8 @@
             filePath = "NextEld/HelpingInterfacesFile/ViewModels/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "844"
-            endingLineNumber = "844"
+            startingLineNumber = "865"
+            endingLineNumber = "865"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -334,8 +318,8 @@
             filePath = "NextEld/HelpingInterfacesFile/ViewModels/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "847"
-            endingLineNumber = "847"
+            startingLineNumber = "868"
+            endingLineNumber = "868"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -702,8 +686,8 @@
             filePath = "NextEld/HelpingInterfacesFile/ViewModels/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "880"
-            endingLineNumber = "880"
+            startingLineNumber = "901"
+            endingLineNumber = "901"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -718,8 +702,8 @@
             filePath = "NextEld/HelpingInterfacesFile/ViewModels/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "882"
-            endingLineNumber = "882"
+            startingLineNumber = "903"
+            endingLineNumber = "903"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>

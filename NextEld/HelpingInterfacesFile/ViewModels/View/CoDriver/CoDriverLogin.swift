@@ -19,7 +19,7 @@ struct CoDriverLogin: View {
 
         VStack(spacing: 0){
                    
-            Color(.blue)
+            Color(uiColor: .wine)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 1)
         
@@ -42,7 +42,7 @@ struct CoDriverLogin: View {
                        Spacer()
                    }
                    .padding()
-                   .background(Color.blue.shadow(radius: 1))
+                   .background(Color(uiColor: .wine).shadow(radius: 1))
 
                             Text("Select Co-Driver")
                                    .font(.title2)
@@ -88,7 +88,7 @@ struct CoDriverLogin: View {
                                        .foregroundColor(.white)
                                        .frame(maxWidth: .infinity)
                                        .padding()
-                                       .background(Color.blue)
+                                       .background(Color(uiColor: .wine))
                                        .cornerRadius(10)
                                }
                                .padding(.horizontal)

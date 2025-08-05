@@ -19,7 +19,7 @@ struct DeviceScannerView: View {
         
         VStack (spacing: 0) {
             ZStack(alignment: .topLeading){
-                Color.blue
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height:20)
             }
@@ -40,7 +40,7 @@ struct DeviceScannerView: View {
             }
             
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             .frame(height: 40, alignment: .topLeading)
             
             
@@ -73,7 +73,7 @@ struct DeviceScannerView: View {
                 .padding()
                 HStack{
                     Image("")
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color(uiColor: .wine))
                     TextField("Type Mac address Here", text: $macaddress)
                 }
                 .padding()
@@ -92,7 +92,7 @@ struct DeviceScannerView: View {
                     .bold()
                     .frame(width: 300 , height: 40)
                     .buttonStyle(.bordered)
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .padding()

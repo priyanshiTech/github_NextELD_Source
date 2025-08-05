@@ -10,6 +10,8 @@ import SwiftUI
 
 enum AppRoute: Hashable {
  
+   
+ 
     
     case SplashScreen
     case ForgetPassword(tittle: String)
@@ -29,8 +31,10 @@ enum AppRoute: Hashable {
     case DailyLogs(tittle: String)
     case emailLogs(tittle: String)
     case RecapHours(tittle: String)
-    // case AddDvirScreenView
-    case AddDvirScreenView(selectedVehicle: String)
+    case AddDvirScreenView(
+        selectedVehicle: String,
+        selectedRecord: DvirRecord
+    )
     case  ADDVehicle
     case DotInspection(tittle: String)
     //  With associated value
@@ -120,9 +124,18 @@ struct RootView: View {
                 case .CertifySelectedView(let tittle):
                     CertifySelectedView(title: tittle)
                     
+//                case .AddDvirPriTrip:
+//                    EmailDvir( tittle: "")
                 case .AddDvirPriTrip:
-                    EmailDvir( tittle: "")
-                    
+                    EmailDvir(
+                        tittle: "Email DVIR",
+                        updateRecords: DvirDatabaseManager.shared.fetchAllRecords(), // or your source of records
+                        onSelect: { selectedRecord in
+                            print(" Selected Record: \(selectedRecord)")
+                            // Optional: navigate or update state
+                        }
+                    )
+
                 case .DvirHostory( let title ):
                     DVIRHistory(title: title)
                     
@@ -133,7 +146,29 @@ struct RootView: View {
                     EyeViewData(tittle: "Daily Logs", selectedDate: Date())
                     
                 case .AddDvirScreenView:
-                    AddDvirScreenView(selectedVehicle: $selectedVehicle)
+                   // AddDvirScreenView(selectedVehicle: $selectedVehicle)
+                    AddDvirScreenView(
+              
+                        selectedVehicle: $selectedVehicle,
+                        selectedVehicleupdated: $selectedVehicle,
+                        selectedRecord: DvirRecord(
+                            id: nil,
+                            driver: "",
+                            time: "",
+                            date: "",
+                            odometer: "",
+                            company: "",
+                            location: "",
+                            vehicle: "",
+                            trailer: "",
+                            truckDefect: "",
+                            trailerDefect: "",
+                            vehicleCondition: "",
+                            notes: "",
+                            signature: nil
+                        )
+                    )
+
                     
                 case .ADDVehicle:
                     ADDVehicle(selectedVehicleNumber: $selectedVehicle)

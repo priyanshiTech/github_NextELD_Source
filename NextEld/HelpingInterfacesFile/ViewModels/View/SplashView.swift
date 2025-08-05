@@ -22,7 +22,7 @@ struct SplashView: View {
                 .offset(y: offSetImage)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(UIColor.blue))
+        .background( Color(uiColor: .wine))
         .ignoresSafeArea()
         .onAppear {
             // Run animation

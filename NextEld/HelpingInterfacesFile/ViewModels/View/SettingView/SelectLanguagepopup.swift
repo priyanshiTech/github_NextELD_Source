@@ -30,7 +30,7 @@ struct SelectLanguagepopup:View {
                             Spacer()
 
                             Image(systemName: selectedlanguage == lang ? "checkmark.circle.fill" : "checkmark.circle")
-                                .foregroundColor(.blue)
+                                .foregroundColor(Color(uiColor: .wine))
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
@@ -50,7 +50,7 @@ struct SelectLanguagepopup:View {
                     .foregroundColor(.white)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                     .cornerRadius(12)
             }
             .padding(.horizontal)

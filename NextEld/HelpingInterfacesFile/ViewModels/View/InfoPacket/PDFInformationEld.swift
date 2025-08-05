@@ -35,7 +35,7 @@ struct PDFViewerWithHeader: View {
                 Spacer()
             }
             .padding()
-            .background(Color.blue)
+            .background(Color(uiColor: .wine))
 
             Divider()
 

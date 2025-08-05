@@ -26,7 +26,7 @@ struct PT30ConnectionView: View {
                     Spacer()
                 }
                 .padding()
-                .background(Color.blue)
+                .background(Color(uiColor: .wine))
 
                 Spacer()
             }

@@ -48,11 +48,11 @@ struct SignatureCertifyView: View {
                 .lineLimit(1)
                 .font(.footnote)
                 .background(Color.white)
-                .foregroundColor(.blue)
+                .foregroundColor(Color(uiColor: .wine))
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.blue, lineWidth: 1)
+                        .stroke(Color(uiColor: .wine), lineWidth: 1)
                 )
 
                 Button("Agree") {
@@ -105,7 +105,7 @@ struct SignatureCertifyView: View {
                 .bold()
                 .font(.footnote)
 
-                .background(Color.blue)
+                .background(Color(uiColor: .wine))
                 .foregroundColor(.white)
                 .cornerRadius(8)
             }

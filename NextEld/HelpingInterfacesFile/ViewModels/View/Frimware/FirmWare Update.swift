@@ -16,8 +16,7 @@ struct FirmWare_Update: View {
         VStack(spacing:0){
             
             ZStack(alignment: .topLeading){
-              //  Color(UIColor.blue)
-                Color(.blue)
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height:2)
               
@@ -40,7 +39,7 @@ struct FirmWare_Update: View {
                 
             }
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             .frame(height: 40, alignment: .topLeading)
             Spacer(minLength: 20)
             VStack(spacing: 20) {

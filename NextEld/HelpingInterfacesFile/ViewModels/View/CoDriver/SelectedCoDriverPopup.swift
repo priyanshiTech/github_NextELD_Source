@@ -33,7 +33,7 @@ struct SelectCoDriverPopup: View {
                             Spacer()
 
                             Image(systemName: selectedCoDriver == driver ? "checkmark.circle.fill" : "checkmark.circle")
-                                .foregroundColor(.blue)
+                                .foregroundColor( Color(uiColor: .wine))
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
@@ -56,7 +56,7 @@ struct SelectCoDriverPopup: View {
                     .foregroundColor(.white)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.blue)
+                    .background( Color(uiColor: .wine))
                     .cornerRadius(12)
             }
             .padding(.horizontal)

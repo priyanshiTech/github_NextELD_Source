@@ -33,7 +33,7 @@ struct SupportView: View {
                         Spacer()
                     }
                     .padding()
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                     
                     UniversalScrollView {
                         VStack(/*alignment: .leading,*/ spacing: 16) {
@@ -64,7 +64,7 @@ struct SupportView: View {
                                     .frame(height: 200)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 8)
-                                            .stroke(Color.blue, lineWidth: 2)
+                                            .stroke(Color(uiColor: .wine), lineWidth: 2)
                                     )
                             }
 
@@ -77,7 +77,7 @@ struct SupportView: View {
                                     .frame(maxWidth: 100)
                                     .padding()
                                     .bold()
-                                    .background(Color.blue)
+                                    .background(Color(uiColor: .wine))
                                     .foregroundColor(.white)
                                     .cornerRadius(8)
                             }
@@ -108,7 +108,7 @@ struct SupportView: View {
                         Spacer()
                     }
                     .padding()
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                     .cornerRadius(10)
                     .padding(.horizontal)
                     .padding(.bottom, 10)

@@ -20,7 +20,7 @@ struct ForgetPasswordView: View {
         VStack(spacing: 0) {
             // MARK: - Custom Top Header
             ZStack(alignment: .topLeading) {
-                Color.blue
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height: 0)
             }
@@ -43,7 +43,7 @@ struct ForgetPasswordView: View {
             }
             
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             .frame(height: 80, alignment: .topLeading)
 
 
@@ -54,7 +54,7 @@ struct ForgetPasswordView: View {
                     Image("gmail")
                         .resizable()
                         .frame(width: 24, height: 24)
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color(uiColor: .wine))
 
                     TextField("Enter Email", text: $EntEmail)
                         .focused($isfocusState)
@@ -66,7 +66,7 @@ struct ForgetPasswordView: View {
                 .cornerRadius(5)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.blue, lineWidth: 2)
+                        .stroke(Color(uiColor: .wine), lineWidth: 2)
                 )
                 .padding(.horizontal)
 
@@ -88,7 +88,7 @@ struct ForgetPasswordView: View {
                     }
                     .bold()
                     .padding()
-                    .background(Color.blue)
+                    .background(Color(uiColor: .wine))
                     .foregroundColor(.white)
                     .font(.system(size: 18))
                     .cornerRadius(5)

@@ -22,7 +22,7 @@ struct HoursRecap: View {
 
         VStack (spacing: 0 ){
             ZStack(alignment: .topLeading){
-                Color.blue
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height:2)
               
@@ -44,7 +44,7 @@ struct HoursRecap: View {
                 
             }
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             .frame(height: 40, alignment: .topLeading)
             Spacer(minLength: 20)
 
@@ -58,7 +58,7 @@ struct HoursRecap: View {
                     .bold()
 
             }    .padding()
-                .background(Color.blue.shadow(radius: 1))
+                .background(Color(uiColor: .wine).shadow(radius: 1))
                  .frame(height: 40, alignment: .topLeading)
                 Spacer(minLength: 20)
             

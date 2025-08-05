@@ -17,7 +17,7 @@ struct SettingsLanguageView: View {
         
         VStack(spacing:0){
                 
-                Color(.blue)
+            Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height: 1)
                 HStack {
@@ -38,7 +38,7 @@ struct SettingsLanguageView: View {
                     Spacer()
                 }
                 .padding()
-                .background(Color.blue.shadow(radius: 1))
+                .background(Color(uiColor: .wine).shadow(radius: 1))
                 
                 //MARK: -  Vehicle selection
                 CardContainer {

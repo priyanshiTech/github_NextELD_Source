@@ -18,7 +18,7 @@ struct InformationPacket: View {
         
         
         VStack(spacing:0){
-            Color(.blue)
+            Color(uiColor: .wine)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 0)
             
@@ -40,7 +40,7 @@ struct InformationPacket: View {
                 Spacer()
             }
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             Spacer()
             
             VStack{
@@ -66,7 +66,7 @@ struct InformationPacket: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color(uiColor: .wine))
                         .cornerRadius(10)
                 }
                 .padding()
@@ -92,7 +92,7 @@ struct InformationPacket: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color(uiColor: .wine))
                         .cornerRadius(10)
                 }
                 .padding(.horizontal)

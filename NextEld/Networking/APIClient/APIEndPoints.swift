@@ -10,6 +10,7 @@ import Foundation
 
 
 enum API {
+    
     static let baseURL = URL(string: "https://gbt-usa.com/eld_log/")!
 
     enum Endpoint {
@@ -18,6 +19,9 @@ enum API {
         case ForgetUserName
         case ForSavingOfflineData
         case getAllDatadelete
+        case dispatchadd_dvir_data
+        case update_dvir_data
+        case getRefershAlldata
 
         var url: URL {
             switch self {
@@ -31,20 +35,31 @@ enum API {
                 return API.baseURL.appendingPathComponent("dispatch/add_drivering_status_offline")
             case .getAllDatadelete:
                 return API.baseURL.appendingPathComponent("dispatch/delete_all_driver_status_by_id")
+            case .dispatchadd_dvir_data:
+                return API.baseURL.appendingPathComponent("dispatch/add_dvir_data")
+            case .update_dvir_data:
+                return API.baseURL.appending(components: "dispatch/update_dvir_data")
+            case .getRefershAlldata:
+                return API.baseURL.appendingPathComponent("auth/login_data_by_employee_id")
+
             }
         }
 
         var method: String {
             switch self {
-            case .login, .ForgetPassword , .ForgetUserName:
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data:
                 return "POST"
-            case .ForSavingOfflineData , .getAllDatadelete:
+            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata:
                 return "POST"
-            
+
             }
         }
     }
 }
+
+
+
+
 
 
 //MARK: -
@@ -65,17 +80,18 @@ final class NetworkManager {
         print("📝 Method: \(endpoint.method)")
         print("📤 Content-Type: application/json")
         if let bodyString = String(data: encodedBody, encoding: .utf8) {
-            print("📤 JSON Body: \(bodyString)")
+            print("**************** JSON Body: \(bodyString)")
         }
 
         let (data, response) = try await URLSession.shared.data(for: request)
+        
 
         if let httpResponse = response as? HTTPURLResponse {
-            print("📡 Status Code: \(httpResponse.statusCode)")
+            print("___________ Status Code: \(httpResponse.statusCode)")
         }
 
         if let string = String(data: data, encoding: .utf8) {
-            print("📥 Response Body: \(string)")
+            print("$$$$$$$$$$$$$$$______Response Body: \(string)")
         }
 
         return try JSONDecoder().decode(T.self, from: data)
@@ -83,86 +99,8 @@ final class NetworkManager {
 
 }
 
-//MARK: - call MultipartAPI
 
-import Foundation
-import UIKit
-
-class DvirAPIService {
-    static let shared = DvirAPIService()
-
-    
-    func uploadDvirRecord(record: DvirRecord, completion: @escaping (Result<Bool, Error>) -> Void) {
-        let url = URL(string: "https://gbt-usa.com/eld_log/dispatch/add_dvir_data")!
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-
-        let boundary = UUID().uuidString
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-
-        let httpBody = createMultipartBody(record: record, boundary: boundary)
-        request.httpBody = httpBody
-
-        print(" Starting API Upload...")
-        
-        URLSession.shared.uploadTask(with: request, from: httpBody) { data, response, error in
-            if let error = error {
-                print("❌ Error: \(error.localizedDescription)")
-                completion(.failure(error))
-                return
-            }
-
-            if let httpResponse = response as? HTTPURLResponse {
-                print("📡 Status Code: \(httpResponse.statusCode)")
-            }
-
-            if let data = data {
-                let responseString = String(data: data, encoding: .utf8) ?? "No readable response"
-                print("📨 Response Data: \(responseString)")
-            }
-
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200..<300).contains(httpResponse.statusCode) else {
-                completion(.failure(NSError(domain: "Server error", code: 0)))
-                return
-            }
-
-            //print(" Upload Success!")
-            completion(.success(true))
-        }.resume()
-    }
-
-    private func createMultipartBody(record: DvirRecord, boundary: String) -> Data {
-        var body = Data()
-
-        func appendField(_ name: String, value: String) {
-            body.append("--\(boundary)\r\n")
-            body.append("Content-Disposition: form-data; name=\"\(name)\"\r\n\r\n")
-            body.append("\(value)\r\n")
-        }
-
-        appendField("driverId", value: "10")
-    appendField("dateTime", value: "\(record.date) \(record.time)")
-       // appendField("datetime", value: record.datetime)
-        appendField("location", value: record.location)
-        appendField("truckDefect", value: record.truckDefect)
-        appendField("trailerDefect", value: record.trailerDefect)
-        appendField("notes", value: record.notes)
-        appendField("vehicleCondition", value: record.vehicleCondition)
-
-        if let signature = record.signature {
-            body.append("--\(boundary)\r\n")
-            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"signature.png\"\r\n")
-            body.append("Content-Type: image/png\r\n\r\n")
-            body.append(signature)
-            body.append("\r\n")
-        }
-
-        body.append("--\(boundary)--\r\n")
-        return body
-    }
-}
+//MARK: - CALL MultipartAPI
 
 extension Data {
     mutating func append(_ string: String) {
@@ -171,4 +109,80 @@ extension Data {
         }
     }
 }
+//Resuable Common Function to call api
+
+struct MultipartFile {
+    let name: String
+    let filename: String
+    let mimeType: String
+    let data: Data
+}
+
+class MultipartAPIService {
+    static let shared = MultipartAPIService()
+
+    func upload(
+        url: URL,
+        fields: [String: String],
+        files: [MultipartFile],
+        completion: @escaping (Result<Data, Error>) -> Void
+    ) {
+        let boundary = "Boundary-\(UUID().uuidString)"
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        let httpBody = createBody(fields: fields, files: files, boundary: boundary)
+
+        URLSession.shared.uploadTask(with: request, from: httpBody) { data, response, error in
+            if let error = error {
+                print("ohh Shit  ....... Error: \(error)")
+                completion(.failure(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(NSError(domain: "Invalid response", code: 0)))
+                return
+            }
+
+            print("Waooo....... Status Code: \(httpResponse.statusCode)")
+
+            if let data = data {
+                print("**What a ...... Response: \(String(data: data, encoding: .utf8) ?? "Unreadable")")
+                if (200...299).contains(httpResponse.statusCode) {
+                    completion(.success(data))
+                } else {
+                    completion(.failure(NSError(domain: "Server error", code: httpResponse.statusCode)))
+                }
+            } else {
+                completion(.failure(NSError(domain: "Empty response", code: 0)))
+            }
+        }.resume()
+    }
+
+    private func createBody(fields: [String: String], files: [MultipartFile], boundary: String) -> Data {
+        var body = Data()
+
+        for (key, value) in fields {
+            body.append("--\(boundary)\r\n")
+            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
+            body.append("\(value)\r\n")
+        }
+
+        for file in files {
+            body.append("--\(boundary)\r\n")
+            body.append("Content-Disposition: form-data; name=\"\(file.name)\"; filename=\"\(file.filename)\"\r\n")
+            body.append("Content-Type: \(file.mimeType)\r\n\r\n")
+            body.append(file.data)
+            body.append("\r\n")
+        }
+
+        body.append("--\(boundary)--\r\n")
+        return body
+    }
+}
+
+
 

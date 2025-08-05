@@ -20,7 +20,7 @@ struct ForgetUserName: View {
             //MARK: -  Custom Header
             
             ZStack(alignment: .topLeading){
-                Color.blue
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height:20)
             }
@@ -43,13 +43,13 @@ struct ForgetUserName: View {
             
                
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             .frame(height: 60, alignment: .topLeading)
             Spacer()
             VStack {
                 HStack{
                     Image("phone-call")
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color(uiColor: .wine))
                     TextField("Enter Mobile Number", text: $mobNumber)
                         .focused($istextfieldFocus)
                 }
@@ -58,7 +58,7 @@ struct ForgetUserName: View {
                 .cornerRadius(5)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.blue, lineWidth: 2)
+                        .stroke(Color(uiColor: .wine), lineWidth: 2)
                 )
                 .padding()
                 
@@ -78,7 +78,7 @@ struct ForgetUserName: View {
                                }
                                .bold()
                                .padding()
-                               .background(Color.blue)
+                               .background(Color(uiColor: .wine))
                                .foregroundColor(.white)
                                .cornerRadius(10)
                                .font(.system(size: 18))

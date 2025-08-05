@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1009E35B2DCB22EB002E3D13 /* CheckBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1009E35A2DCB22EB002E3D13 /* CheckBoxView.swift */; };
 		1009E35F2DCB376D002E3D13 /* CoordinatorClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1009E35E2DCB376D002E3D13 /* CoordinatorClass.swift */; };
-		1009E3612DCB37F5002E3D13 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1009E3602DCB37F5002E3D13 /* AppRoute.swift */; };
 		1009E3632DCB3A79002E3D13 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1009E3622DCB3A79002E3D13 /* SplashView.swift */; };
 		1065860D2DCCC75F003CE502 /* HoursOfServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1065860C2DCCC75F003CE502 /* HoursOfServices.swift */; };
 		106586132DCCE182003CE502 /* ColourExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106586122DCCE182003CE502 /* ColourExtensions.swift */; };
@@ -115,6 +114,10 @@
 		AFB943502E02CD7B00AD19D7 /* TokenModelLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9434F2E02CD7B00AD19D7 /* TokenModelLog.swift */; };
 		AFB943542E02D43600AD19D7 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943532E02D43500AD19D7 /* APIClient.swift */; };
 		AFB943562E02D62E00AD19D7 /* APIEndPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943552E02D62E00AD19D7 /* APIEndPoints.swift */; };
+		AFBB59F62E4230D80056A660 /* RefreshViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F52E4230D80056A660 /* RefreshViewModel.swift */; };
+		AFBB59F82E4231800056A660 /* UpdateDvirModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F72E4231800056A660 /* UpdateDvirModel.swift */; };
+		AFBB59FA2E4233B10056A660 /* CurrentDT.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F92E4233B10056A660 /* CurrentDT.swift */; };
+		AFBB59FC2E4233FB0056A660 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59FB2E4233FB0056A660 /* AppRoute.swift */; };
 		AFC0386B2E0FF10600944204 /* CountDownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC0386A2E0FF10600944204 /* CountDownTimer.swift */; };
 		AFC1B5542E15499000C57620 /* ForgetPasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5532E15499000C57620 /* ForgetPasswordModel.swift */; };
 		AFC1B5562E154A6500C57620 /* ForgetpasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */; };
@@ -181,7 +184,6 @@
 /* Begin PBXFileReference section */
 		1009E35A2DCB22EB002E3D13 /* CheckBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxView.swift; sourceTree = "<group>"; };
 		1009E35E2DCB376D002E3D13 /* CoordinatorClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorClass.swift; sourceTree = "<group>"; };
-		1009E3602DCB37F5002E3D13 /* AppRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
 		1009E3622DCB3A79002E3D13 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		1065860C2DCCC75F003CE502 /* HoursOfServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoursOfServices.swift; sourceTree = "<group>"; };
 		106586122DCCE182003CE502 /* ColourExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColourExtensions.swift; sourceTree = "<group>"; };
@@ -292,6 +294,10 @@
 		AFB9434F2E02CD7B00AD19D7 /* TokenModelLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModelLog.swift; sourceTree = "<group>"; };
 		AFB943532E02D43500AD19D7 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		AFB943552E02D62E00AD19D7 /* APIEndPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndPoints.swift; sourceTree = "<group>"; };
+		AFBB59F52E4230D80056A660 /* RefreshViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshViewModel.swift; sourceTree = "<group>"; };
+		AFBB59F72E4231800056A660 /* UpdateDvirModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDvirModel.swift; sourceTree = "<group>"; };
+		AFBB59F92E4233B10056A660 /* CurrentDT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentDT.swift; sourceTree = "<group>"; };
+		AFBB59FB2E4233FB0056A660 /* AppRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
 		AFC0386A2E0FF10600944204 /* CountDownTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownTimer.swift; sourceTree = "<group>"; };
 		AFC1B5532E15499000C57620 /* ForgetPasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetPasswordModel.swift; sourceTree = "<group>"; };
 		AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetpasswordModel.swift; sourceTree = "<group>"; };
@@ -362,7 +368,7 @@
 		1009E35D2DCB3689002E3D13 /* Routing */ = {
 			isa = PBXGroup;
 			children = (
-				1009E3602DCB37F5002E3D13 /* AppRoute.swift */,
+				AFBB59FB2E4233FB0056A660 /* AppRoute.swift */,
 				1009E35E2DCB376D002E3D13 /* CoordinatorClass.swift */,
 			);
 			path = Routing;
@@ -806,7 +812,9 @@
 				AF79511B2E3BA83D005FFFBF /* DVIRViewModelUpload.swift */,
 				AFC381762E29067B006FD4E1 /* OfflineSavingDataModel.swift */,
 				AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */,
+				AFBB59F72E4231800056A660 /* UpdateDvirModel.swift */,
 				AF72E4452DFD557700626DC0 /* LocationManager.swift */,
+				AFBB59F52E4230D80056A660 /* RefreshViewModel.swift */,
 				AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */,
 				108FF82D2DC89C6F0051671B /* View */,
 			);
@@ -917,6 +925,7 @@
 				AFC0386A2E0FF10600944204 /* CountDownTimer.swift */,
 				AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */,
 				AFC1B55C2E1566E300C57620 /* KeyChainSwift.swift */,
+				AFBB59F92E4233B10056A660 /* CurrentDT.swift */,
 				AFDFD4812E32301700F81B24 /* VoilationBox.swift */,
 			);
 			path = HelpingGroup;
@@ -1120,6 +1129,7 @@
 				AF72E4312DFD54B400626DC0 /* DataRow.swift in Sources */,
 				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
 				AF7951182E3BA7B5005FFFBF /* DVIRDataTableView.swift in Sources */,
+				AFBB59FC2E4233FB0056A660 /* AppRoute.swift in Sources */,
 				AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */,
 				AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */,
 				AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */,
@@ -1133,6 +1143,7 @@
 				AFA98C932E017BCB00E87802 /* PT30Devicedata.swift in Sources */,
 				AF72E4382DFD54B400626DC0 /* HalfScreenMapView.swift in Sources */,
 				AFB943412E029D3100AD19D7 /* AppConfig.swift in Sources */,
+				AFBB59F62E4230D80056A660 /* RefreshViewModel.swift in Sources */,
 				AFA98C972E017F6700E87802 /* StoreEventView.swift in Sources */,
 				AF72E4482DFD579500626DC0 /* BluetoothViewModel.swift in Sources */,
 				AF79511C2E3BA83D005FFFBF /* DVIRViewModelUpload.swift in Sources */,
@@ -1157,6 +1168,7 @@
 				AFB9434A2E02CCF900AD19D7 /* Rules.swift in Sources */,
 				AFA98C912E017A1B00E87802 /* PT30DataViewModel.swift in Sources */,
 				AF72E4412DFD54B400626DC0 /* HoursRecap.swift in Sources */,
+				AFBB59F82E4231800056A660 /* UpdateDvirModel.swift in Sources */,
 				AFC381772E29067B006FD4E1 /* OfflineSavingDataModel.swift in Sources */,
 				AF72E4612DFD845800626DC0 /* QRScanner.swift in Sources */,
 				AF72E4422DFD54B400626DC0 /* DailyLogView.swift in Sources */,
@@ -1181,7 +1193,6 @@
 				AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */,
 				AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */,
 				AFB9434C2E02CD0800AD19D7 /* SplitLog.swift in Sources */,
-				1009E3612DCB37F5002E3D13 /* AppRoute.swift in Sources */,
 				AF04B1BB2DE98DA600A5F3D1 /* SelectLanguagepopup.swift in Sources */,
 				AFB943502E02CD7B00AD19D7 /* TokenModelLog.swift in Sources */,
 				AF92F4DD2DDDE7DB00DEBBF6 /* EmailDvir.swift in Sources */,
@@ -1240,6 +1251,7 @@
 				AFA98C952E017C1F00E87802 /* DeviceManagerView.swift in Sources */,
 				10CA6EBD2DCC89EF003B265C /* CardContainer.swift in Sources */,
 				AFD072662DE5A49000C939B0 /* NewDriverLogin.swift in Sources */,
+				AFBB59FA2E4233B10056A660 /* CurrentDT.swift in Sources */,
 				AF9DD4EF2DDDB1A70034FA8E /* AddDvirScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

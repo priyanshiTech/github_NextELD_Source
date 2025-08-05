@@ -129,7 +129,7 @@ struct _ScannerQR: View {
                 }
                 .padding(.horizontal)
                 .frame(height: 50)
-                .background(Color.blue)
+                .background(Color(uiColor: .wine))
                 .zIndex(1)
 
                 Spacer()

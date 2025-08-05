@@ -24,7 +24,7 @@ struct CompanyInformationView: View {
         VStack(spacing: 0) {
             // Top Blue Bar
             
-            Color(.blue)
+            Color(uiColor: .wine)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 1)
             HStack {
@@ -45,7 +45,7 @@ struct CompanyInformationView: View {
                 Spacer()
             }
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             
             UniversalScrollView {
                 VStack(alignment: .leading, spacing: 30) {
@@ -81,7 +81,7 @@ struct InputField: View {
                 .frame(height:50)
                 .overlay(
                     RoundedRectangle(cornerRadius: 4)
-                        .stroke(Color.blue, lineWidth: 2)
+                        .stroke(Color(uiColor: .wine), lineWidth: 2)
                 )
         }
     }

@@ -30,7 +30,7 @@ struct CalendarButton: View {
             }
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
-                    .stroke(Color.blue, lineWidth: 2)
+                    .stroke( Color(uiColor: .wine), lineWidth: 2)
             )
         }
         .sheet(isPresented: $showDatePicker) {

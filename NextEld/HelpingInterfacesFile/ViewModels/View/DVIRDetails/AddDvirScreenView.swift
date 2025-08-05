@@ -24,16 +24,23 @@ struct AddDvirScreenView: View  {
     
     @State private var showPopupVechicle = false
     @EnvironmentObject var vehicleVM: VehicleConditionViewModel
-    @EnvironmentObject var dvirVM: DvirViewModel
-  
+  //  @EnvironmentObject var dvirVM: DvirViewModel
+
+    @Binding var selectedVehicleupdated: String
+    let selectedRecord: DvirRecord
     
     @State  var driverName:String = ""
-   // @State  var time: String
-   // @State  var date: String
     @State  var odometer : String = ""
     @State  var  companyName: String = ""
     @State  var Location: String  = ""
+    @State  var  driverID: String  = ""
+    //let time = DateTimeHelper.currentTime()      // e.g., "12:51:00"
+   // let date = DateTimeHelper.currentDate()
     
+    
+    @State private var date: String = ""
+    @State private var time: String = ""
+
 
 
     
@@ -45,7 +52,7 @@ struct AddDvirScreenView: View  {
                 
                 // MARK: - Top Strip
                 ZStack(alignment: .topLeading) {
-                    Color(UIColor.colorPrimary)
+                    Color(UIColor.wine)
                         .edgesIgnoringSafeArea(.top)
                         .frame(height: 10)
                 }
@@ -75,7 +82,7 @@ struct AddDvirScreenView: View  {
                         Spacer()
                     }
                     .padding()
-                    .background(Color.blue.shadow(radius: 1))
+                    .background(Color(UIColor.wine).shadow(radius: 1))
                     .frame(height: 40, alignment: .topLeading)
                 }
                 
@@ -86,12 +93,12 @@ struct AddDvirScreenView: View  {
                         // Driver Info
                         CardContainer {
                             VStack(alignment: .leading, spacing: 15) {
-                                DvirField(label: "Driver", value: "MARK Joseph ELD")
-                                DvirField(label: "Time", value: "12:16 PM")
-                                DvirField(label: "Date", value: "2025-05-21")
+                                DvirField(label: "Driver", value: driverName)
+                                DvirField(label: "Time", value: time)
+                                DvirField(label: "Date", value: date)
                                 DvirField(label: "Odometer", value: "0")
-                                DvirField(label: "Company", value: "Eld Solutions - India")
-                                DvirField(label: "Location", value: "349, Vijay Nagar, Scheme 54 PU4, Indore, Madhya Pradesh 452010, India")
+                                DvirField(label: "Company", value: companyName)
+                                DvirField(label: "Location", value: Location)
                             }
                         }
                         
@@ -99,7 +106,7 @@ struct AddDvirScreenView: View  {
                         CardContainer {
                             Button(action: {
                                 navmanager.navigate(to: .ADDVehicle)
-                                //showVehicleSelection = true
+                               
                             }) {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
@@ -164,9 +171,9 @@ struct AddDvirScreenView: View  {
                                         Text("No Defects")
                                             .frame(maxWidth: .infinity)
                                             .padding()
-                                            .background(truckDefectSelection == "no" ? Color.blue : Color.white)
-                                            .foregroundColor(truckDefectSelection == "no" ? .white : .blue)
-                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 1))
+                                            .background(truckDefectSelection == "no" ?Color(UIColor.wine) : Color.white)
+                                            .foregroundColor(truckDefectSelection == "no" ? .white : (Color(UIColor.wine)))
+                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(UIColor.wine), lineWidth: 1))
                                             .cornerRadius(8)
                                     }
                                     
@@ -177,9 +184,9 @@ struct AddDvirScreenView: View  {
                                         Text("Has Defects")
                                             .frame(maxWidth: .infinity)
                                             .padding()
-                                            .background(truckDefectSelection == "yes" ? Color.blue : Color.white)
-                                            .foregroundColor(truckDefectSelection == "yes" ? .white : .blue)
-                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 1))
+                                            .background(truckDefectSelection == "yes" ? Color(UIColor.wine) : Color.white)
+                                            .foregroundColor(truckDefectSelection == "yes" ? .white : Color(UIColor.wine))
+                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(UIColor.wine), lineWidth: 1))
                                             .cornerRadius(8)
                                     }
                                 }
@@ -195,9 +202,9 @@ struct AddDvirScreenView: View  {
                                         Text("No Defects")
                                             .frame(maxWidth: .infinity)
                                             .padding()
-                                            .background(trailerDefectSelection == "no" ? Color.blue : Color.white)
-                                            .foregroundColor(trailerDefectSelection == "no" ? .white : .blue)
-                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 1))
+                                            .background(trailerDefectSelection == "no" ? Color(UIColor.wine) : Color.white)
+                                            .foregroundColor(trailerDefectSelection == "no" ? .white : Color(UIColor.wine))
+                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(UIColor.wine), lineWidth: 1))
                                             .cornerRadius(8)
                                     }
                                     
@@ -208,9 +215,9 @@ struct AddDvirScreenView: View  {
                                         Text("Has Defects")
                                             .frame(maxWidth: .infinity)
                                             .padding()
-                                            .background(trailerDefectSelection == "yes" ? Color.blue : Color.white)
-                                            .foregroundColor(trailerDefectSelection == "yes" ? .white : .blue)
-                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 1))
+                                            .background(trailerDefectSelection == "yes" ? Color(UIColor.wine): Color.white)
+                                            .foregroundColor(trailerDefectSelection == "yes" ? .white : Color(UIColor.wine))
+                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(UIColor.wine), lineWidth: 1))
                                             .cornerRadius(8)
                                     }
                                 }
@@ -280,20 +287,43 @@ struct AddDvirScreenView: View  {
                         }
                         .frame(width: 350, height: 80)
                     }
-        
+
                     
-                    // Add DVIR Button
-                    HStack {
+                    .onAppear {
+                        // Load defaults from UserDefaults
+                        loadLoginData()
+
+                        // Only use selectedRecord values if they're non-empty (editing existing record)
+                        if !selectedRecord.driver.isEmpty {
+                            driverName = selectedRecord.driver
+                            odometer = selectedRecord.odometer
+                            companyName = selectedRecord.company
+                            Location = selectedRecord.location
+                            truckDefectSelection = selectedRecord.truckDefect
+                            trailerDefectSelection = selectedRecord.trailerDefect
+                            date = selectedRecord.date.isEmpty ? DateTimeHelper.currentDate() : selectedRecord.date
+                            time = selectedRecord.time.isEmpty ? DateTimeHelper.currentTime() : selectedRecord.time
+
+                            if vehicleVM.selectedCondition == nil || vehicleVM.selectedCondition == "None" {
+                                vehicleVM.selectedCondition = selectedRecord.vehicleCondition
+                            }
+                        } else {
+                            // If new record, use current date/time
+                            date = DateTimeHelper.currentDate()
+                            time = DateTimeHelper.currentTime()
+                        }
+                    }
+
+
+                    HStack{
                         Button(action: {
-                            //  Convert Signature Path to PNG Data
                             let signatureImage = signatureToImage(path: signaturePath, size: CGSize(width: 300, height: 150))
                             let signatureData = signatureImage.pngData()
                             
-                            //  Create DVIR Record
                             let record = DvirRecord(
                                 driver: driverName,
-                               time: "15:20:30" ,//  only one space
-                                date: "2025-05-21",
+                                time: time,
+                                date: date,
                                 odometer: odometer,
                                 company: companyName,
                                 location: Location,
@@ -303,28 +333,28 @@ struct AddDvirScreenView: View  {
                                 trailerDefect: trailerDefectSelection ?? "no",
                                 vehicleCondition: vehicleVM.selectedCondition ?? "None",
                                 notes: notesText,
-                                signature: signatureData //  SAVE SIGNATURE
+                                signature: signatureData
                             )
-
-                            //  Save to Database
-                            DvirDatabaseManager.shared.insertRecord(record)
-                            print(" DVIR Record Saved Successfully")
-                            dvirVM.uploadRecord(record)
-                            // navmanager.goBack()
-                            navmanager.navigate(to: AppRoute.DvirDataListView)
                             
+                            DvirDatabaseManager.shared.insertRecord(record)
+                            
+                            if let id = record.id, id > 0 {
+                                updateDvirDataUsingCommonService(record: record, dvirLogId: driverID)
+                                
+                            } else {
+                                uploadDvirDataUsingCommonService(record: record)
+                            }
+                            navmanager.navigate(to: AppRoute.DvirDataListView)
                         }) {
                             Text("Add Dvir")
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 10)
                                 .frame(width: 350, height: 50)
                                 .foregroundColor(.white)
-                                .background(Color.blue)
+                                .background(Color(UIColor.wine))
                                 .cornerRadius(10)
-                                .bold()
                         }
                     }
                     
+                  
                 }
                 .padding(.horizontal, 5)
             }
@@ -337,7 +367,7 @@ struct AddDvirScreenView: View  {
                 }
                 
             }
-            
+                
             // MARK: - Defect Popup Overlay
             if Showpopup {
                 Color.black.opacity(0.4)
@@ -352,6 +382,7 @@ struct AddDvirScreenView: View  {
                     .zIndex(2)
                     .transition(.scale)
             }
+                
             //MARK: - Vehicle popup
             if showPopupVechicle {
                 Color.black.opacity(0.4)
@@ -362,11 +393,21 @@ struct AddDvirScreenView: View  {
                     .environmentObject(vehicleVM)
                     .transition(.scale)
             }
+                
         }
+       
         .animation(.easeInOut, value: showSignaturePopup)
         .animation(.easeInOut, value: Showpopup)
         .animation(.easeInOut, value: showPopupVechicle)
     }
+        //MARK: - load login data into swiftui
+    func loadLoginData() {
+        driverName = UserDefaults.standard.string(forKey: "driverName") ?? "N/A"
+        Location = UserDefaults.standard.string(forKey: "customLocation") ?? "N/A"
+        companyName = UserDefaults.standard.string(forKey: "companyName") ?? "N/A"
+        driverID = UserDefaults.standard.string(forKey: "userId") ?? "n/a"
+
+   }
     // MARK:   Convert the SwiftUI Path to UIImage, then to PNG Data
     func signatureToImage(path: Path, size: CGSize) -> UIImage {
         let controller = UIHostingController(rootView:

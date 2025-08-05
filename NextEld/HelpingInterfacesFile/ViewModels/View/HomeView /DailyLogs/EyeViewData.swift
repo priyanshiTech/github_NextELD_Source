@@ -18,14 +18,14 @@ struct EyeViewData: View {
         
         VStack(spacing:0){
             ZStack(alignment: .topLeading){
-                Color.blue
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height:2)
                 
             }
 
             ZStack(alignment: .top) {
-                Color.blue
+                Color(uiColor: .wine)
                     .frame(height: 50)
                     .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
                 HStack {

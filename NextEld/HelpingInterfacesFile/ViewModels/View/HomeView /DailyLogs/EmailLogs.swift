@@ -27,8 +27,8 @@ struct EmailLogs: View {
         VStack (spacing:0){
             
             ZStack(alignment: .topLeading){
-              //  Color(UIColor.blue)
-                Color(.blue)
+             
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height:2)
               
@@ -50,14 +50,14 @@ struct EmailLogs: View {
                   
             }
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background(Color(uiColor: .wine).shadow(radius: 1))
             .frame(height: 40, alignment: .topLeading)
             Spacer(minLength: 20)
             HStack{
                 Text("Email Logs")
                     .font(.system(size: 35))
                     .bold()
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color(uiColor: .wine))
                 Image("email_icon_blue")
             }
             .padding()
@@ -73,7 +73,7 @@ struct EmailLogs: View {
                             .frame(maxWidth: .infinity, minHeight: 50)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(Color.blue, lineWidth: 2)
+                                    .stroke(Color(uiColor: .wine), lineWidth: 2)
                             )
                     }
                     .sheet(isPresented: $showFromDatePicker) {
@@ -95,7 +95,7 @@ struct EmailLogs: View {
                             .frame(maxWidth: .infinity, minHeight: 50)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(Color.blue, lineWidth: 2)
+                                    .stroke(Color(uiColor: .wine), lineWidth: 2)
                             )
                     }
                     .sheet(isPresented: $showFromDatePicker) {
@@ -128,23 +128,41 @@ struct EmailLogs: View {
                     .frame(height: 50)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
-                            .stroke(Color.blue, lineWidth: 2)
+                            .stroke(Color(uiColor: .wine), lineWidth: 2)
                     )
 
-                    Button(action: {
-                        // Send email action
-                    }) {
-                        Text("Send")
-                            .foregroundColor(.white)
-                            .font(.title3)
-                            .frame(width: 90, height: 40)
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
-                .padding(.horizontal)
-                .padding(.top, 12)
+//                    Button(action: {
+//                        // Send email action
+//                    }) {
+//                        Text("Send")
+//                            .foregroundColor(.white)
+//                            .font(.title3)
+//                            .frame(width: 90, height: 40)
+//                    }
+//                    .buttonStyle(.borderedProminent)
+//                }
+//                .padding(.horizontal)
+//                .padding(.top, 12)
                 
-            }
+                    
+                    Button(action: {
+                           // Send email action
+                       }) {
+                           Text("Send")
+                               .font(.title3)
+                               .frame(width: 90, height: 40)
+                       }
+                       .buttonStyle(.borderedProminent)
+                       .tint(Color(uiColor: .wine)) //  Full wine color
+                       .foregroundColor(.white)
+                   }
+             
+                   .padding(.horizontal)
+                   .padding(.top, 12)
+                }
+            Spacer()
+            
+            
             
             List(dateList, id: \.self) { date in
                 HStack {

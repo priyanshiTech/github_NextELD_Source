@@ -19,7 +19,7 @@ struct DotInspection: View {
         
         VStack (spacing:0){
             ZStack(alignment: .topLeading){
-                Color.blue
+                Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
                     .frame(height:0)
                 
@@ -40,7 +40,7 @@ struct DotInspection: View {
                 
             }
             .padding()
-            .background(Color.blue.shadow(radius: 1))
+            .background( Color(uiColor: .wine).shadow(radius: 1))
             .frame(height: 40, alignment: .topLeading)
             Spacer(minLength: 20)
             VStack(alignment: .center, spacing: 20) {
@@ -61,8 +61,7 @@ struct DotInspection: View {
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
+                            .background(Color(uiColor: .wine))                            .foregroundColor(.white)
                             .cornerRadius(8)
                     }
                     
@@ -86,8 +85,7 @@ struct DotInspection: View {
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
+                            .background(Color(uiColor: .wine))                            .foregroundColor(.white)
                             .cornerRadius(8)
                     }
                 }
@@ -110,8 +108,7 @@ struct DotInspection: View {
                                 .fontWeight(.bold)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
+                                .background(Color(uiColor: .wine))                                .foregroundColor(.white)
                                 .cornerRadius(8)
                         }
                     }
@@ -131,8 +128,7 @@ struct DotInspection: View {
                                 .fontWeight(.bold)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
+                                .background(Color(uiColor: .wine))                                .foregroundColor(.white)
                                 .cornerRadius(8)
                         }
                         
