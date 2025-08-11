@@ -139,6 +139,9 @@
 		AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AFCAF8242DD85D9200D82F29 /* assets .xcassets */; };
 		AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB43662E2F978100363BB6 /* DeleteModelAPI.swift */; };
 		AFCB43692E2F9E2400363BB6 /* DeleteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */; };
+		AFCC4C9D2E49E23A00629DE3 /* EyeViewAllRecords.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCC4C9C2E49E23A00629DE3 /* EyeViewAllRecords.swift */; };
+		AFCC4CA02E49E8CF00629DE3 /* MultipartAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCC4C9F2E49E8CF00629DE3 /* MultipartAPI.swift */; };
+		AFCC4CA22E49EBD000629DE3 /* ViewDriveringDtatusBydateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCC4CA12E49EBD000629DE3 /* ViewDriveringDtatusBydateModel.swift */; };
 		AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072612DE5889E00C939B0 /* CoDriverLogin.swift */; };
 		AFD072642DE59A9600C939B0 /* SelectedCoDriverPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072632DE59A9600C939B0 /* SelectedCoDriverPopup.swift */; };
 		AFD072662DE5A49000C939B0 /* NewDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */; };
@@ -317,6 +320,9 @@
 		AFCAF8242DD85D9200D82F29 /* assets .xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "assets .xcassets"; sourceTree = "<group>"; };
 		AFCB43662E2F978100363BB6 /* DeleteModelAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteModelAPI.swift; sourceTree = "<group>"; };
 		AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteViewModel.swift; sourceTree = "<group>"; };
+		AFCC4C9C2E49E23A00629DE3 /* EyeViewAllRecords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EyeViewAllRecords.swift; sourceTree = "<group>"; };
+		AFCC4C9F2E49E8CF00629DE3 /* MultipartAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartAPI.swift; sourceTree = "<group>"; };
+		AFCC4CA12E49EBD000629DE3 /* ViewDriveringDtatusBydateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDriveringDtatusBydateModel.swift; sourceTree = "<group>"; };
 		AFD072612DE5889E00C939B0 /* CoDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoDriverLogin.swift; sourceTree = "<group>"; };
 		AFD072632DE59A9600C939B0 /* SelectedCoDriverPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCoDriverPopup.swift; sourceTree = "<group>"; };
 		AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDriverLogin.swift; sourceTree = "<group>"; };
@@ -446,6 +452,7 @@
 		108FF82C2DC89C620051671B /* Model 2 */ = {
 			isa = PBXGroup;
 			children = (
+				AFCC4C9E2E49E7C100629DE3 /* DispatchViewStatusDate */,
 				AFC381782E290A23006FD4E1 /* Offlinedata */,
 				AFC381752E29035C006FD4E1 /* ForgetModel's */,
 				AFDBB17A2E03FAE500D4A2CA /* LoginModel */,
@@ -816,6 +823,7 @@
 				AF72E4452DFD557700626DC0 /* LocationManager.swift */,
 				AFBB59F52E4230D80056A660 /* RefreshViewModel.swift */,
 				AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */,
+				AFCC4CA12E49EBD000629DE3 /* ViewDriveringDtatusBydateModel.swift */,
 				108FF82D2DC89C6F0051671B /* View */,
 			);
 			path = ViewModels;
@@ -835,6 +843,7 @@
 			children = (
 				AFB943532E02D43500AD19D7 /* APIClient.swift */,
 				AFB943552E02D62E00AD19D7 /* APIEndPoints.swift */,
+				AFCC4C9F2E49E8CF00629DE3 /* MultipartAPI.swift */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -916,6 +925,14 @@
 				AFCB43662E2F978100363BB6 /* DeleteModelAPI.swift */,
 			);
 			path = DeleteModel;
+			sourceTree = "<group>";
+		};
+		AFCC4C9E2E49E7C100629DE3 /* DispatchViewStatusDate */ = {
+			isa = PBXGroup;
+			children = (
+				AFCC4C9C2E49E23A00629DE3 /* EyeViewAllRecords.swift */,
+			);
+			path = DispatchViewStatusDate;
 			sourceTree = "<group>";
 		};
 		AFCE29E12E129C61001C6729 /* HelpingGroup */ = {
@@ -1153,6 +1170,7 @@
 				AF72E43A2DFD54B400626DC0 /* Foam&certify.swift in Sources */,
 				AFC535572E0D631900AD10C9 /* DataBaseManagerClass.swift in Sources */,
 				AF72E43B2DFD54B400626DC0 /* DeviceScannerView.swift in Sources */,
+				AFCC4C9D2E49E23A00629DE3 /* EyeViewAllRecords.swift in Sources */,
 				AF72E43C2DFD54B400626DC0 /* CertifySelectedView.swift in Sources */,
 				AFB9433C2E029CE200AD19D7 /* FirmwareUpdateViewController.swift in Sources */,
 				AF910B5F2E14009100BCC9E9 /* VoilationsAlert's.swift in Sources */,
@@ -1199,6 +1217,7 @@
 				AFC1B55A2E155BFA00C57620 /* ForgetNmeModelView.swift in Sources */,
 				10CA6EC02DCC9103003B265C /* ScrollViewUniversal.swift in Sources */,
 				AFA98C8F2E01748000E87802 /* VariablesView.swift in Sources */,
+				AFCC4CA02E49E8CF00629DE3 /* MultipartAPI.swift in Sources */,
 				AF72E4462DFD557700626DC0 /* LocationManager.swift in Sources */,
 				AFDFD4822E32301700F81B24 /* VoilationBox.swift in Sources */,
 				AF9DD4F32DDDB25F0034FA8E /* DvirEditField.swift in Sources */,
@@ -1211,6 +1230,7 @@
 				AFB9432D2E029CCF00AD19D7 /* DeviceViewController+TrackerServiceDelegate.swift in Sources */,
 				1009E35F2DCB376D002E3D13 /* CoordinatorClass.swift in Sources */,
 				AF97AFA82E2B666D009F1B06 /* MoniterClass.swift in Sources */,
+				AFCC4CA22E49EBD000629DE3 /* ViewDriveringDtatusBydateModel.swift in Sources */,
 				AFC3CFA22DE5F1A200D83558 /* RulesView.swift in Sources */,
 				AFB943392E029CD700AD19D7 /* VariablesViewController.swift in Sources */,
 				AFB943242E029CB000AD19D7 /* StoredEventsViewController.swift in Sources */,

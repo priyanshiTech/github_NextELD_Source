@@ -15,6 +15,15 @@ struct EmailDvir: View {
     var onSelect: (DvirRecord) -> Void
     @State private var selectedVehicle: String = ""
     
+    //MARK: - remove placeholder multiple value  filteredRecords
+    
+    var filteredRecords: [DvirRecord] {
+        updateRecords.filter { record in
+            !(record.date == "Current Date" || record.time == "Current Time")
+        }
+    }
+
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
@@ -56,7 +65,6 @@ struct EmailDvir: View {
                                 .imageScale(.large)
                         }
                         
-                        //}
                         Button(action: {
                             navmanager.navigate(to: .DvirHostory(tittle: "Dvir History"))
                         }) {
@@ -73,7 +81,7 @@ struct EmailDvir: View {
                 Divider()
                 
                 // MARK: - Main Content
-                if updateRecords.isEmpty {
+                if filteredRecords.isEmpty {
                     Spacer()
                     VStack(spacing: 12) {
                         Image(systemName: "doc.text.magnifyingglass")
@@ -88,15 +96,13 @@ struct EmailDvir: View {
                     Spacer()
                 } else {
                     List {
-                        ForEach(updateRecords, id: \.id) { record in
+                        ForEach(filteredRecords, id: \.id) { record in
                             NavigationLink(
                                 destination:AddDvirScreenView(
                                     selectedVehicle: $selectedVehicle,
                                     selectedVehicleupdated: $selectedVehicle,
                                     selectedRecord: record
                                 )
-                                
-                                
                             ) {
                                 HStack(alignment: .top, spacing: 10) {
                                     Image(systemName: "checkmark.circle.fill")

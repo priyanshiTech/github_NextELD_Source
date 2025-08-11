@@ -39,7 +39,7 @@ enum AppRoute: Hashable {
     case DotInspection(tittle: String)
     //  With associated value
     case LogsDetails(title: String, entry: WorkEntry)
-    case EyeViewData(tittle: String)
+    case EyeViewData(tittle: String , entry : WorkEntry )
     case CoDriverLogin
     case NewDriverLogin(title: String)
     //Vichle Mode
@@ -142,11 +142,10 @@ struct RootView: View {
                 case .DotInspection(let titlle):
                     DotInspection( title: titlle)
                     
-                case .EyeViewData:
-                    EyeViewData(tittle: "Daily Logs", selectedDate: Date())
+                case .EyeViewData(let title, let entry):
+                    EyeViewData(title: title, entry: entry)
                     
                 case .AddDvirScreenView:
-                   // AddDvirScreenView(selectedVehicle: $selectedVehicle)
                     AddDvirScreenView(
               
                         selectedVehicle: $selectedVehicle,

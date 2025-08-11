@@ -53,7 +53,16 @@ struct LogsDetails: View {
                     Spacer()
                     
                     HStack(spacing: 5) {
-                        CustomIconButton(iconName: "eye_fill_icon", title: "", action: { navManager.navigate(to: .EyeViewData(tittle: "daily Logs"))})
+                       // CustomIconButton(iconName: "eye_fill_icon", title: "", action: { navManager.navigate(to: .EyeViewData(tittle: "daily Logs"))})
+                        CustomIconButton(iconName: "eye_fill_icon", title: "", action: {
+                            navManager.navigate(to: .EyeViewData(
+                                tittle: "Daily Logs",
+                                entry: entry,
+                              //  selectedDate: $selectedDate // pass binding
+                            ))
+                        })
+
+
                     }
                 }
                 .padding(.horizontal) // or even remove entirely to test

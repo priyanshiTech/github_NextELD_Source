@@ -13,13 +13,14 @@ struct DvirListView: View {
     @State private var records: [DvirRecord] = []
     @State private var currentPage = 0
     private let recordsPerPage = 10
-
+ 
     var paginatedRecords: [DvirRecord] {
         let start = currentPage * recordsPerPage
         let end = min(start + recordsPerPage, records.count)
         return Array(records[start..<end])
     }
 
+    
     var totalPages: Int {
         max(1, (records.count + recordsPerPage - 1) / recordsPerPage)
     }
@@ -80,9 +81,27 @@ struct DvirListView: View {
         .padding()
     }
 
+//   func loadRecords() {
+//        records = DvirDatabaseManager.shared.fetchAllRecords()
+//    }
+    
+    
+
     func loadRecords() {
-        records = DvirDatabaseManager.shared.fetchAllRecords()
+        let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+
+        var seenKeys = Set<String>()
+        records = allRecords.filter { record in
+            let key = "\(record.driver)-\(record.vehicle)-\(record.trailer)"
+            if seenKeys.contains(key) {
+                return false
+            } else {
+                seenKeys.insert(key)
+                return true
+            }
+        }
     }
+
 }
 
 // MARK: - Table Header
