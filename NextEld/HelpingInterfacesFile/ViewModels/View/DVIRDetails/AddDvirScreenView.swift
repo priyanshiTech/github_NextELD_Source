@@ -34,9 +34,7 @@ struct AddDvirScreenView: View  {
     @State  var  companyName: String = ""
     @State  var Location: String  = ""
     @State  var  driverID: String  = ""
-    //let time = DateTimeHelper.currentTime()      // e.g., "12:51:00"
-   // let date = DateTimeHelper.currentDate()
-    
+
     
     @State private var date: String = ""
     @State private var time: String = ""
@@ -135,7 +133,7 @@ struct AddDvirScreenView: View  {
                         CardContainer {
                             Button(action: {
                                 
-                                navmanager.navigate(to: AppRoute.trailer)   //MARK: -  26 july
+                                navmanager.navigate(to: AppRoute.trailerScreen)   //MARK: -  26 july
                             }) {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {

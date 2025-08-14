@@ -9,10 +9,7 @@ import Foundation
 import SwiftUI
 
 enum AppRoute: Hashable {
- 
-   
- 
-    
+
     case SplashScreen
     case ForgetPassword(tittle: String)
     case ForgetUser(tittle: String)
@@ -20,10 +17,12 @@ enum AppRoute: Hashable {
     case Scanner
     case Login
     case CertifySelectedView(tittle: String)
+    case DatabaseCertifyView
     case AddDvirPriTrip
     //MARK: -  Cases of Add dvirPri trip
     
-    case trailer
+    case trailerScreen
+    case ShippingDocment
     case DvirHostory(tittle: String)
     case NT11Connection
     case PT30Connection
@@ -52,7 +51,7 @@ enum AppRoute: Hashable {
     case Logout
     case FirmWare_Update
     case DriverLogListView
-   case  DvirDataListView
+    case DvirDataListView
     
 }
 
@@ -70,6 +69,7 @@ struct RootView: View {
     @State private var hasCheckedSession = false
     @EnvironmentObject var loginVM: LoginViewModel
     @StateObject var session = SessionManager()
+
 
 
 
@@ -121,11 +121,8 @@ struct RootView: View {
                     HoursRecap(tittle: tittle)
                 case .LogsDetails(let title, let entry):
                     LogsDetails(title: title, entry: entry)
-                case .CertifySelectedView(let tittle):
-                    CertifySelectedView(title: tittle)
-                    
-//                case .AddDvirPriTrip:
-//                    EmailDvir( tittle: "")
+                case .CertifySelectedView(let tittle ):
+                    CertifySelectedView( vehiclesc:  $selectedVehicle, title: tittle)
                 case .AddDvirPriTrip:
                     EmailDvir(
                         tittle: "Email DVIR",
@@ -172,6 +169,8 @@ struct RootView: View {
                 case .ADDVehicle:
                     ADDVehicle(selectedVehicleNumber: $selectedVehicle)
                     
+    
+                    
                 case .CoDriverLogin:
                     CoDriverLogin()
                     
@@ -206,11 +205,16 @@ struct RootView: View {
                 case .DriverLogListView:
                     DriverLogListView()
                     
-                case .trailer:
+                case .trailerScreen:
                     TrailerView(tittle:"Trailer")
                     
                 case .DvirDataListView:
                     DvirListView()
+                    
+                case .ShippingDocment:
+                    ShippingDocView(tittle: "Shipping Document")
+                case .DatabaseCertifyView:
+                    DatabaseCertifyView()
                 }
                 
             }

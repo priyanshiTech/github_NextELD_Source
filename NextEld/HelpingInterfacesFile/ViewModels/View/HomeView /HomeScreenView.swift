@@ -68,7 +68,7 @@ struct TopBarView: View {
                                    Button("OK", role: .destructive) {
                                        Task {
                                            await viewModel.refresh()
-                                           await deleteViewModel.deleteAllDataOnVersionClick(driverId: 17)
+                                           //await deleteViewModel.deleteAllDataOnVersionClick(driverId: 17)
                                        }
                                    }
                                }

@@ -55,26 +55,57 @@ struct SignatureCertifyView: View {
                         .stroke(Color(uiColor: .wine), lineWidth: 1)
                 )
 
+                
                 Button("Agree") {
                     // 1. Verify there's actually a signature
                     guard !signaturePath.isEmpty else {
                         showAlert = true
                         return
                     }
-                    
+
                     // 2. Render the signature as image
                     let size = CGSize(width: 300, height: 250)
                     let image = renderSignatureAsImage(path: signaturePath, size: size)
-                    
-                    // 3. Convert to PNG data
-                    guard let imageData = image.pngData() else {
-                        print("Failed to convert signature to PNG data")
+
+                    // 3. Convert to JPEG data (matches .jpg filename)
+                    guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+                        print("Failed to convert signature to JPEG data")
                         return
                     }
-                    
-                    // 4. Create a complete DVIR record with signature
+
+                    // 4. Save signature JPEG to a temporary file with dynamic filename
+                    let driverId = "17"
+                    let TokenNo = UserDefaults.standard.string(forKey: "authToken") ?? ""
+                    let tempDirectory = FileManager.default.temporaryDirectory
+                    let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
+                    print("here is your File URL Bro*******\(fileURL)")
+
+                    do {
+                        try imageData.write(to: fileURL)
+                    } catch {
+                        print("Failed to write signature to file: \(error)")
+                        return
+                    }
+
+                    // 5. Call the CertifyDriver API
+                    let viewModel = CertifyDriverViewModel()
+                    viewModel.uploadCertifiedLog(
+                        driverId: "17",
+                        vehicleId: "2",
+                        coDriverId: "0",
+                        trailers: "aaa,zzz",
+                        shippingDocs: "aaa,bbb,ccc",
+                        certifiedDate: "2025-08-13",
+                        fileURL: fileURL,
+                        tokenNo: TokenNo,
+                        certifiedDateTime: "1755129599000", // <- numeric timestamp
+                        certifiedAt: "1755150649"        // <- numeric timestamp
+                    )
+
+
+                    // 6. Save to local database
                     let record = DvirRecord(
-                        driver: "Driver Name", // Replace with actual values
+                        driver: "Driver Name",
                         time: "Current Time",
                         date: "Current Date",
                         odometer: "Odometer Reading",
@@ -88,13 +119,16 @@ struct SignatureCertifyView: View {
                         notes: "Additional Notes",
                         signature: imageData
                     )
-                    
-                    // 5. Save to database
+
                     DvirDatabaseManager.shared.insertRecord(record)
-                    
+                    print("Save DVIR Data Re4cord Successfully \(record)")
+
+                    // 7. Show alert to user
                     showAlert = true
                 }
 
+
+            
                 .alert("Image Saved", isPresented: $showAlert) {
                     Button("OK", role: .cancel) { }
                 } message: {

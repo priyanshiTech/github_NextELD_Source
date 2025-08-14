@@ -61,21 +61,12 @@ class SyncViewModel: ObservableObject {
                 utcDateTime: log.timestamp,
                 vehicleId: "\(log.vehicleId)"
             )
+            
+           
+           
         }
 
 
-//        let requestBody = SyncRequest(
-//            eldLogData: [], driveringStatusData: driveringStatusData,
-//            //splitLog: SplllitLogss(day: 0, dbId: 0, driverId: 0, shift: 0)
-//            splitLog:  SplllitLogss(
-//                day: log.day,
-//                dbId: log.id ?? 0,
-//                driverId: log.userId,
-//                shift: log.shift
-//            )
-//
-//            
-//        )
         guard let firstLog = unsyncedLogs.first else { return }
 
         let splitLog = SplllitLogss(
@@ -90,7 +81,7 @@ class SyncViewModel: ObservableObject {
             driveringStatusData: driveringStatusData,
             splitLog: splitLog
         )
-
+          print("Request data To Offline API ::::::::\(requestBody)")
         isSyncing = true
         defer { isSyncing = false }
 

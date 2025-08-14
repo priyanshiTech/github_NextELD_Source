@@ -16,6 +16,6 @@ struct DeleteDriverResponse: Codable {    //MARK: -  Responce API
 }
 
 
-struct DeleteAllDriverStatusRequest: Encodable {    //MARK: - Request Model
+struct DeleteAllDriverStatusRequest: Codable {    //MARK: - Request Model
     let driverId: Int
 }

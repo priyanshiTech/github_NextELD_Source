@@ -23,6 +23,11 @@ enum API {
         case update_dvir_data
         case getRefershAlldata
         case viewdriveringstatusbydate
+        case CompanyDriverInformation
+        case HelpSupportInfo
+        case CodriverListInfo
+        case certifyDriver
+        
 
         var url: URL {
             switch self {
@@ -44,22 +49,63 @@ enum API {
                 return API.baseURL.appendingPathComponent("auth/login_data_by_employee_id")
             case .viewdriveringstatusbydate:
                 return API.baseURL.appendingPathComponent("dispatch/view_drivering_status_by_date")
-
+            case .CompanyDriverInformation:
+                return API.baseURL.appendingPathComponent("master/view_driver_information")
+            case .HelpSupportInfo:
+                return API.baseURL.appendingPathComponent("dispatch/add_eld_support")
+            case .CodriverListInfo:
+                return API.baseURL.appendingPathComponent("master/view_employee_by_client")
+            case .certifyDriver:
+                return API.baseURL.appendingPathComponent("dispatch/add_certified_log")
             }
         }
 
         var method: String {
+            
             switch self {
-            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate:
+                
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo:
                 return "POST"
-            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata:
+            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver:
                 return "POST"
-
+        
             }
         }
     }
 }
 
+//MARK: -  for Curl
+
+
+private func printCurlCommand(for request: URLRequest) {
+    guard let url = request.url else { return }
+    var curlCommand = "curl"
+
+    // HTTP method
+    if let method = request.httpMethod {
+        curlCommand += " -X \(method)"
+    }
+
+    // Headers
+    if let headers = request.allHTTPHeaderFields {
+        for (key, value) in headers {
+            curlCommand += " -H '\(key): \(value)'"
+        }
+    }
+
+    // Body
+    if let httpBody = request.httpBody,
+       let bodyString = String(data: httpBody, encoding: .utf8),
+       !bodyString.isEmpty {
+        curlCommand += " -d '\(bodyString.replacingOccurrences(of: "'", with: "\\'"))'"
+    }
+
+    // URL
+    curlCommand += " '\(url.absoluteString)'"
+
+    print("\n📡 Generated cURL Command:")
+    print(curlCommand)
+}
 
 
 
@@ -75,7 +121,9 @@ final class NetworkManager {
         var request = URLRequest(url: endpoint.url)
         request.httpMethod = endpoint.method
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        
+        printCurlCommand(for: request)
+        
         let encodedBody = try JSONEncoder().encode(body)
         request.httpBody = encodedBody
 

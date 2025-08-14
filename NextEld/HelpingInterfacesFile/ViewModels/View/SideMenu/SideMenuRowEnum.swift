@@ -7,17 +7,20 @@
 
 import Foundation
 import SwiftUICore
+import UIKit
 
 
-struct AppInfo {
-    static var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-    }
-
-    static var buildNumber: String {
-        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
-    }
-}
+//struct AppInfo {
+//    static var appVersion: String {
+//        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+//    }
+//
+//    static var buildNumber: String {
+//        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+//    }
+//   
+//
+//}
 
 
 enum SideMenuRowType: Int, CaseIterable{
@@ -72,7 +75,8 @@ enum SideMenuRowType: Int, CaseIterable{
             return  "Logout"
 
         case .version:
-            return "Version \(AppInfo.appVersion) (\(AppInfo.buildNumber))"
+            return "Version \(UIDevice.current.systemVersion) "
+           // (\(AppInfo.buildNumber))"
             
             //        case .emailLogs:
             //                return "Daily Logs"

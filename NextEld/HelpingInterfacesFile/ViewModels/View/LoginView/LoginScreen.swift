@@ -151,6 +151,7 @@ struct LoginScreen: View {
                     .padding(.horizontal)
             }
         }
+        .navigationBarBackButtonHidden()
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(uiColor: .wine).ignoresSafeArea())

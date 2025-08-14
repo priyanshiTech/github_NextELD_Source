@@ -61,8 +61,10 @@ struct TrailerView: View {
                         if !inputText.isEmpty {
                            // items.append(inputText)
                             trailerVM.trailers.append(inputText)
-                            inputText = ""    //  Auto-clear TextField after add
+                          
+                            inputText = ""
                         }
+                     
                     }) {
                         Text("Add")
                             .padding(.vertical, 8)

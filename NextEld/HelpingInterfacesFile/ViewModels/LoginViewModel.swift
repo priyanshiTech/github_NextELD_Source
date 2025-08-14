@@ -56,13 +56,22 @@ class LoginViewModel: ObservableObject {
                 //Save token in Keychain / UserDefaults
                 SessionManagerClass.shared.saveToken(token)
                 UserDefaults.standard.set(token, forKey: "authToken")
+                
                 UserDefaults.standard.set(email, forKey: "userEmail")
-
+//MARK: -  Save employeeid
+                if let empId = response.result?.employeeId {
+                    UserDefaults.standard.set(empId, forKey: "employeeId")
+                }
+                //MARK: - ClientId
+                if let clintId = response.result?.clientId {
+                    UserDefaults.standard.set(clintId, forKey: "clientId")
+                }
                 //Save Driver Name
                 if let driverName = response.result?.driverLog?.first?.driverName {
                     UserDefaults.standard.set(driverName, forKey: "driverName")
                     print("Saved full name to UserDefaults: \(driverName)")
                 }
+                //MARK: - 
                 // Save Driver Name
                 if let driverName = response.result?.driverLog?.first?.driverName {
                     print(" API Returned driverName: \(driverName)")
@@ -99,7 +108,7 @@ class LoginViewModel: ObservableObject {
                 }
                 
                 if let driverId = response.result?.driverLog?.first?.driverId {
-                    UserDefaults.standard.set(driverId, forKey: "userId")
+                    UserDefaults.standard.set(driverId, forKey: "driverId")
                     print(" Saved userId to UserDefaults: \(driverId)")
                 } else {
                     print(" No driverId found in API response, defaulting to 0")

@@ -2,35 +2,24 @@
 //  CompanyInformationView.swift
 //  NextEld
 //
-//  Created by Inurum   on 27/05/25.
+//  Created by priyanshi on 27/05/25.
 //
 
 import SwiftUI
 
-
 struct CompanyInformationView: View {
-    
-
-    @State private var driverName = "Mark Josheph"
-    @State private var driverEmail = "amanjosheph@gmail.com"
-    @State private var driverPhone = "1234567890"
-    @State private var driverLicence = "464465"
-    @State private var companyName = "Eld Solutions - India"
-    @State private var mainOfficeAddress = "Main Terminal 1"
-    @State private var homeTerminalAddress = "Main Terminal 1"
     @EnvironmentObject var navmanager: NavigationManager
-
+    @StateObject private var viewModel = EmployeeViewModel(networkManager: NetworkManager.shared)
+    
     var body: some View {
         VStack(spacing: 0) {
-            // Top Blue Bar
-            
+            // Header
             Color(uiColor: .wine)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 1)
+            
             HStack {
-                Button(action: {
-                    navmanager.goBack()
-                }) {
+                Button(action: { navmanager.goBack() }) {
                     Image(systemName: "arrow.left")
                         .bold()
                         .foregroundColor(.white)
@@ -50,22 +39,26 @@ struct CompanyInformationView: View {
             UniversalScrollView {
                 VStack(alignment: .leading, spacing: 30) {
                     
-                    InputField(label: "Driver Name", text: $driverName)
-                    InputField(label: "Driver Email", text: $driverEmail)
-                    InputField(label: "Driver Phone", text: $driverPhone)
-                    InputField(label: "Driver Licence", text: $driverLicence)
-                    InputField(label: "Company Name", text: $companyName)
-                    InputField(label: "Main Office Address", text: $mainOfficeAddress)
-                    InputField(label: "Home Terminal Address", text: $homeTerminalAddress)
-
+                    InputField(label: "Driver Name", text: .constant("\(viewModel.companyInfo?.firstName ?? "") \(viewModel.companyInfo?.lastName ?? "")"))
+                    InputField(label: "Driver Email", text: .constant(viewModel.companyInfo?.email ?? ""))
+                    InputField(label: "Driver Phone", text: .constant("\(viewModel.companyInfo?.mobileNo ?? 0)"))
+                    InputField(label: "Driver Licence", text: .constant(viewModel.companyInfo?.cdlNo ?? ""))
+                    InputField(label: "Company Name", text: .constant(viewModel.companyInfo?.companyName ?? ""))
+                    InputField(label: "Main Office Address", text: .constant(viewModel.companyInfo?.mainOfficeAddress ?? ""))
+                    InputField(label: "Home Terminal Address", text: .constant(viewModel.companyInfo?.homeTerminalAddress ?? ""))
                 }
                 .padding()
             }
-        }.navigationBarBackButtonHidden()
+            .task {
+                await viewModel.fetchEmployeeData(
+                    employeeId: 17,
+                    tokenNo: "60ea2fbd-4585-4c27-a47b-8ee8101ffb41"
+                )
+            }
+        }
+        .navigationBarBackButtonHidden()
     }
 }
-
-// Reusable Field View
 struct InputField: View {
     var label: String
     @Binding var text: String
@@ -91,3 +84,5 @@ struct InputField: View {
 //#Preview {
 //    CompanyInformationView()
 //}
+
+

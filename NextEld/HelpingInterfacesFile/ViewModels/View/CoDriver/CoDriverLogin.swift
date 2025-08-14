@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CoDriverLogin: View {
-    @State private var selectionCoDriver: String? = nil
+    //@State private var selectionCoDriver: String? = nil
+    @State private var selectionCoDriver: String = ""
+
     @State private var ShowDriver = false
     @EnvironmentObject var navmanager: NavigationManager
 

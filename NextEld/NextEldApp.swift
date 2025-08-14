@@ -11,13 +11,18 @@ import SwiftUI
 
 @main
 struct NextEldApp: App {
+    
+    
     @StateObject private var navManager = NavigationManager()
     @StateObject private var session = SessionManager()
     @StateObject private var loginVM = LoginViewModel(session: SessionManager()) // temp placeholder
     @StateObject private var networkMonitor = NetworkMonitor()
     @StateObject var trailerVM = TrailerViewModel()
+    @StateObject var shippingVM = ShippingDocViewModel()
+    @StateObject var addVechicleVm = VehicleViewModel()
     @StateObject var vehicleVM = VehicleConditionViewModel()
     @StateObject var hoseEventsChartViewModel = HOSEventsChartViewModel()
+    
 
 
     var body: some Scene {
@@ -31,8 +36,11 @@ struct NextEldApp: App {
                 .environmentObject(sharedLoginVM)
                 .environmentObject(networkMonitor)
                 .environmentObject(trailerVM)
+                .environmentObject(addVechicleVm)
                 .environmentObject(vehicleVM)
                 .environmentObject(hoseEventsChartViewModel)
+                .environmentObject(shippingVM)
+              
         }
     }
 }
