@@ -9,18 +9,15 @@ import Foundation
 import SwiftUICore
 import UIKit
 
-
-//struct AppInfo {
-//    static var appVersion: String {
-//        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-//    }
-//
-//    static var buildNumber: String {
-//        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
-//    }
-//   
-//
-//}
+struct AppInfo {
+    static var version: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+    }
+    
+    static var build: String {
+        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
+    }
+}
 
 
 enum SideMenuRowType: Int, CaseIterable{

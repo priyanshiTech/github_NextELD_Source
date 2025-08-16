@@ -207,6 +207,15 @@ class DatabaseManager {
     func insertLog(from model: DriverLogModel)
 
     {
+        let skipStatuses: Set<String> = [
+               DriverStatusConstants.weeklyCycle // Add more if needed
+           ]
+           
+           if skipStatuses.contains(model.status) {
+               print("⏩ Skipping log insert for status: \(model.status)")
+               return
+           }
+           
             do {
                 let insert = driverLogs.insert(
                     status <- model.status,
@@ -238,7 +247,6 @@ class DatabaseManager {
                     isSplit <- model.isSplit,
                     engineStatus <- model.engineStatus
                 )
-
                 // Run insert and capture the auto-incremented ID
                 let rowID = try db?.run(insert) ?? 0
                 print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
@@ -246,9 +254,6 @@ class DatabaseManager {
             } catch {
                 print(" Insert Log Error: \(error.localizedDescription)")
             }
-        
-      
-
         }
     
     //MARK: -  TO DELETE ALL SAVED DATA IN DBMS

@@ -18,7 +18,7 @@ class CertifyDriverViewModel: ObservableObject {
     @Published var token: String?
 
     func uploadCertifiedLog(
-        driverId: String,
+        driverId: Int,
         vehicleId: String,
         coDriverId: String,
         trailers: String,
@@ -39,9 +39,9 @@ class CertifyDriverViewModel: ObservableObject {
         }
 
         let fields: [String: String] = [
-            "driverId": driverId,
-            "vehicleId": vehicleId,
-            "coDriverId": coDriverId,
+            "driverId": String(driverId),
+            "vehicleId": String(vehicleId),
+            "coDriverId": String(coDriverId),
             "trailers": trailers,
             "shippingDocs": shippingDocs,
             "certifiedDate": certifiedDate,
@@ -49,6 +49,7 @@ class CertifyDriverViewModel: ObservableObject {
             "certifiedDateTime": certifiedDateTime,
             "certifiedAt": certifiedAt
         ]
+
 
 
         

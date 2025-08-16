@@ -18,12 +18,12 @@ class EmployeeViewModel: ObservableObject {
     @Published var companyInfo: CompanyInformation?
     @Published var isLoading = false
     @Published var errorMessage: String?
-    
     private let networkManager: NetworkManager
     
     init(networkManager: NetworkManager) {
         self.networkManager = networkManager
     }
+    
     
     func fetchEmployeeData(employeeId: Int, tokenNo: String) async {
         isLoading = true

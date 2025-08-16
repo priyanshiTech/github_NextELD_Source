@@ -31,16 +31,16 @@ class SyncViewModel: ObservableObject {
           
 
             return DriveringStatusData(
-                appVersion: "12.0",
+                appVersion: AppInfo.version,
                 clientId: 1,
                 currentLocation: log.location,
                 customLocation: log.location,
                 dateTime: log.startTime,
                 days: log.day,
-                driverId: log.userId,
+                driverId: DriverInfo.driverId ?? 0,
                 engineHour: log.engineHours,
                 engineStatus: log.engineStatus,
-                identifier: log.identifier,
+                identifier: 0,
                 isSplit: log.isSplit,
                 isVoilation: log.isVoilations,
                 lastOnSleepTime: Int(log.lastSleepTime) ?? 0,
@@ -50,7 +50,7 @@ class SyncViewModel: ObservableObject {
                 longitude: log.long,
                 note: log.notes,
                 odometer: Int(log.odometer),
-                origin: log.origin,
+                origin: DriverInfo.origins,
                 osVersion: "iOS - \(UIDevice.current.systemVersion)",
                 remainingDriveTime: Int(log.remainingDriveTime ?? "0") ?? 0,
                 remainingDutyTime: Int(log.remainingDutyTime ?? "0") ?? 0,
@@ -59,13 +59,11 @@ class SyncViewModel: ObservableObject {
                 shift: log.shift,
                 status: log.status,
                 utcDateTime: log.timestamp,
-                vehicleId: "\(log.vehicleId)"
+                vehicleId: DriverInfo.vehicleId ?? 3
             )
-            
-           
            
         }
-
+        
 
         guard let firstLog = unsyncedLogs.first else { return }
 

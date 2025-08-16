@@ -139,7 +139,11 @@ struct DVIRHistory: View {
                }
          
                .padding(.horizontal)
-               .padding(.top, 12)
+               .padding(.top,
+               
+               
+               
+               )
             }
         Spacer()
             .navigationBarBackButtonHidden()

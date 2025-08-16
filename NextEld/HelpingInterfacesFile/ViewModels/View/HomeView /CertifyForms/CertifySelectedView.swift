@@ -156,8 +156,8 @@ struct CertifySelectedView: View {
                         }
                         Button(action: {
                             let record = CertifyRecord(
-                                    userID: "17", // Or get from your logged-in user data
-                                    userName: "Mark Joseph",
+                                    userID: String(DriverInfo.driverId ?? 0), // Or get from your logged-in user data
+                                    userName: DriverInfo.UserName,
                                     startTime: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
                                     date: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none),
                                     shift: "Day", // Or dynamically from your shift logic

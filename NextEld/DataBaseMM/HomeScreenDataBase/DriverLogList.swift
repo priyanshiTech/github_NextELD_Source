@@ -84,18 +84,6 @@ struct DriverLogListView: View {
                 }
                 .disabled((currentPage + 1) * logsPerPage >= viewModel.logs.count)
 
-//                Button("Clear All Logs") {
-//                    showConfirmation = true
-//                }
-//                .alert("Are you sure?", isPresented: $showConfirmation) {
-//                    Button("Delete All", role: .destructive) {
-//                       // DatabaseManager.shared.deleteDatabaseFile()
-//                        DatabaseManager.shared.deleteAllLogs()
-//                         viewModel.logs.removeAll()
-//                         currentPage = 0
-//                    }
-//                    Button("Cancel", role: .cancel) {}
-//                }
             }
             .padding()
         }
@@ -152,7 +140,7 @@ struct DriverLogRow: View {
             TableCell(text: "\(log.id ?? -1)", width: 50)
             TableCell(text: log.status, width: 180)
             TableCell(text: log.startTime, width: 260)
-            TableCell(text: String(describing: log.userId), width: 100)
+            TableCell(text: "\(DriverInfo.driverId ?? 0)", width: 100)
             TableCell(text: "\(log.day)", width: 100)
             TableCell(text: "\(log.isVoilations)", width: 100)
             TableCell(text: log.dutyType, width: 150)
@@ -165,10 +153,9 @@ struct DriverLogRow: View {
             TableCell(text: log.engineHours, width: 100)
             TableCell(text: log.origin, width: 100)
             TableCell(text: log.isSynced ? "Yes" : "No", width: 100)
-            TableCell(text: String(describing: log.vehicleId), width: 100)
+            TableCell(text: "\(DriverInfo.vehicleId ?? 3)", width: 100)
             TableCell(text: log.trailers, width: 100)
             TableCell(text: log.notes, width: 100)
-          //  TableCell(text: String(describing: log.serverId), width: 300)
             TableCell(text: log.serverId.map { String($0) } ?? "-", width: 300)
             TableCell(text: "\(log.timestamp)", width: 100)
             TableCell(text: "\(log.identifier)", width: 100)

@@ -74,35 +74,38 @@ struct SignatureCertifyView: View {
                     }
 
                     // 4. Save signature JPEG to a temporary file with dynamic filename
-                    let driverId = "17"
-                    let TokenNo = UserDefaults.standard.string(forKey: "authToken") ?? ""
-                    let tempDirectory = FileManager.default.temporaryDirectory
-                    let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
-                    print("here is your File URL Bro*******\(fileURL)")
-
-                    do {
-                        try imageData.write(to: fileURL)
-                    } catch {
-                        print("Failed to write signature to file: \(error)")
-                        return
+                 
+                    if let driverId = DriverInfo.driverId {   //  I Used Using your common approach
+                        let tokenNo = DriverInfo.authToken
+                        let tempDirectory = FileManager.default.temporaryDirectory
+                        let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
+            
+                        print("Token: \(tokenNo)")
+                        print("here is your File URL Bro*******\(fileURL)")
+                        
+                        do {
+                            try imageData.write(to: fileURL)
+                        } catch {
+                            print("Failed to write signature to file: \(error)")
+                            return
+                        }
+                        
+                        // 5. Call the CertifyDriver API
+                        let viewModel = CertifyDriverViewModel()
+                        viewModel.uploadCertifiedLog(
+                            driverId: driverId,
+                            vehicleId: "2",
+                            coDriverId: "0",
+                            trailers: "aaa,zzz",
+                            shippingDocs: "aaa,bbb,ccc",
+                            certifiedDate: "2025-08-13",
+                            fileURL: fileURL,
+                            tokenNo: tokenNo,
+                            certifiedDateTime: "1755129599000", // <- numeric timestamp
+                            certifiedAt: "1755150649"        // <- numeric timestamp
+                        )
+                        
                     }
-
-                    // 5. Call the CertifyDriver API
-                    let viewModel = CertifyDriverViewModel()
-                    viewModel.uploadCertifiedLog(
-                        driverId: "17",
-                        vehicleId: "2",
-                        coDriverId: "0",
-                        trailers: "aaa,zzz",
-                        shippingDocs: "aaa,bbb,ccc",
-                        certifiedDate: "2025-08-13",
-                        fileURL: fileURL,
-                        tokenNo: TokenNo,
-                        certifiedDateTime: "1755129599000", // <- numeric timestamp
-                        certifiedAt: "1755150649"        // <- numeric timestamp
-                    )
-
-
                     // 6. Save to local database
                     let record = DvirRecord(
                         driver: "Driver Name",

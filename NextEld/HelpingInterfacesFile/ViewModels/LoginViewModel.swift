@@ -56,9 +56,20 @@ class LoginViewModel: ObservableObject {
                 //Save token in Keychain / UserDefaults
                 SessionManagerClass.shared.saveToken(token)
                 UserDefaults.standard.set(token, forKey: "authToken")
-                
                 UserDefaults.standard.set(email, forKey: "userEmail")
 //MARK: -  Save employeeid
+                if let driverId =
+                    response.result?.driverLog?.first?.driverId ??
+                    response.result?.loginLogoutLog?.first?.driverId ??
+                    response.result?.employeeId {
+
+                    UserDefaults.standard.set(driverId, forKey: "driverId")
+                    print(" Saved driverId: \(driverId)")
+                } else {
+                    print(" No driverId found in any field")
+                }
+
+
                 if let empId = response.result?.employeeId {
                     UserDefaults.standard.set(empId, forKey: "employeeId")
                 }
@@ -66,11 +77,7 @@ class LoginViewModel: ObservableObject {
                 if let clintId = response.result?.clientId {
                     UserDefaults.standard.set(clintId, forKey: "clientId")
                 }
-                //Save Driver Name
-                if let driverName = response.result?.driverLog?.first?.driverName {
-                    UserDefaults.standard.set(driverName, forKey: "driverName")
-                    print("Saved full name to UserDefaults: \(driverName)")
-                }
+
                 //MARK: - 
                 // Save Driver Name
                 if let driverName = response.result?.driverLog?.first?.driverName {
@@ -107,13 +114,7 @@ class LoginViewModel: ObservableObject {
                     UserDefaults.standard.set(onSleepTime, forKey: "onSleepTime")
                 }
                 
-                if let driverId = response.result?.driverLog?.first?.driverId {
-                    UserDefaults.standard.set(driverId, forKey: "driverId")
-                    print(" Saved userId to UserDefaults: \(driverId)")
-                } else {
-                    print(" No driverId found in API response, defaulting to 0")
-                }
-
+            
                 //Save Shift
                 if let shiftValue = response.result?.driverLog?.first?.shift {
                     UserDefaults.standard.set(shiftValue, forKey: "shift")
@@ -149,7 +150,7 @@ class LoginViewModel: ObservableObject {
                 }
                 
                 if let VechicleID = response.result?.driverLog?.first?.vehicleId{
-                    UserDefaults.standard.set(VechicleID, forKey: "vehicleId")
+                    let vehicleId = UserDefaults.standard.integer(forKey: "vehicleId") // works for Int
                     print(" Saved VechicleID: \(VechicleID)")
                 }
                 
@@ -169,7 +170,7 @@ class LoginViewModel: ObservableObject {
                 }
                 
                 if let  trailer  =  response.result?.driverLog?.first?.trailers{
-                    UserDefaults.standard.set(trailer, forKey: "trailer ")
+                    UserDefaults.standard.set(trailer, forKey: "trailer")
                 }
                 session.logIn(token: token)
             }

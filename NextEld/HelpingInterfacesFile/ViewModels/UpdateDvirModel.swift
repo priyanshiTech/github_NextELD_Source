@@ -16,7 +16,7 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
     let odometer = record.odometer.isEmpty ? "0" : record.odometer
 
     let fields: [String: String] = [
-        "driverId": "12",
+        "driverId": String(DriverInfo.driverId ?? 0),
         "dateTime": "\(record.date) \(record.time)",
         "location": record.location,
         "truckDefect": record.truckDefect,

@@ -155,68 +155,71 @@ struct StatusView: View {
                 VStack(alignment: .center, spacing: 0) {
                     HStack {
                         StatusCheckBox(
-                            isClick: confirmedStatus == "On-Duty",
+                            isClick: confirmedStatus == DriverStatusConstants.onDuty,
                             labelText: "On-Duty",
                             onTap: {
-                                selectedStatus = "On-Duty"
+                                selectedStatus = DriverStatusConstants.onDuty
                                 showAlert = true
                             })
-                        
+
+                            
                         Spacer()
                         StatusCheckBox(
-                            isClick: confirmedStatus == "Drive",
+                            isClick: confirmedStatus == DriverStatusConstants.onDrive,
                             labelText: "Drive",
                             onTap: {
-                                selectedStatus = "Drive"
+                                selectedStatus = DriverStatusConstants.onDrive
                                 showAlert = true
                             })
                     }
                     .padding()
                     HStack {
                         StatusCheckBox(
-                            isClick: confirmedStatus == "Off-Duty",
+                            isClick: confirmedStatus == DriverStatusConstants.offDuty,
                             labelText: "Off-Duty",
                             onTap: {
-                                selectedStatus = "Off-Duty"
+                                selectedStatus =  DriverStatusConstants.offDuty
                                 showAlert = true
                             })
                         
                         Spacer()
                         StatusCheckBox(
-                            isClick: confirmedStatus == "Sleep",
+                            isClick: confirmedStatus == DriverStatusConstants.onSleep,
                             labelText: "Sleep",
                             onTap: {
-                                selectedStatus = "Sleep"
+                                selectedStatus = DriverStatusConstants.onSleep
                                 showAlert = true
                             })
                     }
                     .padding()
                 }
-                
+            
+
                 //MARK: -  Personal Use and Yard Move buttons
                 HStack {
                     StatusButton(
                         title: "Personal Use",
                         action: {
-                            selectedStatus = "Personal Use"
+                            selectedStatus = DriverStatusConstants.personalUse
                             showAlert = true
                         },
-                        isSelected: confirmedStatus == "Personal Use"
+                        isSelected: confirmedStatus ==  DriverStatusConstants.personalUse
                     )
                     
                     Spacer()
                     StatusButton(
                         title: "Yard Move",
                         action: {
-                            selectedStatus = "Yard Move"
+                            selectedStatus =  DriverStatusConstants.yardMove
                             showAlert = true
                         },
-                        isSelected: confirmedStatus == "Yard Move"
+                        isSelected: confirmedStatus == DriverStatusConstants.yardMove
                     )
                 }
             }
         }
     }
+ 
 }
 
 struct StatusBox: View {
@@ -305,14 +308,14 @@ struct AvailableHoursView: View {
                 //MARK: -  Time boxes
                 VStack(spacing: 2) {
                     HStack(spacing: 2) {
-                        TimeBox(title: "On-Duty", timer: ONDuty)
-                        TimeBox(title: "Drive", timer: driveTimer)
+                        TimeBox(title: DriverStatusConstants.onDuty, timer: ONDuty)
+                        TimeBox(title: DriverStatusConstants.onDrive, timer: driveTimer)
                     
                     }
                     
                     HStack(spacing: 2) {
                         TimeBox(title: "Cycle / 7 Days", timer: cycleTimer)
-                        TimeBox(title: "Sleep", timer: sleepTimer)
+                        TimeBox(title: DriverStatusConstants.onSleep, timer: sleepTimer)
                     }
                 }
             }
@@ -592,7 +595,7 @@ struct HomeScreenView: View {
                         .ignoresSafeArea()
                         .zIndex(2)
                     
-                    if selected == "Sleep" || selected == "Off-Duty" || selected == "Personal Use" || selected == "Yard Move" || selected == "On-Duty" {
+                    if selected == DriverStatusConstants.onSleep || selected == DriverStatusConstants.offDuty || selected == DriverStatusConstants.personalUse || selected == DriverStatusConstants.yardMove || selected == DriverStatusConstants.onDuty {
                         StatusDetailsPopup(
                             statusTitle: selected,
                             onClose: { showAlert = false },
@@ -600,7 +603,7 @@ struct HomeScreenView: View {
                                 confirmedStatus = selected
                                 print("Note for \(selected): \(note)")
                                 
-                                if selected == "On-Duty" {
+                                if selected == DriverStatusConstants.onDuty {
                                     sleepTimer.stop()
                                     let totalWorked = totalDutyLast7or8Days()
                                     let weeklyLimit = (cycleType == "7/60") ? 60 * 3600 : 70 * 3600
@@ -621,7 +624,7 @@ struct HomeScreenView: View {
                                     isOnDutyActive = true
                                     checkAndStartCycleTimer()
                                     offDutySleepAccumulated = 0
-                                } else if selected == "Sleep" {
+                                } else if selected == DriverStatusConstants.onSleep {
                                     sleepTimer.start()
                                     dutyTimerOn.stop()
                                     cycleTimerOn.stop()
@@ -630,7 +633,7 @@ struct HomeScreenView: View {
                                     DutyTime.stop()
                                     breakTime.start()
                                     checkFor10HourReset()
-                                } else if selected == "Off-Duty" {
+                                } else if selected == DriverStatusConstants.offDuty {
                                     let dutyTime = ONDuty.elapsed
                                     saveDailyDutyLog(duration: dutyTime)
                                     driveTimer.stop()
@@ -660,8 +663,8 @@ struct HomeScreenView: View {
                                     remainingSleepTime: sleepTimer.timeString,
                                     lastSleepTime: breakTime.timeString,
                                     RemaningRestBreak: "true",
-                                    isruning: selected == "Sleep",
-                                    isVoilations: selected == "Drive" || selected == "On-Duty" || selected == "Sleep"
+                                    isruning: selected == DriverStatusConstants.onSleep,
+                                    isVoilations: selected == DriverStatusConstants.onDrive || selected == DriverStatusConstants.onDuty || selected == DriverStatusConstants.onSleep
                                 )
                                 let logs = DatabaseManager.shared.fetchLogs()
                                 print(" Total Logs in DB: \(logs.count)")
@@ -673,7 +676,7 @@ struct HomeScreenView: View {
                             
                         )
                         .zIndex(3)
-                    } else if selected == "Drive" {
+                    } else if selected == DriverStatusConstants.onDrive {
                         CustomPopupAlert(
                             title: "Certify Log",
                             message: "please add DVIR before going to On-Drive",
@@ -693,7 +696,7 @@ struct HomeScreenView: View {
                                 let now = formatter.string(from: Date())
                                 
                                 DatabaseManager.shared.saveTimerLog(
-                                    status: "Drive",
+                                    status: DriverStatusConstants.onDrive,
                                     startTime: now,
                                     remainingWeeklyTime: cycleTimerOn.timeString,
                                     remainingDriveTime: driveTimer.timeString,
@@ -870,8 +873,8 @@ struct HomeScreenView: View {
                  
         
                     if confirmedStatus == nil {
-                        selectedStatus = "Off-Duty"
-                    confirmedStatus = "Off-Duty"
+                        selectedStatus = DriverStatusConstants.offDuty
+                    confirmedStatus = DriverStatusConstants.offDuty
                         driveTimer.stop()
                         ONDuty.stop()
                         sleepTimer.stop()
@@ -1009,18 +1012,26 @@ struct HomeScreenView: View {
         .alert("Are you sure you want to delete all data?", isPresented: $showDeleteConfirm) {
             Button("Delete", role: .destructive) {
                 Task {
-                    await deleteViewModel.deleteAllDataOnVersionClick(driverId: 12)
-                    showSuccessAlert = true      //MARK: -   Show success after API
+                    if let driverId = DriverInfo.driverId {  //  Get from common storage
+                        await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
+                        showSuccessAlert = true // Show success after API
+                       
+                    } else {
+                        print(" Driver ID not found in UserDefaults")
+                    }
                 }
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("This will permanently delete all local logs.")
+            Text("This will permanently delete all logs Record.")
         }
+
 
         //MARK: -   Success alert after deletion
         .alert("Success", isPresented: $showSuccessAlert) {
-            Button("OK", role: .cancel) {}
+            Button("OK", role: .cancel) {
+                
+                navmanager.navigate(to: AppRoute.Login)}
         } message: {
             Text("Data deleted successfully.")
         }
@@ -1091,8 +1102,8 @@ func showToast(message: String, color: Color) {
             offDutySleepAccumulated = 0
 
             // Refresh UI (On-Duty will start again when user selects status)
-            confirmedStatus = "Off-Duty"
-            selectedStatus = "Off-Duty"
+            confirmedStatus = DriverStatusConstants.offDuty
+            selectedStatus = DriverStatusConstants.offDuty
 
             // Reload Events after reset
             hoseChartViewModel.loadEventsFromDatabase()

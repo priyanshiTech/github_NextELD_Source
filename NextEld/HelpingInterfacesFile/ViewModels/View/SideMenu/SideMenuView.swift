@@ -14,9 +14,7 @@ struct SideMenuView: View {
     @Binding var presentSideMenu: Bool
     @Binding var showLogoutPopup: Bool
     @Binding var showDeleteConfirm: Bool
-    
-    
-    
+
     var body: some View {
         ZStack(alignment: .leading) {
             Color.white
@@ -65,18 +63,20 @@ struct SideMenuView: View {
                     Circle()
                         .stroke(Color.black.opacity(0.5), lineWidth: 4)
                 )
-                .padding()
+                //.padding()
             VStack(alignment: .leading, spacing: 0) {
-                Text("Mark Joseph")
-                    .font(.system(size: 14, weight: .bold))
+                Text(DriverInfo.UserName)
+                    .font(.system(size: 14, weight: .semibold))
                     .lineLimit(1)
                     .foregroundColor(.black)
+                    
 
-                Text("ELD ID - 17")
-                    .font(.system(size: 12, weight: .semibold))
+                Text("ELD ID - \(String(DriverInfo.driverId ?? 0))")
+                    .font(.system(size: 12, weight: .heavy))
                     .foregroundColor(.gray)
                     .lineLimit(1)
             }
+            .padding()
             Spacer()
         }
     }

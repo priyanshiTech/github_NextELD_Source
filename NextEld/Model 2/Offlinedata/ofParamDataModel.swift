@@ -48,7 +48,7 @@ struct DriveringStatusData: Codable {
     let shift: Int
     let status: String
     let utcDateTime: Int64
-    let vehicleId: String
+    let vehicleId: Int
 }
 
 

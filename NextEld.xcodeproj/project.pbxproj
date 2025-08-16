@@ -81,6 +81,7 @@
 		AF9DD4F12DDDB1FF0034FA8E /* DvirField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4F02DDDB1FF0034FA8E /* DvirField.swift */; };
 		AF9DD4F32DDDB25F0034FA8E /* DvirEditField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4F22DDDB25F0034FA8E /* DvirEditField.swift */; };
 		AFA869412E4DC0AD0061A115 /* CertifyDriverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA869402E4DC0AD0061A115 /* CertifyDriverViewModel.swift */; };
+		AFA869432E4DFA820061A115 /* UserDefaultValueSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */; };
 		AFA98C882E0152E400E87802 /* PacificTrack.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */; };
 		AFA98C892E0152E400E87802 /* PacificTrack.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AFA98C8C2E015FD200E87802 /* PT30BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C8B2E015FD200E87802 /* PT30BluetoothManager.swift */; };
@@ -115,7 +116,6 @@
 		AFB943412E029D3100AD19D7 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943402E029D3100AD19D7 /* AppConfig.swift */; };
 		AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943422E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift */; };
 		AFB943462E02C9D300AD19D7 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943452E02C9D300AD19D7 /* LoginModel.swift */; };
-		AFB943482E02CCBF00AD19D7 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943472E02CCBF00AD19D7 /* Result.swift */; };
 		AFB9434A2E02CCF900AD19D7 /* Rules.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943492E02CCF900AD19D7 /* Rules.swift */; };
 		AFB9434C2E02CD0800AD19D7 /* SplitLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9434B2E02CD0800AD19D7 /* SplitLog.swift */; };
 		AFB9434E2E02CD2D00AD19D7 /* DriverLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9434D2E02CD2D00AD19D7 /* DriverLog.swift */; };
@@ -155,6 +155,7 @@
 		AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072612DE5889E00C939B0 /* CoDriverLogin.swift */; };
 		AFD072642DE59A9600C939B0 /* SelectedCoDriverPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072632DE59A9600C939B0 /* SelectedCoDriverPopup.swift */; };
 		AFD072662DE5A49000C939B0 /* NewDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */; };
+		AFD90C8D2E50907800C56528 /* GlobalVariableclass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */; };
 		AFDBB1792E03FAC000D4A2CA /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */; };
 		AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */; };
 		AFDEF7242E4B18AE00BEB2B1 /* Help&SupportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDEF7232E4B18AE00BEB2B1 /* Help&SupportViewModel.swift */; };
@@ -275,7 +276,7 @@
 		AF9DD4F02DDDB1FF0034FA8E /* DvirField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirField.swift; sourceTree = "<group>"; };
 		AF9DD4F22DDDB25F0034FA8E /* DvirEditField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirEditField.swift; sourceTree = "<group>"; };
 		AFA869402E4DC0AD0061A115 /* CertifyDriverViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifyDriverViewModel.swift; sourceTree = "<group>"; };
-		AFA895752E0EB1C600FF4A3B /* temperory .geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = "temperory .geojson"; sourceTree = "<group>"; };
+		AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultValueSaved.swift; sourceTree = "<group>"; };
 		AFA98C832E0146C200E87802 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = PacificTrack.xcframework; sourceTree = "<group>"; };
 		AFA98C8B2E015FD200E87802 /* PT30BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PT30BluetoothManager.swift; sourceTree = "<group>"; };
@@ -310,7 +311,6 @@
 		AFB943402E029D3100AD19D7 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		AFB943422E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI&SwiftUIConnecter.swift"; sourceTree = "<group>"; };
 		AFB943452E02C9D300AD19D7 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
-		AFB943472E02CCBF00AD19D7 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		AFB943492E02CCF900AD19D7 /* Rules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rules.swift; sourceTree = "<group>"; };
 		AFB9434B2E02CD0800AD19D7 /* SplitLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitLog.swift; sourceTree = "<group>"; };
 		AFB9434D2E02CD2D00AD19D7 /* DriverLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLog.swift; sourceTree = "<group>"; };
@@ -348,6 +348,7 @@
 		AFD072612DE5889E00C939B0 /* CoDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoDriverLogin.swift; sourceTree = "<group>"; };
 		AFD072632DE59A9600C939B0 /* SelectedCoDriverPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCoDriverPopup.swift; sourceTree = "<group>"; };
 		AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDriverLogin.swift; sourceTree = "<group>"; };
+		AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariableclass.swift; sourceTree = "<group>"; };
 		AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerClass.swift; sourceTree = "<group>"; };
 		AFDEF7232E4B18AE00BEB2B1 /* Help&SupportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Help&SupportViewModel.swift"; sourceTree = "<group>"; };
@@ -415,7 +416,6 @@
 		108FF7F52DC895E10051671B = {
 			isa = PBXGroup;
 			children = (
-				AFA895752E0EB1C600FF4A3B /* temperory .geojson */,
 				108FF8002DC895E10051671B /* NextEld */,
 				AF04B1AF2DE9834600A5F3D1 /* LocalizableString */,
 				108FF8122DC895E20051671B /* NextEldTests */,
@@ -1020,6 +1020,8 @@
 				AFC1B55C2E1566E300C57620 /* KeyChainSwift.swift */,
 				AFBB59F92E4233B10056A660 /* CurrentDT.swift */,
 				AFDFD4812E32301700F81B24 /* VoilationBox.swift */,
+				AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */,
+				AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */,
 			);
 			path = HelpingGroup;
 			sourceTree = "<group>";
@@ -1049,7 +1051,6 @@
 				AFB943452E02C9D300AD19D7 /* LoginModel.swift */,
 				AFB9434B2E02CD0800AD19D7 /* SplitLog.swift */,
 				AFB9434F2E02CD7B00AD19D7 /* TokenModelLog.swift */,
-				AFB943472E02CCBF00AD19D7 /* Result.swift */,
 				AFB943492E02CCF900AD19D7 /* Rules.swift */,
 			);
 			path = LoginModel;
@@ -1234,6 +1235,7 @@
 				AFBB59FC2E4233FB0056A660 /* AppRoute.swift in Sources */,
 				AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */,
 				AF66F7A12E4CAAEA009A13A0 /* Co-DriverModel.swift in Sources */,
+				AFA869432E4DFA820061A115 /* UserDefaultValueSaved.swift in Sources */,
 				AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */,
 				AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */,
 				AF72E4332DFD54B400626DC0 /* PT30ConnectionView.swift in Sources */,
@@ -1313,7 +1315,6 @@
 				AF9DD4F32DDDB25F0034FA8E /* DvirEditField.swift in Sources */,
 				AFB943542E02D43600AD19D7 /* APIClient.swift in Sources */,
 				AFC3CF9F2DE5D6BE00D83558 /* InformationPacket.swift in Sources */,
-				AFB943482E02CCBF00AD19D7 /* Result.swift in Sources */,
 				AF04B1B92DE9873600A5F3D1 /* SettingsLanguageView.swift in Sources */,
 				AFEEDF822DE6DD06005675C2 /* HOSEventChartView.swift in Sources */,
 				AFB9432C2E029CCF00AD19D7 /* DeviceViewController.swift in Sources */,
@@ -1324,6 +1325,7 @@
 				AFC3CFA22DE5F1A200D83558 /* RulesView.swift in Sources */,
 				AF66F79A2E4C9AC5009A13A0 /* certifydatabase.swift in Sources */,
 				AFB943392E029CD700AD19D7 /* VariablesViewController.swift in Sources */,
+				AFD90C8D2E50907800C56528 /* GlobalVariableclass.swift in Sources */,
 				AFB943242E029CB000AD19D7 /* StoredEventsViewController.swift in Sources */,
 				AFB943562E02D62E00AD19D7 /* APIEndPoints.swift in Sources */,
 				AFB943252E029CB000AD19D7 /* StoredEventsViewController+UITableView.swift in Sources */,
