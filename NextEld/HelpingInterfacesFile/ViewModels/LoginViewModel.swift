@@ -94,11 +94,17 @@ class LoginViewModel: ObservableObject {
                 } else {
                     print("No driverName found anywhere, not saving")
                 }
+                
+                if let loginDateTime = response.result?.loginDateTime {
+                    UserDefaults.standard.set(loginDateTime, forKey: "LoginDateTime")
+                }
+
 
                 // Save Timezone
                 if let timeZone = response.result?.timezone {
                     UserDefaults.standard.set(timeZone, forKey: "timezone")
-                } else if let timeZoneOffSet = response.result?.timezoneOffSet {
+                }
+                if let timeZoneOffSet = response.result?.timezoneOffSet {
                     UserDefaults.standard.set(timeZoneOffSet, forKey: "timezoneOffSet")
                 }
                 //Save Timers

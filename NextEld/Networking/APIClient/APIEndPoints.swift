@@ -27,7 +27,9 @@ enum API {
         case HelpSupportInfo
         case CodriverListInfo
         case certifyDriver
-        
+        case LoginLogAPI   //MARK: -  LogLogin
+        case LogoutAPI
+        case DefectAPIModel
 
         var url: URL {
             switch self {
@@ -57,6 +59,12 @@ enum API {
                 return API.baseURL.appendingPathComponent("master/view_employee_by_client")
             case .certifyDriver:
                 return API.baseURL.appendingPathComponent("dispatch/add_certified_log")
+            case .LoginLogAPI:
+                return API.baseURL.appendingPathComponent("auth/update_login_with_login_log")
+            case .LogoutAPI:
+                return API.baseURL.appendingPathComponent("auth/logout_api")
+            case .DefectAPIModel:
+                return API.baseURL.appendingPathComponent("master/view_defect")
             }
         }
 
@@ -64,11 +72,11 @@ enum API {
             
             switch self {
                 
-            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo:
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI:
                 return "POST"
-            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver:
+            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI , .DefectAPIModel:
                 return "POST"
-        
+         
             }
         }
     }

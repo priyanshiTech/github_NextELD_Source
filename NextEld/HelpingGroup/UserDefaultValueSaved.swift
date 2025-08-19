@@ -7,11 +7,15 @@
 
 import Foundation
 struct AppStorageKeys {
+    
     static let driverId  = "driverId"
     static let authToken = "authToken"
     static let UserName  = "driverName"
     static let vehicleid = "vehicleId"
     static let origin =   "origin"
+    static let loginDateTime = "loginDateTime"
+    static let TimeZoneOffset = "timezoneOffSet"
+
 }
 
 struct DriverInfo {
@@ -50,5 +54,18 @@ struct DriverInfo {
       static func setOrigins(_ org: String) {
           UserDefaults.standard.set(org, forKey: AppStorageKeys.origin)
       }
+    static var loginDateTime: Int64? {
+            UserDefaults.standard.object(forKey: AppStorageKeys.loginDateTime) as? Int64
+        }
+        static func setLoginDateTime(_ value: Int64) {
+            UserDefaults.standard.set(value, forKey: AppStorageKeys.loginDateTime)
+        }
+    // MARK: - Time Zone Offset
+    static var timeZoneOffset: String {
+        UserDefaults.standard.string(forKey: AppStorageKeys.TimeZoneOffset) ?? "+00:00"
+    }
+    static func setTimeZoneOffset(_ offset: String) {
+        UserDefaults.standard.set(offset, forKey: AppStorageKeys.TimeZoneOffset)
+    }
 }
 

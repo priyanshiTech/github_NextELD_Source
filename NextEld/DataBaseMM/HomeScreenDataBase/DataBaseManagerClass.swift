@@ -317,6 +317,7 @@ class DatabaseManager {
 
 
 extension DatabaseManager {
+    
     func saveTimerLog(
         status: String,
         startTime: String,
@@ -351,7 +352,12 @@ extension DatabaseManager {
             trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
             notes: "",
             serverId: nil,
-            timestamp: Int64(Date().timeIntervalSince1970),
+            timestamp:TimeUtils.currentTimestamp(with: DriverInfo.timeZoneOffset),
+              //  CurrentTimeHelperStamp.currentTimestamp,
+              
+            // Int64(Date().timeIntervalSince1970),
+    
+                
             identifier: Int.random(in: 1000...9999),
             remainingWeeklyTime: remainingWeeklyTime,
             remainingDriveTime: remainingDriveTime,
