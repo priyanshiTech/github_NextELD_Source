@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct EmailLogs: View {
+    
+    
     @EnvironmentObject var navManager: NavigationManager
     @State var email:String = ""
     @State var title: String
@@ -21,9 +23,7 @@ struct EmailLogs: View {
        @State private var showWebView = false
        @State private var reportURL: URL?
        @State private var showConfirmation = false
-    let driverId = DriverInfo.driverId
-    
-    
+       let driverId = DriverInfo.driverId
     
     let dateList: [Date] = [
         Date(),
@@ -144,14 +144,12 @@ struct EmailLogs: View {
                         let base = "https://gbt-usa.com/eldchart/generateCharts"
                          let fromStr = "\(dateFormatted(fromDate)) 00:00:00"
                          let toStr = "\(dateFormatted(toDate)) 23:59:59"
-                         
                          let urlString = "\(base)/\(driverId ?? 0)/\(fromStr)/\(toStr)/\(email)"
                          print(urlString)
                          
                          if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) ?? "") {
                              reportURL = url
                              showWebView = true
-                             
                              DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                       showConfirmation = true
                                   }
