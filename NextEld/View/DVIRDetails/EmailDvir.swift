@@ -2,10 +2,11 @@
 //  EmailDvir.swift
 //  NextEld
 //
-//  Created by Inurum   on 21/05/25.
+//  Created by priyanshi on 21/05/25.
 //
-
+import Foundation
 import SwiftUI
+
 
 struct EmailDvir: View {
     @EnvironmentObject var navmanager: NavigationManager
@@ -14,6 +15,7 @@ struct EmailDvir: View {
     let updateRecords: [DvirRecord]
     var onSelect: (DvirRecord) -> Void
     @State private var selectedVehicle: String = ""
+    
     
     //MARK: - remove placeholder multiple value  filteredRecords
     

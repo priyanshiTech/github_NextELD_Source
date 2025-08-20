@@ -7,16 +7,20 @@
 
 import SwiftUI
 
+
 struct AddVichleMode: View {
-    
+
     @EnvironmentObject var navmanager: NavigationManager
     @Binding var selectedVehicle: String
+    @StateObject private var viewModel = EmployeeRulesViewModel(
+           networkManager: NetworkManager()
+       )
     var tittle:String = "Add Vehicle"
-    
+
     var body: some View {
-        
+
         VStack(spacing:0){
-            
+
             Color(uiColor: .wine)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 1)
@@ -29,17 +33,17 @@ struct AddVichleMode: View {
                         .foregroundColor(.white)
                         .imageScale(.large)
                 }
-                
+
                 Text(tittle)
                     .font(.headline)
                     .foregroundColor(.white)
                     .fontWeight(.semibold)
-                
+
                 Spacer()
             }
             .padding()
             .background( Color(uiColor: .wine).shadow(radius: 1))
-            
+
             //MARK: -  Vehicle selection
             CardContainer {
                 Button(action: {
@@ -50,7 +54,7 @@ struct AddVichleMode: View {
                             Text("Vehicle")
                                 .font(.headline)
                                 .foregroundColor(.black)
-                            
+
                             //MARK: -  to show a selected data
                             Text("\(selectedVehicle)")
                                 .font(.headline)
@@ -65,7 +69,7 @@ struct AddVichleMode: View {
                 .buttonStyle(PlainButtonStyle())
             }
             .padding(20)
-            
+
             Button(action: {
                 navmanager.navigate(to: .Scanner)
             }) {
@@ -79,7 +83,7 @@ struct AddVichleMode: View {
             }
             .padding(.horizontal)
             Spacer()
-            
+
         }.navigationBarBackButtonHidden()
                    }
         }
@@ -87,3 +91,47 @@ struct AddVichleMode: View {
 //#Preview {
 //    AddVichleMode(, selectedVehicle: "")
 //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

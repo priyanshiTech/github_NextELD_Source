@@ -30,6 +30,10 @@ enum API {
         case LoginLogAPI   //MARK: -  LogLogin
         case LogoutAPI
         case DefectAPIModel
+        case EmailDVirAPI
+        case VchicleList
+        case ForRulesAPI
+        case MacAddress
 
         var url: URL {
             switch self {
@@ -65,6 +69,14 @@ enum API {
                 return API.baseURL.appendingPathComponent("auth/logout_api")
             case .DefectAPIModel:
                 return API.baseURL.appendingPathComponent("master/view_defect")
+            case .EmailDVirAPI:
+                return API.baseURL.appendingPathComponent("dispatch/view_dvir_data")
+            case .VchicleList:
+                return API.baseURL.appendingPathComponent("master/view_active_vehicle")
+            case .ForRulesAPI:
+                return API.baseURL.appendingPathComponent("master/view_employee")
+            case .MacAddress:
+                return API.baseURL.appendingPathComponent("master/add_mac_address")
             }
         }
 
@@ -72,11 +84,13 @@ enum API {
             
             switch self {
                 
-            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI:
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI:
                 return "POST"
-            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI , .DefectAPIModel:
+            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress:
                 return "POST"
-         
+           
+      
+           
             }
         }
     }

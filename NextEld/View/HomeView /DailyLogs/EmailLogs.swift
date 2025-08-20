@@ -9,6 +9,253 @@ import SwiftUI
 
 struct EmailLogs: View {
     
+    @EnvironmentObject var navManager: NavigationManager
+    @State var email:String = ""
+    @State var title: String
+    @State private var fromDate = Date()
+    @State private var toDate = Date()
+    @State private var showFromDatePicker = false
+    @State private var showToDatePicker = false
+    @State private var isFromDateSelected = false
+    @State private var isToDateSelected = false
+    
+    //MARK:  WebView state
+    @State private var showWebView = false
+    @State private var reportURL: URL?
+    @State private var showConfirmation = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    
+    let driverId = DriverInfo.driverId
+    
+    var body: some View {
+        
+        VStack (spacing:0){
+            
+            HStack {
+                Button(action: { navManager.goBack() }) {
+                    Image(systemName: "arrow.left")
+                        .foregroundColor(.white)
+                        .imageScale(.large)
+                }
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .fontWeight(.semibold)
+                Spacer()
+            }
+            .padding()
+            .background(Color(uiColor: .wine))
+            .frame(height: 40)
+            
+            Spacer(minLength: 20)
+            
+            HStack{
+                Text("Email Logs")
+                    .font(.system(size: 35))
+                    .bold()
+                    .foregroundColor(Color(uiColor: .wine))
+                Image("email_icon_blue")
+            }
+            .padding()
+            
+            VStack(spacing:0){
+                HStack(spacing: 16) {
+                    
+                    Button(action: {
+                        showFromDatePicker = true
+                    }) {
+                        Text(isFromDateSelected ? "\(dateFormatted(fromDate))" : "From Date")
+                            .foregroundColor(isFromDateSelected ? .black : .gray)
+                            .font(.system(size: 18))
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color(uiColor: .wine), lineWidth: 2)
+                            )
+                    }
+                    .sheet(isPresented: $showFromDatePicker) {
+                        DatePickerPopup(
+                            selectedDate: $fromDate,
+                            isPresented: $showFromDatePicker,
+                            onDateSelected: { isFromDateSelected = true }
+                        )
+                    }
+                    
+                    Button(action: {
+                        showToDatePicker = true
+                    }) {
+                        Text(isToDateSelected ? "\(dateFormatted(toDate))" : "To Date")
+                            .foregroundColor(isToDateSelected ? .black : .gray)
+                            .font(.system(size: 18))
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color(uiColor: .wine), lineWidth: 2)
+                            )
+                    }
+                    .sheet(isPresented: $showToDatePicker) {
+                        DatePickerPopup(
+                            selectedDate: $toDate,
+                            isPresented: $showToDatePicker,
+                            onDateSelected: { isToDateSelected = true }
+                        )
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 12)
+                
+                HStack(spacing: 12) {
+                    
+                    TextField(
+                        "",
+                        text: $email,
+                        prompt: Text("Enter Email")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 18))
+                    )
+                    .padding()
+                    .font(.system(size: 18))
+                    .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
+                    .frame(height: 50)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color(uiColor: .wine), lineWidth: 2)
+                    )
+                    
+                    Button(action: {
+                        //  Validation
+                        if !isFromDateSelected {
+                            alertMessage = "Please select From Date"
+                            showAlert = true
+                        } else if !isToDateSelected {
+                            alertMessage = "Please select To Date"
+                            showAlert = true
+                        } else if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            alertMessage = "Please enter Email"
+                            showAlert = true
+                        } else if !isValidEmail(email) {
+                            alertMessage = "Please enter a valid Email address"
+                            showAlert = true
+                        } else {
+                            //  Proceed if all filled correctly
+                            let base = "https://gbt-usa.com/eldchart/generateCharts"
+                            let fromStr = "\(dateFormatted(fromDate)) 00:00:00"
+                            let toStr = "\(dateFormatted(toDate)) 23:59:59"
+                            let urlString = "\(base)/\(driverId ?? 0)/\(fromStr)/\(toStr)/\(email)"
+                            print(urlString)
+                            
+                            if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) ?? "") {
+                                reportURL = url
+                                showWebView = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                    showConfirmation = true
+                                }
+                            }
+                        }
+                    }) {
+                        Text("Send")
+                            .font(.title3)
+                            .frame(width: 90, height: 40)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color(uiColor: .wine))
+                    .foregroundColor(.white)
+                }
+                .padding(.horizontal)
+                .padding(.top, 12)
+            }
+            
+            Spacer(minLength: 200)
+                .padding()
+        }
+        .navigationBarBackButtonHidden()
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Validation Error"),
+                  message: Text(alertMessage),
+                  dismissButton: .default(Text("OK")))
+        }
+        .overlay(
+            Group {
+                if showWebView, let reportURL = reportURL {
+                    WebView(url: reportURL)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                
+                if showConfirmation {
+                    ReportConfirmationView()
+                        .transition(.opacity)
+                        .zIndex(1)
+                }
+            }
+        )
+    }
+    
+    // MARK: - Helper Function
+    private func dateFormatted(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: date)
+    }
+    
+    // MARK: - Email Validation
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx =
+        #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#
+        return NSPredicate(format: "SELF MATCHES %@", emailRegEx).evaluate(with: email)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*import SwiftUI
+
+struct EmailLogs: View {
+    
     
     @EnvironmentObject var navManager: NavigationManager
     @State var email:String = ""
@@ -141,7 +388,8 @@ struct EmailLogs: View {
 
                     
                     Button(action: {
-                        let base = "https://gbt-usa.com/eldchart/generateCharts"
+                        
+                         let base = "https://gbt-usa.com/eldchart/generateCharts"
                          let fromStr = "\(dateFormatted(fromDate)) 00:00:00"
                          let toStr = "\(dateFormatted(toDate)) 23:59:59"
                          let urlString = "\(base)/\(driverId ?? 0)/\(fromStr)/\(toStr)/\(email)"
@@ -150,7 +398,7 @@ struct EmailLogs: View {
                          if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) ?? "") {
                              reportURL = url
                              showWebView = true
-                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                   DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                       showConfirmation = true
                                   }
                          }
@@ -166,20 +414,11 @@ struct EmailLogs: View {
                    .padding(.horizontal)
                    .padding(.top, 12)
                 }
-            Spacer()
 
-            
-            List(dateList, id: \.self) { date in
-                HStack {
-                    Text(dateFormatted(date))
-                        .foregroundColor(.primary)
-                    Spacer()
-                    CheckboxButton()
-                }
-            }
-            .listStyle(.plain)
-            
+            Spacer(minLength: 200)
+                .padding()
         }
+        
         .navigationBarBackButtonHidden()
         
         .overlay(
@@ -211,4 +450,4 @@ struct EmailLogs: View {
 
 #Preview {
     EmailLogs(title: "Daily Logs")
-}
+}*/

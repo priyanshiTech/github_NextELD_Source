@@ -25,8 +25,6 @@ class SyncViewModel: ObservableObject {
 
         print("📤 Preparing \(unsyncedLogs.count) logs for syncing...")
 
-
- 
         let driveringStatusData = unsyncedLogs.map { log in
           
 

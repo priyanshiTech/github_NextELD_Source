@@ -35,6 +35,14 @@
 		AF66F7A12E4CAAEA009A13A0 /* Co-DriverModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF66F7A02E4CAAEA009A13A0 /* Co-DriverModel.swift */; };
 		AF66F7A32E4CAEDB009A13A0 /* CoderiverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF66F7A22E4CAEDB009A13A0 /* CoderiverViewModel.swift */; };
 		AF66F7A62E4CD00F009A13A0 /* CertifySignatureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF66F7A52E4CD00F009A13A0 /* CertifySignatureModel.swift */; };
+		AF7234FD2E55B851009EAA9E /* DvirEmailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7234FC2E55B851009EAA9E /* DvirEmailModel.swift */; };
+		AF7234FF2E55BE47009EAA9E /* DvirEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7234FE2E55BE47009EAA9E /* DvirEmailViewModel.swift */; };
+		AF7235022E55DC5F009EAA9E /* RuleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7235012E55DC5F009EAA9E /* RuleModel.swift */; };
+		AF7235052E55DC78009EAA9E /* VechicleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7235042E55DC78009EAA9E /* VechicleModel.swift */; };
+		AF7235072E55E4A4009EAA9E /* vchicleAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7235062E55E4A4009EAA9E /* vchicleAPIViewModel.swift */; };
+		AF7235092E55FC51009EAA9E /* RulesViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7235082E55FC51009EAA9E /* RulesViewModels.swift */; };
+		AF72350B2E560307009EAA9E /* MacaddressModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72350A2E560307009EAA9E /* MacaddressModel.swift */; };
+		AF72350D2E560567009EAA9E /* MacAddressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72350C2E560567009EAA9E /* MacAddressViewModel.swift */; };
 		AF72E4312DFD54B400626DC0 /* DataRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72E4292DFD54B400626DC0 /* DataRow.swift */; };
 		AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72E41C2DFD54B400626DC0 /* SignaturePad.swift */; };
 		AF72E4332DFD54B400626DC0 /* PT30ConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF72E42D2DFD54B400626DC0 /* PT30ConnectionView.swift */; };
@@ -238,6 +246,14 @@
 		AF66F7A02E4CAAEA009A13A0 /* Co-DriverModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Co-DriverModel.swift"; sourceTree = "<group>"; };
 		AF66F7A22E4CAEDB009A13A0 /* CoderiverViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoderiverViewModel.swift; sourceTree = "<group>"; };
 		AF66F7A52E4CD00F009A13A0 /* CertifySignatureModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifySignatureModel.swift; sourceTree = "<group>"; };
+		AF7234FC2E55B851009EAA9E /* DvirEmailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirEmailModel.swift; sourceTree = "<group>"; };
+		AF7234FE2E55BE47009EAA9E /* DvirEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirEmailViewModel.swift; sourceTree = "<group>"; };
+		AF7235012E55DC5F009EAA9E /* RuleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleModel.swift; sourceTree = "<group>"; };
+		AF7235042E55DC78009EAA9E /* VechicleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VechicleModel.swift; sourceTree = "<group>"; };
+		AF7235062E55E4A4009EAA9E /* vchicleAPIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vchicleAPIViewModel.swift; sourceTree = "<group>"; };
+		AF7235082E55FC51009EAA9E /* RulesViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesViewModels.swift; sourceTree = "<group>"; };
+		AF72350A2E560307009EAA9E /* MacaddressModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacaddressModel.swift; sourceTree = "<group>"; };
+		AF72350C2E560567009EAA9E /* MacAddressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacAddressViewModel.swift; sourceTree = "<group>"; };
 		AF72E41A2DFD54B400626DC0 /* CertifySelectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifySelectedView.swift; sourceTree = "<group>"; };
 		AF72E41B2DFD54B400626DC0 /* DriverSignatiureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverSignatiureView.swift; sourceTree = "<group>"; };
 		AF72E41C2DFD54B400626DC0 /* SignaturePad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignaturePad.swift; sourceTree = "<group>"; };
@@ -493,6 +509,9 @@
 		108FF82C2DC89C620051671B /* Model 2 */ = {
 			isa = PBXGroup;
 			children = (
+				AF7235032E55DC63009EAA9E /* vchicleModel */,
+				AF7235002E55DC48009EAA9E /* ForRuleModel */,
+				AF7234FB2E55B21F009EAA9E /* DVIREmailModel */,
 				AFA690FF2E5465D80035D092 /* DefectAPI */,
 				AFE5DFFB2E5345700069BE27 /* LogoutModel */,
 				AFD7BAA52E53012C001AF76C /* LogLoginModels */,
@@ -637,6 +656,31 @@
 				AF66F7A52E4CD00F009A13A0 /* CertifySignatureModel.swift */,
 			);
 			path = CertifySinatureAPI;
+			sourceTree = "<group>";
+		};
+		AF7234FB2E55B21F009EAA9E /* DVIREmailModel */ = {
+			isa = PBXGroup;
+			children = (
+				AF7234FC2E55B851009EAA9E /* DvirEmailModel.swift */,
+			);
+			path = DVIREmailModel;
+			sourceTree = "<group>";
+		};
+		AF7235002E55DC48009EAA9E /* ForRuleModel */ = {
+			isa = PBXGroup;
+			children = (
+				AF7235012E55DC5F009EAA9E /* RuleModel.swift */,
+			);
+			path = ForRuleModel;
+			sourceTree = "<group>";
+		};
+		AF7235032E55DC63009EAA9E /* vchicleModel */ = {
+			isa = PBXGroup;
+			children = (
+				AF7235042E55DC78009EAA9E /* VechicleModel.swift */,
+				AF72350A2E560307009EAA9E /* MacaddressModel.swift */,
+			);
+			path = vchicleModel;
 			sourceTree = "<group>";
 		};
 		AF72E41D2DFD54B400626DC0 /* CertifyForms */ = {
@@ -924,6 +968,10 @@
 				AFD7BAA82E53054B001AF76C /* loginlogAPIViewModel.swift */,
 				AFE5DFFE2E5349B20069BE27 /* LogOutAPiViewModel.swift */,
 				AFA691022E54682A0035D092 /* DefectViewModel.swift */,
+				AF7234FE2E55BE47009EAA9E /* DvirEmailViewModel.swift */,
+				AF7235062E55E4A4009EAA9E /* vchicleAPIViewModel.swift */,
+				AF7235082E55FC51009EAA9E /* RulesViewModels.swift */,
+				AF72350C2E560567009EAA9E /* MacAddressViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1280,18 +1328,22 @@
 				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
 				AFCC4CA52E4A24CC00629DE3 /* CompanyInfo.swift in Sources */,
 				AF7951182E3BA7B5005FFFBF /* DVIRDataTableView.swift in Sources */,
+				AF7235072E55E4A4009EAA9E /* vchicleAPIViewModel.swift in Sources */,
 				AFBB59FC2E4233FB0056A660 /* AppRoute.swift in Sources */,
 				AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */,
 				AF66F7A12E4CAAEA009A13A0 /* Co-DriverModel.swift in Sources */,
+				AF7235052E55DC78009EAA9E /* VechicleModel.swift in Sources */,
 				AFA869432E4DFA820061A115 /* UserDefaultValueSaved.swift in Sources */,
 				AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */,
 				AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */,
+				AF7234FF2E55BE47009EAA9E /* DvirEmailViewModel.swift in Sources */,
 				AF72E4332DFD54B400626DC0 /* PT30ConnectionView.swift in Sources */,
 				AF72E4342DFD54B400626DC0 /* PT30ModelView.swift in Sources */,
 				AFA869412E4DC0AD0061A115 /* CertifyDriverViewModel.swift in Sources */,
 				AF72E4352DFD54B400626DC0 /* DutyLogEntryView .swift in Sources */,
 				AFC5355B2E0D67F900AD10C9 /* DriverLogList.swift in Sources */,
 				AFC381742E290180006FD4E1 /* OfflineSavingData.swift in Sources */,
+				AF7235022E55DC5F009EAA9E /* RuleModel.swift in Sources */,
 				AF72E4362DFD54B400626DC0 /* ToggleRow.swift in Sources */,
 				AF72E4372DFD54B400626DC0 /* LogsDetails.swift in Sources */,
 				AFA98C932E017BCB00E87802 /* PT30Devicedata.swift in Sources */,
@@ -1308,6 +1360,7 @@
 				AF72E43A2DFD54B400626DC0 /* Foam&certify.swift in Sources */,
 				AFC535572E0D631900AD10C9 /* DataBaseManagerClass.swift in Sources */,
 				AF72E43B2DFD54B400626DC0 /* DeviceScannerView.swift in Sources */,
+				AF72350B2E560307009EAA9E /* MacaddressModel.swift in Sources */,
 				AFCC4C9D2E49E23A00629DE3 /* EyeViewAllRecords.swift in Sources */,
 				AF72E43C2DFD54B400626DC0 /* CertifySelectedView.swift in Sources */,
 				AFB9433C2E029CE200AD19D7 /* FirmwareUpdateViewController.swift in Sources */,
@@ -1352,6 +1405,7 @@
 				AFA691012E5465ED0035D092 /* DefectAPicalling.swift in Sources */,
 				1065860D2DCCC75F003CE502 /* HoursOfServices.swift in Sources */,
 				AF04B1B62DE986F300A5F3D1 /* SupportView.swift in Sources */,
+				AF7235092E55FC51009EAA9E /* RulesViewModels.swift in Sources */,
 				AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */,
 				AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */,
 				AFD7BAA72E53014A001AF76C /* loginLogModel.swift in Sources */,
@@ -1393,6 +1447,7 @@
 				AF9DB2C12DE1B3FE00B98C17 /* HadDefectedView.swift in Sources */,
 				AFB9431B2E029C9500AD19D7 /* DeviceTableViewCell.swift in Sources */,
 				AFD7BAA92E53054B001AF76C /* loginlogAPIViewModel.swift in Sources */,
+				AF7234FD2E55B851009EAA9E /* DvirEmailModel.swift in Sources */,
 				AFB9431C2E029C9500AD19D7 /* DashboardReportView.swift in Sources */,
 				AFC1B5562E154A6500C57620 /* ForgetpasswordModel.swift in Sources */,
 				AFC535592E0D677C00AD10C9 /* DriverLogViewModel.swift in Sources */,
@@ -1417,6 +1472,7 @@
 				AF66F7932E4C7B26009A13A0 /* ShippingDocView.swift in Sources */,
 				AFC3CF992DE5C4A100D83558 /* AddVichleMode.swift in Sources */,
 				10CA6EC32DCC9BA8003B265C /* Reuseable  Label.swift in Sources */,
+				AF72350D2E560567009EAA9E /* MacAddressViewModel.swift in Sources */,
 				AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */,
 				AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */,
 				108FF8302DC8A8BA0051671B /* LoginScreen.swift in Sources */,
