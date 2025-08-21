@@ -21,7 +21,7 @@ struct AddMacAddressRequest: Codable {
 // MARK: - Response Model
 struct AddMacAddressResponse: Codable {
     let result: String
-    let arrayData: String?   
+    let arrayData: String?
     let status: String
     let message: String
     let token: String

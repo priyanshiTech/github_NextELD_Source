@@ -34,6 +34,7 @@ enum API {
         case VchicleList
         case ForRulesAPI
         case MacAddress
+        case ConnectdDisConnectedAPI
 
         var url: URL {
             switch self {
@@ -77,6 +78,8 @@ enum API {
                 return API.baseURL.appendingPathComponent("master/view_employee")
             case .MacAddress:
                 return API.baseURL.appendingPathComponent("master/add_mac_address")
+            case .ConnectdDisConnectedAPI:
+                return API.baseURL.appendingPathComponent("master/add_device_status")
             }
         }
 
@@ -84,12 +87,10 @@ enum API {
             
             switch self {
                 
-            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI:
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI:
                 return "POST"
             case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress:
                 return "POST"
-           
-      
            
             }
         }

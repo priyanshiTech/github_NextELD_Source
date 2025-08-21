@@ -482,50 +482,6 @@
             endingLineNumber = "18"
             landmarkName = "syncOfflineData()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "5B8827E8-9387-4281-B015-04EB6934B8C6 - 9b88ddce66407003"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for NextEld.SyncViewModel.syncOfflineData() async -&gt; ()"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/OfflineSavingDataModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "18"
-                  endingLineNumber = "18">
-               </Location>
-               <Location
-                  uuid = "5B8827E8-9387-4281-B015-04EB6934B8C6 - edf4affcf928c201"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.SyncViewModel.syncOfflineData() async -&gt; ()"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/OfflineSavingDataModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "18"
-                  endingLineNumber = "18">
-               </Location>
-               <Location
-                  uuid = "5B8827E8-9387-4281-B015-04EB6934B8C6 - 31d0434fc1bc3dca"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (NextEld.DriverLogModel) -&gt; Swift.Bool in NextEld.SyncViewModel.syncOfflineData() async -&gt; ()"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/OfflineSavingDataModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "18"
-                  endingLineNumber = "18">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -670,36 +626,6 @@
             endingLineNumber = "54"
             landmarkName = "login(email:password:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "F73EA5EE-A763-47CA-B603-B845F47546F5 - 18e977ff600d9fdc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "54"
-                  endingLineNumber = "54">
-               </Location>
-               <Location
-                  uuid = "F73EA5EE-A763-47CA-B603-B845F47546F5 - 18e977ff600d9fdc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "54"
-                  endingLineNumber = "54">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -716,36 +642,6 @@
             endingLineNumber = "154"
             landmarkName = "login(email:password:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "577C9FE2-55BA-4330-9E93-30E8808D5A7D - 18e977ff600deaf0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "154"
-                  endingLineNumber = "154">
-               </Location>
-               <Location
-                  uuid = "577C9FE2-55BA-4330-9E93-30E8808D5A7D - 18e977ff600deaf0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "154"
-                  endingLineNumber = "154">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -762,36 +658,6 @@
             endingLineNumber = "155"
             landmarkName = "login(email:password:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "51504DF4-A363-4681-AD20-F2E9E0337A73 - 18e977ff600dead3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "155"
-                  endingLineNumber = "155">
-               </Location>
-               <Location
-                  uuid = "51504DF4-A363-4681-AD20-F2E9E0337A73 - 18e977ff600dead3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "155"
-                  endingLineNumber = "155">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -932,8 +798,8 @@
             filePath = "NextEld/Networking/APIClient/APIEndPoints.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "NetworkManager"
             landmarkType = "3">
          </BreakpointContent>
@@ -948,8 +814,8 @@
             filePath = "NextEld/Networking/APIClient/APIEndPoints.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "post(_:body:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -968,36 +834,6 @@
             endingLineNumber = "123"
             landmarkName = "login(email:password:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "2D651FEB-ECF5-45ED-A388-2C2D6BF199AE - 18e977ff600de535"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "125"
-                  endingLineNumber = "125">
-               </Location>
-               <Location
-                  uuid = "2D651FEB-ECF5-45ED-A388-2C2D6BF199AE - 18e977ff600de535"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "125"
-                  endingLineNumber = "125">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1302,36 +1138,6 @@
             endingLineNumber = "104"
             landmarkName = "login(email:password:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "725D40B0-337F-4EF3-B2C4-3698AB97E41D - 18e977ff600de04e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "104"
-                  endingLineNumber = "104">
-               </Location>
-               <Location
-                  uuid = "725D40B0-337F-4EF3-B2C4-3698AB97E41D - 18e977ff600de04e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "104"
-                  endingLineNumber = "104">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1348,36 +1154,6 @@
             endingLineNumber = "107"
             landmarkName = "login(email:password:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "07365A13-2CF8-4927-921D-6B3AC014B14A - 18e977ff600de0e3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "107"
-                  endingLineNumber = "107">
-               </Location>
-               <Location
-                  uuid = "07365A13-2CF8-4927-921D-6B3AC014B14A - 18e977ff600de0e3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "107"
-                  endingLineNumber = "107">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1394,36 +1170,6 @@
             endingLineNumber = "108"
             landmarkName = "login(email:password:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "16620FCE-7712-4648-9006-FDD303E6BDA6 - 18e977ff600de0c2"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "108"
-                  endingLineNumber = "108">
-               </Location>
-               <Location
-                  uuid = "16620FCE-7712-4648-9006-FDD303E6BDA6 - 18e977ff600de0c2"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.LoginViewModel.login(email: Swift.String, password: Swift.String) async -&gt; Swift.Bool"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/LoginViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "108"
-                  endingLineNumber = "108">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1536,36 +1282,6 @@
             endingLineNumber = "36"
             landmarkName = "fetchDefects()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "2254E786-F524-4DB5-B1F4-36F7F13C9B68 - e5e9e7224df254fe"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for NextEld.DefectAPIViewModel.fetchDefects() async -&gt; ()"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/DefectViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "36"
-                  endingLineNumber = "36">
-               </Location>
-               <Location
-                  uuid = "2254E786-F524-4DB5-B1F4-36F7F13C9B68 - f7d652a5c7f4aefc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for NextEld.DefectAPIViewModel.fetchDefects() async -&gt; ()"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/HelpingInterfacesFile/ViewModels/DefectViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "36"
-                  endingLineNumber = "36">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1614,36 +1330,6 @@
             endingLineNumber = "37"
             landmarkName = "body"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "96D1D84A-EE2A-4819-973C-5A819B6F0B41 - 6d57ec15368f570d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 () -&gt; &lt;&lt;opaque return type of SwiftUI.View.imageScale(SwiftUI.Image.Scale) -&gt; some&gt;&gt;.0 in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Button&lt;&lt;&lt;opaque return type of SwiftUI.View.imageScale(SwiftUI.Image.Scale) -&gt; some&gt;&gt;.0&gt;, SwiftUI.Text, SwiftUI.Spacer)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, SwiftUI.Spacer, &lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0)&gt;&gt;, &lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0)&gt; in NextEld.EmailLogs.body.getter : some"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/View/HomeView%20/DailyLogs/EmailLogs.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "37"
-                  endingLineNumber = "37">
-               </Location>
-               <Location
-                  uuid = "96D1D84A-EE2A-4819-973C-5A819B6F0B41 - 6d57ec15368f570d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 () -&gt; &lt;&lt;opaque return type of SwiftUI.View.imageScale(SwiftUI.Image.Scale) -&gt; some&gt;&gt;.0 in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Button&lt;&lt;&lt;opaque return type of SwiftUI.View.imageScale(SwiftUI.Image.Scale) -&gt; some&gt;&gt;.0&gt;, SwiftUI.Text, SwiftUI.Spacer)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, SwiftUI.Spacer, &lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0)&gt;&gt;, &lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0)&gt; in NextEld.EmailLogs.body.getter : some"
-                  moduleName = "NextEld.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/inurum9/Documents/NEXTELDSource/NextEld/View/HomeView%20/DailyLogs/EmailLogs.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "37"
-                  endingLineNumber = "37">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

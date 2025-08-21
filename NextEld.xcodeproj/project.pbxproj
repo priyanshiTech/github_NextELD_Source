@@ -164,6 +164,8 @@
 		AFCC4CA22E49EBD000629DE3 /* ViewDriveringDtatusBydateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCC4CA12E49EBD000629DE3 /* ViewDriveringDtatusBydateModel.swift */; };
 		AFCC4CA52E4A24CC00629DE3 /* CompanyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCC4CA42E4A24CC00629DE3 /* CompanyInfo.swift */; };
 		AFCC4CA72E4A29C500629DE3 /* CompanyInformation<odel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCC4CA62E4A29C500629DE3 /* CompanyInformation<odel.swift */; };
+		AFCC878A2E56F2A600A09745 /* DisconnectAPIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCC87892E56F2A600A09745 /* DisconnectAPIModel.swift */; };
+		AFCC878C2E56F48D00A09745 /* DisConnetedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCC878B2E56F48D00A09745 /* DisConnetedViewModel.swift */; };
 		AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072612DE5889E00C939B0 /* CoDriverLogin.swift */; };
 		AFD072642DE59A9600C939B0 /* SelectedCoDriverPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072632DE59A9600C939B0 /* SelectedCoDriverPopup.swift */; };
 		AFD072662DE5A49000C939B0 /* NewDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */; };
@@ -373,6 +375,8 @@
 		AFCC4CA12E49EBD000629DE3 /* ViewDriveringDtatusBydateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDriveringDtatusBydateModel.swift; sourceTree = "<group>"; };
 		AFCC4CA42E4A24CC00629DE3 /* CompanyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyInfo.swift; sourceTree = "<group>"; };
 		AFCC4CA62E4A29C500629DE3 /* CompanyInformation<odel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompanyInformation<odel.swift"; sourceTree = "<group>"; };
+		AFCC87892E56F2A600A09745 /* DisconnectAPIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisconnectAPIModel.swift; sourceTree = "<group>"; };
+		AFCC878B2E56F48D00A09745 /* DisConnetedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisConnetedViewModel.swift; sourceTree = "<group>"; };
 		AFD072612DE5889E00C939B0 /* CoDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoDriverLogin.swift; sourceTree = "<group>"; };
 		AFD072632DE59A9600C939B0 /* SelectedCoDriverPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCoDriverPopup.swift; sourceTree = "<group>"; };
 		AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDriverLogin.swift; sourceTree = "<group>"; };
@@ -509,6 +513,7 @@
 		108FF82C2DC89C620051671B /* Model 2 */ = {
 			isa = PBXGroup;
 			children = (
+				AFCC87882E56F29100A09745 /* ConnectDisCont */,
 				AF7235032E55DC63009EAA9E /* vchicleModel */,
 				AF7235002E55DC48009EAA9E /* ForRuleModel */,
 				AF7234FB2E55B21F009EAA9E /* DVIREmailModel */,
@@ -972,6 +977,7 @@
 				AF7235062E55E4A4009EAA9E /* vchicleAPIViewModel.swift */,
 				AF7235082E55FC51009EAA9E /* RulesViewModels.swift */,
 				AF72350C2E560567009EAA9E /* MacAddressViewModel.swift */,
+				AFCC878B2E56F48D00A09745 /* DisConnetedViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1089,6 +1095,14 @@
 				AFCC4CA42E4A24CC00629DE3 /* CompanyInfo.swift */,
 			);
 			path = CompanyInformationModel;
+			sourceTree = "<group>";
+		};
+		AFCC87882E56F29100A09745 /* ConnectDisCont */ = {
+			isa = PBXGroup;
+			children = (
+				AFCC87892E56F2A600A09745 /* DisconnectAPIModel.swift */,
+			);
+			path = ConnectDisCont;
 			sourceTree = "<group>";
 		};
 		AFCE29E12E129C61001C6729 /* HelpingGroup */ = {
@@ -1453,6 +1467,7 @@
 				AFC535592E0D677C00AD10C9 /* DriverLogViewModel.swift in Sources */,
 				AFB9431D2E029C9500AD19D7 /* EventTableViewCell.swift in Sources */,
 				AFB9431E2E029C9500AD19D7 /* DeviceInfoView.swift in Sources */,
+				AFCC878C2E56F48D00A09745 /* DisConnetedViewModel.swift in Sources */,
 				AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */,
 				AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */,
 				106586132DCCE182003CE502 /* ColourExtensions.swift in Sources */,
@@ -1460,6 +1475,7 @@
 				AFB943332E029CD300AD19D7 /* DeviceListViewController.swift in Sources */,
 				AFA691032E54682A0035D092 /* DefectViewModel.swift in Sources */,
 				AFB943342E029CD300AD19D7 /* DeviceListViewController+UITableView.swift in Sources */,
+				AFCC878A2E56F2A600A09745 /* DisconnectAPIModel.swift in Sources */,
 				AF66F7A32E4CAEDB009A13A0 /* CoderiverViewModel.swift in Sources */,
 				AFB943352E029CD300AD19D7 /* DeviceListViewController+CBCentralManagerDelegate.swift in Sources */,
 				AFB943362E029CD300AD19D7 /* DeviceListViewController+UIViewControllerEventDelegate.swift in Sources */,

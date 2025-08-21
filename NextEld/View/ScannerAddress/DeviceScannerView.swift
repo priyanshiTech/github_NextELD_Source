@@ -15,6 +15,10 @@ struct DeviceScannerView: View {
     @State var tittle:String
     @State var checkboxClick : Bool
     @State var macaddress: String
+    
+    @StateObject private var deviceStatusVM = DeviceStatusViewModel(
+         networkManager: NetworkManager()
+     )
     var body: some View {
         
         VStack (spacing: 0) {
@@ -98,16 +102,56 @@ struct DeviceScannerView: View {
                     .padding()
                 
                 
+//                
+//                Button("Continue Disconnect") { navManager.navigate(to: .Home) }
+//                    .bold()
+//                    .frame(width: 300, height: 40)
+//                    .buttonStyle(.bordered)
+//                    .background(Color.black)
+//                    .foregroundColor(.white)
+//                    .cornerRadius(10)
+//                    .padding()
+//                Spacer()
                 
-                Button("Continue Disconnect") { navManager.navigate(to: .Home) }
-                    .bold()
-                    .frame(width: 300, height: 40)
-                    .buttonStyle(.bordered)
-                    .background(Color.black)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding()
-                Spacer()
+                Button {
+                                   Task {
+                                       await deviceStatusVM.updateDeviceStatus(status: "Disconnected")
+                                       
+                                       if deviceStatusVM.responseMessage != nil {
+                                           navManager.navigate(to: .Home)
+                                       }
+                                   }
+                               } label: {
+                                   if deviceStatusVM.isLoading {
+                                       ProgressView()
+                                           .frame(width: 300, height: 40)
+                                           .background(Color.black)
+                                           .cornerRadius(10)
+                                           .padding()
+                                   } else {
+                                       Text("Continue Disconnect")
+                                           .bold()
+                                           .frame(width: 300, height: 40)
+                                           .buttonStyle(.bordered)
+                                           .background(Color.black)
+                                           .foregroundColor(.white)
+                                           .cornerRadius(10)
+                                           .padding()
+                                   }
+                               }
+                               
+                               //  Show API response/error feedback
+                               if let error = deviceStatusVM.errorMessage {
+                                   Text(error)
+                                       .foregroundColor(.red)
+                                       .padding()
+                               }
+                               if let success = deviceStatusVM.responseMessage {
+                                   Text(success)
+                                       .foregroundColor(.green)
+                                       .padding()
+                               }
+                   Spacer()
             }
             Spacer()
             

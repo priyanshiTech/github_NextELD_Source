@@ -135,8 +135,8 @@ struct RulesView: View {
         }
         .navigationBarBackButtonHidden()
         .task {
-            /// API call when screen appears
-            await viewModel.fetchEmployeeRules(employeeId: 17, clientId: 1)
+            // API call when screen appears
+            await viewModel.fetchEmployeeRules(employeeId: 30, clientId: 3)
         }
     }
 }
