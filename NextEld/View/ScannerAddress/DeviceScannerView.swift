@@ -100,18 +100,7 @@ struct DeviceScannerView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .padding()
-                
-                
-//                
-//                Button("Continue Disconnect") { navManager.navigate(to: .Home) }
-//                    .bold()
-//                    .frame(width: 300, height: 40)
-//                    .buttonStyle(.bordered)
-//                    .background(Color.black)
-//                    .foregroundColor(.white)
-//                    .cornerRadius(10)
-//                    .padding()
-//                Spacer()
+
                 
                 Button {
                                    Task {

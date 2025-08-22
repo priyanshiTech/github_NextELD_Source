@@ -6,10 +6,22 @@
 //
 import Foundation
 import SwiftUI
+extension CertifyViewModel {
+    func fetchCertifyDataFromStoredSession() async {
+       
+        let storedDriverId = 1
+        let storedEmployeeId = UserDefaults.standard.integer(forKey: "employeeId")
+        let storedToken = UserDefaults.standard.string(forKey: "authToken") ?? ""
+       
+        await fetchCertifyData(driverId: storedDriverId, employeeID: storedEmployeeId, tokenNo: storedToken)
+    }
+}
 
 struct SelectCoDriverPopup: View {
     @Binding var selectedCoDriver: String
     @Binding var isPresented: Bool
+    @Binding var selectedCoDriverEmail: String
+
     @StateObject private var viewModel = CertifyViewModel(networkManager: NetworkManager())
 
     var body: some View {
@@ -28,29 +40,34 @@ struct SelectCoDriverPopup: View {
                     .foregroundColor(.red)
                     .padding()
             } else {
-                ScrollView {
+                UniversalScrollView {
                     VStack(spacing: 12) {
                         ForEach(viewModel.certifyRecords, id: \.employeeId) { driver in
+                            let fullName = "\(driver.firstName ?? "") \(driver.lastName ?? "")"
+                            
                             HStack {
-                                Text("\(driver.firstName ?? "") \(driver.lastName ?? "")")
+                                Text(fullName)
                                     .foregroundColor(.black)
                                 Spacer()
-                                Image(systemName: selectedCoDriver == "\(driver.firstName ?? "") \(driver.lastName ?? "")" ? "checkmark.circle.fill" : "checkmark.circle")
+                                Image(systemName: selectedCoDriver == fullName
+                                      ? "checkmark.circle.fill"
+                                      : "checkmark.circle")
                                     .foregroundColor(Color(uiColor: .wine))
                             }
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                selectedCoDriver = "\(driver.firstName ?? "") \(driver.lastName ?? "")"
+                                selectedCoDriver = fullName
+                                selectedCoDriverEmail = driver.email ?? ""
+                                print("Selected Email: \(driver.email ?? "nil")")
                             }
+                            
                             Divider()
                         }
                     }
                     .padding(.horizontal)
-                    Divider()
                 }
+                .frame(maxHeight: 250)
             }
-
-            Spacer()
 
             Button(action: {
                 isPresented = false
@@ -66,22 +83,14 @@ struct SelectCoDriverPopup: View {
             .padding(.horizontal)
             .padding(.bottom)
         }
+        .background(Color.white)
+        .cornerRadius(16)
+        .shadow(radius: 10)
+        .padding(.horizontal, 24)
         .onAppear {
             Task {
                 await viewModel.fetchCertifyDataFromStoredSession()
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-extension CertifyViewModel {
-    func fetchCertifyDataFromStoredSession() async {
-       
-        let storedDriverId = 1
-        let storedEmployeeId = UserDefaults.standard.integer(forKey: "employeeId")
-        let storedToken = UserDefaults.standard.string(forKey: "authToken") ?? ""
-       
-        await fetchCertifyData(driverId: storedDriverId, employeeID: storedEmployeeId, tokenNo: storedToken)
-    }
-}
-

@@ -24,6 +24,7 @@ struct CertifySelectedView: View {
     @EnvironmentObject var navManager: NavigationManager
     @EnvironmentObject var trailerVM: TrailerViewModel
     @EnvironmentObject var shippingVM: ShippingDocViewModel
+    @State private var selectedCoDriverEmail: String = "" // Hidden Email
     var title: String
     
     var body: some View {
@@ -207,7 +208,7 @@ struct CertifySelectedView: View {
                 
                 SelectCoDriverPopup(
                     selectedCoDriver: $selectedCoDriver,
-                    isPresented: $showCoDriverPopup
+                    isPresented: $showCoDriverPopup, selectedCoDriverEmail: $selectedCoDriverEmail,
                 )
 
                 .frame(width: 300, height: 400)

@@ -9,7 +9,7 @@ import Foundation
 
 func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
 //    guard let url = URL(string: "https://gbt-usa.com/eld_log/dispatch/update_dvir_data") else {
-//        print("❌ Invalid URL")
+//        print(" Invalid URL")
 //        return
 //    }
     let url =  API.Endpoint.update_dvir_data.url
@@ -30,7 +30,7 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
 
 
     print("📤 Fields to upload:")
-    fields.forEach { print("🔹 \($0.key): \($0.value)") }
+    fields.forEach { print(" \($0.key): \($0.value)") }
 
     var files: [MultipartFile] = []
 
@@ -52,7 +52,7 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
                 print(" Response: \(String(data: data, encoding: .utf8) ?? "None")")
 
             case .failure(let error):
-                print("❌ Upload failed: \(error.localizedDescription)")
+                print(" Upload failed: \(error.localizedDescription)")
             }
         }
     }

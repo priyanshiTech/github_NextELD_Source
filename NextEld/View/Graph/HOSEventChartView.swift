@@ -41,7 +41,7 @@ class HOSEventsChartViewModel: ObservableObject {
         var logs = DatabaseManager.shared.fetchDutyEventsForToday()
         logs.sort { $0.startTime < $1.startTime }
 
-        // 🟧 Add dummy OFF_DUTY if needed
+        //  Add dummy OFF_DUTY if needed
         if let first = logs.first {
             let startOfDay = Calendar.current.startOfDay(for: Date())
             if first.startTime > startOfDay {
@@ -194,7 +194,7 @@ struct DutyLinePathView: View {
     }
 
     private func isPersonalUse(_ event: HOSEvent) -> Bool {
-        // ✅ Customize this condition as per your database flag
+        // Customize this condition as per your database flag
         // Example: If dutyType == "OFF_DUTY" and label contains "Personal Use"
         return event.dutyType == "OFF_DUTY" && event.label.localizedCaseInsensitiveContains("Personal")
     }

@@ -9,20 +9,6 @@ import Foundation
 import SwiftUI
 import UIKit
 
-//struct DeviceListWrapper: UIViewControllerRepresentable {
-//    func makeUIViewController(context: Context) -> DeviceListViewController {
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc = storyboard.instantiateViewController(identifier: "DeviceListViewController") as! DeviceListViewController
-//        return vc
-//    }
-//
-//    func updateUIViewController(_ uiViewController: DeviceListViewController, context: Context) {
-//        // Update if needed
-//    }
-//}
-import SwiftUI
-import UIKit
-
 struct DeviceListWrapper: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> DeviceListViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)

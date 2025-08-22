@@ -1,7 +1,7 @@
-////  HomeScreenView.swift
-////  NextEld
-////  Created by priyanshi on 07/05/25.
-////
+//  HomeScreenView.swift
+//  NextEld
+//  Created by priyanshi on 07/05/25.
+//
 //
 import SwiftUI
 
@@ -15,8 +15,6 @@ struct TopBarView: View {
     var labelValue: String
     @Binding var showDeviceSelector: Bool
     @StateObject private var deleteViewModel = DeleteViewModel()
-    @StateObject private var viewModel = RefreshViewModel()
-    @State private var showConfirmation = false   //MARK: -  For Refresh Alert
     var body: some View {
         
         
@@ -58,21 +56,6 @@ struct TopBarView: View {
                             .resizable()
                             .frame(width: 30, height: 30)
                     }
-
-             
-                               IconButton(iconName: "arrow.2.circlepath") {
-                                   showConfirmation = true
-                               }
-                               .alert("Are you sure you want to refresh all logs?", isPresented: $showConfirmation) {
-                                   Button("Cancel", role: .cancel) {}
-                                   Button("OK", role: .destructive) {
-                                       Task {
-                                           await viewModel.refresh()
-                                           //await deleteViewModel.deleteAllDataOnVersionClick(driverId: 17)
-                                       }
-                                   }
-                               }
-             
                         .padding()
                 }
             }
@@ -379,6 +362,7 @@ struct HomeScreenView: View {
     @State private var showAlert: Bool = false
     @State private var showStatusalert: Bool = false
     @State private var showLogoutPopup: Bool = false
+    @State private var ShowrefreshPopup: Bool = false
     @State private var isCycleCompleted: Bool = false
     @Binding var presentSideMenu: Bool
     @Binding var selectedSideMenuTab: Int
@@ -396,6 +380,7 @@ struct HomeScreenView: View {
     @State private var didShowContinusDrivingVoilation =  false
     @AppStorage("didSyncOnLaunch") private var didSyncOnLaunch: Bool = false
 
+    @EnvironmentObject var dutyManager: DutyStatusManager
 
     
     @State private var onDutyTimer = CountdownTimer(startTime: 0)
@@ -447,7 +432,7 @@ struct HomeScreenView: View {
     @State private var activeTimerAlert: TimerAlert?
     @EnvironmentObject var navmanager: NavigationManager
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
-    
+    @StateObject private var viewModel = RefreshViewModel()
     @StateObject private var syncVM = SyncViewModel()
     //MARK: -  to show a Cycle state
     @State private var isOnDutyActive = false
@@ -484,8 +469,11 @@ struct HomeScreenView: View {
     @StateObject private var deleteViewModel = DeleteViewModel()
     @State private var showSuccessAlert = false
     @State private var showViolation = true
+    @State private var showSyncconfirmation  =  false
+  
 
-    @StateObject private var logoutVM = APILogoutViewModel()  //logout
+    @StateObject private var logoutVM = APILogoutViewModel()   //logout
+    @State private var showsyncRefreshalert = RefreshViewModel()  // Refresh
 
     
     var body: some View {
@@ -564,7 +552,7 @@ struct HomeScreenView: View {
                 }
                 .scrollIndicators(.hidden)
             }
-            .disabled(presentSideMenu || showLogoutPopup)
+            .disabled(presentSideMenu || showLogoutPopup || ShowrefreshPopup )
             
             if presentSideMenu {
                 Color.black.opacity(0.3)
@@ -580,7 +568,7 @@ struct HomeScreenView: View {
                     selectedSideMenuTab: $selectedSideMenuTab,
                     presentSideMenu: $presentSideMenu,
                     showLogoutPopup: $showLogoutPopup,
-                    showDeleteConfirm: $showDeleteConfirm ,
+                    showDeleteConfirm: $showDeleteConfirm, showSyncConfirmation: $showSyncconfirmation ,
                     
                 )
                 .frame(width: 250)
@@ -596,12 +584,13 @@ struct HomeScreenView: View {
                         .ignoresSafeArea()
                         .zIndex(2)
                     
-                    if selected == DriverStatusConstants.onSleep || selected == DriverStatusConstants.offDuty || selected == DriverStatusConstants.personalUse || selected == DriverStatusConstants.yardMove || selected == DriverStatusConstants.onDuty {
+                    if   /* dutyManager.dutyStatus*/  selected == DriverStatusConstants.onSleep || selected == DriverStatusConstants.offDuty || selected == DriverStatusConstants.personalUse || selected == DriverStatusConstants.yardMove || selected == DriverStatusConstants.onDuty {
                         StatusDetailsPopup(
                             statusTitle: selected,
                             onClose: { showAlert = false },
                             onSubmit: { note in
                                 confirmedStatus = selected
+                                dutyManager.dutyStatus = selected 
                                 print("Note for \(selected): \(note)")
                                 
                                 if selected == DriverStatusConstants.onDuty {
@@ -683,6 +672,7 @@ struct HomeScreenView: View {
                             message: "please add DVIR before going to On-Drive",
                             onOK: { 
                                 confirmedStatus = selected
+                                dutyManager.dutyStatus = selected
                                 isDriveActive = true
                                 driveTimer.start()
                                 dutyTimerOn.start()
@@ -824,7 +814,7 @@ struct HomeScreenView: View {
             if newValue {
                 showToast(message: " Internet Connected Successfully", color: .green)
             } else {
-                showToast(message: "⚠️ No Internet Connection", color: .red)
+                showToast(message: " No Internet Connection", color: .red)
             }
         }
         
@@ -1003,6 +993,7 @@ struct HomeScreenView: View {
                 didShowCycleViolation = true
             }
             else if remaining <= 0 && !didShowCycleViolation {
+                
                 activeTimerAlert = TimerAlert(
                     title: "Cycle Violation",
                     message: "Your weekly cycle has been exceeded to 70 hours",
@@ -1028,6 +1019,18 @@ struct HomeScreenView: View {
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("This will permanently delete all logs Record.")
+        }
+       //MARK: - Showing Refresh Log alert
+        .alert("Are you sure you want to refresh all logs?", isPresented: $showSyncconfirmation) {
+            Button("Cancel", role: .cancel) {}
+            Button("OK", role: .destructive) {
+                Task {
+                    await viewModel.refresh()   //  Call your refresh API
+                   
+                }
+            }
+        } message: {
+            Text("This will refresh all your local logs with the server.")
         }
 
 
@@ -1095,7 +1098,7 @@ func showToast(message: String, color: Color) {
             sleepTimer.stop()
             breakTime.stop()
 
-            // Reset timers to full time (but DO NOT reset cycleTimerOn)
+            //Reset timers to full time (but DO NOT reset cycleTimerOn)
             driveTimer.reset(startTime: CountdownTimer.timeStringToSeconds("11:00:00"))
             ONDuty.reset(startTime: CountdownTimer.timeStringToSeconds("14:00:00"))
             dutyTimerOn.reset(startTime: CountdownTimer.timeStringToSeconds("08:00:00"))
@@ -1213,7 +1216,7 @@ func showToast(message: String, color: Color) {
             Sleep \(sleepTimer.timeString)
             """)
         } else {
-            print("⚠️ No timer logs found in DB")
+            print(" No timer logs found in DB")
         }
     }
 
@@ -1265,7 +1268,6 @@ func showToast(message: String, color: Color) {
         isCycleTimerActive = true
         cycleTimerOn.start()          //MARK: -   this is the CountdownTimer you passed to AvailableHoursView
         
-        
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let now = formatter.string(from: Date())
@@ -1279,7 +1281,6 @@ func showToast(message: String, color: Color) {
             remainingSleepTime: sleepTimer.timeString,
             lastSleepTime: "", RemaningRestBreak: breakTime.timeString, isruning: false
         )
-        
         print(" Saved Cycle timer to DB at \(now)")
         
     }
@@ -1291,7 +1292,6 @@ func showToast(message: String, color: Color) {
         cycleTimerOn.stop() //  stop your cycle countdown
         print(" Cycle Timer Stopped")
     }
-    
     
 }
 

@@ -98,33 +98,7 @@ struct LoginScreen: View {
             }
             
             //MARK:  With API Verification
-//            Button {
-//                if !isValidEmail(email) || !isValidPassword(password) {
-//                    alertVisible = true
-//                    return
-//                }
-//
-//                Task {
-//                    let success = await loginVM.login(email: email, password: password)
-//
-//                    if success && SessionManagerClass.shared.isLoggedIn() {
-//                        isLoggedIn = true
-//                        navManager.navigate(to: .Scanner)
-//                    } else {
-//                        alertVisible = true
-//                    }
-//                }
-//                Task {
-//                    await viewModel.callLoginLogUpdateAPI()
-//                          }
-//            } label: {
-//                Text("Log - In")
-//                    .foregroundColor(Color(uiColor: .wine))
-//                    .frame(maxWidth: .infinity)
-//                    .padding()
-//                    .background((isValidEmail(email) && isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
-//                    .cornerRadius(10)
-//            }
+
             Button {
                 if !isValidEmail(email) || !isValidPassword(password) {
                     alertVisible = true

@@ -36,11 +36,13 @@ enum AppRoute: Hashable {
     )
     case  ADDVehicle
     case DotInspection(tittle: String)
+    case DataTransferView
+
     //  With associated value
     case LogsDetails(title: String, entry: WorkEntry)
     case EyeViewData(tittle: String , entry : WorkEntry )
     case CoDriverLogin
-    case NewDriverLogin(title: String)
+    case NewDriverLogin(title: String , email: String)
     //Vichle Mode
     case AddVichleMode
     case CompanyInformationView
@@ -63,6 +65,7 @@ struct RootView: View {
     @State private var presentSideMenu: Bool = false
     @State private var selectedSideMenuTab: Int = 0
     @State private var selectedVehicle: String = ""
+    @State private var emailAuto: String = ""
     @State private var language: String = ""
     @State private var isLogoutPresented: Bool = false
     @State private var isCycleCompleted: Bool = false
@@ -168,14 +171,15 @@ struct RootView: View {
                     
                 case .ADDVehicle:
                     ADDVehicle(selectedVehicleNumber: $selectedVehicle)
-                    
-    
-                    
+
                 case .CoDriverLogin:
                     CoDriverLogin()
                     
-                case .NewDriverLogin:
-                    NewDriverLogin()
+//                case .NewDriverLogin:
+//                    NewDriverLogin(isLoggedIn: $isLoggedIn, tittle: "Co-Driver Log-In", email: emailAuto)
+                case .NewDriverLogin(let title, let email):
+                    NewDriverLogin(isLoggedIn: $isLoggedIn, tittle: title, email: email)
+                        .id(email)
                     
                 case .AddVichleMode:
                     AddVichleMode(selectedVehicle: $selectedVehicle)
@@ -215,6 +219,8 @@ struct RootView: View {
                     ShippingDocView(tittle: "Shipping Document")
                 case .DatabaseCertifyView:
                     DatabaseCertifyView()
+                case .DataTransferView:
+                    DataTransferInspectionView()
                 }
                 
             }

@@ -14,6 +14,7 @@ struct SideMenuView: View {
     @Binding var presentSideMenu: Bool
     @Binding var showLogoutPopup: Bool
     @Binding var showDeleteConfirm: Bool
+    @Binding var showSyncConfirmation: Bool
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -115,7 +116,10 @@ struct SideMenuView: View {
            presentSideMenu = false
            showDeleteConfirm = true
     
-        }
+       case .Sync:
+           presentSideMenu = false
+        showSyncConfirmation = true   // <-- Trigger popup
+       }
     }
 
     func RowView(isSelected: Bool, imageName: String, title: String, action: @escaping () -> Void) -> some View {

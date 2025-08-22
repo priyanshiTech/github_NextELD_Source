@@ -2,7 +2,7 @@
 //  CalanderView.swift
 //  NextEld
 //
-//  Created by Inurum   on 21/05/25.
+//  Created by priyanshi on 21/05/25.
 //
 
 import Foundation
@@ -25,7 +25,6 @@ struct CalendarButton: View {
                 Text("\(title): \(formattedDate)")
                     .foregroundColor(.gray)
                     .font(.system(size: 18))
-                   // .frame(maxWidth: .infinity, minHeight: 50)
                     .frame(width: 100 , height: 100 , alignment: .leading)
             }
             .overlay(

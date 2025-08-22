@@ -27,6 +27,7 @@ enum SideMenuRowType: Int, CaseIterable{
     case DotInspection
     case coDriver
     case Vehicle
+    case Sync
     case companyInformation
     case InformationPocket
     case Rules
@@ -73,13 +74,17 @@ enum SideMenuRowType: Int, CaseIterable{
 
         case .version:
             return "Version \(UIDevice.current.systemVersion) "
-           // (\(AppInfo.buildNumber))"
-            
-            //        case .emailLogs:
-            //                return "Daily Logs"
-            //        case .RecapHour:
-            //            return "Recap Hour"
+       
+        case .Sync:
+            return "Sync"
         }
+        // (\(AppInfo.buildNumber))"
+         
+         //        case .emailLogs:
+         //                return "Daily Logs"
+         //        case .RecapHour:
+       // return "Recap Hour"
+         //
     }
 
     var iconName: String {
@@ -99,10 +104,10 @@ enum SideMenuRowType: Int, CaseIterable{
         case .FirmWareUpdate: return "firmawre_update"
         case .logout: return "logout_ic"
         case .version: return "AppleIcon"
+        case .Sync: return "refresh"
             
             //        case .emailLogs: return "email_icon"
             //        case .RecapHour: return "alarm_icon"
-            
         }
     }
 }

@@ -2,7 +2,7 @@
 //  VariablesView.swift
 //  NextEld
 //
-//  Created by Inurum   on 17/06/25.
+//  Created by priyanshi   on 17/06/25.
 //
 
 

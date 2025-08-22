@@ -10,6 +10,7 @@ import SwiftUI
 struct InformationPacket: View {
 
     @State private var showPDF = false
+    @State private var selectedPDF: String? = nil
 
     @EnvironmentObject var navmanager: NavigationManager
     var tittle: String = "Information Packet"
@@ -56,8 +57,9 @@ struct InformationPacket: View {
 
                 
                 Button(action: {
-                 //   navmanager.goBack()
+                    
                      showPDF = true
+                    selectedPDF = "excel_Manual_ppt"
                     //MARK:  addiga a new view
 
                 }) {
@@ -85,9 +87,10 @@ struct InformationPacket: View {
                 
                 Button(action: {
                     showPDF = true
+                    selectedPDF = "excel_eld_instruction"
                     //MARK:  addiga a new view
                 }) {
-                    Text("View User Manual")
+                    Text("View Instruction")
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -99,9 +102,14 @@ struct InformationPacket: View {
                 Spacer()
                               
             }
-            .sheet(isPresented: $showPDF) {
-                
-                PDFViewerWithHeader(fileName: "eld_instruction", title: "Informtion Packet")
+
+            .sheet(isPresented: Binding(
+                get: { selectedPDF != nil },
+                set: { if !$0 { selectedPDF = nil } }
+            )) {
+                if let pdfFile = selectedPDF {
+                    PDFViewerWithHeader(fileName: pdfFile, title: "Information Packet")
+                }
             }
 
         }.navigationBarBackButtonHidden()
@@ -111,3 +119,10 @@ struct InformationPacket: View {
 #Preview {
     InformationPacket()
 }
+
+
+//            .sheet(isPresented: $showPDF) {
+//
+//                PDFViewerWithHeader(fileName: "excel_eld_instruction", title: "Informtion Packet")
+//            }
+            

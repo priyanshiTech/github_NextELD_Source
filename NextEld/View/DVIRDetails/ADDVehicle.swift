@@ -31,17 +31,34 @@ struct ADDVehicle: View {
             // Header
             Color(uiColor: .wine)
                 .edgesIgnoringSafeArea(.top)
-                .frame(height: 20)
-            
-            HStack {
+                .frame(height: 30)
 
+            HStack {
+                // Back Button (left corner)
+                Button(action: {
+                    navmanager.goBack()
+                }) {
+                    Image(systemName: "arrow.left")
+                        .bold()
+                        .foregroundColor(.white)
+                        .imageScale(.large)
+                }
+                
+                Spacer()
+                // Title (center)
                 Text("Add Vehicle")
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 56)
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(.white)
-                    .background(Color(uiColor: .wine))
+                
+                Spacer()
+                // Empty space so title stays center
+                Image(systemName: "arrow.left")
+                    .opacity(0) // invisible, for symmetry
+                    .imageScale(.large)
             }
+            .frame(height: 56)
+            .padding(.horizontal)
+            .background(Color(uiColor: .wine))
 
             // Search Bar
             HStack {
@@ -77,7 +94,6 @@ struct ADDVehicle: View {
                 }
             }
             .listStyle(PlainListStyle())
-
             // Submit Button
             Button {
                 navmanager.goBack()

@@ -61,7 +61,8 @@ struct DotInspection: View {
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color(uiColor: .wine))                            .foregroundColor(.white)
+                            .background(Color(uiColor: .wine))
+                            .foregroundColor(.white)
                             .cornerRadius(8)
                     }
                     
@@ -80,6 +81,7 @@ struct DotInspection: View {
                     
                     Button(action: {
                         // Data Transfer action
+                        navManager.navigate(to: AppRoute.DataTransferView)
                     }) {
                         Text("Data Transfer")
                             .fontWeight(.bold)
@@ -128,7 +130,8 @@ struct DotInspection: View {
                                 .fontWeight(.bold)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color(uiColor: .wine))                                .foregroundColor(.white)
+                                .background(Color(uiColor: .wine))
+                                .foregroundColor(.white)
                                 .cornerRadius(8)
                         }
                         

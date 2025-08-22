@@ -24,6 +24,7 @@ struct SplashView: View {
                 .frame(width: 200, height: 250)
                 .offset(y: offSetImage)
         }
+        .navigationBarBackButtonHidden()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background( Color(uiColor: .wine))
         .ignoresSafeArea()

@@ -36,6 +36,7 @@ enum API {
         case MacAddress
         case ConnectdDisConnectedAPI
 
+        
         var url: URL {
             switch self {
             case .login:

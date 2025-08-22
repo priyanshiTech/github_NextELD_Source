@@ -22,6 +22,8 @@ struct NextEldApp: App {
     @StateObject var addVechicleVm = VehicleViewModel()
     @StateObject var vehicleVM = VehicleConditionViewModel()
     @StateObject var hoseEventsChartViewModel = HOSEventsChartViewModel()
+    @StateObject var dutyStatusManager = DutyStatusManager()
+
     
 
 
@@ -40,6 +42,7 @@ struct NextEldApp: App {
                 .environmentObject(vehicleVM)
                 .environmentObject(hoseEventsChartViewModel)
                 .environmentObject(shippingVM)
+                .environmentObject(dutyStatusManager)
               
         }
     }
