@@ -24,7 +24,7 @@ struct CertifiedLogRequest {
 //MARK: API Responce Model  For Certify Driver
 
 struct CertifiedLogResponse: Codable {
-    let message: String
+    let message: String?
     let result: String
     let status: String
     let token: String

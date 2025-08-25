@@ -18,7 +18,8 @@ extension CertifyViewModel {
 }
 
 struct SelectCoDriverPopup: View {
-    @Binding var selectedCoDriver: String
+    @Binding var selectedCoDriver: String?
+    @Binding var selectedCodriverID: Int?
     @Binding var isPresented: Bool
     @Binding var selectedCoDriverEmail: String
 
@@ -58,6 +59,8 @@ struct SelectCoDriverPopup: View {
                             .onTapGesture {
                                 selectedCoDriver = fullName
                                 selectedCoDriverEmail = driver.email ?? ""
+                                selectedCodriverID = driver.employeeId ?? 0
+                                print("Selected EmpID: \(driver.employeeId ?? 0)")
                                 print("Selected Email: \(driver.email ?? "nil")")
                             }
                             

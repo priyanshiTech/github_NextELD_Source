@@ -14,8 +14,8 @@ struct CertifySelectedView: View {
     @State private var trailer = "None"
     @State private var shippingDocs = "docwriting"
     @State private var coDriver = "none"
-    @State private var selectedCoDriver: String = ""
-
+    @State private var selectedCoDriverName: String? = nil
+    @State private var selectedCoID: Int? = nil
     @State private var SelectedTraller: String? = nil
     @State private var showSignaturePad = false
     @State private var signaturePath = Path()
@@ -25,6 +25,10 @@ struct CertifySelectedView: View {
     @EnvironmentObject var trailerVM: TrailerViewModel
     @EnvironmentObject var shippingVM: ShippingDocViewModel
     @State private var selectedCoDriverEmail: String = "" // Hidden Email
+    @State private var certifiedDate: String = ""
+    @State private var isCertified: Bool = false
+   
+
     var title: String
     
     var body: some View {
@@ -98,10 +102,10 @@ struct CertifySelectedView: View {
                 
                 Spacer()
                 
-                // MARK: - Form Tab Content
+                // MARK: - Form Tab Content"
                 if selectedTab == "Form" {
                     VStack(spacing: 10) {
-                        FormField(label: "Driver", value: .constant("Mark Joseph ID - 17"), editable: false)
+                        FormField(label: "Driver", value: .constant("\(DriverInfo.UserName )- \(DriverInfo.driverId ?? 0)"), editable: false)
                         FormField(
                             label: "Vehicle",
                             value: $vehiclesc , // Direct binding
@@ -109,68 +113,91 @@ struct CertifySelectedView: View {
                         ) {
                             navManager.navigate(to: .ADDVehicle)
                         }
-                        
+
                         FormField(
                             label: "Trailer",
                             value: Binding(
-                                get: { trailerVM.trailers.last ?? "None" },
-                                set: { newValue in
+                                get: {
                                     if trailerVM.trailers.isEmpty {
-                                        trailerVM.trailers.append(newValue)
+                                        return "None"
                                     } else {
-                                        trailerVM.trailers[trailerVM.trailers.count - 1] = newValue
+                                        return trailerVM.trailers.prefix(10).joined(separator: ", ")
+                                    }
+                                },
+                                set: { newValue in
+                                    let values = newValue
+                                        .split(separator: ",")
+                                        .map { $0.trimmingCharacters(in: .whitespaces) }
+                                    
+                                    if values.isEmpty {
+                                        trailerVM.trailers = []
+                                    } else {
+                                        trailerVM.trailers = Array(values.prefix(10))
                                     }
                                 }
                             ),
                             editable: true
-                        ) {
+                        )
+{
                             navManager.navigate(to: .trailerScreen)
                         }
-                        
-                        
                         FormField(
                             label: "Shipping Docs",
                             value: Binding(
-                                get: { shippingVM.ShippingDoc.last ?? "None" },
+                                get: {
+                                    let docs = Array(shippingVM.ShippingDoc.prefix(10)) // starting se max 10 values
+                                    return docs.isEmpty ? "None" : docs.joined(separator: ", ")
+                                },
                                 set: { newValue in
-                                    if shippingVM.ShippingDoc.isEmpty {
-                                        shippingVM.ShippingDoc.append(newValue)
-                                    } else {
-                                        shippingVM.ShippingDoc[shippingVM.ShippingDoc.count - 1] = newValue
-                                    }
+                                    // Split newValue by comma if user edits it
+                                    let values = newValue.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+                                    shippingVM.ShippingDoc = Array(values.prefix(10))
                                 }
                             ),
                             editable: true
-                        ) {
+                        )
+{
                             navManager.navigate(to: .ShippingDocment) // shipping screen
                         }
-                        
+
                         FormField(
                             label: "Co-Driver",
                             value: Binding(
-                                get: { selectedCoDriver ?? coDriver },
-                                set: { selectedCoDriver = $0 }
+                                get: { selectedCoDriverName ?? coDriver },   // UI me sirf name show hoga
+                                set: { newValue in
+                                    selectedCoDriverName = newValue
+                                    // id update popup se karoge (jab user choose kare)
+                                }
                             ),
                             editable: true
                         ) {
                             showCoDriverPopup = true
                         }
+
+                        
+                        
                         Button(action: {
                             let record = CertifyRecord(
                                     userID: String(DriverInfo.driverId ?? 0), // Or get from your logged-in user data
                                     userName: DriverInfo.UserName,
                                     startTime: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
-                                    date: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none),
-                                    shift: "Day", // Or dynamically from your shift logic
+                                    date: certifiedDate,
+                                    shift: DriverInfo.shift,
                                     selectedVehicle: vehiclesc,
-                                    selectedTrailer: trailerVM.trailers.last ?? "None",
-                                    selectedShippingDoc: shippingVM.ShippingDoc.last ?? "None",
-                                    selectedCoDriver: selectedCoDriver ?? "None",
-                                    vehicleID: "V123", // Replace with actual vehicle ID if available
-                                    coDriverID: "C123" // Replace with actual co-driver ID if available
+                                    selectedTrailer: trailerVM.trailers.isEmpty
+                                        ? "None"
+                                        : trailerVM.trailers.prefix(10).joined(separator: ", "),
+                                    selectedShippingDoc: shippingVM.ShippingDoc.isEmpty
+                                         ? "None"
+                                         : shippingVM.ShippingDoc.prefix(10).joined(separator: ", "),
+                                    selectedCoDriver: selectedCoDriverName ?? "None",
+                                    vehicleID: DriverInfo.vehicleId ?? 0,
+                                    coDriverID: selectedCoID, /*isCertify: ""*/
                                 )
                                 
-                                CertifyDatabaseManager.shared.insertRecord(record)
+                              //  CertifyDatabaseManager.shared.insertRecord(record)
+                            CertifyDatabaseManager.shared.saveRecord(record)
+
                                 print("@@@@@@@@@@@@@@@@@@ Record saved successfully!")
                                 navManager.navigate(to: AppRoute.DatabaseCertifyView)
                                 
@@ -182,17 +209,35 @@ struct CertifySelectedView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(8)
                         }
+                        
+                 
                         .padding(.horizontal)
                         Spacer()
                     }
+                    .onAppear {
+                          certifiedDate = title.extractDate()   // Title se date set
+                      }
                     .padding(.top)
                 }
                 
                 // MARK: - Signature Tab Content
+
                 if selectedTab == "Certify" {
-                    SignatureCertifyView(signaturePath: $signaturePath)
-                        .transition(.slide)
+                    SignatureCertifyView(
+                        signaturePath: $signaturePath,
+                        selectedVehicle: vehiclesc,
+                        selectedTrailer: trailerVM.trailers.last ?? "None",
+                        selectedShippingDoc: shippingVM.ShippingDoc.last ?? "None",
+                        selectedCoDriver: selectedCoDriverName,
+                        selectedCoDriverID: selectedCoID,
+                        certifiedDate: certifiedDate
+                    )
+                    .environmentObject(trailerVM)
+                    .environmentObject(shippingVM)
+                    .transition(.slide)
                 }
+
+
                 
                 Spacer()
             }
@@ -207,7 +252,7 @@ struct CertifySelectedView: View {
                     .onTapGesture { showCoDriverPopup = false }
                 
                 SelectCoDriverPopup(
-                    selectedCoDriver: $selectedCoDriver,
+                    selectedCoDriver: $selectedCoDriverName, selectedCodriverID: $selectedCoID ,
                     isPresented: $showCoDriverPopup, selectedCoDriverEmail: $selectedCoDriverEmail,
                 )
 
@@ -224,6 +269,9 @@ struct CertifySelectedView: View {
         }
     }
 }
+
+
+
 
 // MARK: - FormField View
 struct FormField: View {
@@ -257,6 +305,25 @@ struct FormField: View {
         Divider()
     }
 }
+
+//MARK: -  To Transfer a Exact date  in tittle
+extension String {
+    func extractDate() -> String {
+        // Extract last 10 chars if format is yyyy-MM-dd
+        if self.count >= 10 {
+            let dateStr = String(self.suffix(10))
+            return dateStr
+        }
+        return self
+    }
+}
+
+
+
+
+
+
+
 //
 //// MARK: - Preview
 //#Preview {

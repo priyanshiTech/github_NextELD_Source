@@ -42,7 +42,6 @@ struct DatabaseCertifyView: View {
                     }
                 }
             }
-            
             Divider()
             
             // MARK: - Pagination Controls
@@ -69,6 +68,21 @@ struct DatabaseCertifyView: View {
                 .disabled((currentPage + 1) * recordsPerPage >= records.count)
             }
             .padding()
+            
+            // MARK: - Delete All Button
+                     Button(role: .destructive) {
+                         CertifyDatabaseManager.shared.deleteAllRecords()
+                         loadRecords()
+                         currentPage = 0
+                     } label: {
+                         Text("Delete All Records")
+                             .frame(maxWidth: .infinity)
+                             .padding()
+                             .background(Color.red.opacity(0.9))
+                             .foregroundColor(.white)
+                             .cornerRadius(8)
+                     }
+                     .padding(.top, 10)
         }
         .navigationTitle("Certify Records")
         .onAppear {
@@ -79,11 +93,15 @@ struct DatabaseCertifyView: View {
     
     func loadRecords() {
         records = CertifyDatabaseManager.shared.fetchAllRecords()
+        print("All certify Records here :\(records)")
     }
+  
+
 }
 
 // MARK: - Table Header
 struct CertifyTableHeader: View {
+    
     var body: some View {
         HStack(spacing: 5) {
             TableCellCertify(text: "User ID", width: 120, isHeader: true)
@@ -97,8 +115,10 @@ struct CertifyTableHeader: View {
             TableCellCertify(text: "Co-Driver", width: 150, isHeader: true)
             TableCellCertify(text: "Vehicle ID", width: 150, isHeader: true)
             TableCellCertify(text: "CoDriver ID", width: 150, isHeader: true)
+            TableCellCertify(text: "IsLogCertified", width: 150, isHeader: true)
         }
     }
+    
 }
 
 // MARK: - Table Row
@@ -116,8 +136,10 @@ struct CertifyTableRow: View {
             TableCellCertify(text: record.selectedTrailer, width: 150)
             TableCellCertify(text: record.selectedShippingDoc, width: 200)
             TableCellCertify(text: record.selectedCoDriver, width: 150)
-            TableCellCertify(text: record.vehicleID, width: 150)
-            TableCellCertify(text: record.coDriverID, width: 150)
+            TableCellCertify(text: String(record.vehicleID ?? 00), width: 150)
+            TableCellCertify(text: String(record.coDriverID ?? 00), width: 150)
+           // TableCellCertify(text: record.isCertify, width: 150)
+
         }
     }
 }

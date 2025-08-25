@@ -13,7 +13,6 @@ class CertifyDatabaseManager {
     
     private var db: Connection?
     private let certifyTable = Table("certify_records")
-    
     private let id = Expression<Int64>("id")
     private let userID = Expression<String>("userID")
     private let userName = Expression<String>("userName")
@@ -24,9 +23,11 @@ class CertifyDatabaseManager {
     private let selectedTrailer = Expression<String>("selectedTrailer")
     private let selectedShippingDoc = Expression<String>("selectedShippingDoc")
     private let selectedCoDriver = Expression<String>("selectedCoDriver")
-    private let vehicleID = Expression<String>("vehicleID")
-    private let coDriverID = Expression<String>("coDriverID")
-    
+    private let vehicleID = Expression<Int?>("vehicleID")
+    private let coDriverID = Expression<Int?>("coDriverID")
+
+    private let IsCertified = Expression<String>("isLogcertified")
+  
     private init() {
         setupDatabase()
         createTable()
@@ -58,6 +59,7 @@ class CertifyDatabaseManager {
                 table.column(selectedCoDriver)
                 table.column(vehicleID)
                 table.column(coDriverID)
+                table.column(IsCertified)
             })
         } catch {
             print("Error creating Certify table: \(error)")
@@ -77,7 +79,9 @@ class CertifyDatabaseManager {
                 selectedShippingDoc <- record.selectedShippingDoc,
                 selectedCoDriver <- record.selectedCoDriver,
                 vehicleID <- record.vehicleID,
-                coDriverID <- record.coDriverID
+                coDriverID <- record.coDriverID,
+               // IsCertified <- record.isCertify
+                
             )
             
             let rowId = try db?.run(insert)
@@ -86,28 +90,92 @@ class CertifyDatabaseManager {
             print("@@@@@@@@@@@@@@@ Error inserting Certify record: \(error)")
         }
     }
-    
+
     func fetchAllRecords() -> [CertifyRecord] {
         var records: [CertifyRecord] = []
         
-        if let rows = try? db?.prepare(certifyTable) {
-            for row in rows {
-                records.append(CertifyRecord(
-                    userID: row[userID],
-                    userName: row[userName],
-                    startTime: row[startTime],
-                    date: row[date],
-                    shift: row[shift],
-                    selectedVehicle: row[selectedVehicle],
-                    selectedTrailer: row[selectedTrailer],
-                    selectedShippingDoc: row[selectedShippingDoc],
-                    selectedCoDriver: row[selectedCoDriver],
-                    vehicleID: row[vehicleID],
-                    coDriverID: row[coDriverID]
-                ))
+        do {
+            if let rows = try db?.prepare(certifyTable) {
+                for row in rows {
+                    records.append(CertifyRecord(
+                        userID: row[userID],
+                        userName: row[userName],
+                        startTime: row[startTime],
+                        date: row[date],
+                        shift: row[shift],
+                        selectedVehicle: row[selectedVehicle],
+                        selectedTrailer: row[selectedTrailer],
+                        selectedShippingDoc: row[selectedShippingDoc],
+                        selectedCoDriver: row[selectedCoDriver],
+                        vehicleID: row[vehicleID],     // Int? now
+                        coDriverID: row[coDriverID]
+                    ))
+                }
             }
+        } catch {
+            print("Error fetching all records: \(error)")
         }
         
         return records
     }
+
+
+//MARK: -  For Update Records
+    func saveRecord(_ record: CertifyRecord) {
+        do {
+            // Check if record exists for the same date
+            let query = certifyTable.filter(date == record.date)
+            if let existing = try db?.pluck(query) {
+                // If exists → update it
+                try db?.run(query.update(
+                    userID <- record.userID,
+                    userName <- record.userName,
+                    startTime <- record.startTime,
+                    shift <- record.shift,
+                    selectedVehicle <- record.selectedVehicle,
+                    selectedTrailer <- record.selectedTrailer,
+                    selectedShippingDoc <- record.selectedShippingDoc,
+                    selectedCoDriver <- record.selectedCoDriver,
+                    vehicleID <- record.vehicleID,
+                    coDriverID <- record.coDriverID
+                    //IsCertified <- record.isCertify
+                ))
+                print("@@@@@ Record updated successfully for date \(record.date)")
+            } else {
+                // If not exists → insert new
+                let insert = certifyTable.insert(
+                    userID <- record.userID,
+                    userName <- record.userName,
+                    startTime <- record.startTime,
+                    date <- record.date,
+                    shift <- record.shift,
+                    selectedVehicle <- record.selectedVehicle,
+                    selectedTrailer <- record.selectedTrailer,
+                    selectedShippingDoc <- record.selectedShippingDoc,
+                    selectedCoDriver <- record.selectedCoDriver,
+                    vehicleID <- record.vehicleID,
+                    coDriverID <- record.coDriverID
+                    //IsCertified <- record.isCertify
+                )
+                let rowId = try db?.run(insert)
+                print("@@@@@@@@@@@@ Certify record inserted with ID: \(rowId ?? -1)")
+            }
+        } catch {
+            print("Error saving record: \(error)")
+        }
+    }
+    
+    //MARK: -  Delete all records from db
+
+    func deleteAllRecords() {
+        do {
+            try db?.run(certifyTable.delete())
+            print("##### All certify records deleted successfully!")
+        } catch {
+            print("Error deleting all certify records: \(error)")
+        }
+    }
+
+
+
 }

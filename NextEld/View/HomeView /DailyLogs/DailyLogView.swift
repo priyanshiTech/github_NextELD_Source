@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+
+struct LogDate: Identifiable {
+    let id = UUID()
+    let date: String
+    let isMissing: Bool
+}
+
 struct DailyLogView: View {
     
     @State var lbldate: String = ""
@@ -15,13 +22,32 @@ struct DailyLogView: View {
     let entry: WorkEntry  //passed from previous screen
 
     //MARK: -  Sample list of dates
-    
-    let dateList: [Date] = [
-        Date(),
-        Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
-        Calendar.current.date(byAdding: .day, value: -2, to: Date())!
-    ]
-    
+        private var logDates: [LogDate] {
+        let calendar = Calendar.current
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        // DB se dates nikalo
+        let logs = DatabaseManager.shared.fetchLogs()
+        let logDatesFromDB = Set(logs.compactMap { $0.startTime.toDate() }).map { formatter.string(from: $0) }
+        
+        // Last 7 din ki continuous list banao
+        let last7Days = (0..<5).compactMap { i -> String? in
+            guard let date = calendar.date(byAdding: .day, value: -i, to: Date()) else { return nil }
+            return formatter.string(from: date)
+        }
+        
+        // Ab list banani hai with missing check
+        let finalList: [LogDate] = last7Days.map { day in
+            if logDatesFromDB.contains(day) {
+                return LogDate(date: day, isMissing: false)
+            } else {
+                return LogDate(date: day, isMissing: true)
+            }
+        }
+        return finalList.sorted { $0.date > $1.date } // latest -> oldest
+    }
+
     var body: some View {
         
         //MARK: top Header Colour
@@ -63,7 +89,6 @@ struct DailyLogView: View {
                 .padding(.horizontal)
             }
             
-            
             HStack{
                 
                 Image(systemName: "exclamationmark.circle.fill")
@@ -78,31 +103,27 @@ struct DailyLogView: View {
             .padding()
             
             //MARK: -  List Section
-            
-            List(dateList, id: \.self) { date in
-                Button {
-                    //MARK: -  Navigate to LogsDetails screen with selected date wrapped in WorkEntry
-                    let selectedEntry = WorkEntry(date: date, hoursWorked: 0) // Replace hoursWorked if you want real data
-                    navManager.navigate(to: .LogsDetails(title: "Daily Logs", entry: selectedEntry))
-                } label: {
-                    HStack {
-                        Text(dateFormatted(date))
-                            .foregroundColor(.primary)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            navManager.navigate(to: .CertifySelectedView(tittle: "\(dateFormatted(date))"))
-                            print("Uncertified button tapped for \(dateFormatted(date))")
-                        }) {
-                            Text("Uncertified")
-                                .foregroundColor(.red)
-                                .padding(8)
-                        }
+
+            List(logDates) { log in
+                HStack {
+                    Text(dateFormattedString(log.date))
+                        .foregroundColor(.primary)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        navManager.navigate(to: .CertifySelectedView(tittle: dateFormattedString(log.date)))
+                        print("Uncertified tapped for \(dateFormattedString(log.date))")
+                    }) {
+                        Text("Uncertified")
+                            .foregroundColor(.red)
+                            .padding(8)
                     }
                 }
+                .contentShape(Rectangle())
             }
             .listStyle(.plain)
+ 
         }
         .navigationBarBackButtonHidden()
     }
@@ -113,11 +134,70 @@ struct DailyLogView: View {
         formatter.dateFormat = "dd-MM-yyyy"
         return formatter.string(from: date)
     }
+    
+    private func dateFormattedString(_ date: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        if let d = formatter.date(from: date) {
+            formatter.dateFormat = "dd-MM-yyyy"
+            return formatter.string(from: d)
+        }
+        return date
+    }
+  
+}
+extension String {
+    func toDate() -> Date? {
+        let formats = [
+            "yyyy-MM-dd'T'HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd'T'HH:mm:ssZ",
+            "yyyy-MM-dd'T'HH:mm:ssXXXXX"
+        ]
+        
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        
+        for format in formats {
+            formatter.dateFormat = format
+            if let date = formatter.date(from: self) {
+                return date
+            }
+        }
+        return nil
+    }
 
 }
-#Preview {
-    let sampleEntry = WorkEntry(date: Date(), hoursWorked: 8.0)
-    return DailyLogView(title: "Daily Logs", entry: sampleEntry)
-        .environmentObject(NavigationManager())
-}
+
+
+
+//#Preview {
+//    let sampleEntry = WorkEntry(date: Date(), hoursWorked: 8.0)
+//    DailyLogView(title: "Daily Logs", entry: sampleEntry, logs: [DriverLogModel])
+//        .environmentObject(NavigationManager())
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

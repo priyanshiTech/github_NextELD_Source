@@ -117,7 +117,11 @@ struct RootView: View {
                 case .PT30Connection:
                     PT30ConnectionView()
                 case .DailyLogs(let title):
-                    DailyLogView(title: title, entry: WorkEntry(date: Date(), hoursWorked: 0)) // ←default/fake data
+                    DailyLogView(title: title, entry: WorkEntry(date: Date(), hoursWorked: 0))
+        
+
+//                case .DailyLogs(let title):
+//                    DailyLogView(title: title, entry: WorkEntry(date: Date(), hoursWorked: 0), logs: [])
                 case .emailLogs( let tittle):
                     EmailLogs(title: tittle)
                 case .RecapHours(let tittle):

@@ -5,13 +5,49 @@
 //  Created by priyanshi   on 26/05/25.
 //
 
+
 import Foundation
 import SwiftUI
 
 struct SignatureCertifyView: View {
+    // Inputs
     @Binding var signaturePath: Path
-    @State private var showAlert = false
+    var selectedVehicle: String
+    var selectedTrailer: String
+    var selectedShippingDoc: String
+    var selectedCoDriver: String?
+    var selectedCoDriverID : Int?
+    var certifiedDate: String
+    var onCertified: (() -> Void)?
 
+    // Env
+    @EnvironmentObject var trailerVM: TrailerViewModel
+    @EnvironmentObject var shippingVM: ShippingDocViewModel
+
+    // UI state
+    @State private var showAlert = false
+    @State private var alertTitle = "Alert"
+    @State private var alertMessage = ""
+    @State private var isLoading = false
+
+    // MARK: - Derived validations
+    private var isFormValid: Bool {
+        let vehOK = !selectedVehicle.isEmpty && selectedVehicle != "None"
+        let trlOK = !selectedTrailer.isEmpty && selectedTrailer != "None"
+        let docOK = !selectedShippingDoc.isEmpty && selectedShippingDoc != "None"
+        let coOK  = {
+            guard let c = selectedCoDriver?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  !c.isEmpty else { return false }
+            return c.lowercased() != "none"
+        }()
+        let coIDOK: Bool = {
+            guard let c = selectedCoDriverID else { return false }
+            return c != 0   // or replace 0 with the "invalid" value you want to check against
+        }()
+
+    ()
+        return vehOK && trlOK && docOK && coOK && coIDOK
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -20,11 +56,11 @@ struct SignatureCertifyView: View {
             Text("Driver Signature")
                 .font(.headline)
                 .padding(.leading)
-            
+
             SignaturePad(path: $signaturePath)
                 .frame(height: 250)
                 .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10)) // restrict drawing to shape
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color.gray, lineWidth: 2)
@@ -56,118 +92,128 @@ struct SignatureCertifyView: View {
                 )
 
                 
-                Button("Agree") {
-                    // 1. Verify there's actually a signature
-                    guard !signaturePath.isEmpty else {
-                        showAlert = true
-                        return
-                    }
+                Button(action: {
+                    
+                       guard isFormValid else {
+                           alertTitle = "Incomplete Form"
+                           alertMessage = "Please fill the form first."
+                           showAlert = true
+                           return
+                       }
+   
+                       // 2) Signature validation
+                       guard !signaturePath.isEmpty else {
+                           alertTitle = "Signature Required"
+                           alertMessage = "Please provide a signature."
+                           showAlert = true
+                           return
+                       }
+   
+                       // 3) Render signature to image
+                       let size = CGSize(width: 300, height: 250)
+                       let image = renderSignatureAsImage(path: signaturePath, size: size)
+                       guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+                           alertTitle = "Error"
+                           alertMessage = "Failed to convert signature."
+                           showAlert = true
+                           return
+                       }
+   
+                       // 4) Save temp file
+                       guard let driverId = DriverInfo.driverId else {
+                           alertTitle = "Error"
+                           alertMessage = "Missing driverId."
+                           showAlert = true
+                           return
+                       }
+   
+                       let tokenNo = DriverInfo.authToken
+                       let tempDirectory = FileManager.default.temporaryDirectory
+                       let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
+   
+                       do {
+                           try imageData.write(to: fileURL)
+                       } catch {
+                           alertTitle = "Error"
+                           alertMessage = "Failed to save signature file."
+                           showAlert = true
+                           return
+                       }
+   
+                       // 5) Call API with completion -> show API message
+                       isLoading = true
+                       let vm = CertifyDriverViewModel()
+                       vm.uploadCertifiedLog(
+                           driverId: driverId,
+                           vehicleId: DriverInfo.vehicleId ?? 0,
+                           coDriverId: DriverInfo.coDriverId ?? 0,
+                           trailers: trailerVM.trailers.last ?? "None",
+                           shippingDocs: shippingVM.ShippingDoc.last ?? "None",
+                           certifiedDate: certifiedDate,
+                           fileURL: fileURL,
+                           tokenNo: tokenNo,
+                           certifiedDateTime: "1755129599000",
+                           certifiedAt: "1755150649"
+                       ) { result in
+                           // <-- add this completion in your VM
+                           DispatchQueue.main.async {
+                               isLoading = false
+                               switch result {
+                               case .success(let apiMessage):
+                                   alertTitle = "Success"
+                                   alertMessage = apiMessage.isEmpty ? "Certified successfully." : apiMessage
+                                   onCertified?()   // tell parent
 
-                    // 2. Render the signature as image
-                    let size = CGSize(width: 300, height: 250)
-                    let image = renderSignatureAsImage(path: signaturePath, size: size)
-
-                    // 3. Convert to JPEG data (matches .jpg filename)
-                    guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-                        print("Failed to convert signature to JPEG data")
-                        return
-                    }
-
-                    // 4. Save signature JPEG to a temporary file with dynamic filename
-                 
-                    if let driverId = DriverInfo.driverId {   //  I Used Using your common approach
-                        let tokenNo = DriverInfo.authToken
-                        let tempDirectory = FileManager.default.temporaryDirectory
-                        let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
-            
-                        print("Token: \(tokenNo)")
-                        print("here is your File URL Bro*******\(fileURL)")
-                        
-                        do {
-                            try imageData.write(to: fileURL)
-                        } catch {
-                            print("Failed to write signature to file: \(error)")
-                            return
-                        }
-                        
-                        // 5. Call the CertifyDriver API
-                        let viewModel = CertifyDriverViewModel()
-                        viewModel.uploadCertifiedLog(
-                            driverId: driverId,
-                            vehicleId: "2",
-                            coDriverId: "0",
-                            trailers: "aaa,zzz",
-                            shippingDocs: "aaa,bbb,ccc",
-                            certifiedDate: "2025-08-13",
-                            fileURL: fileURL,
-                            tokenNo: tokenNo,
-                            certifiedDateTime: "1755129599000", // <- numeric timestamp
-                            certifiedAt: "1755150649"        // <- numeric timestamp
-                        )
-                        
-                    }
-                    // 6. Save to local database
-                    let record = DvirRecord(
-                        driver: "Driver Name",
-                        time: "Current Time",
-                        date: "Current Date",
-                        odometer: "Odometer Reading",
-                        company: "Company Name",
-                        location: "Location",
-                        vehicle: "Vehicle Number",
-                        trailer: "Trailer Number",
-                        truckDefect: "Truck Defects",
-                        trailerDefect: "Trailer Defects",
-                        vehicleCondition: "Vehicle Condition",
-                        notes: "Additional Notes",
-                        signature: imageData
-                    )
-
-                    DvirDatabaseManager.shared.insertRecord(record)
-                    print("Save DVIR Data Re4cord Successfully \(record)")
-
-                    // 7. Show alert to user
-                    showAlert = true
+                               case .failure(let err):
+                                   alertTitle = "Error"
+                                   alertMessage = err.localizedDescription
+                               }
+                               showAlert = true
+                           }
+                       }
+   
+                       // 6) (Optional) Save locally
+                       let record = DvirRecord(
+                           driver: DriverInfo.UserName,
+                           time: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
+                           date: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none),
+                           odometer: "",
+                           company: "",
+                           location: "",
+                           vehicle: selectedVehicle,
+                           trailer: selectedTrailer,
+                           truckDefect: "",
+                           trailerDefect: "",
+                           vehicleCondition: "",
+                           notes: "",
+                           signature: imageData
+                       )
+                       DvirDatabaseManager.shared.insertRecord(record)
+                }) {
+                    Text(isLoading ? "Please wait..." : "Agree")
                 }
-
-
-            
-                .alert("Image Saved", isPresented: $showAlert) {
-                    Button("OK", role: .cancel) { }
-                } message: {
-                    Text("Signature image saved successfully.")
-                }
+                .disabled(isLoading)
                 .frame(maxWidth: .infinity)
                 .padding()
                 .bold()
                 .font(.footnote)
-
                 .background(Color(uiColor: .wine))
                 .foregroundColor(.white)
                 .cornerRadius(8)
             }
             .padding(.horizontal)
+
             Spacer()
         }
         .transition(.slide)
-    }
-    
-    
-}
-
-#Preview {
-    SignatureCertifyPreviewWrapper()
-}
-
-
-//MARK:  popup view Resuable
-struct SignatureCertifyPreviewWrapper: View {
-    @State private var path = Path()
-    
-    var body: some View {
-        SignatureCertifyView(signaturePath: $path)
+        .alert(alertTitle, isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(alertMessage)
+        }
     }
 }
+
 
 //MARK: -  create a popup for resuable in app
 
@@ -227,3 +273,26 @@ func renderSignatureAsImage(path: Path, size: CGSize) -> UIImage {
         controller.view.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -48,8 +48,9 @@ struct TokenResult: Decodable {
     let shortHaulException : String?
     let unlimitedTrailers : String?
     let unlimitedShippingDocs : String?
- //   let driveringStatusData: [DriveringStatusData]
+  // let driveringStatusData: [DriveringStatusData]
     let driverLog: [DriverLog]?
+    let driverCertifiedLog: [DriverCertifiedLog]
     let loginLogoutLog: [LoginLogoutLog]?
     let splitLog: [SplitLog]?
     let rules: [Rules]?

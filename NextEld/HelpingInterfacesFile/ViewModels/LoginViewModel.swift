@@ -126,6 +126,13 @@ class LoginViewModel: ObservableObject {
                     UserDefaults.standard.set(shiftValue, forKey: "shift")
                     print(" Saved shift: \(shiftValue)")
                 }
+                
+                
+                if let firstLog = response.result?.driverCertifiedLog.first {
+                    let coDriverId = firstLog.coDriverId
+                    UserDefaults.standard.set(coDriverId, forKey: "coDriverId")
+                    print("Saved coDriverId:", coDriverId)
+                }
 
                 //Save Location (if available)
                 if let location = response.result?.driverLog?.first?.customLocation {

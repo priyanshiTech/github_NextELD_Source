@@ -7,7 +7,9 @@
 import SwiftUI
 
 struct CoDriverLogin: View {
-    @State private var selectionCoDriver: String = ""
+    @State private var selectionCoDriver: String? = nil
+    @State private var selectedCoDriverId: Int? = nil
+
     @State private var showDriver = false
     @EnvironmentObject var navmanager: NavigationManager
     @State private var showAlert = false
@@ -56,7 +58,7 @@ struct CoDriverLogin: View {
                                     .foregroundColor(.black)
 
                                 // Show selected value
-                                Text(selectionCoDriver.isEmpty ? "None" : selectionCoDriver)
+                                Text((((selectionCoDriver?.isEmpty) != nil) ? "None" : selectionCoDriver) ?? "")
                                     .font(.headline)
                                     .foregroundColor(.black)
                                     .lineLimit(1)
@@ -90,7 +92,7 @@ struct CoDriverLogin: View {
                                        .cornerRadius(10)
                                }
                                .padding(.horizontal)
-                               .disabled(selectionCoDriver.isEmpty)
+                               .disabled(((selectionCoDriver?.isEmpty) != nil))
                                .alert("Switch to Off-Duty before Co-Driver can login.", isPresented: $showAlert) {
                                    Button("OK", role: .cancel) { }
                                }
@@ -104,7 +106,7 @@ struct CoDriverLogin: View {
                     .onTapGesture { showDriver = false } // tap outside to close
 
                 SelectCoDriverPopup(
-                    selectedCoDriver: $selectionCoDriver,
+                    selectedCoDriver: $selectionCoDriver, selectedCodriverID: $selectedCoDriverId,
                     isPresented: $showDriver, selectedCoDriverEmail: $selectedCoDriverEmail
                 )
 

@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-
-//MARK: ----  Without Compilation errror
-
-
-
-import SwiftUI
-
 // MARK: - MAIN VIEW
 struct DriverLogListView: View {
     @StateObject private var viewModel = DriverLogViewModel()

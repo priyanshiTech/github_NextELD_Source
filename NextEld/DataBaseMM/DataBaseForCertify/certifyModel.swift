@@ -19,7 +19,8 @@ struct CertifyRecord: Codable{
     var selectedTrailer: String
     var selectedShippingDoc: String
     var selectedCoDriver: String
-    var vehicleID: String
-    var coDriverID: String
+    var vehicleID: Int?
+    var coDriverID: Int?
     var signature: Data?
+   // var isCertify: String
 }

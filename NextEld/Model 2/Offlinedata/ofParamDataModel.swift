@@ -58,3 +58,39 @@ struct SplllitLogss: Codable {
     let driverId: Int
     let shift: Int
 }
+
+
+//DVIR Certify Log
+
+import Foundation
+
+
+
+
+// MARK: - Driver Certified Log
+struct DriverCertifiedLog: Codable, Identifiable {
+    let id = UUID()   // local unique id for SwiftUI List
+    let _id: String?          // null in JSON, keep as optional String
+    let driverId: Int
+    let driverName: String
+    let vehicleId: Int
+    let vehicleName: String
+    let trailers: [String]
+    let shippingDocs: [String]
+    let coDriverId: Int
+    let coDriverName: String?
+    let certifiedSignature: String
+    let certifiedDate: String
+    let lCertifiedDate: Int64
+    let certifiedDateTime: Int
+    let certifiedAt: Int
+    let addedTimestamp: Int64
+
+    enum CodingKeys: String, CodingKey {
+        case _id
+        case driverId, driverName, vehicleId, vehicleName, trailers, shippingDocs
+        case coDriverId, coDriverName, certifiedSignature, certifiedDate
+        case lCertifiedDate, certifiedDateTime, certifiedAt, addedTimestamp
+    }
+}
+

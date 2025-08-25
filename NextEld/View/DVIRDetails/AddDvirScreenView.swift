@@ -39,6 +39,13 @@ struct AddDvirScreenView: View  {
     @State private var date: String = ""
     @State private var time: String = ""
 
+    @State private var selectedCoDriver: String? = nil
+
+
+    @State private var showSignaturePad = false
+    @State private var showCoDriverPopup = false
+    @EnvironmentObject var navManager: NavigationManager
+    @EnvironmentObject var shippingVM: ShippingDocViewModel
 
 
     
@@ -359,12 +366,29 @@ struct AddDvirScreenView: View  {
             .navigationBarBackButtonHidden()
             
             // MARK: - Signature Popup Overlay
-            if showSignaturePopup {
+           /* if showSignaturePopup {
                 PopupContainer(isPresented: $showSignaturePopup) {
-                    SignatureCertifyView(signaturePath: $signaturePath)
+                    SignatureCertifyView (signaturePath: $signaturePath)
                 }
                 
+            }*/
+            
+            if selectedTab == "Certify" {
+                SignatureCertifyView(
+                    signaturePath: $signaturePath,
+                    selectedVehicle: "vehiclesc",
+                    selectedTrailer: trailerVM.trailers.last ?? "None",
+                    selectedShippingDoc: shippingVM.ShippingDoc.last ?? "None",
+                    selectedCoDriver: selectedCoDriver,
+                    certifiedDate: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none)
+         
+                    
+                )
+                .environmentObject(trailerVM)
+                .environmentObject(shippingVM)
+                .transition(.slide)
             }
+
                 
             // MARK: - Defect Popup Overlay
             if Showpopup {
