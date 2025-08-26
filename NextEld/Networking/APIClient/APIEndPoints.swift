@@ -132,9 +132,6 @@ private func printCurlCommand(for request: URLRequest) {
 }
 
 
-
-
-
 //MARK: -
 
 final class NetworkManager {

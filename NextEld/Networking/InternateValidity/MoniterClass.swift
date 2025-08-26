@@ -27,3 +27,24 @@ class NetworkMonitor: ObservableObject {
         monitor.cancel()
     }
 }
+
+//MARK: -  for internate connectivity
+
+
+class InternateNetworkConnectivity: ObservableObject {
+    static let shared = NetworkMonitor()  // Singleton
+    
+    private let monitor = NWPathMonitor()
+    private let queue = DispatchQueue(label: "NetworkMonitorQueue")
+    
+    @Published var isConnected: Bool = true
+    
+    private init() {
+        monitor.pathUpdateHandler = { [weak self] path in
+            DispatchQueue.main.async {
+                self?.isConnected = path.status == .satisfied
+            }
+        }
+        monitor.start(queue: queue)
+    }
+}

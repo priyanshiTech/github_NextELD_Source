@@ -21,13 +21,13 @@ class VehicleInfoViewModel: ObservableObject {
     }
 
     /// Fetch Vehicle Information
-    func fetchVehicleInfo(vehicleId: Int, clientId: Int) async {
+    func fetchVehicleInfo() async {
         isLoading = true
         errorMessage = nil
 
         let requestBody = VehicleInfoRequest(
             vehicleId: DriverInfo.vehicleId ?? 0,
-            clientId: clientId,
+            clientId: DriverInfo.clientId ?? 0,
             driverId: DriverInfo.driverId ?? 1,
             tokenNo: DriverInfo.authToken
         )

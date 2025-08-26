@@ -23,6 +23,7 @@ struct SignatureCertifyView: View {
     // Env
     @EnvironmentObject var trailerVM: TrailerViewModel
     @EnvironmentObject var shippingVM: ShippingDocViewModel
+    @StateObject private var networkMonitor = InternateNetworkConnectivity.shared
 
     // UI state
     @State private var showAlert = false
@@ -90,108 +91,135 @@ struct SignatureCertifyView: View {
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color(uiColor: .wine), lineWidth: 1)
                 )
-
-                
                 Button(action: {
+                    // 1) Form validation
+                    guard isFormValid else {
+                        alertTitle = "Incomplete Form"
+                        alertMessage = "Please fill the form first."
+                        showAlert = true
+                        return
+                    }
                     
-                       guard isFormValid else {
-                           alertTitle = "Incomplete Form"
-                           alertMessage = "Please fill the form first."
-                           showAlert = true
-                           return
-                       }
-   
-                       // 2) Signature validation
-                       guard !signaturePath.isEmpty else {
-                           alertTitle = "Signature Required"
-                           alertMessage = "Please provide a signature."
-                           showAlert = true
-                           return
-                       }
-   
-                       // 3) Render signature to image
-                       let size = CGSize(width: 300, height: 250)
-                       let image = renderSignatureAsImage(path: signaturePath, size: size)
-                       guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-                           alertTitle = "Error"
-                           alertMessage = "Failed to convert signature."
-                           showAlert = true
-                           return
-                       }
-   
-                       // 4) Save temp file
-                       guard let driverId = DriverInfo.driverId else {
-                           alertTitle = "Error"
-                           alertMessage = "Missing driverId."
-                           showAlert = true
-                           return
-                       }
-   
-                       let tokenNo = DriverInfo.authToken
-                       let tempDirectory = FileManager.default.temporaryDirectory
-                       let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
-   
-                       do {
-                           try imageData.write(to: fileURL)
-                       } catch {
-                           alertTitle = "Error"
-                           alertMessage = "Failed to save signature file."
-                           showAlert = true
-                           return
-                       }
-   
-                       // 5) Call API with completion -> show API message
-                       isLoading = true
-                       let vm = CertifyDriverViewModel()
-                       vm.uploadCertifiedLog(
-                           driverId: driverId,
-                           vehicleId: DriverInfo.vehicleId ?? 0,
-                           coDriverId: DriverInfo.coDriverId ?? 0,
-                           trailers: trailerVM.trailers.last ?? "None",
-                           shippingDocs: shippingVM.ShippingDoc.last ?? "None",
-                           certifiedDate: certifiedDate,
-                           fileURL: fileURL,
-                           tokenNo: tokenNo,
-                           certifiedDateTime: "1755129599000",
-                           certifiedAt: "1755150649"
-                       ) { result in
-                           // <-- add this completion in your VM
-                           DispatchQueue.main.async {
-                               isLoading = false
-                               switch result {
-                               case .success(let apiMessage):
-                                   alertTitle = "Success"
-                                   alertMessage = apiMessage.isEmpty ? "Certified successfully." : apiMessage
-                                   onCertified?()   // tell parent
-
-                               case .failure(let err):
-                                   alertTitle = "Error"
-                                   alertMessage = err.localizedDescription
-                               }
-                               showAlert = true
-                           }
-                       }
-   
-                       // 6) (Optional) Save locally
-                       let record = DvirRecord(
-                           driver: DriverInfo.UserName,
-                           time: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
-                           date: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none),
-                           odometer: "",
-                           company: "",
-                           location: "",
-                           vehicle: selectedVehicle,
-                           trailer: selectedTrailer,
-                           truckDefect: "",
-                           trailerDefect: "",
-                           vehicleCondition: "",
-                           notes: "",
-                           signature: imageData
-                       )
-                       DvirDatabaseManager.shared.insertRecord(record)
+                    // 2) Signature validation
+                    guard !signaturePath.isEmpty else {
+                        alertTitle = "Signature Required"
+                        alertMessage = "Please provide a signature."
+                        showAlert = true
+                        return
+                    }
+                    
+                    // 3) Render signature to image
+                    let size = CGSize(width: 300, height: 250)
+                    let image = renderSignatureAsImage(path: signaturePath, size: size)
+                    guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+                        alertTitle = "Error"
+                        alertMessage = "Failed to convert signature."
+                        showAlert = true
+                        return
+                    }
+                    
+                    // 4) Save temp file
+                    guard let driverId = DriverInfo.driverId else {
+                        alertTitle = "Error"
+                        alertMessage = "Missing driverId."
+                        showAlert = true
+                        return
+                    }
+                    
+                    let tokenNo = DriverInfo.authToken
+                    let tempDirectory = FileManager.default.temporaryDirectory
+                    let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
+                    
+                    do {
+                        try imageData.write(to: fileURL)
+                    } catch {
+                        alertTitle = "Error"
+                        alertMessage = "Failed to save signature file."
+                        showAlert = true
+                        return
+                    }
+                    
+                    // --- Mark record as Certified, but syncStatus = 0 initially
+                    CertifyDatabaseManager.shared.updateCertifyStatus(
+                        for: certifiedDate,
+                        isCertify: "Yes",
+                        syncStatus: 0
+                    )
+                    
+                    //  5) Check Internet before API
+                    guard networkMonitor.isConnected else {
+                        alertTitle = "No Internet"
+                        alertMessage = "Please check your connection and try again."
+                        showAlert = true
+                        return
+                    }
+                    
+                    //  6) Call API with completion
+                    isLoading = true
+                    let vm = CertifyDriverViewModel()
+                    vm.uploadCertifiedLog(
+                        driverId: driverId,
+                        vehicleId: DriverInfo.vehicleId ?? 0,
+                        coDriverId: DriverInfo.coDriverId ?? 0,
+                        trailers: trailerVM.trailers.last ?? "None",
+                        shippingDocs: shippingVM.ShippingDoc.last ?? "None",
+                        certifiedDate: certifiedDate,
+                        fileURL: fileURL,
+                        tokenNo: tokenNo,
+                        certifiedDateTime: "1755129599000",
+                        certifiedAt: "1755150649"
+                    ) { result in
+                        DispatchQueue.main.async {
+                            isLoading = false
+                            switch result {
+                            case .success(let apiMessage):
+                                alertTitle = "Success"
+                                alertMessage = apiMessage.isEmpty ? "Certified successfully." : apiMessage
+                                //  API success → mark syncStatus = 1
+                                CertifyDatabaseManager.shared.updateCertifyStatus(
+                                    for: certifiedDate,
+                                    isCertify: "Yes",
+                                    syncStatus: 1
+                                )
+                                NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
+                                onCertified?()
+                            case .failure(let err):
+                                alertTitle = "Error"
+                                alertMessage = err.localizedDescription
+                                //  API fail → keep syncStatus = 0
+                                CertifyDatabaseManager.shared.updateCertifyStatus(
+                                    for: certifiedDate,
+                                    isCertify: "Yes",
+                                    syncStatus: 0
+                                )
+                            }
+                            showAlert = true
+                        }
+                    }
+                    
+                    // 7) Save locally (DVIR)
+                    let record = DvirRecord(
+                        driver: DriverInfo.UserName,
+                        time: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
+                        date: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none),
+                        odometer: "",
+                        company: "",
+                        location: "",
+                        vehicle: selectedVehicle,
+                        trailer: selectedTrailer,
+                        truckDefect: "",
+                        trailerDefect: "",
+                        vehicleCondition: "",
+                        notes: "",
+                        signature: imageData
+                    )
+                    DvirDatabaseManager.shared.insertRecord(record)
+                    
                 }) {
                     Text(isLoading ? "Please wait..." : "Agree")
                 }
+
+                
                 .disabled(isLoading)
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -275,11 +303,9 @@ func renderSignatureAsImage(path: Path, size: CGSize) -> UIImage {
 }
 
 
-
-
-
-
-
+extension Notification.Name {
+    static let certifyUpdated = Notification.Name("certifyUpdated")
+}
 
 
 

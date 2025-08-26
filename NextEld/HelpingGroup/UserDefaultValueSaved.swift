@@ -17,6 +17,7 @@ struct AppStorageKeys {
     static let TimeZoneOffset = "timezoneOffSet"
     static let coDriverId = "coDriverId"
     static let shift = "shift"
+    static let clientId = "clientId"
 
 }
 
@@ -82,5 +83,13 @@ struct DriverInfo {
     static func setShift(_ value: String) {
         UserDefaults.standard.set(value, forKey: AppStorageKeys.shift)
     }
+    // MARK: - ClientId
+        static var clientId: Int? {
+            UserDefaults.standard.object(forKey: AppStorageKeys.clientId) as? Int
+        }
+        static func setClientId(_ id: Int) {
+            UserDefaults.standard.set(id, forKey: AppStorageKeys.clientId)
+        }
+    
 }
 

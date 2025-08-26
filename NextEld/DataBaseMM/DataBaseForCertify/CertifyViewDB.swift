@@ -88,6 +88,14 @@ struct DatabaseCertifyView: View {
         .onAppear {
             loadRecords()
         }
+       
+        .onReceive(NotificationCenter.default.publisher(for: .certifyUpdated)) { notification in
+            if let date = notification.object as? String {
+                print(" Certified updated for date: \(date)")
+            }
+            loadRecords() // Refresh table
+        }
+
         .padding()
     }
     
@@ -115,7 +123,10 @@ struct CertifyTableHeader: View {
             TableCellCertify(text: "Co-Driver", width: 150, isHeader: true)
             TableCellCertify(text: "Vehicle ID", width: 150, isHeader: true)
             TableCellCertify(text: "CoDriver ID", width: 150, isHeader: true)
+            TableCellCertify(text: "isSynced", width: 150, isHeader: true)
             TableCellCertify(text: "IsLogCertified", width: 150, isHeader: true)
+
+
         }
     }
     
@@ -138,7 +149,8 @@ struct CertifyTableRow: View {
             TableCellCertify(text: record.selectedCoDriver, width: 150)
             TableCellCertify(text: String(record.vehicleID ?? 00), width: 150)
             TableCellCertify(text: String(record.coDriverID ?? 00), width: 150)
-           // TableCellCertify(text: record.isCertify, width: 150)
+            TableCellCertify(text: String(record.syncStatus) , width: 150)
+            TableCellCertify(text: record.isCertify, width: 150)
 
         }
     }

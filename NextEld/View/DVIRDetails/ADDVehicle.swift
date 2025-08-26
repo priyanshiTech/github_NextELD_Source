@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ADDVehicle: View {
     @Binding var selectedVehicleNumber: String
+    @Binding var VechicleID: Int
     @EnvironmentObject var navmanager: NavigationManager
     @State private var searchText = ""
 
@@ -89,7 +90,9 @@ struct ADDVehicle: View {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         selectedVehicleNumber = vehicle.vehicleNo
+                        VechicleID = vehicle.vehicleId
                         print("Vehicle selected: \(selectedVehicleNumber)")
+                        print("Vehicle ID: \(VechicleID)")
                     }
                 }
             }
@@ -113,8 +116,9 @@ struct ADDVehicle: View {
         
         
         .task {
-            await vehicleVM.fetchVehicleInfo(vehicleId: 3, clientId: 1)
+            await vehicleVM.fetchVehicleInfo()
             print("API se aaye vehicles: \(vehicleVM.vehicles.map{$0.vehicleNo})")
+            print("API se aaye vehicles ID Number : \(vehicleVM.vehicles.map{$0.vehicleId})")
         }
         
     }

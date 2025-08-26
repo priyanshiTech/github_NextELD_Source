@@ -22,5 +22,6 @@ struct CertifyRecord: Codable{
     var vehicleID: Int?
     var coDriverID: Int?
     var signature: Data?
-   // var isCertify: String
+    var syncStatus: Int
+    var isCertify: String
 }

@@ -2,7 +2,7 @@
 //  CertifySelectedView.swift
 //  NextEld
 //
-//  Created by priyanshi   on 19/05/25.
+//  Created by priyanshi  on 19/05/25.
 //
 import SwiftUI
 import Foundation
@@ -21,13 +21,15 @@ struct CertifySelectedView: View {
     @State private var signaturePath = Path()
     @State private var showCoDriverPopup = false
     @Binding var vehiclesc: String
+    @Binding var VechicleID: Int
     @EnvironmentObject var navManager: NavigationManager
     @EnvironmentObject var trailerVM: TrailerViewModel
     @EnvironmentObject var shippingVM: ShippingDocViewModel
     @State private var selectedCoDriverEmail: String = "" // Hidden Email
     @State private var certifiedDate: String = ""
     @State private var isCertified: Bool = false
-   
+    @State private var isCertify: String = "No" // Default "No"
+
 
     var title: String
     
@@ -53,11 +55,16 @@ struct CertifySelectedView: View {
                                 .foregroundColor(.white)
                                 .imageScale(.large)
                         }.padding()
-                        
-                        Text(title)
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .fontWeight(.semibold)
+
+                        Button(action: {
+                            navManager.navigate(to: .DatabaseCertifyView)
+                        }) {
+                            Text(title)
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .fontWeight(.semibold)
+                        }
+
                         
                         Spacer()
                         
@@ -163,7 +170,7 @@ struct CertifySelectedView: View {
                         FormField(
                             label: "Co-Driver",
                             value: Binding(
-                                get: { selectedCoDriverName ?? coDriver },   // UI me sirf name show hoga
+                                get: { selectedCoDriverName ?? coDriver},   // UI me sirf name show hoga
                                 set: { newValue in
                                     selectedCoDriverName = newValue
                                     // id update popup se karoge (jab user choose kare)
@@ -173,9 +180,7 @@ struct CertifySelectedView: View {
                         ) {
                             showCoDriverPopup = true
                         }
-
-                        
-                        
+ 
                         Button(action: {
                             let record = CertifyRecord(
                                     userID: String(DriverInfo.driverId ?? 0), // Or get from your logged-in user data
@@ -192,14 +197,13 @@ struct CertifySelectedView: View {
                                          : shippingVM.ShippingDoc.prefix(10).joined(separator: ", "),
                                     selectedCoDriver: selectedCoDriverName ?? "None",
                                     vehicleID: DriverInfo.vehicleId ?? 0,
-                                    coDriverID: selectedCoID, /*isCertify: ""*/
+                                    coDriverID: selectedCoID,
+                                    syncStatus: 0, isCertify: "No",
                                 )
-                                
-                              //  CertifyDatabaseManager.shared.insertRecord(record)
-                            CertifyDatabaseManager.shared.saveRecord(record)
-
-                                print("@@@@@@@@@@@@@@@@@@ Record saved successfully!")
-                                navManager.navigate(to: AppRoute.DatabaseCertifyView)
+                                    CertifyDatabaseManager.shared.saveRecord(record)
+                                 self.isCertify = "No"
+                               print("@@@@@@@@@@@@@@@@@@ Record saved successfully!")
+//                            navManager.navigate(to: AppRoute.DatabaseCertifyView)
                                 
                         }) {
                             Text("Save")
@@ -209,13 +213,13 @@ struct CertifySelectedView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(8)
                         }
-                        
-                 
                         .padding(.horizontal)
                         Spacer()
                     }
                     .onAppear {
-                          certifiedDate = title.extractDate()   // Title se date set
+                          certifiedDate = title.extractDate()
+                                // Set the current selection into DriverInfo when view appears
+                                DriverInfo.setvehicleId(VechicleID)
                       }
                     .padding(.top)
                 }
@@ -223,6 +227,7 @@ struct CertifySelectedView: View {
                 // MARK: - Signature Tab Content
 
                 if selectedTab == "Certify" {
+
                     SignatureCertifyView(
                         signaturePath: $signaturePath,
                         selectedVehicle: vehiclesc,
@@ -231,7 +236,18 @@ struct CertifySelectedView: View {
                         selectedCoDriver: selectedCoDriverName,
                         selectedCoDriverID: selectedCoID,
                         certifiedDate: certifiedDate
-                    )
+                    ) {
+                        // Callback when certification is done
+                        self.isCertify = "Yes"
+
+                        // optional: re-fetch to confirm
+                        let all = CertifyDatabaseManager.shared.fetchAllRecords()
+                        if let match = all.first(where: { $0.date == certifiedDate }) {
+                            self.isCertify = match.isCertify
+                            print(" DB updated: \(match.isCertify)")
+                        }
+                    }
+
                     .environmentObject(trailerVM)
                     .environmentObject(shippingVM)
                     .transition(.slide)
@@ -249,7 +265,8 @@ struct CertifySelectedView: View {
             if showCoDriverPopup && selectedTab == "Form" {
                 Color.black.opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
-                    .onTapGesture { showCoDriverPopup = false }
+                    .onTapGesture { showCoDriverPopup = false
+                    }
                 
                 SelectCoDriverPopup(
                     selectedCoDriver: $selectedCoDriverName, selectedCodriverID: $selectedCoID ,
@@ -257,7 +274,6 @@ struct CertifySelectedView: View {
                 )
 
                 .frame(width: 300, height: 400)
-                .background(Color.white)
                 .cornerRadius(12)
                 .shadow(radius: 8)
                 .position(
@@ -269,8 +285,6 @@ struct CertifySelectedView: View {
         }
     }
 }
-
-
 
 
 // MARK: - FormField View

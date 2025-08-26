@@ -25,9 +25,10 @@ class CertifyDatabaseManager {
     private let selectedCoDriver = Expression<String>("selectedCoDriver")
     private let vehicleID = Expression<Int?>("vehicleID")
     private let coDriverID = Expression<Int?>("coDriverID")
+    private let isLogcertified = Expression<String>("isLogcertified")
+    private let isSynced = Expression<Int>("isSynced")
 
-    private let IsCertified = Expression<String>("isLogcertified")
-  
+
     private init() {
         setupDatabase()
         createTable()
@@ -46,6 +47,7 @@ class CertifyDatabaseManager {
     
     private func createTable() {
         do {
+            
             try db?.run(certifyTable.create(ifNotExists: true) { table in
                 table.column(id, primaryKey: .autoincrement)
                 table.column(userID)
@@ -59,13 +61,24 @@ class CertifyDatabaseManager {
                 table.column(selectedCoDriver)
                 table.column(vehicleID)
                 table.column(coDriverID)
-                table.column(IsCertified)
+                 table.column(isSynced)
+                table.column(isLogcertified, defaultValue: "No")
+
             })
         } catch {
             print("Error creating Certify table: \(error)")
         }
+        do {
+            try db?.run(certifyTable.addColumn(isLogcertified, defaultValue: "No"))
+            print("Column isLogCertified added successfully ")
+        } catch {
+            print("Column may already exist: \(error)")
+        }
+
     }
     
+    
+
     func insertRecord(_ record: CertifyRecord) {
         do {
             let insert = certifyTable.insert(
@@ -80,7 +93,8 @@ class CertifyDatabaseManager {
                 selectedCoDriver <- record.selectedCoDriver,
                 vehicleID <- record.vehicleID,
                 coDriverID <- record.coDriverID,
-               // IsCertified <- record.isCertify
+                isSynced <- record.syncStatus,
+                isLogcertified <- record.isCertify
                 
             )
             
@@ -108,7 +122,9 @@ class CertifyDatabaseManager {
                         selectedShippingDoc: row[selectedShippingDoc],
                         selectedCoDriver: row[selectedCoDriver],
                         vehicleID: row[vehicleID],     // Int? now
-                        coDriverID: row[coDriverID]
+                        coDriverID: row[coDriverID],
+                        syncStatus: row[isSynced],
+                        isCertify: row[isLogcertified]
                     ))
                 }
             }
@@ -137,12 +153,14 @@ class CertifyDatabaseManager {
                     selectedShippingDoc <- record.selectedShippingDoc,
                     selectedCoDriver <- record.selectedCoDriver,
                     vehicleID <- record.vehicleID,
-                    coDriverID <- record.coDriverID
-                    //IsCertified <- record.isCertify
+                    coDriverID <- record.coDriverID,
+                    isSynced <- record.syncStatus,
+                    isLogcertified <- record.isCertify
                 ))
                 print("@@@@@ Record updated successfully for date \(record.date)")
             } else {
                 // If not exists → insert new
+                
                 let insert = certifyTable.insert(
                     userID <- record.userID,
                     userName <- record.userName,
@@ -154,8 +172,9 @@ class CertifyDatabaseManager {
                     selectedShippingDoc <- record.selectedShippingDoc,
                     selectedCoDriver <- record.selectedCoDriver,
                     vehicleID <- record.vehicleID,
-                    coDriverID <- record.coDriverID
-                    //IsCertified <- record.isCertify
+                    coDriverID <- record.coDriverID,
+                    isSynced <- record.syncStatus,
+                    isLogcertified <- record.isCertify
                 )
                 let rowId = try db?.run(insert)
                 print("@@@@@@@@@@@@ Certify record inserted with ID: \(rowId ?? -1)")
@@ -164,6 +183,20 @@ class CertifyDatabaseManager {
             print("Error saving record: \(error)")
         }
     }
+
+    func updateCertifyStatus(for date: String, isCertify: String, syncStatus: Int) {
+        do {
+            let query = certifyTable.filter(self.date == date)
+            try db?.run(query.update(
+                self.isLogcertified <- isCertify,
+                self.isSynced <- syncStatus
+            ))
+            print("DB updated for \(date): isCertify=\(isCertify), syncStatus=\(syncStatus)")
+        } catch {
+            print("Failed to update certify status: \(error)")
+        }
+    }
+
     
     //MARK: -  Delete all records from db
 
@@ -175,6 +208,21 @@ class CertifyDatabaseManager {
             print("Error deleting all certify records: \(error)")
         }
     }
+    
+    func markCertified(for date: String) {
+        do {
+            let record = certifyTable.filter(self.date == date)
+            try db?.run(record.update(self.isLogcertified <- "Yes"))
+            print("Updated certification for date \(date)")
+        } catch {
+            print(" Failed to update certify flag: \(error)")
+        }
+    
+        
+        let all = CertifyDatabaseManager.shared.fetchAllRecords()
+        print(" After update DB records: \(all)")
+    }
+
 
 
 

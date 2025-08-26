@@ -65,6 +65,8 @@ struct RootView: View {
     @State private var presentSideMenu: Bool = false
     @State private var selectedSideMenuTab: Int = 0
     @State private var selectedVehicle: String = ""
+    @State private var VehicleID: Int = 0
+
     @State private var emailAuto: String = ""
     @State private var language: String = ""
     @State private var isLogoutPresented: Bool = false
@@ -129,7 +131,7 @@ struct RootView: View {
                 case .LogsDetails(let title, let entry):
                     LogsDetails(title: title, entry: entry)
                 case .CertifySelectedView(let tittle ):
-                    CertifySelectedView( vehiclesc:  $selectedVehicle, title: tittle)
+                    CertifySelectedView( vehiclesc:  $selectedVehicle, VechicleID: $VehicleID, title: tittle)
                 case .AddDvirPriTrip:
                     EmailDvir(
                         tittle: "Email DVIR",
@@ -174,7 +176,7 @@ struct RootView: View {
 
                     
                 case .ADDVehicle:
-                    ADDVehicle(selectedVehicleNumber: $selectedVehicle)
+                    ADDVehicle(selectedVehicleNumber: $selectedVehicle, VechicleID:  $VehicleID)
 
                 case .CoDriverLogin:
                     CoDriverLogin()
