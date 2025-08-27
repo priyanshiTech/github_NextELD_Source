@@ -214,7 +214,6 @@ struct SignatureCertifyView: View {
                         signature: imageData
                     )
                     DvirDatabaseManager.shared.insertRecord(record)
-                    
                 }) {
                     Text(isLoading ? "Please wait..." : "Agree")
                 }

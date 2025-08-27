@@ -103,6 +103,7 @@ struct DatabaseCertifyView: View {
         records = CertifyDatabaseManager.shared.fetchAllRecords()
         print("All certify Records here :\(records)")
     }
+    
   
 
 }

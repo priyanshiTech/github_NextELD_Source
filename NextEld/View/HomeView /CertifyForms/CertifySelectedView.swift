@@ -11,12 +11,16 @@ struct CertifySelectedView: View {
     
     // MARK: - States
     @State private var selectedTab = "Form"
-    @State private var trailer = "None"
+    @State private var trailer = ""
     @State private var shippingDocs = "docwriting"
     @State private var coDriver = "none"
     @State private var selectedCoDriverName: String? = nil
     @State private var selectedCoID: Int? = nil
     @State private var SelectedTraller: String? = nil
+    @State private var SelectedSheeping: String? = nil
+    @State private var SelectedVechicle: String? = nil
+
+
     @State private var showSignaturePad = false
     @State private var signaturePath = Path()
     @State private var showCoDriverPopup = false
@@ -24,6 +28,7 @@ struct CertifySelectedView: View {
     @Binding var VechicleID: Int
     @EnvironmentObject var navManager: NavigationManager
     @EnvironmentObject var trailerVM: TrailerViewModel
+  //  @StateObject private var trailerVM = TrailerViewModel()
     @EnvironmentObject var shippingVM: ShippingDocViewModel
     @State private var selectedCoDriverEmail: String = "" // Hidden Email
     @State private var certifiedDate: String = ""
@@ -182,28 +187,30 @@ struct CertifySelectedView: View {
                         }
  
                         Button(action: {
+                
                             let record = CertifyRecord(
-                                    userID: String(DriverInfo.driverId ?? 0), // Or get from your logged-in user data
-                                    userName: DriverInfo.UserName,
-                                    startTime: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
-                                    date: certifiedDate,
-                                    shift: DriverInfo.shift,
-                                    selectedVehicle: vehiclesc,
-                                    selectedTrailer: trailerVM.trailers.isEmpty
-                                        ? "None"
-                                        : trailerVM.trailers.prefix(10).joined(separator: ", "),
-                                    selectedShippingDoc: shippingVM.ShippingDoc.isEmpty
-                                         ? "None"
-                                         : shippingVM.ShippingDoc.prefix(10).joined(separator: ", "),
-                                    selectedCoDriver: selectedCoDriverName ?? "None",
-                                    vehicleID: DriverInfo.vehicleId ?? 0,
-                                    coDriverID: selectedCoID,
-                                    syncStatus: 0, isCertify: "No",
-                                )
-                                    CertifyDatabaseManager.shared.saveRecord(record)
-                                 self.isCertify = "No"
-                               print("@@@@@@@@@@@@@@@@@@ Record saved successfully!")
-//                            navManager.navigate(to: AppRoute.DatabaseCertifyView)
+                                userID: String(DriverInfo.driverId ?? 0),
+                                userName: DriverInfo.UserName,
+                                startTime: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
+                                date: certifiedDate,
+                                shift: DriverInfo.shift,
+                                selectedVehicle: vehiclesc,
+                                selectedTrailer: trailerVM.trailers.isEmpty
+                                    ? "None"
+                                    : trailerVM.trailers.prefix(10).joined(separator: ", "),
+                                selectedShippingDoc: shippingVM.ShippingDoc.isEmpty
+                                     ? "None"
+                                     : shippingVM.ShippingDoc.prefix(10).joined(separator: ", "),
+                                
+                               // selectedTrailer: SelectedTraller,
+                                selectedCoDriver: selectedCoDriverName ?? "None",
+                                vehicleID: VechicleID,
+                                coDriverID: selectedCoID,
+                                syncStatus: 0,
+                                isCertify: "No"
+                            )
+                            CertifyDatabaseManager.shared.saveRecord(record)
+
                                 
                         }) {
                             Text("Save")
@@ -216,11 +223,76 @@ struct CertifySelectedView: View {
                         .padding(.horizontal)
                         Spacer()
                     }
+     
                     .onAppear {
-                          certifiedDate = title.extractDate()
-                                // Set the current selection into DriverInfo when view appears
-                                DriverInfo.setvehicleId(VechicleID)
-                      }
+                        certifiedDate = title.extractDate()
+                        DriverInfo.setvehicleId(VechicleID)
+                        
+                        
+                        let records = CertifyDatabaseManager.shared.fetchAllRecords()
+                        print(records)
+
+                        //  Fetch saved record for this date
+                        if let record = CertifyDatabaseManager.shared.fetchAllRecords()
+                            .first(where: { $0.date == certifiedDate         }) {
+                      
+                            print(record.date)
+                            print(certifiedDate)
+                            print(record.selectedTrailer)
+                            print(record.selectedCoDriver)
+                            print(record.selectedVehicle)
+                            print(record.selectedShippingDoc)
+                            
+
+                            self.SelectedTraller = record.selectedTrailer // only if you really need both
+                            self.trailer =  record.selectedTrailer
+                            
+                            self.SelectedSheeping  =  record.selectedShippingDoc
+                            self.shippingDocs  = record.selectedShippingDoc
+                            
+                            self.SelectedVechicle = record.selectedVehicle
+                           // self.vehiclesc = record.selectedVehicle
+                            
+                            self.selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
+                            self.selectedCoID = record.coDriverID
+                            self.coDriver = record.selectedCoDriver
+                            
+                        }
+                    }
+
+//                    .onAppear {
+//                        certifiedDate = title.extractDate()
+//                        DriverInfo.setvehicleId(VechicleID)
+//
+//                        if let record = CertifyDatabaseManager.shared.fetchAllRecords()
+//                            .first(where: { $0.date == certifiedDate }) {
+//
+//                            // Vehicle
+//                            if !record.selectedVehicle.isEmpty {
+//                                self.vehiclesc = record.selectedVehicle   //  yahi binding update karo
+//                            }
+//
+//                            // Trailer
+//                            if record.selectedTrailer != "None" {
+//                                trailerVM.trailers = record.selectedTrailer.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+//                            } else {
+//                                trailerVM.trailers = []
+//                            }
+//
+//                            // Shipping Docs
+//                            if record.selectedShippingDoc != "None" {
+//                                shippingVM.ShippingDoc = record.selectedShippingDoc.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+//                            } else {
+//                                shippingVM.ShippingDoc = []
+//                            }
+//
+//                            // Co-Driver
+//                            self.selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
+//                            self.selectedCoID = record.coDriverID
+//                        }
+//
+//                    }
+
                     .padding(.top)
                 }
                 
@@ -284,6 +356,7 @@ struct CertifySelectedView: View {
             }
         }
     }
+
 }
 
 

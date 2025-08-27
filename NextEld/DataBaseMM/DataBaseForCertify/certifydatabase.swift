@@ -125,6 +125,8 @@ class CertifyDatabaseManager {
                         coDriverID: row[coDriverID],
                         syncStatus: row[isSynced],
                         isCertify: row[isLogcertified]
+                        
+                        
                     ))
                 }
             }
@@ -134,6 +136,37 @@ class CertifyDatabaseManager {
         
         return records
     }
+//    func fetchAllRecords(for date: String, userID: String) -> [CertifyRecord] {
+//        var records: [CertifyRecord] = []
+//        do {
+//            let query = certifyTable.filter(self.date == date && self.userID == userID)
+//            if let rows = try db?.prepare(query) {
+//                for row in rows {
+//                    records.append(CertifyRecord(
+//                        userID: row[self.userID],
+//                        userName: row[self.userName],
+//                        startTime: row[self.startTime],
+//                        date: row[self.date],
+//                        shift: row[self.shift],
+//                        selectedVehicle: row[self.selectedVehicle],
+//                        selectedTrailer: row[self.selectedTrailer],
+//                        selectedShippingDoc: row[self.selectedShippingDoc],
+//                        selectedCoDriver: row[self.selectedCoDriver],
+//                        vehicleID: row[self.vehicleID],
+//                        coDriverID: row[self.coDriverID],
+//                        syncStatus: row[self.isSynced],
+//                        isCertify: row[self.isLogcertified]
+//                    ))
+//                }
+//            }
+//        } catch {
+//            print("Error fetching records for date \(date) and user \(userID): \(error)")
+//        }
+//        return records
+//    }
+
+    
+    
 
 
 //MARK: -  For Update Records
@@ -184,6 +217,8 @@ class CertifyDatabaseManager {
         }
     }
 
+    
+
     func updateCertifyStatus(for date: String, isCertify: String, syncStatus: Int) {
         do {
             let query = certifyTable.filter(self.date == date)
@@ -209,20 +244,33 @@ class CertifyDatabaseManager {
         }
     }
     
-    func markCertified(for date: String) {
-        do {
-            let record = certifyTable.filter(self.date == date)
-            try db?.run(record.update(self.isLogcertified <- "Yes"))
-            print("Updated certification for date \(date)")
-        } catch {
-            print(" Failed to update certify flag: \(error)")
-        }
-    
-        
-        let all = CertifyDatabaseManager.shared.fetchAllRecords()
-        print(" After update DB records: \(all)")
-    }
+//    func markCertified(for date: String) {
+//        do {
+//            let record = certifyTable.filter(self.date == date)
+//            try db?.run(record.update(self.isLogcertified <- "Yes"))
+//            print("Updated certification for date \(date)")
+//        } catch {
+//            print(" Failed to update certify flag: \(error)")
+//        }
+//    
+//        
+//        let all = CertifyDatabaseManager.shared.fetchAllRecords()
+//        print(" After update DB records: \(all)")
+//    }
 
+    func markCertified(for date: String, userID: String) {
+        do {
+            let record = certifyTable.filter(self.date == date && self.userID == userID)
+            try db?.run(record.update(self.isLogcertified <- "Yes"))
+            print("Updated certification for date \(date) and user \(userID)")
+        } catch {
+            print("Failed to update certify flag: \(error)")
+        }
+        
+        let updated = fetchAllRecords()
+        print("After update DB record: \(updated)")
+
+    }
 
 
 
