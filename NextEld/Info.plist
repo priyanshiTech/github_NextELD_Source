@@ -2,30 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleVersion</key>
-	<string>CFBundleVersion</string>
-	<key>CFBundleShortVersionString</key>
-	<string>Human-readable app version</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Required to connect to PT30 device</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Required to discover BLE peripherals</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs your location to scan for nearby Bluetooth devices and show your location on the map.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs location access to detect and maintain Bluetooth connections in the background.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>We need camera access to scan documents.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires location access to stay connected with your ESP32 device even when running in background.</string>
+	<key>NSServices</key>
+	<array>
+		<dict/>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
 		<string>location</string>
-	</array>
-	<key>NSServices</key>
-	<array>
-		<dict/>
 	</array>
 </dict>
 </plist>

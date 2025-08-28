@@ -1022,8 +1022,8 @@
             filePath = "NextEld/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "739"
-            endingLineNumber = "739"
+            startingLineNumber = "736"
+            endingLineNumber = "736"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1134,8 +1134,8 @@
             filePath = "NextEld/DataBaseMM/HomeScreenDataBase/DataBaseManagerClass.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "327"
-            endingLineNumber = "327"
+            startingLineNumber = "380"
+            endingLineNumber = "380"
             landmarkName = "saveTimerLog(status:startTime:remainingWeeklyTime:remainingDriveTime:remainingDutyTime:remainingSleepTime:lastSleepTime:RemaningRestBreak:isruning:isVoilations:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1182,8 +1182,8 @@
             filePath = "NextEld/DataBaseMM/HomeScreenDataBase/DataBaseManagerClass.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "354"
-            endingLineNumber = "354"
+            startingLineNumber = "407"
+            endingLineNumber = "407"
             landmarkName = "saveTimerLog(status:startTime:remainingWeeklyTime:remainingDriveTime:remainingDutyTime:remainingSleepTime:lastSleepTime:RemaningRestBreak:isruning:isVoilations:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1198,8 +1198,8 @@
             filePath = "NextEld/DataBaseMM/HomeScreenDataBase/DataBaseManagerClass.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "363"
-            endingLineNumber = "363"
+            startingLineNumber = "413"
+            endingLineNumber = "413"
             landmarkName = "saveTimerLog(status:startTime:remainingWeeklyTime:remainingDriveTime:remainingDutyTime:remainingSleepTime:lastSleepTime:RemaningRestBreak:isruning:isVoilations:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1214,8 +1214,8 @@
             filePath = "NextEld/DataBaseMM/HomeScreenDataBase/DataBaseManagerClass.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "399"
-            endingLineNumber = "399"
+            startingLineNumber = "449"
+            endingLineNumber = "449"
             landmarkName = "DriverLogModel"
             landmarkType = "14">
          </BreakpointContent>
@@ -1390,8 +1390,8 @@
             filePath = "NextEld/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "618"
-            endingLineNumber = "618"
+            startingLineNumber = "615"
+            endingLineNumber = "615"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1406,8 +1406,8 @@
             filePath = "NextEld/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "626"
-            endingLineNumber = "626"
+            startingLineNumber = "623"
+            endingLineNumber = "623"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1422,8 +1422,8 @@
             filePath = "NextEld/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "587"
-            endingLineNumber = "587"
+            startingLineNumber = "583"
+            endingLineNumber = "583"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1438,8 +1438,8 @@
             filePath = "NextEld/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "596"
-            endingLineNumber = "596"
+            startingLineNumber = "592"
+            endingLineNumber = "592"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1534,8 +1534,8 @@
             filePath = "NextEld/View/HomeView /CertifyForms/CertifySelectedView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
+            startingLineNumber = "237"
+            endingLineNumber = "237"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1550,8 +1550,24 @@
             filePath = "NextEld/View/HomeView /CertifyForms/CertifySelectedView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "246"
-            endingLineNumber = "246"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3EC66916-7186-4601-B57A-A24A4238360A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "381"
+            endingLineNumber = "381"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>

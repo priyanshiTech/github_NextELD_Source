@@ -6,7 +6,7 @@
 //
 import SwiftUI
 import Foundation
-
+ 
 struct CertifySelectedView: View {
     
     // MARK: - States
@@ -19,8 +19,6 @@ struct CertifySelectedView: View {
     @State private var SelectedTraller: String? = nil
     @State private var SelectedSheeping: String? = nil
     @State private var SelectedVechicle: String? = nil
-
-
     @State private var showSignaturePad = false
     @State private var signaturePath = Path()
     @State private var showCoDriverPopup = false
@@ -30,10 +28,10 @@ struct CertifySelectedView: View {
     @EnvironmentObject var trailerVM: TrailerViewModel
   //  @StateObject private var trailerVM = TrailerViewModel()
     @EnvironmentObject var shippingVM: ShippingDocViewModel
-    @State private var selectedCoDriverEmail: String = "" // Hidden Email
+    @State private var selectedCoDriverEmail: String = "" //Hidden Email
     @State private var certifiedDate: String = ""
     @State private var isCertified: Bool = false
-    @State private var isCertify: String = "No" // Default "No"
+    @State private var isCertify: String = "No" //Default "No"
 
 
     var title: String
@@ -251,7 +249,7 @@ struct CertifySelectedView: View {
                             self.shippingDocs  = record.selectedShippingDoc
                             
                             self.SelectedVechicle = record.selectedVehicle
-                           // self.vehiclesc = record.selectedVehicle
+                            self.vehiclesc = record.selectedVehicle
                             
                             self.selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
                             self.selectedCoID = record.coDriverID

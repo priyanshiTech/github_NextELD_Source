@@ -20,12 +20,12 @@ struct DailyLogView: View {
     var title: String
     @EnvironmentObject var navManager: NavigationManager
     let entry: WorkEntry  //passed from previous screen
-
+    
     //MARK: -  Sample list of dates
-        private var logDates: [LogDate] {
+    private var logDates: [LogDate] {
         let calendar = Calendar.current
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = "dd-MM-yyyy"  // Changed to match the display format
         
         // DB se dates nikalo
         let logs = DatabaseManager.shared.fetchLogs()
@@ -47,7 +47,79 @@ struct DailyLogView: View {
         }
         return finalList.sorted { $0.date > $1.date } // latest -> oldest
     }
-
+    
+    //MARK: - Database records for certification check
+    private var certifiedRecords: [CertifyRecord] {
+        return CertifyDatabaseManager.shared.fetchAllRecords()
+    }
+    
+    //MARK: - Check if a date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
+    private func isDateFullyCertified(_ logDate: String) -> Bool {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        
+        print("🔍 Checking certification for date: \(logDate)")
+        
+        for record in certifiedRecords {
+            // Convert DB date to same format for comparison
+            if let dbDate = parseDate(record.date) {
+                let dbDateString = formatter.string(from: dbDate)
+                
+                print("     Comparing with DB record:")
+                print("    - DB Date: \(record.date) -> Formatted: \(dbDateString)")
+                print("    - Log Date: \(logDate)")
+                print("    - Date Match: \(dbDateString == logDate)")
+                print("    - isSynced: \(record.syncStatus) (needs to be 1)")
+                print("    - isLogCertified: \(record.isCertify) (needs to be 'Yes')")
+                
+                // Check all three conditions:
+                // 1. Date matches
+                // 2. isSynced = 1
+                // 3. isLogCertified = "Yes"
+                let dateMatches = dbDateString == logDate
+                let isSynced = record.syncStatus == 1
+                let isCertified = record.isCertify == "Yes"
+                
+                print("    - All conditions met: \(dateMatches && isSynced && isCertified)")
+                
+                if dateMatches && isSynced && isCertified {
+                    print("     FULLY CERTIFIED - All conditions met!")
+                    return true
+                } else if dateMatches {
+                    print("      Date exists but NOT fully certified:")
+                    print("      - isSynced: \(isSynced)")
+                    print("      - isLogCertified: \(isCertified)")
+                }
+            }
+        }
+        
+        print("     NOT CERTIFIED - No matching record or conditions not met")
+        return false
+    }
+    
+    // Helper function to parse various date formats
+    private func parseDate(_ dateString: String) -> Date? {
+        let formats = [
+            "yyyy-MM-dd",
+            "dd-MM-yyyy",
+            "yyyy-MM-dd'T'HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss",
+            "MM/dd/yyyy",
+            "dd/MM/yyyy"
+        ]
+        
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        
+        for format in formats {
+            formatter.dateFormat = format
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+        }
+        return nil
+    }
+    
     var body: some View {
         
         //MARK: top Header Colour
@@ -103,7 +175,7 @@ struct DailyLogView: View {
             .padding()
             
             //MARK: -  List Section
-
+            
             List(logDates) { log in
                 HStack {
                     Text(dateFormattedString(log.date))
@@ -111,23 +183,74 @@ struct DailyLogView: View {
                     
                     Spacer()
                     
-                    Button(action: {
-                        navManager.navigate(to: .CertifySelectedView(tittle: dateFormattedString(log.date)))
-                        print("Uncertified tapped for \(dateFormattedString(log.date))")
-                    }) {
-                        Text("Uncertified")
-                            .foregroundColor(.red)
-                            .padding(8)
+                    // Condition: Check if date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
+                    let isCertified = isDateFullyCertified(log.date)
+                  //  print(" Final result for \(log.date): isCertified = \(isCertified)")
+                    
+                    if isCertified {
+                        Button(action: {
+                            navManager.navigate(to: .CertifySelectedView(tittle: dateFormattedString(log.date)))
+                            print("Certified tapped for \(dateFormattedString(log.date))")
+                        }) {
+                            Text("Certified")
+                                .foregroundColor(.green)
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(Color.green.opacity(0.1))
+                                .cornerRadius(6)
+                        }
+                    } else {
+                        Button(action: {
+                            navManager.navigate(to: .CertifySelectedView(tittle: dateFormattedString(log.date)))
+                            print("Uncertified tapped for \(dateFormattedString(log.date))")
+                        }) {
+                            Text("Uncertified")
+                                .foregroundColor(.red)
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(Color.red.opacity(0.1))
+                                .cornerRadius(6)
+                        }
                     }
                 }
                 .contentShape(Rectangle())
             }
-            .listStyle(.plain)
- 
-        }
-        .navigationBarBackButtonHidden()
+            .onAppear {
+                // Debug information
+                let allDates = logDates.map { dateFormattedString($0.date) }
+                print("All Log Dates:", allDates)
+                print("All Certified DB Records Count:", certifiedRecords.count)
+                
+                // Check if any dates match with full certification criteria
+                for log in logDates {
+                    let isFullyCertified = isDateFullyCertified(log.date)
+                    print("Date: \(log.date) -> Fully Certified: \(isFullyCertified)")
+                    
+                    // Show detailed certification status for debugging
+                    for record in certifiedRecords {
+                        if let dbDate = parseDate(record.date) {
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "dd-MM-yyyy"
+                            let dbDateString = formatter.string(from: dbDate)
+                            
+                            if dbDateString == log.date {
+                                print("  - DB Record found:")
+                                print("    - Date: \(record.date)")
+                                print("    - isSynced: \(record.syncStatus)")
+                                print("    - isLogCertified: \(record.isCertify)")
+                                print("    - All conditions met: \(record.syncStatus == 1 && record.isCertify == "Yes")")
+                            }
+                        }
+                    }
+                }
+            }
+        }.navigationBarBackButtonHidden()
     }
 
+
+    
     // MARK: - Helper Function
     private func dateFormatted(_ date: Date) -> String {
         let formatter = DateFormatter()
@@ -136,16 +259,13 @@ struct DailyLogView: View {
     }
     
     private func dateFormattedString(_ date: String) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        if let d = formatter.date(from: date) {
-            formatter.dateFormat = "dd-MM-yyyy"
-            return formatter.string(from: d)
-        }
+        // Since logDates are now already in dd-MM-yyyy format, just return as is
         return date
     }
-  
+    
+    
 }
+
 extension String {
     func toDate() -> Date? {
         let formats = [
@@ -177,6 +297,14 @@ extension String {
 //        .environmentObject(NavigationManager())
 //}
 
+
+
+
+//#Preview {
+//    let sampleEntry = WorkEntry(date: Date(), hoursWorked: 8.0)
+//    DailyLogView(title: "Daily Logs", entry: sampleEntry, logs: [DriverLogModel])
+//        .environmentObject(NavigationManager())
+//}
 
 
 

@@ -373,7 +373,8 @@ struct AddDvirScreenView: View  {
                 
             }*/
             
-            if selectedTab == "Certify" {
+          //  if selectedTab == "Certify" {
+            if showSignaturePopup {
                 SignatureCertifyView(
                     signaturePath: $signaturePath,
                     selectedVehicle: "vehiclesc",
@@ -381,13 +382,12 @@ struct AddDvirScreenView: View  {
                     selectedShippingDoc: shippingVM.ShippingDoc.last ?? "None",
                     selectedCoDriver: selectedCoDriver,
                     certifiedDate: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none)
-         
-                    
+ 
                 )
                 .environmentObject(trailerVM)
                 .environmentObject(shippingVM)
                 .transition(.slide)
-            }
+           }
 
                 
             // MARK: - Defect Popup Overlay

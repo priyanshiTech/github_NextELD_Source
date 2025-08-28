@@ -452,7 +452,6 @@ struct HomeScreenView: View {
     @State private var showDriveStopPrompt: Bool = false
     @State private var driveStopPromptTimer: Timer? = nil
     
-    
     //MARK: -  Network
     @EnvironmentObject var networkMonitor: NetworkMonitor
     @State private var showBanner: Bool = false
@@ -470,8 +469,6 @@ struct HomeScreenView: View {
     @State private var showSuccessAlert = false
     @State private var showViolation = true
     @State private var showSyncconfirmation  =  false
-  
-
     @StateObject private var logoutVM = APILogoutViewModel()   //logout
     @State private var showsyncRefreshalert = RefreshViewModel()  // Refresh
 
@@ -485,7 +482,6 @@ struct HomeScreenView: View {
                     Color(uiColor: .wine)
                         .edgesIgnoringSafeArea(.top)
                         .frame(height: 0)
-                    
                     
                     TopBarView(
                         presentSideMenu: $presentSideMenu,
@@ -614,6 +610,7 @@ struct HomeScreenView: View {
                                     isOnDutyActive = true
                                     checkAndStartCycleTimer()
                                     offDutySleepAccumulated = 0
+                                    
                                 } else if selected == DriverStatusConstants.onSleep {
                                     sleepTimer.start()
                                     dutyTimerOn.stop()
@@ -675,7 +672,7 @@ struct HomeScreenView: View {
                                 dutyManager.dutyStatus = selected
                                 isDriveActive = true
                                 driveTimer.start()
-                                dutyTimerOn.start()
+                               // dutyTimerOn.start()
                                 startCycleTimer()
                                 sleepTimer.stop()
                                 breakTime.stop()
@@ -810,6 +807,7 @@ struct HomeScreenView: View {
                 .animation(.easeInOut, value: showBanner)
             }
         }
+        
         .onChange(of: networkMonitor.isConnected) { newValue in
             if newValue {
                 showToast(message: " Internet Connected Successfully", color: .green)
