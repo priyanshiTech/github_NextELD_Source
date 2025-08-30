@@ -810,11 +810,7 @@ struct HomeScreenView: View {
                 showToast(message: " No Internet Connection", color: .red)
             }
         }
-        
-        
-        
-        
-        
+
         .onAppear {
             loadTodayHOSEvents()
         }

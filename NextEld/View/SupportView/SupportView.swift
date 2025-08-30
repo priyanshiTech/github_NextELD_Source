@@ -129,7 +129,6 @@ struct SupportView: View {
                 }
             }
 
-
         }
         .navigationBarBackButtonHidden()
         .background(Color.white.edgesIgnoringSafeArea(.all))

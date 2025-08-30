@@ -75,6 +75,8 @@
 		AF8717FA2DFFF97400544383 /* blueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8717F92DFFF97400544383 /* blueModel.swift */; };
 		AF8E3A032DD1D646004AE777 /* SideMenuRowEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */; };
 		AF8E3A052DD1D9F8004AE777 /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8E3A042DD1D9F8004AE777 /* SideMenuView.swift */; };
+		AF900BD42E631DDF003D01A5 /* FrimWareResponceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF900BD32E631DDF003D01A5 /* FrimWareResponceModel.swift */; };
+		AF900BD62E6329AD003D01A5 /* betteryLevelRealDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF900BD52E6329AD003D01A5 /* betteryLevelRealDevice.swift */; };
 		AF910B5F2E14009100BCC9E9 /* VoilationsAlert's.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */; };
 		AF92F4DD2DDDE7DB00DEBBF6 /* EmailDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */; };
 		AF92F4DF2DDDEE0D00DEBBF6 /* DVIRHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DE2DDDEE0D00DEBBF6 /* DVIRHistory.swift */; };
@@ -292,6 +294,8 @@
 		AF8717F92DFFF97400544383 /* blueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blueModel.swift; sourceTree = "<group>"; };
 		AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuRowEnum.swift; sourceTree = "<group>"; };
 		AF8E3A042DD1D9F8004AE777 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
+		AF900BD32E631DDF003D01A5 /* FrimWareResponceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrimWareResponceModel.swift; sourceTree = "<group>"; };
+		AF900BD52E6329AD003D01A5 /* betteryLevelRealDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = betteryLevelRealDevice.swift; sourceTree = "<group>"; };
 		AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VoilationsAlert's.swift"; sourceTree = "<group>"; };
 		AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailDvir.swift; sourceTree = "<group>"; };
 		AF92F4DE2DDDEE0D00DEBBF6 /* DVIRHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRHistory.swift; sourceTree = "<group>"; };
@@ -521,6 +525,7 @@
 		108FF82C2DC89C620051671B /* Model 2 */ = {
 			isa = PBXGroup;
 			children = (
+				AF900BD22E631DBA003D01A5 /* FirmWareUpdateModel */,
 				AFCC87882E56F29100A09745 /* ConnectDisCont */,
 				AF7235032E55DC63009EAA9E /* vchicleModel */,
 				AF7235002E55DC48009EAA9E /* ForRuleModel */,
@@ -778,6 +783,15 @@
 				AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */,
 			);
 			path = SideMenu;
+			sourceTree = "<group>";
+		};
+		AF900BD22E631DBA003D01A5 /* FirmWareUpdateModel */ = {
+			isa = PBXGroup;
+			children = (
+				AF900BD32E631DDF003D01A5 /* FrimWareResponceModel.swift */,
+				AF900BD52E6329AD003D01A5 /* betteryLevelRealDevice.swift */,
+			);
+			path = FirmWareUpdateModel;
 			sourceTree = "<group>";
 		};
 		AF9593AE2DDE0AB200C5FCC1 /* CalanderView */ = {
@@ -1443,6 +1457,7 @@
 				AF04B1B62DE986F300A5F3D1 /* SupportView.swift in Sources */,
 				AF7235092E55FC51009EAA9E /* RulesViewModels.swift in Sources */,
 				AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */,
+				AF900BD62E6329AD003D01A5 /* betteryLevelRealDevice.swift in Sources */,
 				AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */,
 				AFD7BAA72E53014A001AF76C /* loginLogModel.swift in Sources */,
 				AFB9434C2E02CD0800AD19D7 /* SplitLog.swift in Sources */,
@@ -1505,6 +1520,7 @@
 				AFB943362E029CD300AD19D7 /* DeviceListViewController+UIViewControllerEventDelegate.swift in Sources */,
 				AF92F4DF2DDDEE0D00DEBBF6 /* DVIRHistory.swift in Sources */,
 				AFDBB1792E03FAC000D4A2CA /* LoginViewModel.swift in Sources */,
+				AF900BD42E631DDF003D01A5 /* FrimWareResponceModel.swift in Sources */,
 				AFA98C992E01826100E87802 /* FrimWareUpdateModel.swift in Sources */,
 				AF66F79C2E4C9ACE009A13A0 /* certifyModel.swift in Sources */,
 				1009E3632DCB3A79002E3D13 /* SplashView.swift in Sources */,

@@ -5,7 +5,7 @@
 //  Created by priyanshi on 17/06/25.
 //
 
-import Foundation
+/*import Foundation
 import PacificTrack
 import Combine
 
@@ -53,4 +53,57 @@ class FirmwareUpdateViewModel: ObservableObject {
         trackerService.performUpgrade()
         // Optionally: hook into progress delegate if available
     }
+}*/
+
+
+
+
+
+import Foundation
+
+struct FirmwareResponse: Codable, Equatable {
+    let processOta: Int
+    let hardwareVersion: String
+    let otaUrl: String
+    let firmwareVersion: String
 }
+
+
+import Foundation
+import SwiftUI
+
+@MainActor
+class FirmwareUpdateViewModel: ObservableObject {
+    @Published var firmwareInfo: FirmwareResponse?
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+
+    private let networkManager: NetworkManager
+
+    init(networkManager: NetworkManager) {
+        self.networkManager = networkManager
+    }
+
+    /// Fetch Firmware Update Info
+    func fetchFirmwareUpdate() async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            let response: FirmwareResponse = try await networkManager.post(
+                .FirmWareUPdates,
+                body: [String: String]() // empty JSON {}
+            )
+
+            print(response)
+            self.firmwareInfo = response
+
+        } catch {
+            self.errorMessage = error.localizedDescription
+        }
+
+        isLoading = false
+    }
+}
+
+

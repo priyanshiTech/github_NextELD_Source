@@ -36,33 +36,45 @@ enum API {
         case ForRulesAPI
         case MacAddress
         case ConnectdDisConnectedAPI
+        case FirmWareUPdates
 
         
         var url: URL {
             switch self {
             case .login:
                 return API.baseURL.appendingPathComponent("auth/login")
+                
             case . ForgetPassword:
                 return API.baseURL.appendingPathComponent("auth/forgot_password")
+                
             case .ForgetUserName:
                 return API.baseURL.appendingPathComponent("auth/forgot_username")
+                
             case .ForSavingOfflineData:
                 return API.baseURL.appendingPathComponent("dispatch/add_drivering_status_offline")
+                
             case .getAllDatadelete:
                 return API.baseURL.appendingPathComponent("dispatch/delete_all_driver_status_by_id")
+                
             case .dispatchadd_dvir_data:
                 return API.baseURL.appendingPathComponent("dispatch/add_dvir_data")
+                
             case .update_dvir_data:
                 return API.baseURL.appending(components: "dispatch/update_dvir_data")
+                
             case .getRefershAlldata:
                 return API.baseURL.appendingPathComponent("auth/login_data_by_employee_id")
+                
             case .viewdriveringstatusbydate:
                 return API.baseURL.appendingPathComponent("dispatch/view_drivering_status_by_date")
+                
             case .CompanyDriverInformation:
                 return API.baseURL.appendingPathComponent("master/view_driver_information")
+                
             case .HelpSupportInfo:
                 //return API.baseURL.appendingPathComponent("dispatch/add_eld_support")
                 return API.baseURLTwo.appendingPathComponent("driver/messageToSupport")
+                
             case .CodriverListInfo:
                 return API.baseURL.appendingPathComponent("master/view_employee_by_client")
             case .certifyDriver:
@@ -83,6 +95,8 @@ enum API {
                 return API.baseURL.appendingPathComponent("master/add_mac_address")
             case .ConnectdDisConnectedAPI:
                 return API.baseURL.appendingPathComponent("master/add_device_status")
+            case .FirmWareUPdates:
+                return  API.baseURL.appendingPathComponent("dispatch/view_last_eld_ota")
             }
         }
 
@@ -92,9 +106,10 @@ enum API {
                 
             case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI:
                 return "POST"
-            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress:
+            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates:
                 return "POST"
            
+  
             }
         }
     }

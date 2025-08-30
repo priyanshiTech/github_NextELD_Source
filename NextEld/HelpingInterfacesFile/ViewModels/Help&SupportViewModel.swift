@@ -12,7 +12,6 @@ class SupportViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var successMessage: String?
     @Published var errorMessage: String?
-    
     private let networkManager: NetworkManager
     
     init(networkManager: NetworkManager) {
@@ -23,17 +22,26 @@ class SupportViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
+//        let requestBody = MessageRequestSupportNew(
+//            // driverId:  "\(String(describing: DriverInfo.driverId))",
+//            driverId: "\(DriverInfo.driverId)",
+//            message: "hello message from Excel end driver testing",
+//            companyDomainName: "exceleld.com")
+        
         let requestBody = MessageRequestSupportNew(
-            driverId: DriverInfo.driverId ?? 0,
+            driverId: String(DriverInfo.driverId ?? 0),
             message: "hello message from Excel end driver testing",
-            companyDomainName: "exceleld.com")
+            companyDomainName: "exceleld.com"
+        )
+
+
         do {
             let response: HelpSupportResponce = try await networkManager.post(
                 .HelpSupportInfo,
                 body: requestBody
             )
-            
             self.successMessage = response.message ?? "Message sent successfully"
+
         } catch {
             self.errorMessage = error.localizedDescription
         }
