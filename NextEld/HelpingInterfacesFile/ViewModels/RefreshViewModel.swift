@@ -23,8 +23,8 @@ class RefreshViewModel: ObservableObject {
         isLoading = true
 
         let requestBody = EmployeeToken(
-            employeeId: 17,
-            tokenNo: "3a73e5fb-47e6-4793-870c-b8df25614f77"
+            employeeId:   DriverInfo.driverId ?? 0,
+            tokenNo: DriverInfo.authToken
         )
 
         print("Request Body: \(requestBody)")

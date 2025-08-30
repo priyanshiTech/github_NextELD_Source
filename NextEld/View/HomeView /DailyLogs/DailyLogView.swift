@@ -36,7 +36,6 @@ struct DailyLogView: View {
             guard let date = calendar.date(byAdding: .day, value: -i, to: Date()) else { return nil }
             return formatter.string(from: date)
         }
-        
         // Ab list banani hai with missing check
         let finalList: [LogDate] = last7Days.map { day in
             if logDatesFromDB.contains(day) {
@@ -47,18 +46,16 @@ struct DailyLogView: View {
         }
         return finalList.sorted { $0.date > $1.date } // latest -> oldest
     }
-    
     //MARK: - Database records for certification check
     private var certifiedRecords: [CertifyRecord] {
         return CertifyDatabaseManager.shared.fetchAllRecords()
     }
-    
     //MARK: - Check if a date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
     private func isDateFullyCertified(_ logDate: String) -> Bool {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
         
-        print("🔍 Checking certification for date: \(logDate)")
+        print(" Checking certification for date: \(logDate)")
         
         for record in certifiedRecords {
             // Convert DB date to same format for comparison

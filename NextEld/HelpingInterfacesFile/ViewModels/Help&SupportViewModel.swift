@@ -8,7 +8,6 @@
 import Foundation
 // MARK: - ViewModel
 @MainActor
-
 class SupportViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var successMessage: String?
@@ -24,15 +23,10 @@ class SupportViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        let requestBody = MessageRequestSupport(
-            companyId: 1, // replace with real value
-            driverId: 19, // replace with real value
-            message: userMessage,
-            tokenNo: "a37b180c-936b-4185-91be-8cbf3b616f7f",
-            utcDateTime: Int64(Date().timeIntervalSince1970 * 1000),
-            vehicleId: 3
-        )
-        
+        let requestBody = MessageRequestSupportNew(
+            driverId: DriverInfo.driverId ?? 0,
+            message: "hello message from Excel end driver testing",
+            companyDomainName: "exceleld.com")
         do {
             let response: HelpSupportResponce = try await networkManager.post(
                 .HelpSupportInfo,

@@ -236,7 +236,8 @@ struct EyeViewData: View {
         await viewModel.fetch(
             driverId: String(DriverInfo.driverId ?? 0),
             date: selectedDate,
-            token: "3b790c5b-4f90-48ec-b0a3-ab026d9fc495"
+            token: DriverInfo.authToken
+        
         )
     }
 

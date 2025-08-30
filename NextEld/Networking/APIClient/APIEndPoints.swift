@@ -12,6 +12,7 @@ import Foundation
 enum API {
     
     static let baseURL = URL(string: "https://gbt-usa.com/eld_log/")!
+    static let baseURLTwo = URL(string: "http://165.232.183.179:4002/api/")!
 
     enum Endpoint {
         case login
@@ -60,7 +61,8 @@ enum API {
             case .CompanyDriverInformation:
                 return API.baseURL.appendingPathComponent("master/view_driver_information")
             case .HelpSupportInfo:
-                return API.baseURL.appendingPathComponent("dispatch/add_eld_support")
+                //return API.baseURL.appendingPathComponent("dispatch/add_eld_support")
+                return API.baseURLTwo.appendingPathComponent("driver/messageToSupport")
             case .CodriverListInfo:
                 return API.baseURL.appendingPathComponent("master/view_employee_by_client")
             case .certifyDriver:

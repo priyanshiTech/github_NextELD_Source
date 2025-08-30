@@ -183,6 +183,7 @@ struct RootView: View {
                     
 //                case .NewDriverLogin:
 //                    NewDriverLogin(isLoggedIn: $isLoggedIn, tittle: "Co-Driver Log-In", email: emailAuto)
+                    
                 case .NewDriverLogin(let title, let email):
                     NewDriverLogin(isLoggedIn: $isLoggedIn, tittle: title, email: email)
                         .id(email)

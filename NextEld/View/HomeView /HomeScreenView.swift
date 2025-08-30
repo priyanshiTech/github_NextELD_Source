@@ -572,7 +572,7 @@ struct HomeScreenView: View {
                 .transition(.move(edge: .leading))
                 .zIndex(1)
             }
-            
+
             // Status Alert / Drive Prompt
             if showAlert, let selected = selectedStatus {
                 ZStack {
@@ -580,7 +580,7 @@ struct HomeScreenView: View {
                         .ignoresSafeArea()
                         .zIndex(2)
                     
-                    if   /* dutyManager.dutyStatus*/  selected == DriverStatusConstants.onSleep || selected == DriverStatusConstants.offDuty || selected == DriverStatusConstants.personalUse || selected == DriverStatusConstants.yardMove || selected == DriverStatusConstants.onDuty {
+                    if /* dutyManager.dutyStatus*/  selected == DriverStatusConstants.onSleep || selected == DriverStatusConstants.offDuty || selected == DriverStatusConstants.personalUse || selected == DriverStatusConstants.yardMove || selected == DriverStatusConstants.onDuty {
                         StatusDetailsPopup(
                             statusTitle: selected,
                             onClose: { showAlert = false },
@@ -593,7 +593,7 @@ struct HomeScreenView: View {
                                     sleepTimer.stop()
                                     let totalWorked = totalDutyLast7or8Days()
                                     let weeklyLimit = (cycleType == "7/60") ? 60 * 3600 : 70 * 3600
-                                    if Int(totalWorked) >= weeklyLimit {
+                                    if Int(totalWorked) >= weeklyLimit{
                                         activeTimerAlert = TimerAlert(
                                             title: "Cycle Violation",
                                             message: "You’ve exceeded your \(cycleType) duty hour limit.",
@@ -628,7 +628,6 @@ struct HomeScreenView: View {
                                     dutyTimerOn.stop()
                                     sleepTimer.stop()
                                     breakTime.start()
-                                    
                                     cycleTimerOn.stop()
                                     DutyTime.stop()
                                     isDriveActive = false
@@ -636,7 +635,6 @@ struct HomeScreenView: View {
                                     checkAndStartCycleTimer()
                                     checkFor10HourReset()
                                 }
-                                
                                 showAlert = false
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -656,11 +654,9 @@ struct HomeScreenView: View {
                                 let logs = DatabaseManager.shared.fetchLogs()
                                 print(" Total Logs in DB: \(logs.count)")
                                 hoseChartViewModel.loadEventsFromDatabase()
-                                
                                 print("Saved \(selected) timer to DB at \(now)")
                             }
-                            
-                            
+
                         )
                         .zIndex(3)
                     } else if selected == DriverStatusConstants.onDrive {
@@ -678,7 +674,6 @@ struct HomeScreenView: View {
                                 breakTime.stop()
                                 offDutySleepAccumulated = 0
                                 showAlert = false
-                                
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                                 let now = formatter.string(from: Date())
@@ -704,6 +699,7 @@ struct HomeScreenView: View {
                                     lastSleepTime: "", RemaningRestBreak: restBreakTimer.timeString,
                                     isruning: true
                                 )
+                                
                                 print(" Saved Continue Drive timer to DB at \(now)")
                                 //MARK: -  RELOAD THE CHART DATA INSTANTLY
                                 hoseChartViewModel.loadEventsFromDatabase()
@@ -807,7 +803,6 @@ struct HomeScreenView: View {
                 .animation(.easeInOut, value: showBanner)
             }
         }
-        
         .onChange(of: networkMonitor.isConnected) { newValue in
             if newValue {
                 showToast(message: " Internet Connected Successfully", color: .green)
@@ -857,13 +852,12 @@ struct HomeScreenView: View {
         }
 
                 .onAppear {
+                    
                     if let driverName = UserDefaults.standard.string(forKey: "driverName") {
                         labelValue = driverName
                     } else {
                         labelValue = "Unknown User"
                     }
-                 
-        
                     if confirmedStatus == nil {
                         selectedStatus = DriverStatusConstants.offDuty
                     confirmedStatus = DriverStatusConstants.offDuty
@@ -872,16 +866,11 @@ struct HomeScreenView: View {
                         sleepTimer.stop()
                         cycleTimerOn.stop()
                         DutyTime.stop()
-
                     }
-        
                     checkFor34HourReset()
                     restoreAllTimers()
-        
-        
-        
-        
                 }
+        
         .onReceive(dutyTimerOn.$remainingTime) { remaining in
             if remaining <= 1800 && remaining >= 1700 && !didShowContinusDrivingVoilation {
                 activeTimerAlert = TimerAlert(
@@ -911,6 +900,8 @@ struct HomeScreenView: View {
         }
 
         .onReceive(ONDuty.$remainingTime) { remaining in
+            
+            
             if remaining <= 1800 && remaining >= 1700 && !didShowOnDutyViolation {
                 activeTimerAlert = TimerAlert(
                     title: "On-Duty Reminder",
@@ -936,9 +927,11 @@ struct HomeScreenView: View {
                 )
                 didShowOnDutyViolation = true
             }
+            
         }
 
         .onReceive(driveTimer.$remainingTime) { remaining in
+            
             if remaining <= 1800 && remaining >= 1700 && !didShowDriveViolation {
                 activeTimerAlert = TimerAlert(
                     title: "Drive Reminder",
@@ -952,8 +945,6 @@ struct HomeScreenView: View {
                     title: "Drive Alert",
                     message: "15 minutes left For completing your On Drive Cycle Of The Day",
                     backgroundColor: .orange
-                    
-                    
                 )
                 didShowDriveViolation = true
             }
@@ -966,14 +957,14 @@ struct HomeScreenView: View {
                 )
                 didShowDriveViolation = true
             }
+            
         }
         //MARK: -  to show latest db time
         .onAppear {
             loadLatestTimersFromDB()
         }
-
-        
         .onReceive(cycleTimerOn.$remainingTime) { remaining in
+            
             if remaining <= 1800 && remaining >= 1700 && !didShowCycleViolation {
                 activeTimerAlert = TimerAlert(
                     title: "Cycle Alert",
@@ -1014,6 +1005,7 @@ struct HomeScreenView: View {
                     }
                 }
             }
+            
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("This will permanently delete all logs Record.")
@@ -1035,18 +1027,17 @@ struct HomeScreenView: View {
         //MARK: -   Success alert after deletion
         .alert("Success", isPresented: $showSuccessAlert) {
             Button("OK", role: .cancel) {
-                
                 navmanager.navigate(to: AppRoute.Login)}
+            
         } message: {
             Text("Data deleted successfully.")
         }
 
-        
         .navigationBarBackButtonHidden()
     }
     
-    //MARK: Function to Show Banner for 3 seconds
-func showToast(message: String, color: Color) {
+          //MARK: Function to Show Banner for 3 seconds
+        func showToast(message: String, color: Color) {
         bannerMessage = message
         bannerColor = color
         showBanner = true
@@ -1058,7 +1049,7 @@ func showToast(message: String, color: Color) {
         }
     }
     
-    private func loadTodayHOSEvents() {
+       private func loadTodayHOSEvents() {
         let todayLogs = DatabaseManager.shared.fetchDutyEventsForToday()
         print(" Logs fetched from DB: \(todayLogs.count)")
         for log in todayLogs {
@@ -1075,7 +1066,9 @@ func showToast(message: String, color: Color) {
         }
         hoseEvents = converted
     }
-    func timeStringToSeconds(_ timeString: String) -> TimeInterval {
+    
+    
+     func timeStringToSeconds(_ timeString: String) -> TimeInterval {
         let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
         guard parts.count == 3 else { return 0 }
         let hours = parts[0], minutes = parts[1], seconds = parts[2]
@@ -1083,7 +1076,7 @@ func showToast(message: String, color: Color) {
     }
     
     // MARK: - Check for 10-hour reset (Off-Duty + Sleep)
-    func checkFor10HourReset() {
+     func checkFor10HourReset() {
         //MARK: -  Total Off-Duty + Sleep time
         let totalRest = offDutySleepAccumulated
         if totalRest >= 10 * 3600 {

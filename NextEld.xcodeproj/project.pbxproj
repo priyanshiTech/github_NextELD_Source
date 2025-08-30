@@ -82,6 +82,7 @@
 		AF95DD432DE9C1280099D4CC /* PDFInformationEld.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF95DD422DE9C1280099D4CC /* PDFInformationEld.swift */; };
 		AF95DD462DE9C4940099D4CC /* LogOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF95DD452DE9C4940099D4CC /* LogOut.swift */; };
 		AF97AFA82E2B666D009F1B06 /* MoniterClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97AFA72E2B666D009F1B06 /* MoniterClass.swift */; };
+		AF9B80EB2E61A88200844A6D /* RecapLogicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B80EA2E61A88200844A6D /* RecapLogicClass.swift */; };
 		AF9DB2C12DE1B3FE00B98C17 /* HadDefectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DB2C02DE1B3FE00B98C17 /* HadDefectedView.swift */; };
 		AF9DB2C32DE1CD0B00B98C17 /* ADDVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DB2C22DE1CD0B00B98C17 /* ADDVehicle.swift */; };
 		AF9DD4EF2DDDB1A70034FA8E /* AddDvirScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4EE2DDDB1A70034FA8E /* AddDvirScreenView.swift */; };
@@ -298,6 +299,7 @@
 		AF95DD422DE9C1280099D4CC /* PDFInformationEld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFInformationEld.swift; sourceTree = "<group>"; };
 		AF95DD452DE9C4940099D4CC /* LogOut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOut.swift; sourceTree = "<group>"; };
 		AF97AFA72E2B666D009F1B06 /* MoniterClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoniterClass.swift; sourceTree = "<group>"; };
+		AF9B80EA2E61A88200844A6D /* RecapLogicClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecapLogicClass.swift; sourceTree = "<group>"; };
 		AF9DB2C02DE1B3FE00B98C17 /* HadDefectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HadDefectedView.swift; sourceTree = "<group>"; };
 		AF9DB2C22DE1CD0B00B98C17 /* ADDVehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADDVehicle.swift; sourceTree = "<group>"; };
 		AF9DD4EE2DDDB1A70034FA8E /* AddDvirScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDvirScreenView.swift; sourceTree = "<group>"; };
@@ -718,6 +720,7 @@
 				AF72E4492DFD59E100626DC0 /* DateInfo 2.swift */,
 				AFA691042E549CF80035D092 /* Webview.swift */,
 				AFA691062E54B04F0035D092 /* RecordUpdateInterface .swift */,
+				AF9B80EA2E61A88200844A6D /* RecapLogicClass.swift */,
 			);
 			path = DailyLogs;
 			sourceTree = "<group>";
@@ -1427,6 +1430,7 @@
 				1009E35B2DCB22EB002E3D13 /* CheckBoxView.swift in Sources */,
 				AFB943282E029CCC00AD19D7 /* BluetoothStatusViewController.swift in Sources */,
 				AFA98C8C2E015FD200E87802 /* PT30BluetoothManager.swift in Sources */,
+				AF9B80EB2E61A88200844A6D /* RecapLogicClass.swift in Sources */,
 				AF9593B02DDE0AC800C5FCC1 /* CalanderView.swift in Sources */,
 				AF8E3A032DD1D646004AE777 /* SideMenuRowEnum.swift in Sources */,
 				AF0F71AF2E34FAA2005F950C /* TrailerView.swift in Sources */,

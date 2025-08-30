@@ -15,9 +15,6 @@ struct MessageRequestSupport: Codable {
     let utcDateTime: Int64
     let vehicleId: Int
 }
-
-
-
 struct HelpSupportResponce  : Codable {
     let result : String?
     let arrayData : String?
@@ -27,3 +24,18 @@ struct HelpSupportResponce  : Codable {
 
    
 }
+
+// MARK: - API Request Model
+struct MessageRequestSupportNew: Codable {
+    let driverId: Int
+    let message: String
+    let companyDomainName: String
+
+}
+
+// MARK: - Response Model
+struct HelpSupportResponceNew: Codable {
+    let status: Bool
+    let message: String
+}
+

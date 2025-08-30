@@ -349,7 +349,6 @@ class DatabaseManager {
                     // Use timestamp or calculate +2 hours if no end field
                     let endDate = startDate.addingTimeInterval(00 * 60 * 60) // assume 2 hr default
 
-
                     // Only use logs from today
                     if startDate >= startOfDay && startDate < endOfDay {
                         let log = DutyLog(id: idValue, status: statusValue, startTime: startDate, endTime: endDate)
@@ -363,9 +362,6 @@ class DatabaseManager {
 
         return logs
     }
-
-    
-    
 }
 
 
@@ -475,6 +471,176 @@ extension DatabaseManager {
     }
     
     
+    //MARK++++++++++++++++++for hours recap
+
+extension DatabaseManager {
+    func fetchWorkEntriesLast7Days() -> [WorkEntry] {
+        let calendar = Calendar.current
+        let today = Date()
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.timeZone = .current
+
+        // Fetch all logs
+        let allLogs = fetchLogs()
+
+        var results: [WorkEntry] = []
+
+        for offset in (-6...0) {
+            guard let day = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
+            let startOfDay = calendar.startOfDay(for: day)
+            let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+            // Filter logs for this day
+            let logsForDay = allLogs.compactMap { log -> (Date, String)? in
+                guard let startDate = df.date(from: log.startTime) else { return nil }
+                return (startDate, log.status)
+            }
+            .filter { $0.0 >= startOfDay && $0.0 < startOfNextDay }
+            .sorted { $0.0 < $1.0 }
+
+            var dutySeconds: TimeInterval = 0
+
+            for (i, log) in logsForDay.enumerated() {
+                let startDate = log.0
+                let status = log.1
+
+                let endDate: Date
+                if i + 1 < logsForDay.count {
+                    endDate = logsForDay[i+1].0
+                } else {
+                    endDate = calendar.isDateInToday(day) ? Date() : startOfNextDay
+                }
+
+                let duration = max(0, endDate.timeIntervalSince(startDate))
+
+                if status == "OnDuty" || status == "OnDrive" {
+                    dutySeconds += duration
+                } else if status == "OffDuty" || status == "OnSleep" {
+                    // optional split rule: short off-duty counts as duty
+                    if duration <= 2 * 3600 {
+                        dutySeconds += duration
+                    }
+                }
+            }
+
+            results.append(WorkEntry(date: day, hoursWorked: dutySeconds))
+        }
+
+        return results.sorted { $0.date < $1.date }
+    }
+    func totalWorkedHours(for day: Date) -> TimeInterval {
+            let calendar = Calendar.current
+            let df = DateFormatter()
+            df.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            df.locale = Locale(identifier: "en_US_POSIX")
+            df.timeZone = .current
+
+            let allLogs = fetchLogs()
+            let startOfDay = calendar.startOfDay(for: day)
+            let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+            let logsForDay = allLogs.compactMap { log -> (Date, String)? in
+                guard let startDate = df.date(from: log.startTime) else { return nil }
+                return (startDate, log.status)
+            }
+            .filter { $0.0 >= startOfDay && $0.0 < startOfNextDay }
+            .sorted { $0.0 < $1.0 }
+
+            var dutySeconds: TimeInterval = 0
+
+            for (i, log) in logsForDay.enumerated() {
+                let startDate = log.0
+                let status = log.1
+
+                let endDate: Date
+                if i + 1 < logsForDay.count {
+                    endDate = logsForDay[i+1].0
+                } else {
+                    endDate = calendar.isDateInToday(day) ? Date() : startOfNextDay
+                }
+
+                let duration = max(0, endDate.timeIntervalSince(startDate))
+
+                if status == "OnDuty" || status == "OnDrive" {
+                    dutySeconds += duration
+                } else if status == "OffDuty" || status == "OnSleep" {
+                    if duration <= 2 * 3600 { dutySeconds += duration }
+                }
+            }
+
+            return dutySeconds
+        }
+
+    /// Hours available today = 14h limit - worked hours
+        func availableHoursToday() -> TimeInterval {
+            let worked = totalWorkedHours(for: Date())
+            let limit: TimeInterval = 14 * 3600
+            return max(0, limit - worked)
+        }
+
+        /// Helper to format TimeInterval → HH:mm:ss
+        func formatTime(_ seconds: TimeInterval) -> String {
+            let hrs = Int(seconds) / 3600
+            let mins = (Int(seconds) % 3600) / 60
+            let secs = Int(seconds) % 60
+            return String(format: "%02d:%02d:%02d", hrs, mins, secs)
+        }
+    // for 70 hours
     
+    // Cycle available hours = 60h/7days
+    func availableCycleHours(days: Int = 7, limitHours: Int = 70) -> TimeInterval {
+        let calendar = Calendar.current
+        let today = Date()
+        
+        guard let startDate = calendar.date(byAdding: .day, value: -(days - 1), to: today) else {
+            return 0
+        }
+        
+        // fetch last N days logs
+        let logs = fetchLogs()
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.timeZone = .current
+        
+        // Convert and filter logs
+        let logsForRange = logs.compactMap { log -> (Date, String)? in
+            guard let startDateLog = df.date(from: log.startTime) else { return nil }
+            return (startDateLog, log.status)
+        }
+        .filter { $0.0 >= startDate } // only last N days
+        .sorted { $0.0 < $1.0 }
+        
+        // Calculate duty seconds
+        var dutySeconds: TimeInterval = 0
+        for (i, log) in logsForRange.enumerated() {
+            let startDateLog = log.0
+            let status = log.1
+            
+            let endDate: Date
+            if i + 1 < logsForRange.count {
+                endDate = logsForRange[i+1].0
+            } else {
+                endDate = Date()
+            }
+            
+            let duration = max(0, endDate.timeIntervalSince(startDateLog))
+            
+            if status == "OnDuty" || status == "OnDrive" {
+                dutySeconds += duration
+            } else if status == "OffDuty" || status == "OnSleep" {
+                if duration <= 2 * 3600 { dutySeconds += duration }
+            }
+        }
+        
+        // Cycle rule: 60h/7days
+        let cycleLimit: TimeInterval = TimeInterval(limitHours * 3600)
+        return max(0, cycleLimit - dutySeconds)
+    }
+
+}
+
 
 
