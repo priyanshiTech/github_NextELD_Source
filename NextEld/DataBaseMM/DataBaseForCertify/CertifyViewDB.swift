@@ -144,7 +144,7 @@ struct CertifyTableRow: View {
             TableCellCertify(text: record.startTime, width: 150)
             TableCellCertify(text: record.date, width: 120)
             TableCellCertify(text: record.shift, width: 100)
-            TableCellCertify(text: record.selectedVehicle, width: 150)
+            TableCellCertify(text: String(record.selectedVehicle), width: 150)
             TableCellCertify(text: record.selectedTrailer, width: 150)
             TableCellCertify(text: record.selectedShippingDoc, width: 200)
             TableCellCertify(text: record.selectedCoDriver, width: 150)

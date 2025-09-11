@@ -25,6 +25,10 @@ struct CurrentTimeHelperStamp {
         return Int64(Date().timeIntervalSince1970 * 1000)
     }
 }
+func currentTimestampMillis() -> String {
+    let timestamp = Int(Date().timeIntervalSince1970 * 1000)
+    return "\(timestamp)"
+}
 
 // MARK: - Timestamp Utility
 struct TimeUtils {

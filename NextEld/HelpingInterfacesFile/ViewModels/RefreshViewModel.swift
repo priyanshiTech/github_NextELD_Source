@@ -3,9 +3,8 @@
 //  NextEld
 //
 //  Created by priyanshi  on 04/08/25.
-//
-import Foundation
 
+import Foundation
 
 @MainActor
 class RefreshViewModel: ObservableObject {
@@ -34,7 +33,7 @@ class RefreshViewModel: ObservableObject {
                 .getRefershAlldata,
                 body: requestBody
             )
-         //   print("API Response: \(response)")
+         //  print("API Response: \(response)")
             self.loginResponse = response
 
         } catch {

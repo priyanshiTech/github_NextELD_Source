@@ -29,7 +29,7 @@ class CertifyDriverViewModel: ObservableObject {
         tokenNo: String,
         certifiedDateTime: String,
         certifiedAt: String,
-        completion: @escaping (Result<String, Error>) -> Void   // 👈 ADD THIS
+        completion: @escaping (Result<String, Error>) -> Void   //  ADD THIS
     ) {
         isLoading = true
 

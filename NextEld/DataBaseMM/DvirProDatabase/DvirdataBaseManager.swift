@@ -20,7 +20,7 @@ class DvirDatabaseManager {
     private let driver = Expression<String>("driver")
     private let time = Expression<String>("time")
     private let date = Expression<String>("date")
-    private let odometer = Expression<String>("odometer")
+    private let odometer = Expression<Double?>("odometer")
     private let company = Expression<String>("company")
     private let location = Expression<String>("location")
     private let vehicle = Expression<String>("vehicle")
@@ -68,10 +68,10 @@ class DvirDatabaseManager {
                 driver <- record.driver,
                 time <- record.time,
                 date <- record.date,
-                odometer <- record.odometer,
+                odometer <- record.odometer ?? 0.0,
                 company <- record.company,
                 location <- record.location,
-                vehicle <- record.vehicle,
+                vehicle <- record.vehicleID,
                 trailer <- record.trailer,
                 truckDefect <- record.truckDefect,
                 trailerDefect <- record.trailerDefect,
@@ -98,25 +98,125 @@ class DvirDatabaseManager {
                         driver: row[driver],
                         time: row[time],
                         date: row[date],
-                        odometer: row[odometer],
+                        odometer: row[odometer] ?? 0.0,
                         company: row[company],
                         location: row[location],
-                        vehicle: row[vehicle],
+                        vehicleID: row[vehicle],
                         trailer: row[trailer],
                         truckDefect: row[truckDefect],
                         trailerDefect: row[trailerDefect],
                         vehicleCondition: row[vehicleCondition],
-                        notes: row[notes],
+                        notes: row[notes], engineHour: 0,
                         signature: row[signature] // fetch image
                     ))
                 }
             }
             return records
         }
-        
-    
-    
+ 
 }
+
+extension DvirDatabaseManager {
+    
+    //  Fetch record for a specific date
+    func fetchRecord(for dateValue: String) -> DvirRecord? {
+        do {
+            let query = dvirTable.filter(date == dateValue)
+            if let row = try db?.pluck(query) {
+                return DvirRecord(
+                    id: row[id],
+                    driver: row[driver],
+                    time: row[time],
+                    date: row[date],
+                    odometer: row[odometer] ?? 0.0,
+                    company: row[company],
+                    location: row[location],
+                    vehicleID: row[vehicle],
+                    trailer: row[trailer],
+                    truckDefect: row[truckDefect],
+                    trailerDefect: row[trailerDefect],
+                    vehicleCondition: row[vehicleCondition],
+                    notes: row[notes], engineHour: 0,
+                    signature: row[signature]
+                )
+            }
+        } catch {
+            print("Database fetch error: \(error)")
+        }
+        return nil
+    }
+    
+    //  Update existing record by ID
+    func updateRecord(_ record: DvirRecord) {
+        guard let recordId = record.id else { return }
+        let query = dvirTable.filter(id == recordId)
+        
+        do {
+            try db?.run(query.update(
+                driver <- record.driver,
+                time <- record.time,
+                date <- record.date,
+                odometer <- record.odometer,
+                company <- record.company,
+                location <- record.location,
+                vehicle <- record.vehicleID,
+                trailer <- record.trailer,
+                truckDefect <- record.truckDefect,
+                trailerDefect <- record.trailerDefect,
+                vehicleCondition <- record.vehicleCondition,
+                notes <- record.notes,
+                signature <- record.signature
+            ))
+            print(" Record updated with ID: \(recordId)")
+        } catch {
+            print("Database update error: \(error)")
+        }
+    }
+    
+    func recordExists(driver: String, date: String) -> Bool {
+            do {
+                guard let db = db else { return false }
+                let query = dvirTable.filter(self.driver == driver && self.date == date)
+                let count = try db.scalar(query.count)
+                return count > 0
+            } catch {
+                print("Error checking record existence: \(error)")
+                return false
+            }
+        }
+    
+
+
+
+
+
+    // Update existing DVIR record (replace signature + details)
+    func updateRecord(_ record: DvirRecord, driver: String, date: String) {
+        do {
+            guard let db = db else { return }
+            let row = dvirTable.filter(self.driver == driver && self.date == date)
+            try db.run(row.update(
+                self.time <- record.time,
+                self.vehicle <- record.vehicleID,
+                self.trailer <- record.trailer,
+                self.truckDefect <- record.truckDefect,
+                self.trailerDefect <- record.trailerDefect,
+                self.vehicleCondition <- record.vehicleCondition,
+                self.notes <- record.notes,
+                self.signature <- record.signature
+            ))
+            print("DVIR record updated for \(driver) at \(date)")
+        } catch {
+            print("Error updating DVIR: \(error)")
+        }
+    }
+}
+
+
+
+
+
+
 
 
 

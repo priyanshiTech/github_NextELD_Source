@@ -58,10 +58,12 @@ struct CoDriverLogin: View {
                                     .foregroundColor(.black)
 
                                 // Show selected value
-                                Text((((selectionCoDriver?.isEmpty) != nil) ? "None" : selectionCoDriver) ?? "")
+                                //Text((((selectionCoDriver?.isEmpty) != nil) ? "None" : selectionCoDriver) ?? "")
+                                Text(selectionCoDriver ?? "None")
                                     .font(.headline)
                                     .foregroundColor(.black)
                                     .lineLimit(1)
+
                             }
                             Spacer()
                             Image("pencil").foregroundColor(.gray)

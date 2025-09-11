@@ -4,19 +4,6 @@
 
 import SwiftUI
 import MapKit
-
-//struct HalfScreenMapView: View {
-//    @ObservedObject var locationManager: LocationManager
-//    
-//    var body: some View {
-//        Map(coordinateRegion: $locationManager.region, showsUserLocation: true)
-//            .frame(height: 250)
-//            .cornerRadius(10)
-//            .padding(.horizontal)
-//    }
-//}
-import SwiftUI
-import MapKit
 import CoreLocation
 
 struct HalfScreenMapView: View {

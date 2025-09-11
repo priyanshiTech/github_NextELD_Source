@@ -9,61 +9,55 @@ import SwiftUI
 import SwiftUI
 
 // MARK: - Subviews
+
 struct TopBarView: View {
     @Binding var presentSideMenu: Bool
     @EnvironmentObject var navManager: NavigationManager
     var labelValue: String
     @Binding var showDeviceSelector: Bool
     @StateObject private var deleteViewModel = DeleteViewModel()
+    
     var body: some View {
         
-        
-        ZStack(alignment: .top) {
-            
-            Color.white.frame(height: 50).shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
+        ZStack {
+            Color.white
+                .frame(height: 50)
+                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
             
             HStack {
-                HStack(spacing: 80) {
-                    
-                    IconButton(iconName: "line.horizontal.3", action: {
-                        presentSideMenu.toggle()
-                        print(" Hamburger tapped, presentSideMenu is now: \(presentSideMenu)")
-                        
-                    }, iconColor: .black, iconSize:20)
-                    .bold()
-                    .padding()
-                    Button(action: {
-                        navManager.navigate(to: AppRoute.DriverLogListView)
-                    }) {
-                        Text(labelValue)
-                            .font(.system(size: 20))
-                            .bold()
-                            .foregroundColor(Color(UIColor.wine))
-                        // MARK: -  DynamicLabel style
-                    }
-                    .padding(2)
-                    .foregroundColor(Color(UIColor.wine))
-                    .buttonStyle(PlainButtonStyle()) // MARK: -  prevents default blue tint on iOS
-                    
-                }
-               // .padding(4)
+                IconButton(iconName: "line.horizontal.3", action: {
+                    presentSideMenu.toggle()
+                    print("Hamburger tapped, presentSideMenu is now: \(presentSideMenu)")
+                }, iconColor: .black, iconSize: 20)
+               // .padding()
+                .padding(.leading, 8)
+                
                 Spacer()
-                HStack(spacing: 5) {
-                    Button(action: {
-                        showDeviceSelector = true
-                    }) {
-                        Image("bluuu")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                    }
-                        .padding()
+                
+                // Right: Bluetooth
+                Button(action: {
+                    showDeviceSelector = true
+                }) {
+                    Image("bluuu")
+                        .resizable()
+                        .frame(width: 30, height: 30)
                 }
+                .padding(.trailing, 8)
             }
+            
+            // Center: Title (always centered)
+            Button(action: {
+                navManager.navigate(to: AppRoute.DriverLogListView)
+            }) {
+                Text(labelValue)
+                    .font(.system(size: 20))
+                    .bold()
+                    .foregroundColor(Color(UIColor.wine))
+            }
+            .buttonStyle(PlainButtonStyle())
         }
     }
 }
-
-
 
 
 
@@ -471,6 +465,7 @@ struct HomeScreenView: View {
     @State private var showSyncconfirmation  =  false
     @StateObject private var logoutVM = APILogoutViewModel()   //logout
     @State private var showsyncRefreshalert = RefreshViewModel()  // Refresh
+    @EnvironmentObject var locationManager: LocationManager
 
     
     var body: some View {
@@ -846,27 +841,53 @@ struct HomeScreenView: View {
             timer?.invalidate()
             timer = nil
         }
-
-                .onAppear {
-                    
-                    if let driverName = UserDefaults.standard.string(forKey: "driverName") {
-                        labelValue = driverName
-                    } else {
-                        labelValue = "Unknown User"
-                    }
-                    if confirmedStatus == nil {
-                        selectedStatus = DriverStatusConstants.offDuty
-                    confirmedStatus = DriverStatusConstants.offDuty
-                        driveTimer.stop()
-                        ONDuty.stop()
-                        sleepTimer.stop()
-                        cycleTimerOn.stop()
-                        DutyTime.stop()
-                    }
-                    checkFor34HourReset()
-                    restoreAllTimers()
-                }
+//
+//                .onAppear {
+//                    
+//                    if let driverName = UserDefaults.standard.string(forKey: "driverName") {
+//                        labelValue = driverName
+//                    } else {
+//                        labelValue = "Unknown User"
+//                    }
+//                    if confirmedStatus == nil {
+//                        selectedStatus = DriverStatusConstants.offDuty
+//                    confirmedStatus = DriverStatusConstants.offDuty
+//                    driveTimer.stop()
+//                    ONDuty.stop()
+//                    sleepTimer.stop()
+//                    cycleTimerOn.stop()
+//                    DutyTime.stop()
+//                }
+//                checkFor34HourReset()
+//                restoreAllTimers()
+//            }
+//
         
+        .onAppear {
+            if let driverName = UserDefaults.standard.string(forKey: "driverName"),
+               !driverName.isEmpty {
+                //  User found
+                labelValue = driverName
+            } else {
+                DispatchQueue.main.async {
+                    navmanager.navigate(to: AppRoute.Login)
+                }
+                return
+            }
+            //  Only executed if user exists
+            if confirmedStatus == nil {
+                selectedStatus = DriverStatusConstants.offDuty
+                confirmedStatus = DriverStatusConstants.offDuty
+                driveTimer.stop()
+                ONDuty.stop()
+                sleepTimer.stop()
+                cycleTimerOn.stop()
+                DutyTime.stop()
+            }
+            checkFor34HourReset()
+            restoreAllTimers()
+        }
+
         .onReceive(dutyTimerOn.$remainingTime) { remaining in
             if remaining <= 1800 && remaining >= 1700 && !didShowContinusDrivingVoilation {
                 activeTimerAlert = TimerAlert(

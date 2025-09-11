@@ -50,6 +50,7 @@ struct StatusDetailsPopup: View {
     var statusTitle: String
     var onClose: () -> Void
     var onSubmit: (_ note: String) -> Void
+    @EnvironmentObject var DVClocationManager: DeviceLocationManager
 
     @State private var note: String = ""
 
@@ -80,11 +81,34 @@ struct StatusDetailsPopup: View {
                 Text("Current Location:")
                     .foregroundColor(.gray)
                     .font(.subheadline)
-                    
+                
+//                Text("390, vijay Nagar , Scheme 54 PU4, indore,Madhya Pradesh 452010, india")
+//                    .foregroundColor( Color(uiColor: .wine))
+//                    .font(.body)
+                
+//                if let lat = DVClocationManager.latitude,
+//                            let lon = DVClocationManager.longitude,
+//                            let city = DVClocationManager.cityName {
+//                             Text("\(city) (\(lat), \(lon))")
+//                                 .foregroundColor(Color(uiColor: .wine))
+//                                 .font(.body)
+//                         } else {
+//                             Text("Fetching location...")
+//                                 .foregroundColor(.gray)
+//                                 .font(.body)
+//                         }
+                
+                
+                if let address = DVClocationManager.fullAddress {
+                    Text(address)
+                        .foregroundColor(Color(uiColor: .wine))
+                        .font(.body)
+                } else {
+                    Text("Fetching location...")
+                        .foregroundColor(.gray)
+                        .font(.body)
+                }
 
-                Text("390, vijay Nagar , Scheme 54 PU4, indore,Madhya Pradesh 452010, india")
-                    .foregroundColor( Color(uiColor: .wine))
-                    .font(.body)
                           }
 
             VStack(alignment: .leading, spacing: 8) {
@@ -134,10 +158,12 @@ struct StatusDetailsPopup: View {
 }
 
 struct BluetothPopupview: View {
-    @State private var isPopupVisible = false
-    @State private var isConnected = false
-    @State private var isChecked1 = false
-    @State private var isChecked2 = false
+    
+     @State private var isPopupVisible = false
+     @State private var isConnected = false
+     @State private var isChecked1 = false
+     @State private var isChecked2 = false
+    
     
     var body: some View {
         VStack {

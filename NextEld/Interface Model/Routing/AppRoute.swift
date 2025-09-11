@@ -30,10 +30,12 @@ enum AppRoute: Hashable {
     case DailyLogs(tittle: String)
     case emailLogs(tittle: String)
     case RecapHours(tittle: String)
+    
     case AddDvirScreenView(
         selectedVehicle: String,
         selectedRecord: DvirRecord
     )
+    case AddVehicleForDVIR
     case  ADDVehicle
     case DotInspection(tittle: String)
     case DataTransferView
@@ -74,12 +76,6 @@ struct RootView: View {
     @State private var hasCheckedSession = false
     @EnvironmentObject var loginVM: LoginViewModel
     @StateObject var session = SessionManager()
-
-
-
-
-    
- 
     @State private var isLoggedIn = SessionManagerClass.shared.isLoggedIn()
    
 
@@ -87,20 +83,15 @@ struct RootView: View {
     var body: some View {
         
         NavigationStack(path: $navManager.path) {
-           
             Group {
-                if isLoggedIn == false {
                     SplashView()
-                  
-                } else {
-                    DeviceScannerView(tittle: "", checkboxClick: false, macaddress: "")
-                }
             }
             .onAppear {
                 checkAutoLogin()  //Auto login check when view appears
             }
            // SplashView()
             .navigationDestination(for: AppRoute.self) { route in
+                
                 switch route {
                 case .SplashScreen:
                     SplashView()
@@ -120,10 +111,10 @@ struct RootView: View {
                     PT30ConnectionView()
                 case .DailyLogs(let title):
                     DailyLogView(title: title, entry: WorkEntry(date: Date(), hoursWorked: 0))
-        
-
+                    
 //                case .DailyLogs(let title):
 //                    DailyLogView(title: title, entry: WorkEntry(date: Date(), hoursWorked: 0), logs: [])
+                    
                 case .emailLogs( let tittle):
                     EmailLogs(title: tittle)
                 case .RecapHours(let tittle):
@@ -154,24 +145,26 @@ struct RootView: View {
                 case .AddDvirScreenView:
                     AddDvirScreenView(
               
-                        selectedVehicle: $selectedVehicle,
-                        selectedVehicleupdated: $selectedVehicle,
+                           selectedVehicle: $selectedVehicle,
+                           selectedVehicleId: $VehicleID,
+                           
                         selectedRecord: DvirRecord(
+                            
                             id: nil,
                             driver: "",
                             time: "",
                             date: "",
-                            odometer: "",
+                            odometer: 0.0,
                             company: "",
                             location: "",
-                            vehicle: "",
+                            vehicleID: "",
                             trailer: "",
                             truckDefect: "",
                             trailerDefect: "",
                             vehicleCondition: "",
-                            notes: "",
+                            notes: "", engineHour: 0,
                             signature: nil
-                        )
+                        ),
                     )
 
                     
@@ -224,10 +217,15 @@ struct RootView: View {
                     
                 case .ShippingDocment:
                     ShippingDocView(tittle: "Shipping Document")
+                    
                 case .DatabaseCertifyView:
                     DatabaseCertifyView()
+                    
                 case .DataTransferView:
                     DataTransferInspectionView()
+                    
+                case .AddVehicleForDVIR:
+                    AddVehicleForDvir(selectedVehicleNumber: $selectedVehicle, VechicleID: $VehicleID)
                 }
                 
             }

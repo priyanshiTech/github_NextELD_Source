@@ -61,7 +61,7 @@ class CertifyDatabaseManager {
                 table.column(selectedCoDriver)
                 table.column(vehicleID)
                 table.column(coDriverID)
-                 table.column(isSynced)
+                table.column(isSynced)
                 table.column(isLogcertified, defaultValue: "No")
 
             })

@@ -37,6 +37,7 @@ enum API {
         case MacAddress
         case ConnectdDisConnectedAPI
         case FirmWareUPdates
+        case SpalshDataAPI
 
         
         var url: URL {
@@ -97,6 +98,9 @@ enum API {
                 return API.baseURL.appendingPathComponent("master/add_device_status")
             case .FirmWareUPdates:
                 return  API.baseURL.appendingPathComponent("dispatch/view_last_eld_ota")
+            case .SpalshDataAPI:
+                return API.baseURL.appendingPathComponent("dispatch/view_drivering_status_with_login_details")
+
             }
         }
 
@@ -106,10 +110,9 @@ enum API {
                 
             case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI:
                 return "POST"
-            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates:
+            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI:
                 return "POST"
-           
-  
+
             }
         }
     }

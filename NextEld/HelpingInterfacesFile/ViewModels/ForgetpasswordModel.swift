@@ -20,8 +20,6 @@ struct ForgetPasswordRequest: Encodable {
     let username: String
 }
 
-
-
 @MainActor
 final class ForgetPasswordViewModel: ObservableObject {
     @Published var username: String = ""
@@ -34,6 +32,7 @@ final class ForgetPasswordViewModel: ObservableObject {
         print("📤 Sending Forget Password Request with username: \(username)")
 
         do {
+            
             let response: ForgetPasswordResponse = try await NetworkManager.shared.post(.ForgetPassword, body: request)
             print(" API Call Succeeded")
             print(" Status: \(response.status)")

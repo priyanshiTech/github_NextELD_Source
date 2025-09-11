@@ -124,6 +124,10 @@ struct CertifySelectedView: View {
                             navManager.navigate(to: .ADDVehicle)
                         }
 
+                        
+                        
+             
+
                         FormField(
                             label: "Trailer",
                             value: Binding(

@@ -12,13 +12,16 @@ import SwiftUI
 struct SignatureCertifyView: View {
     // Inputs
     @Binding var signaturePath: Path
-    var selectedVehicle: String
-    var selectedTrailer: String
-    var selectedShippingDoc: String
-    var selectedCoDriver: String?
-    var selectedCoDriverID : Int?
-    var certifiedDate: String
-    var onCertified: (() -> Void)?
+
+    var skipFormValidation: Bool = false
+    var selectedVehicle: String = "none"
+       var selectedTrailer: String = "None"
+       var selectedShippingDoc: String = "None"
+       var selectedCoDriver: String? = nil
+       var selectedCoDriverID: Int? = nil
+       var certifiedDate: String = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none)
+       var onCertified: (() -> Void)? = nil
+        var onDismiss: (() -> Void)? = nil
 
     // Env
     @EnvironmentObject var trailerVM: TrailerViewModel
@@ -92,14 +95,17 @@ struct SignatureCertifyView: View {
                         .stroke(Color(uiColor: .wine), lineWidth: 1)
                 )
                 Button(action: {
-                    // 1) Form validation
-                    guard isFormValid else {
-                        alertTitle = "Incomplete Form"
-                        alertMessage = "Please fill the form first."
-                        showAlert = true
-                        return
+
+                    // 1) Form validation (skip if flag is true)
+                    if !skipFormValidation {
+                        guard isFormValid else {
+                            alertTitle = "Incomplete Form"
+                            alertMessage = "Please fill the form first."
+                            showAlert = true
+                            return
+                        }
                     }
-                    
+
                     // 2) Signature validation
                     guard !signaturePath.isEmpty else {
                         alertTitle = "Signature Required"
@@ -183,6 +189,11 @@ struct SignatureCertifyView: View {
                                 )
                                 NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
                                 onCertified?()
+                                
+                                // MARK: -  Auto dismiss popup after slight delay
+                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                                            onDismiss?()
+                                                        }
                             case .failure(let err):
                                 alertTitle = "Error"
                                 alertMessage = err.localizedDescription
@@ -196,29 +207,26 @@ struct SignatureCertifyView: View {
                             showAlert = true
                         }
                     }
-                    
                     // 7) Save locally (DVIR)
                     let record = DvirRecord(
                         driver: DriverInfo.UserName,
                         time: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
                         date: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none),
-                        odometer: "",
+                        odometer: 0.0,
                         company: "",
                         location: "",
-                        vehicle: selectedVehicle,
+                        vehicleID: selectedVehicle,
                         trailer: selectedTrailer,
                         truckDefect: "",
                         trailerDefect: "",
                         vehicleCondition: "",
                         notes: "",
-                        signature: imageData
+                        engineHour: 0, signature: imageData,
                     )
-                    DvirDatabaseManager.shared.insertRecord(record)
+                   // DvirDatabaseManager.shared.insertRecord(record)
                 }) {
                     Text(isLoading ? "Please wait..." : "Agree")
                 }
-
-                
                 .disabled(isLoading)
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -264,11 +272,12 @@ struct PopupContainer<Content: View>: View {
                         VStack {
                             content
                         }
+
                         .padding()
                         .background(Color.white)
                         .cornerRadius(16)
                         .shadow(radius: 10)
-                        .frame(maxWidth: 250)
+                        .frame(maxWidth: 280)
                         .fixedSize(horizontal: false, vertical: true)
 
                         Button(action: {
@@ -290,7 +299,6 @@ struct PopupContainer<Content: View>: View {
 
 //MARK: -  to save a  signature path into DB
 
-
 func renderSignatureAsImage(path: Path, size: CGSize) -> UIImage {
     let controller = UIHostingController(rootView: SignaturePad(path: .constant(path)))
     controller.view.bounds = CGRect(origin: .zero, size: size)
@@ -301,11 +309,22 @@ func renderSignatureAsImage(path: Path, size: CGSize) -> UIImage {
     }
 }
 
-
 extension Notification.Name {
     static let certifyUpdated = Notification.Name("certifyUpdated")
 }
 
+
+
+
+
+// 1) Form validation
+//                    guard isFormValid else {
+//                        alertTitle = "Incomplete Form"
+//                        alertMessage = "Please fill the form first."
+//                        showAlert = true
+//                        return
+//                    }
+//
 
 
 

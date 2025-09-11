@@ -26,7 +26,7 @@ class DefectAPIViewModel: ObservableObject {
         errorMessage = nil
 
         let requestBody = DefectAPIRequestModel(
-            clientId: 1,
+            clientId: DriverInfo.clientId ?? 0 ,
             defectId: 0,
             driverId: DriverInfo.driverId ?? 0,
             tokenNo: DriverInfo.authToken

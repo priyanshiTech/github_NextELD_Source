@@ -23,8 +23,9 @@ struct NextEldApp: App {
     @StateObject var vehicleVM = VehicleConditionViewModel()
     @StateObject var hoseEventsChartViewModel = HOSEventsChartViewModel()
     @StateObject var dutyStatusManager = DutyStatusManager()
+    @StateObject var locationManager = LocationManager()
+    @StateObject private var DVClocationManager = DeviceLocationManager()
 
-    
 
 
     var body: some Scene {
@@ -32,7 +33,7 @@ struct NextEldApp: App {
             //Create shared LoginVM with same session
             let sharedLoginVM = LoginViewModel(session: session)
 
-            RootView()
+                 RootView()
                 .environmentObject(navManager)
                 .environmentObject(session)
                 .environmentObject(sharedLoginVM)
@@ -43,7 +44,8 @@ struct NextEldApp: App {
                 .environmentObject(hoseEventsChartViewModel)
                 .environmentObject(shippingVM)
                 .environmentObject(dutyStatusManager)
-              
+                .environmentObject(locationManager)
+                .environmentObject(DVClocationManager)
         }
     }
 }

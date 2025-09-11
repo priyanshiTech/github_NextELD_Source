@@ -10,7 +10,8 @@ import SwiftUI
 struct SplashView: View {
     @EnvironmentObject var navManager: NavigationManager
     @State private var offSetImage: CGFloat = 300
-    @State var fadeOut : Bool = false
+    @State private var fadeOut: Bool = false
+    @StateObject private var tokenVM = APITokenUpdateViewModel()
 
     var body: some View {
         
@@ -26,28 +27,47 @@ struct SplashView: View {
         }
         .navigationBarBackButtonHidden()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background( Color(uiColor: .wine))
+        .background(Color(uiColor: .wine))
         .ignoresSafeArea()
         .onAppear {
             // Run animation
             withAnimation(.easeOut(duration: 2.0)) {
                 offSetImage = 0
             }
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
-                         withAnimation(.easeInOut(duration: 0.5)) {
-                             fadeOut = true
-                         }
-                     }
-                     // Navigate to Login screen after fade
-                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
-                         navManager.navigate(to: .Login)
-                     }
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    fadeOut = true
+                }
+            }
+            //  Decide navigation after splash delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
+                handleNavigation()
+            }
+        }
+    }
+
+    private func handleNavigation() {
+        if let savedToken = SessionManagerClass.shared.getToken(), !savedToken.isEmpty {
+            //  If token exists → call splash API
+            Task {
+                let success = await tokenVM.callSplashUpdateAPI()
+                if success {
+                    navManager.navigate(to: .Home)
+                } else {
+                    navManager.navigate(to: .Scanner)
+                }
+            }
+        } else {
+         
+            navManager.navigate(to: .Login)
         }
     }
 }
+#Preview {
+    RootView()
+        .environmentObject(NavigationManager())
 
-//#Preview {
-//    RootView()
-//        .environmentObject(NavigationManager())
-//
-//}
+}
+
+

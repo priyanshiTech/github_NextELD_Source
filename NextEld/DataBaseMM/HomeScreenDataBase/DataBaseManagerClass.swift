@@ -258,9 +258,7 @@ class DatabaseManager {
 
     
 
-   // func insertLog(from model: DriverLogModel)
-
-//    {
+//    func insertLog(from model: DriverLogModel){
 //        let skipStatuses: Set<String> = [
 //               DriverStatusConstants.weeklyCycle // Add more if needed
 //           ]
@@ -402,7 +400,7 @@ extension DatabaseManager {
             notes: "",
             serverId: nil,
             timestamp:TimeUtils.currentTimestamp(with: DriverInfo.timeZoneOffset),
-              //  CurrentTimeHelperStamp.currentTimestamp,
+              //CurrentTimeHelperStamp.currentTimestamp,
             // Int64(Date().timeIntervalSince1970),
             identifier: Int.random(in: 1000...9999),
             remainingWeeklyTime: remainingWeeklyTime,

@@ -13,8 +13,9 @@ import SwiftUI
 class SyncViewModel: ObservableObject {
     @Published var isSyncing = false
     @Published var syncMessage: String = ""
-
+    
     func syncOfflineData() async {
+        
         let unsyncedLogs = DatabaseManager.shared.fetchLogs().filter { !$0.isSynced }
 
         guard !unsyncedLogs.isEmpty else {
@@ -22,12 +23,11 @@ class SyncViewModel: ObservableObject {
             syncMessage = "All data already synced!"
             return
         }
-
+        
         print("📤 Preparing \(unsyncedLogs.count) logs for syncing...")
-
+        
         let driveringStatusData = unsyncedLogs.map { log in
-          
-
+            
             return DriveringStatusData(
                 appVersion: AppInfo.version,
                 clientId: 1,
@@ -59,38 +59,37 @@ class SyncViewModel: ObservableObject {
                 utcDateTime: log.timestamp,
                 vehicleId: DriverInfo.vehicleId ?? 3
             )
-           
+            
         }
         
-
         guard let firstLog = unsyncedLogs.first else { return }
-
+        
         let splitLog = SplllitLogss(
             day: firstLog.day,
             dbId: Int(firstLog.id ?? 0),
             driverId: firstLog.userId,
             shift: firstLog.shift
         )
-
+        
         let requestBody = SyncRequest(
             eldLogData: [],
             driveringStatusData: driveringStatusData,
             splitLog: splitLog
         )
-          print("Request data To Offline API ::::::::\(requestBody)")
+        print("Request data To Offline API ::::::::\(requestBody)")
         isSyncing = true
         defer { isSyncing = false }
-
+        
         do {
             let response: SyncResponse = try await NetworkManager.shared.post(.ForSavingOfflineData, body: requestBody)
-
+            
             print(" API Status: \(response.status)")
             print(" Message: \(response.message)")
+            
             response.result.forEach { item in
-                print("✔️ Synced localId: \(item.localId) → serverId: \(item.serverId)")
+                print(" Synced localId: \(item.localId) → serverId: \(item.serverId)")
                 DatabaseManager.shared.markLogAsSynced(localId: Int64(item.localId) ?? 0, serverId: item.serverId)
             }
-
             syncMessage = response.status == "SUCCESS" ? "Data Synced Successfully!" : "Sync Failed!"
         } catch {
             print(" Sync Failed: \(error.localizedDescription)")

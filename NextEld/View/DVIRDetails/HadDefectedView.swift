@@ -9,72 +9,13 @@ import Foundation
 import SwiftUI
 
 
-//struct DefectPopupView: View {
-//    @Binding var isPresented: Bool
-//    @State private var selected: Set<String> = []
-//
-//    let defects = [
-//        "Brake Connections", "Breaks", "Coupling Devices",
-//        "Coupling Pin", "Doors", "Hitch",
-//        "Landing Gear", "Lights", "Other"
-//    ]
-//
-//    var body: some View {
-//        VStack(spacing: 10) {
-//            HStack {
-//                Spacer()
-//                Text("Select Defect")
-//                    .font(.headline)
-//                    .foregroundColor(Color(uiColor: .wine))
-//                Spacer()
-//                Button(action: { isPresented = false }) {
-//                    Image(systemName: "xmark.circle.fill")
-//                        .foregroundColor(.red)
-//                        .font(.title2)
-//                }
-//            }
-//
-//            ForEach(defects, id: \.self) { defect in
-//                HStack {
-//                    Text(defect)
-//                    Spacer()
-//                    Button(action: { toggle(defect) }) {
-//                        Image(systemName: selected.contains(defect) ? "checkmark.circle.fill" : "circle")
-//                            .foregroundColor(Color(uiColor: .wine))
-//                    }
-//                }
-//                .padding(.horizontal)
-//            }
-//
-//            Button(action: {
-//                isPresented = false
-//            }) {
-//                Text("Submit Defects")
-//                    .frame(maxWidth: .infinity)
-//                    .padding()
-//                    .background(Color(uiColor: .wine))
-//                    .foregroundColor(.white)
-//                    .cornerRadius(10)
-//            }
-//        }
-//        .padding()
-//        .background(Color.clear)  //  Only one background
-//        .cornerRadius(20)
-//        .shadow(radius: 10)
-//    }
-//
-//    private func toggle(_ defect: String) {
-//        if selected.contains(defect) {
-//            selected.remove(defect)
-//        } else {
-//            selected.insert(defect)
-//        }
-//    }
-//}
-
 struct DefectPopupView: View {
     @Binding var isPresented: Bool
-    @State private var selected: Set<String> = []
+    var popupType: String
+    @Binding var truckDefectSelection: String?
+    @Binding var trailerDefectSelection: String?
+    
+    @State private var selected: Set<String> = [] // multiple selection store
     @StateObject private var viewModel = DefectAPIViewModel(networkManager: NetworkManager())
     
     var body: some View {
@@ -83,7 +24,7 @@ struct DefectPopupView: View {
             // --- Header ---
             HStack {
                 Spacer()
-                Text("Select Defect")
+                Text("Select \(popupType) Defect")
                     .font(.headline)
                     .foregroundColor(Color(uiColor: .wine))
                 Spacer()
@@ -104,27 +45,36 @@ struct DefectPopupView: View {
                     .padding()
             } else {
                 UniversalScrollView {
-                    ForEach(viewModel.defects) { defect in
-                        HStack {
-                            Text(defect.defectName ?? "Unknown Defect")
-                            Spacer()
-                            Button(action: { toggle(defect.defectName ?? "") }) {
-                                Image(systemName: selected.contains(defect.defectName ?? "")
-                                      ? "checkmark.circle.fill"
-                                      : "circle")
+                    ForEach(viewModel.defects.filter { $0.defectType == popupType }) { defect in
+                        let name = defect.defectName ?? "Unknown Defect"
+                        
+                        Button(action: {
+                            toggle(name)
+                        }) {
+                            HStack {
+                                Text(name)
+                                Spacer()
+                                Image(systemName: selected.contains(name)
+                                      ? "checkmark.square.fill"
+                                      : "square")
                                     .foregroundColor(Color(uiColor: .wine))
                             }
+                            .padding(.horizontal)
                         }
-                        .padding(.horizontal)
+                        .buttonStyle(PlainButtonStyle())
                         Divider()
-                   
                     }
                 }
             }
             
             // --- Submit Button ---
             Button(action: {
-                print("Selected defects: \(selected)") //  Pass back if needed
+                let result = selected.joined(separator: ", ")
+                if popupType == "Truck" {
+                    truckDefectSelection = result
+                } else {
+                    trailerDefectSelection = result
+                }
                 isPresented = false
             }) {
                 Text("Submit Defects")
@@ -136,19 +86,20 @@ struct DefectPopupView: View {
             }
         }
         .padding()
-        .background(Color.clear)
+        .background(Color.white)
         .cornerRadius(20)
         .shadow(radius: 10)
+        .frame(width: 300, height: 400)
         .task {
             await viewModel.fetchDefects()
         }
     }
     
-    private func toggle(_ defect: String) {
-        if selected.contains(defect) {
-            selected.remove(defect)
+    private func toggle(_ name: String) {
+        if selected.contains(name) {
+            selected.remove(name)
         } else {
-            selected.insert(defect)
+            selected.insert(name)
         }
     }
 }
@@ -166,21 +117,25 @@ extension ResultDefect: Identifiable {
 
 
 
+
 //MARK: -  show's in Vechicle condition
 
 struct VehicleConditionPopupView: View {
     @Binding var isPresented: Bool
-    @State private var selected: Set<String> = []
+    @State private var selected: String? = nil   // single selection
     @EnvironmentObject var vehicleVM: VehicleConditionViewModel
-    let Condition = [
-        "vehicle Condition Satisfactory" , "Vechicle Condition Unsatisfactory"
+    
+    let conditions = [
+        "Vehicle Condition Satisfactory",
+        "Vehicle Condition Unsatisfactory"
     ]
 
     var body: some View {
         VStack(spacing: 15) {
+            // Header
             HStack {
                 Spacer()
-                Text("Select Vechicle Condition")
+                Text("Select Vehicle Condition")
                     .font(.headline)
                     .foregroundColor(Color(uiColor: .wine))
                 Spacer()
@@ -191,22 +146,26 @@ struct VehicleConditionPopupView: View {
                 }
             }
 
-            ForEach(Condition, id: \.self) { defect in
+            // Options
+            ForEach(conditions, id: \.self) { condition in
                 HStack {
-                    Text(defect)
+                    Text(condition)
                     Spacer()
-                    Button(action: { toggle(defect) }) {
-                        Image(systemName: selected.contains(defect) ? "checkmark.circle.fill" : "circle")
-                            .foregroundColor(Color(uiColor: .wine))
-                    }
+                    Image(systemName: selected == condition ? "checkmark.circle.fill" : "circle")
+                        .foregroundColor(Color(uiColor: .wine))
                 }
                 .padding(.horizontal)
+                .padding(.vertical, 8)
+                .contentShape(Rectangle()) // Make whole row tappable
+                .onTapGesture {
+                    selected = condition
+                }
             }
 
+            // Submit
             Button(action: {
-                vehicleVM.selectedCondition = selected.first
+                vehicleVM.selectedCondition = selected
                 isPresented = false
-                
             }) {
                 Text("Add Condition")
                     .frame(maxWidth: 250)
@@ -215,21 +174,35 @@ struct VehicleConditionPopupView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
+            .disabled(selected == nil) // disable until selection made
         }
         .padding()
-        .background(Color.white)  //  Only one background
+        .background(Color.white)
         .cornerRadius(20)
         .shadow(radius: 10)
     }
-
-    private func toggle(_ defect: String) {
-        if selected.contains(defect) {
-            selected.remove(defect)
-        } else {
-            selected.insert(defect)
-        }
-    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

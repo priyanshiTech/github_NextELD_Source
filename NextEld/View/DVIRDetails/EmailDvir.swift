@@ -54,14 +54,17 @@ struct EmailDvir: View {
                     Spacer()
                     
                     HStack(spacing: 16) {
+
                         Button(action: {
                             selectedVehicle = ""
                             navmanager.navigate(to: .AddDvirScreenView(
-                                selectedVehicle: selectedVehicle,
-                                selectedRecord: emptyDvirRecord
-
+                                selectedVehicle: "",
+                                selectedRecord: emptyDvirRecord   // new record
                             ))
-                        }) {
+                        })
+                    {
+
+           
                             Image(systemName: "plus")
                                 .foregroundColor(.white)
                                 .imageScale(.large)
@@ -99,13 +102,13 @@ struct EmailDvir: View {
                 } else {
                     List {
                         ForEach(filteredRecords, id: \.id) { record in
-                            NavigationLink(
-                                destination:AddDvirScreenView(
-                                    selectedVehicle: $selectedVehicle,
-                                    selectedVehicleupdated: $selectedVehicle,
-                                    selectedRecord: record
-                                )
-                            ) {
+                            Button(action: {
+                                selectedVehicle = record.vehicleID
+                                navmanager.navigate(to: .AddDvirScreenView(
+                                    selectedVehicle: record.vehicleID, //  pass String
+                                    selectedRecord: record           //  pass DvirRecord
+                                ))
+                            }) {
                                 HStack(alignment: .top, spacing: 10) {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundColor(Color(UIColor.wine))
@@ -122,17 +125,12 @@ struct EmailDvir: View {
                                 }
                                 .padding(.vertical, 6)
                             }
-                            .simultaneousGesture(
-                                TapGesture().onEnded {
-                                    selectedVehicle = record.vehicle
-                                }
-                            )
                         }
                     }
                     .listStyle(PlainListStyle())
+
                 }
             }
-            
             .edgesIgnoringSafeArea(.top)
             .onAppear {
                 records = DvirDatabaseManager.shared.fetchAllRecords()
@@ -145,20 +143,21 @@ struct EmailDvir: View {
     
     
     private var emptyDvirRecord: DvirRecord {
+        
         DvirRecord(
             id: nil,
             driver: "",
             time: DateTimeHelper.currentTime(),
             date: DateTimeHelper.currentDate(),
-            odometer: "",
+            odometer: 0.0,
             company: "",
             location: "",
-            vehicle: "",
+            vehicleID:"",
             trailer: "",
             truckDefect: "",
             trailerDefect: "",
             vehicleCondition: "",
-            notes: "",
+            notes: "", engineHour: 0,
             signature: nil
         )
     }

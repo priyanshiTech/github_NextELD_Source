@@ -5,10 +5,6 @@
 //  Created by Priyanshi on 05/05/25.
 //
 
-
-
-
-
 import SwiftUI
 
 struct LoginScreen: View {
@@ -27,12 +23,15 @@ struct LoginScreen: View {
     @Binding var isLoggedIn: Bool
 
     var body: some View {
+        
+       
         VStack(spacing: 15) {
+            Spacer()
             Text("Excel ELD")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
-                .padding(.top, 80)
+                .padding()
 
             //  Email field with validation
             HStack {
@@ -112,11 +111,13 @@ struct LoginScreen: View {
                         await viewModel.callLoginLogUpdateAPI()
 
                         isLoggedIn = true
+                       // navManager.navigate(to: .SplashScreen)
                         navManager.navigate(to: .Scanner)
                     } else {
                         alertVisible = true
                     }
                 }
+                 
             } label: {
                 Text("Log - In")
                     .foregroundColor(Color(uiColor: .wine))
@@ -157,8 +158,8 @@ struct LoginScreen: View {
                     .padding(.horizontal)
             }
         }
-        .navigationBarBackButtonHidden()
         .padding()
+        .navigationBarBackButtonHidden()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(uiColor: .wine).ignoresSafeArea())
         .alert(isPresented: $alertVisible) {
@@ -177,12 +178,7 @@ func isValidEmail(_ email: String) -> Bool {
     return NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email)
 }
 
-//  Password Validation
-//func isValidPassword(_ password: String) -> Bool {
-//    // At least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
-//    let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
-//    return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
-//}
+
 
 
 //  Password Validation (Only Numbers, min 4 digits)

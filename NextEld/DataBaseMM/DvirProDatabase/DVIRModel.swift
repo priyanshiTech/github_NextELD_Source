@@ -14,17 +14,19 @@ struct DvirRecord : Identifiable, Codable, Hashable, Equatable {
     var driver: String
     var time: String
     var date: String
-    var odometer: String
+    var odometer: Double
     var company: String
     var location: String
-    var vehicle: String
+    var vehicleID: String
+   // var vehicleID: Int
     var trailer: String
     var truckDefect: String
     var trailerDefect: String
     var vehicleCondition: String
     var notes: String
+    var engineHour: Int
     var signature: Data?   //  Added Signature as PNG/JPEG Data
 }
 
 
- 
+ // RequestModel

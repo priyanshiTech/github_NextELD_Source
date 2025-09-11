@@ -67,9 +67,7 @@ struct DriverLogListView: View {
 
                 Text("Page \(currentPage + 1) of \(totalPages)")
                     .bold()
-
                 Spacer()
-
                 Button("Next") {
                     if (currentPage + 1) * logsPerPage < viewModel.logs.count {
                         currentPage += 1
@@ -89,8 +87,11 @@ struct DriverLogListView: View {
 
 
 struct DriverLogHeader: View {
+
     var body: some View {
+        
         HStack(spacing: 5) {
+            
             TableCell(text: "ID", width: 50,isHeader: true)
             TableCell(text: "Status", width: 180,isHeader: true)
             TableCell(text: "Start Time", width: 260,isHeader: true)
@@ -111,7 +112,7 @@ struct DriverLogHeader: View {
             TableCell(text: "Trailers", width: 100,isHeader: true)
             TableCell(text: "Notes", width: 100,isHeader: true)
             TableCell(text: "ServerId", width: 300,isHeader: true)
-            TableCell(text: "Timestamp", width: 100,isHeader: true)
+            TableCell(text: "Timestamp", width: 250,isHeader: true)
             TableCell(text: "Identifier", width: 100,isHeader: true)
             TableCell(text: "RemainingWeeklyTime", width: 220,isHeader: true)
             TableCell(text: "RemainingDriveTime", width: 220,isHeader: true)
@@ -126,6 +127,7 @@ struct DriverLogHeader: View {
 }
 struct DriverLogRow: View {
     let log: DriverLogModel
+    @EnvironmentObject var DVClocationManager: DeviceLocationManager
 
     var body: some View {
 
@@ -138,7 +140,8 @@ struct DriverLogRow: View {
             TableCell(text: "\(log.isVoilations)", width: 100)
             TableCell(text: log.dutyType, width: 150)
             TableCell(text: "\(log.shift)", width: 100)
-            TableCell(text: log.location, width: 600)
+           // TableCell(text: log.location, width: 600)
+            TableCell(text: DVClocationManager.fullAddress ?? "not found" , width: 600)
             TableCell(text: "\(log.lat)", width: 100)
             TableCell(text: "\(log.long)", width: 100)
             TableCell(text: log.vehicle, width: 100)
@@ -150,7 +153,7 @@ struct DriverLogRow: View {
             TableCell(text: log.trailers, width: 100)
             TableCell(text: log.notes, width: 100)
             TableCell(text: log.serverId.map { String($0) } ?? "-", width: 300)
-            TableCell(text: "\(log.timestamp)", width: 100)
+            TableCell(text: "\(log.timestamp)", width: 250)
             TableCell(text: "\(log.identifier)", width: 100)
             TableCell(text: "\(convertToSeconds(log.remainingWeeklyTime))", width: 220)
             TableCell(text: "\(convertToSeconds(log.remainingDriveTime))", width: 220)

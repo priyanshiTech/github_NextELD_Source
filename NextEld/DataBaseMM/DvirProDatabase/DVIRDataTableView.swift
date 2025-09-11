@@ -92,7 +92,7 @@ struct DvirListView: View {
 
         var seenKeys = Set<String>()
         records = allRecords.filter { record in
-            let key = "\(record.driver)-\(record.vehicle)-\(record.trailer)"
+            let key = "\(record.driver)-\(record.vehicleID)-\(record.trailer)"
             if seenKeys.contains(key) {
                 return false
             } else {
@@ -129,7 +129,7 @@ struct DvirTableRow: View {
     var body: some View {
         HStack(spacing: 5) {
             TableCellDvirList(text: record.driver, width: 150)
-            TableCellDvirList(text: record.vehicle, width: 150)
+            TableCellDvirList(text: "\(record.vehicleID)", width: 150)
             TableCellDvirList(text: record.trailer, width: 150)
             TableCellDvirList(text: record.truckDefect, width: 200)
             TableCellDvirList(text: record.trailerDefect, width: 200)

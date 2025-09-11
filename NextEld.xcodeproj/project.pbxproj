@@ -28,6 +28,9 @@
 		AF04B1BB2DE98DA600A5F3D1 /* SelectLanguagepopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */; };
 		AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */; };
 		AF0F71AF2E34FAA2005F950C /* TrailerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AD2E34FAA2005F950C /* TrailerView.swift */; };
+		AF58BFD82E69C7CE00F0E765 /* SignatureAddDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */; };
+		AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */; };
+		AF6532A52E66D07000FB2A11 /* SplashScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */; };
 		AF66F7932E4C7B26009A13A0 /* ShippingDocView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF66F7922E4C7B26009A13A0 /* ShippingDocView.swift */; };
 		AF66F79A2E4C9AC5009A13A0 /* certifydatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF66F7992E4C9AC5009A13A0 /* certifydatabase.swift */; };
 		AF66F79C2E4C9ACE009A13A0 /* certifyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF66F79B2E4C9ACE009A13A0 /* certifyModel.swift */; };
@@ -75,11 +78,11 @@
 		AF8717FA2DFFF97400544383 /* blueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8717F92DFFF97400544383 /* blueModel.swift */; };
 		AF8E3A032DD1D646004AE777 /* SideMenuRowEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */; };
 		AF8E3A052DD1D9F8004AE777 /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8E3A042DD1D9F8004AE777 /* SideMenuView.swift */; };
-		AF900BD42E631DDF003D01A5 /* FrimWareResponceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF900BD32E631DDF003D01A5 /* FrimWareResponceModel.swift */; };
 		AF900BD62E6329AD003D01A5 /* betteryLevelRealDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF900BD52E6329AD003D01A5 /* betteryLevelRealDevice.swift */; };
 		AF910B5F2E14009100BCC9E9 /* VoilationsAlert's.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */; };
 		AF92F4DD2DDDE7DB00DEBBF6 /* EmailDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */; };
 		AF92F4DF2DDDEE0D00DEBBF6 /* DVIRHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DE2DDDEE0D00DEBBF6 /* DVIRHistory.swift */; };
+		AF93A58C2E67290B00B708E2 /* CoreServiceDeviceLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF93A58B2E67290B00B708E2 /* CoreServiceDeviceLocation.swift */; };
 		AF9593B02DDE0AC800C5FCC1 /* CalanderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9593AF2DDE0AC800C5FCC1 /* CalanderView.swift */; };
 		AF95DD432DE9C1280099D4CC /* PDFInformationEld.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF95DD422DE9C1280099D4CC /* PDFInformationEld.swift */; };
 		AF95DD462DE9C4940099D4CC /* LogOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF95DD452DE9C4940099D4CC /* LogOut.swift */; };
@@ -140,6 +143,8 @@
 		AFBB59F82E4231800056A660 /* UpdateDvirModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F72E4231800056A660 /* UpdateDvirModel.swift */; };
 		AFBB59FA2E4233B10056A660 /* CurrentDT.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F92E4233B10056A660 /* CurrentDT.swift */; };
 		AFBB59FC2E4233FB0056A660 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59FB2E4233FB0056A660 /* AppRoute.swift */; };
+		AFBD12CF2E72A899003EA40F /* DvirResponceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD12CE2E72A899003EA40F /* DvirResponceModel.swift */; };
+		AFBD12D22E730357003EA40F /* AddVehicleForDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD12D12E730357003EA40F /* AddVehicleForDvir.swift */; };
 		AFC0386B2E0FF10600944204 /* CountDownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC0386A2E0FF10600944204 /* CountDownTimer.swift */; };
 		AFC1B5542E15499000C57620 /* ForgetPasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5532E15499000C57620 /* ForgetPasswordModel.swift */; };
 		AFC1B5562E154A6500C57620 /* ForgetpasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */; };
@@ -247,6 +252,9 @@
 		AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLanguagepopup.swift; sourceTree = "<group>"; };
 		AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerViewModel.swift; sourceTree = "<group>"; };
 		AF0F71AD2E34FAA2005F950C /* TrailerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerView.swift; sourceTree = "<group>"; };
+		AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureAddDvir.swift; sourceTree = "<group>"; };
+		AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashModel.swift; sourceTree = "<group>"; };
+		AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewModel.swift; sourceTree = "<group>"; };
 		AF66F7922E4C7B26009A13A0 /* ShippingDocView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingDocView.swift; sourceTree = "<group>"; };
 		AF66F7992E4C9AC5009A13A0 /* certifydatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = certifydatabase.swift; sourceTree = "<group>"; };
 		AF66F79B2E4C9ACE009A13A0 /* certifyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = certifyModel.swift; sourceTree = "<group>"; };
@@ -294,11 +302,11 @@
 		AF8717F92DFFF97400544383 /* blueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blueModel.swift; sourceTree = "<group>"; };
 		AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuRowEnum.swift; sourceTree = "<group>"; };
 		AF8E3A042DD1D9F8004AE777 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
-		AF900BD32E631DDF003D01A5 /* FrimWareResponceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrimWareResponceModel.swift; sourceTree = "<group>"; };
 		AF900BD52E6329AD003D01A5 /* betteryLevelRealDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = betteryLevelRealDevice.swift; sourceTree = "<group>"; };
 		AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VoilationsAlert's.swift"; sourceTree = "<group>"; };
 		AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailDvir.swift; sourceTree = "<group>"; };
 		AF92F4DE2DDDEE0D00DEBBF6 /* DVIRHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRHistory.swift; sourceTree = "<group>"; };
+		AF93A58B2E67290B00B708E2 /* CoreServiceDeviceLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreServiceDeviceLocation.swift; sourceTree = "<group>"; };
 		AF9593AF2DDE0AC800C5FCC1 /* CalanderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalanderView.swift; sourceTree = "<group>"; };
 		AF95DD422DE9C1280099D4CC /* PDFInformationEld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFInformationEld.swift; sourceTree = "<group>"; };
 		AF95DD452DE9C4940099D4CC /* LogOut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOut.swift; sourceTree = "<group>"; };
@@ -359,6 +367,8 @@
 		AFBB59F72E4231800056A660 /* UpdateDvirModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDvirModel.swift; sourceTree = "<group>"; };
 		AFBB59F92E4233B10056A660 /* CurrentDT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentDT.swift; sourceTree = "<group>"; };
 		AFBB59FB2E4233FB0056A660 /* AppRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
+		AFBD12CE2E72A899003EA40F /* DvirResponceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirResponceModel.swift; sourceTree = "<group>"; };
+		AFBD12D12E730357003EA40F /* AddVehicleForDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVehicleForDvir.swift; sourceTree = "<group>"; };
 		AFC0386A2E0FF10600944204 /* CountDownTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownTimer.swift; sourceTree = "<group>"; };
 		AFC1B5532E15499000C57620 /* ForgetPasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetPasswordModel.swift; sourceTree = "<group>"; };
 		AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetpasswordModel.swift; sourceTree = "<group>"; };
@@ -495,6 +505,7 @@
 				10CA6EC12DCC9B77003B265C /* HelpingInterfacesFile */,
 				10CA6EBE2DCC90CF003B265C /* ScrollUniversal */,
 				10CA6EBB2DCC89CE003B265C /* CardContainer */,
+				AF93A58A2E67283700B708E2 /* CoreServiceLocation */,
 				1009E35C2DCB358E002E3D13 /* Interface Model */,
 				AFB943512E02D3B000AD19D7 /* Networking */,
 				108FF8012DC895E10051671B /* NextEldApp.swift */,
@@ -525,6 +536,8 @@
 		108FF82C2DC89C620051671B /* Model 2 */ = {
 			isa = PBXGroup;
 			children = (
+				AFBD12CD2E72A871003EA40F /* DVIRMultipartResponceModel */,
+				AF6532A12E66CFB200FB2A11 /* SplashModel */,
 				AF900BD22E631DBA003D01A5 /* FirmWareUpdateModel */,
 				AFCC87882E56F29100A09745 /* ConnectDisCont */,
 				AF7235032E55DC63009EAA9E /* vchicleModel */,
@@ -549,6 +562,8 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFBD12D02E7302E0003EA40F /* AddVechicleForDvir */,
+				AF58BFD62E69C7B100F0E765 /* SignatureViewADDDvir */,
 				AFF366682E587A160068AC2D /* ProductGuide */,
 				AF66F7912E4C7B11009A13A0 /* ShippingDoc */,
 				AF0F71AE2E34FAA2005F950C /* TraillerView */,
@@ -641,6 +656,22 @@
 				AF0F71AD2E34FAA2005F950C /* TrailerView.swift */,
 			);
 			path = TraillerView;
+			sourceTree = "<group>";
+		};
+		AF58BFD62E69C7B100F0E765 /* SignatureViewADDDvir */ = {
+			isa = PBXGroup;
+			children = (
+				AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */,
+			);
+			path = SignatureViewADDDvir;
+			sourceTree = "<group>";
+		};
+		AF6532A12E66CFB200FB2A11 /* SplashModel */ = {
+			isa = PBXGroup;
+			children = (
+				AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */,
+			);
+			path = SplashModel;
 			sourceTree = "<group>";
 		};
 		AF66F78E2E4C6344009A13A0 /* DataBaseForCertify */ = {
@@ -788,10 +819,17 @@
 		AF900BD22E631DBA003D01A5 /* FirmWareUpdateModel */ = {
 			isa = PBXGroup;
 			children = (
-				AF900BD32E631DDF003D01A5 /* FrimWareResponceModel.swift */,
 				AF900BD52E6329AD003D01A5 /* betteryLevelRealDevice.swift */,
 			);
 			path = FirmWareUpdateModel;
+			sourceTree = "<group>";
+		};
+		AF93A58A2E67283700B708E2 /* CoreServiceLocation */ = {
+			isa = PBXGroup;
+			children = (
+				AF93A58B2E67290B00B708E2 /* CoreServiceDeviceLocation.swift */,
+			);
+			path = CoreServiceLocation;
 			sourceTree = "<group>";
 		};
 		AF9593AE2DDE0AB200C5FCC1 /* CalanderView */ = {
@@ -1002,6 +1040,7 @@
 				AF7235082E55FC51009EAA9E /* RulesViewModels.swift */,
 				AF72350C2E560567009EAA9E /* MacAddressViewModel.swift */,
 				AFCC878B2E56F48D00A09745 /* DisConnetedViewModel.swift */,
+				AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1023,6 +1062,22 @@
 				AFCC4C9F2E49E8CF00629DE3 /* MultipartAPI.swift */,
 			);
 			path = APIClient;
+			sourceTree = "<group>";
+		};
+		AFBD12CD2E72A871003EA40F /* DVIRMultipartResponceModel */ = {
+			isa = PBXGroup;
+			children = (
+				AFBD12CE2E72A899003EA40F /* DvirResponceModel.swift */,
+			);
+			path = DVIRMultipartResponceModel;
+			sourceTree = "<group>";
+		};
+		AFBD12D02E7302E0003EA40F /* AddVechicleForDvir */ = {
+			isa = PBXGroup;
+			children = (
+				AFBD12D12E730357003EA40F /* AddVehicleForDvir.swift */,
+			);
+			path = AddVechicleForDvir;
 			sourceTree = "<group>";
 		};
 		AFC381752E29035C006FD4E1 /* ForgetModel's */ = {
@@ -1377,6 +1432,7 @@
 				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
 				AFCC4CA52E4A24CC00629DE3 /* CompanyInfo.swift in Sources */,
 				AF7951182E3BA7B5005FFFBF /* DVIRDataTableView.swift in Sources */,
+				AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */,
 				AF7235072E55E4A4009EAA9E /* vchicleAPIViewModel.swift in Sources */,
 				AFBB59FC2E4233FB0056A660 /* AppRoute.swift in Sources */,
 				AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */,
@@ -1435,6 +1491,7 @@
 				AF72E4612DFD845800626DC0 /* QRScanner.swift in Sources */,
 				AF72E4422DFD54B400626DC0 /* DailyLogView.swift in Sources */,
 				AF72E4432DFD54B400626DC0 /* HomeScreenView.swift in Sources */,
+				AF58BFD82E69C7CE00F0E765 /* SignatureAddDvir.swift in Sources */,
 				AFA691052E549CF80035D092 /* Webview.swift in Sources */,
 				AF72E4442DFD54B400626DC0 /* EmailLogs.swift in Sources */,
 				AF9DB2C32DE1CD0B00B98C17 /* ADDVehicle.swift in Sources */,
@@ -1450,6 +1507,7 @@
 				AF0F71AF2E34FAA2005F950C /* TrailerView.swift in Sources */,
 				AFD072642DE59A9600C939B0 /* SelectedCoDriverPopup.swift in Sources */,
 				AFFC64A22DCE1EE2008D1CC0 /* AlertModifier.swift in Sources */,
+				AFBD12D22E730357003EA40F /* AddVehicleForDvir.swift in Sources */,
 				AF9DD4F12DDDB1FF0034FA8E /* DvirField.swift in Sources */,
 				108FF8322DC8CB470051671B /* ForgetPasswordView.swift in Sources */,
 				AFA691012E5465ED0035D092 /* DefectAPicalling.swift in Sources */,
@@ -1458,6 +1516,7 @@
 				AF7235092E55FC51009EAA9E /* RulesViewModels.swift in Sources */,
 				AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */,
 				AF900BD62E6329AD003D01A5 /* betteryLevelRealDevice.swift in Sources */,
+				AFBD12CF2E72A899003EA40F /* DvirResponceModel.swift in Sources */,
 				AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */,
 				AFD7BAA72E53014A001AF76C /* loginLogModel.swift in Sources */,
 				AFB9434C2E02CD0800AD19D7 /* SplitLog.swift in Sources */,
@@ -1513,14 +1572,15 @@
 				108FF8022DC895E10051671B /* NextEldApp.swift in Sources */,
 				AFB943332E029CD300AD19D7 /* DeviceListViewController.swift in Sources */,
 				AFA691032E54682A0035D092 /* DefectViewModel.swift in Sources */,
+				AF93A58C2E67290B00B708E2 /* CoreServiceDeviceLocation.swift in Sources */,
 				AFB943342E029CD300AD19D7 /* DeviceListViewController+UITableView.swift in Sources */,
 				AFCC878A2E56F2A600A09745 /* DisconnectAPIModel.swift in Sources */,
 				AF66F7A32E4CAEDB009A13A0 /* CoderiverViewModel.swift in Sources */,
 				AFB943352E029CD300AD19D7 /* DeviceListViewController+CBCentralManagerDelegate.swift in Sources */,
+				AF6532A52E66D07000FB2A11 /* SplashScreenViewModel.swift in Sources */,
 				AFB943362E029CD300AD19D7 /* DeviceListViewController+UIViewControllerEventDelegate.swift in Sources */,
 				AF92F4DF2DDDEE0D00DEBBF6 /* DVIRHistory.swift in Sources */,
 				AFDBB1792E03FAC000D4A2CA /* LoginViewModel.swift in Sources */,
-				AF900BD42E631DDF003D01A5 /* FrimWareResponceModel.swift in Sources */,
 				AFA98C992E01826100E87802 /* FrimWareUpdateModel.swift in Sources */,
 				AF66F79C2E4C9ACE009A13A0 /* certifyModel.swift in Sources */,
 				1009E3632DCB3A79002E3D13 /* SplashView.swift in Sources */,
