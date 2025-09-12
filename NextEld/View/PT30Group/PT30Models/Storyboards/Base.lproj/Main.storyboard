@@ -144,7 +144,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1042.0289855072465" y="107.8125"/>
+            <point key="canvasLocation" x="548" y="77"/>
         </scene>
         <!--Device View Controller-->
         <scene sceneID="iq6-0O-s6e">
@@ -155,7 +155,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active Device" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rmr-hc-2fr">
-                                <rect key="frame" x="20" y="68" width="204" height="39"/>
+                                <rect key="frame" x="70" y="68" width="203.5" height="39"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="32"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -401,6 +401,16 @@
                                     <action selector="selectedSegmentChanged:" destination="oDw-wB-bEF" eventType="valueChanged" id="wcQ-Dn-3OG"/>
                                 </connections>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pjx-f5-ZGU">
+                                <rect key="frame" x="20" y="70" width="30" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="Inp-Tz-erD"/>
+                                    <constraint firstAttribute="height" constant="40" id="KE7-t6-a33"/>
+                                </constraints>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="chevron.left" catalog="system"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="5lK-5Z-WaI"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -414,11 +424,11 @@
                             <constraint firstItem="FVc-mT-cwF" firstAttribute="leading" secondItem="5lK-5Z-WaI" secondAttribute="leading" constant="16" id="DqQ-FT-uyt"/>
                             <constraint firstItem="5lK-5Z-WaI" firstAttribute="trailing" secondItem="uaV-9O-W03" secondAttribute="trailing" constant="16" id="Epr-mb-3U5"/>
                             <constraint firstItem="nUU-UV-Pvb" firstAttribute="trailing" secondItem="5lK-5Z-WaI" secondAttribute="trailing" id="H8c-qd-dDF"/>
+                            <constraint firstItem="rmr-hc-2fr" firstAttribute="leading" secondItem="pjx-f5-ZGU" secondAttribute="trailing" constant="20" id="Ifa-hf-LPB"/>
                             <constraint firstItem="Llw-hM-B70" firstAttribute="centerY" secondItem="rmr-hc-2fr" secondAttribute="centerY" id="JTu-6q-hJk"/>
                             <constraint firstItem="uaV-9O-W03" firstAttribute="top" secondItem="tkv-UL-JS9" secondAttribute="bottom" constant="92" id="Jxo-9w-SZk"/>
                             <constraint firstItem="tkv-UL-JS9" firstAttribute="leading" secondItem="5lK-5Z-WaI" secondAttribute="leading" constant="16" id="K1X-7P-pV3"/>
                             <constraint firstItem="tq0-GS-tCf" firstAttribute="top" secondItem="nUU-UV-Pvb" secondAttribute="bottom" constant="16" id="L7a-y8-SSz"/>
-                            <constraint firstItem="rmr-hc-2fr" firstAttribute="leading" secondItem="5lK-5Z-WaI" secondAttribute="leading" constant="20" id="N3M-mk-GVM"/>
                             <constraint firstItem="5lK-5Z-WaI" firstAttribute="trailing" secondItem="hhq-ML-3K4" secondAttribute="trailing" id="TVu-bK-Rpa"/>
                             <constraint firstItem="GU8-mi-gBJ" firstAttribute="centerX" secondItem="5lK-5Z-WaI" secondAttribute="centerX" id="V3l-dR-mgU"/>
                             <constraint firstItem="rmr-hc-2fr" firstAttribute="top" secondItem="5lK-5Z-WaI" secondAttribute="top" constant="20" id="VJq-jb-ANa"/>
@@ -431,6 +441,8 @@
                             <constraint firstItem="5lK-5Z-WaI" firstAttribute="bottom" secondItem="tq0-GS-tCf" secondAttribute="bottom" constant="60" id="e3U-ct-irl"/>
                             <constraint firstItem="ASh-gf-ETZ" firstAttribute="width" secondItem="iX8-wG-EF1" secondAttribute="width" id="i6k-Js-HiI"/>
                             <constraint firstItem="tkv-UL-JS9" firstAttribute="top" secondItem="fba-cs-XYu" secondAttribute="bottom" constant="8" id="jBf-NK-voj"/>
+                            <constraint firstItem="pjx-f5-ZGU" firstAttribute="top" secondItem="5lK-5Z-WaI" secondAttribute="top" constant="22" id="jsX-ig-mGi"/>
+                            <constraint firstItem="pjx-f5-ZGU" firstAttribute="leading" secondItem="5lK-5Z-WaI" secondAttribute="leading" constant="20" id="rc6-kE-MZI"/>
                             <constraint firstItem="5lK-5Z-WaI" firstAttribute="trailing" secondItem="Llw-hM-B70" secondAttribute="trailing" constant="20" id="si0-MH-Dof"/>
                             <constraint firstItem="5lK-5Z-WaI" firstAttribute="bottom" secondItem="GU8-mi-gBJ" secondAttribute="bottom" constant="20" id="vUG-Ds-gZ1"/>
                             <constraint firstItem="nUU-UV-Pvb" firstAttribute="leading" secondItem="5lK-5Z-WaI" secondAttribute="leading" id="yFF-uE-yk4"/>
@@ -760,11 +772,12 @@
         </scene>
     </scenes>
     <resources>
+        <image name="chevron.left" catalog="system" width="97" height="128"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

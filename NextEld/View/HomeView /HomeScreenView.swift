@@ -593,7 +593,7 @@ struct HomeScreenView: View {
                                             title: "Cycle Violation",
                                             message: "You’ve exceeded your \(cycleType) duty hour limit.",
                                             backgroundColor: .red.opacity(0.9),
-                                            isViolation: true
+                                            isViolation: false
                                         )
                                         showAlert = false
                                         return
@@ -630,6 +630,20 @@ struct HomeScreenView: View {
                                     checkAndStartCycleTimer()
                                     checkFor10HourReset()
                                 }
+                                
+                                
+                                // Before starting timers
+                                let isViolation: Bool
+                                switch selected {
+                                case DriverStatusConstants.onDrive:
+                                    isViolation = false // maybe check if 11-hour limit exceeded
+                                case DriverStatusConstants.onDuty:
+                                    isViolation = false // check if 14-hour limit exceeded
+                                case DriverStatusConstants.onSleep:
+                                    isViolation = false
+                                default:
+                                    isViolation = false
+                                }
                                 showAlert = false
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -644,7 +658,8 @@ struct HomeScreenView: View {
                                     lastSleepTime: breakTime.timeString,
                                     RemaningRestBreak: "true",
                                     isruning: selected == DriverStatusConstants.onSleep,
-                                    isVoilations: selected == DriverStatusConstants.onDrive || selected == DriverStatusConstants.onDuty || selected == DriverStatusConstants.onSleep
+                                    isVoilations: isViolation
+                                    //isVoilations: selected == DriverStatusConstants.onDrive || selected == DriverStatusConstants.onDuty || selected == DriverStatusConstants.onSleep
                                 )
                                 let logs = DatabaseManager.shared.fetchLogs()
                                 print(" Total Logs in DB: \(logs.count)")
@@ -683,17 +698,7 @@ struct HomeScreenView: View {
                                     lastSleepTime: "", RemaningRestBreak: restBreakTimer.timeString, isruning: false,
                                     
                                 )
-                                
-                                DatabaseManager.shared.saveTimerLog(
-                                    status: "Continue Drive",
-                                    startTime: now,
-                                    remainingWeeklyTime: cycleTimerOn.timeString,
-                                    remainingDriveTime: driveTimer.timeString,
-                                    remainingDutyTime: dutyTimerOn.timeString, //MARK:   this is your continue drive timer
-                                    remainingSleepTime: sleepTimer.timeString,
-                                    lastSleepTime: "", RemaningRestBreak: restBreakTimer.timeString,
-                                    isruning: true
-                                )
+
                                 
                                 print(" Saved Continue Drive timer to DB at \(now)")
                                 //MARK: -  RELOAD THE CHART DATA INSTANTLY
@@ -720,7 +725,7 @@ struct HomeScreenView: View {
                 PopupContainer(isPresented: $showLogoutPopup) {
                     LogOutPopup(
                         isCycleCompleted: $isCycleCompleted,
-                        currentStatus: "OffDuty",
+                        currentStatus: DriverStatusConstants.offDuty,
                         onLogout: {
                             Task {
                                 await logoutVM.callLogoutAPI()
@@ -841,27 +846,7 @@ struct HomeScreenView: View {
             timer?.invalidate()
             timer = nil
         }
-//
-//                .onAppear {
-//                    
-//                    if let driverName = UserDefaults.standard.string(forKey: "driverName") {
-//                        labelValue = driverName
-//                    } else {
-//                        labelValue = "Unknown User"
-//                    }
-//                    if confirmedStatus == nil {
-//                        selectedStatus = DriverStatusConstants.offDuty
-//                    confirmedStatus = DriverStatusConstants.offDuty
-//                    driveTimer.stop()
-//                    ONDuty.stop()
-//                    sleepTimer.stop()
-//                    cycleTimerOn.stop()
-//                    DutyTime.stop()
-//                }
-//                checkFor34HourReset()
-//                restoreAllTimers()
-//            }
-//
+
         
         .onAppear {
             if let driverName = UserDefaults.standard.string(forKey: "driverName"),

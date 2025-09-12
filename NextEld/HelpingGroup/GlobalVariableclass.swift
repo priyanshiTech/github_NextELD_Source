@@ -61,3 +61,21 @@ struct TimeUtils {
         }
     }
 }
+
+
+
+enum OriginType: Int {
+    case driver = 1
+    case auto = 2
+    case intermediate = 3
+    case unidentified = 4
+    
+    var description: String {
+        switch self {
+        case .driver: return "Driver"
+        case .auto: return "Auto"
+        case .intermediate: return "Intermediate w/ CLP"
+        case .unidentified: return "Unidentified"
+        }
+    }
+}

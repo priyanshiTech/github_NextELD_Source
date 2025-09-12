@@ -49,6 +49,7 @@ struct PDFViewerWithHeader: View {
                     .padding()
             }
         }
+        .navigationBarBackButtonHidden()
     }
 }
 

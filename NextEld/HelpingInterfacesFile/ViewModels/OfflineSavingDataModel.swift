@@ -30,7 +30,7 @@ class SyncViewModel: ObservableObject {
             
             return DriveringStatusData(
                 appVersion: AppInfo.version,
-                clientId: 1,
+                clientId: DriverInfo.clientId ?? 1,
                 currentLocation: log.location,
                 customLocation: log.location,
                 dateTime: log.startTime,

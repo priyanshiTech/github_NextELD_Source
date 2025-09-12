@@ -9,18 +9,21 @@
 import UIKit
 import CoreBluetooth
 import PacificTrack
+import SwiftUICore
 
 protocol DeviceHandlerDelegate {
     func didStopHandling(_ viewController: UIViewController, peripheral: CBPeripheral)
 }
 
 class DeviceViewController: UIViewController {
+  
     var peripheral: CBPeripheral?
     let trackerService = TrackerService.sharedInstance
     @IBOutlet var deviceInfoView: DeviceInfoView!
     @IBOutlet var virtualDashboardScrollView: UIScrollView!
     @IBOutlet var dashboardReportView: DashboardReportView!
-    
+    @EnvironmentObject var navmanager: NavigationManager
+    @IBOutlet weak var backButtonLeftChevron: UIButton!
     @IBOutlet var modelLabel: UILabel!
     @IBOutlet var serialLabel: UILabel!
     @IBOutlet var firmwareVersionLabel: UILabel!
@@ -69,6 +72,12 @@ class DeviceViewController: UIViewController {
         super.viewWillDisappear(animated)
         // enable auto screen locking
         UIApplication.shared.isIdleTimerDisabled = false
+    }
+    
+    //MARK: -  IBACTION For BACK Button ADD by PJ
+    
+    @IBAction func actionOnBackButton(_ sender: Any) {
+        navmanager.navigate(to: AppRoute.Home)
     }
     
     @IBAction func selectedSegmentChanged(_ sender: UISegmentedControl) {

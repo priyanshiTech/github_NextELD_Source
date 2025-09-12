@@ -25,6 +25,7 @@ struct NextEldApp: App {
     @StateObject var dutyStatusManager = DutyStatusManager()
     @StateObject var locationManager = LocationManager()
     @StateObject private var DVClocationManager = DeviceLocationManager()
+//    @StateObject var PT30Device = DeviceViewController()
 
 
 

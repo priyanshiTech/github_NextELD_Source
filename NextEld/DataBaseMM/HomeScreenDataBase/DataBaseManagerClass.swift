@@ -21,6 +21,9 @@ class DatabaseManager {
     static let shared = DatabaseManager()
 
     private var db: Connection?
+    // Store last row values
+    var lastDay: Int = 1
+    var lastShift: Int = 1
 
     // MARK: - Table and Columns
     let driverLogs = Table("driverLogs")
@@ -114,7 +117,7 @@ class DatabaseManager {
                 let violationValue = (try? row.get(isVoilationColumn)) ?? 0
                             
                             //  Print before appending
-                            print("📌 [DB LOG] Status: \(row[status]), isViolation: \(violationValue)")
+                print("📌 [DB LOG] Status: \(row[status]), isViolation: \(violationValue)")
                 logs.append(DriverLogModel(
 
                     id: row[id],
@@ -160,13 +163,18 @@ class DatabaseManager {
         print("Correct!!!!!!!!!!!!!!!! Saving \(logs.count) logs into SQLite")
 
         for (index, log) in logs.enumerated() {
+            
+            
+            let originCode = UserDefaults.standard.integer(forKey: "origin") // or from API
+            let originValue = OriginType(rawValue: originCode)?.description ?? "Driver" // default
+
             let model = DriverLogModel(
                 id: nil,
                 status: log.status ?? "Unknown",
                 startTime: log.dateTime ?? "N/A",
                 userId: log.driverId ?? 0,
                 day: log.days ?? 0,
-                isVoilations: log.isVoilation ?? 1,
+                isVoilations: log.isVoilation ?? 0,
                 dutyType: log.logType ?? "",
                 shift: log.shift ?? 0,
                 vehicle: log.truckNo ?? "",
@@ -176,7 +184,7 @@ class DatabaseManager {
                 location: log.customLocation ?? "",
                 lat: log.lattitude ?? 0.0,
                 long: log.longitude ?? 0.0,
-                origin: log.origin ?? "Driver",
+                origin: originValue ,
                 isSynced: false,
                 vehicleId: log.vehicleId ?? 0,
                 trailers: (log.trailers ?? []).joined(separator: ", "),
@@ -198,13 +206,13 @@ class DatabaseManager {
 
             insertLog(from: model)
         }
-
+        
         print("Finished saving logs.")
-       
 
     }
     
     func insertLog(from model: DriverLogModel) {
+
         // Normalize status (case insensitive)
         let normalizedStatus = model.status.lowercased()
         
@@ -212,20 +220,25 @@ class DatabaseManager {
             "cycle", "weeklycycle"
         ]
         
+       
         if skipStatuses.contains(normalizedStatus) {
             print(" Skipping log insert for status: \(model.status)")
             return
         }
         
         do {
+            
+            let safeDay = model.day == 0 ? self.lastDay : model.day
+            let safeShift = model.shift == 0 ? self.lastShift : model.shift
+            
             let insert = driverLogs.insert(
                 status <- model.status,
                 startTime <- model.startTime,
                 userId <- model.userId,
-                day <- model.day,
+                day <- safeDay,
                 isVoilationColumn <- model.isVoilations,
                 dutyType <- model.dutyType,
-                shift <- model.shift,
+                shift <- safeShift,
                 vehicleName <- model.vehicle,
                 odometer <- model.odometer,
                 engineHours <- model.engineHours,
@@ -251,6 +264,11 @@ class DatabaseManager {
             
             let rowID = try db?.run(insert) ?? 0
             print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
+
+            //  Update lastDay & lastShift after every insert
+            self.updateLastDayAndShift(for: model.userId)
+            print("👉 Last Day: \(DatabaseManager.shared.lastDay)")
+            print("👉 Last Shift: \(DatabaseManager.shared.lastShift)")
         } catch {
             print(" Insert Log Error: \(error.localizedDescription)")
         }
@@ -258,55 +276,7 @@ class DatabaseManager {
 
     
 
-//    func insertLog(from model: DriverLogModel){
-//        let skipStatuses: Set<String> = [
-//               DriverStatusConstants.weeklyCycle // Add more if needed
-//           ]
-//           
-//           if skipStatuses.contains(model.status) {
-//               print(" Skipping log insert for status: \(model.status)")
-//               return
-//           }
-//           
-//            do {
-//                let insert = driverLogs.insert(
-//                    status <- model.status,
-//                    startTime <- model.startTime,
-//                    userId <- model.userId,
-//                    day <- model.day,
-//                    isVoilationColumn <- model.isVoilations,
-//                    dutyType <- model.dutyType,
-//                    shift <- model.shift,
-//                    vehicleName <- model.vehicle,
-//                    odometer <- model.odometer,
-//                    engineHours <- model.engineHours,
-//                    location <- model.location,
-//                    lat <- model.lat,
-//                    long <- model.long,
-//                    origin <- model.origin,
-//                    isSynced <- model.isSynced,
-//                    vehicleId <- model.vehicleId,
-//                    trailers <- model.trailers,
-//                    notes <- model.notes,
-//                    serverId <- model.serverId,
-//                    timestamp <- model.timestamp,
-//                    identifier <- model.identifier,
-//                    remainingWeeklyTime <- model.remainingWeeklyTime ?? "NA",
-//                    remainingDriveTime <- model.remainingDriveTime ?? "NA",
-//                    remainingDutyTime <- model.remainingDutyTime ?? "NA",
-//                    remainingSleepTime <- model.remainingSleepTime ?? "NA",
-//                    lastSleepTime <- model.lastSleepTime,
-//                    isSplit <- model.isSplit,
-//                    engineStatus <- model.engineStatus
-//                )
-//                // Run insert and capture the auto-incremented ID
-//                let rowID = try db?.run(insert) ?? 0
-//                print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
-//
-//            } catch {
-//                print(" Insert Log Error: \(error.localizedDescription)")
-//            }
-//        }
+
     
     //MARK: -  TO DELETE ALL SAVED DATA IN DBMS
 
@@ -362,6 +332,46 @@ class DatabaseManager {
     }
 }
 
+    //MARK: - Fetch last recent Day & Shift from DB
+
+
+extension DatabaseManager {
+    //MARK: - Fetch last recent Day & Shift from DB
+    func updateLastDayAndShift(for userIdValue: Int) {
+        guard let db = db else { return }
+        do {
+            if let row = try db.pluck(
+                driverLogs
+                    .filter(userId == userIdValue)
+                    .order(timestamp.desc)
+                    .limit(1)
+            ) {
+                var fetchedDay = row[day]
+                var fetchedShift = row[shift]
+
+                //  Default handling: agar 0 ya blank aaye to 1 set karo
+                if fetchedDay == 0 { fetchedDay = 1 }
+                if fetchedShift == 0 { fetchedShift = 1 }
+
+                // Save to properties
+                self.lastDay = fetchedDay
+                self.lastShift = fetchedShift
+
+                print(" Last row → Day: \(fetchedDay), Shift: \(fetchedShift)")
+            } else {
+                print(" No rows found for userId: \(userIdValue)")
+                self.lastDay = 1
+                self.lastShift = 1
+            }
+        } catch {
+            print(" Error fetching last day/shift: \(error)")
+            self.lastDay = 1
+            self.lastShift = 1
+        }
+    }
+}
+
+ 
 
 extension DatabaseManager {
     
@@ -393,7 +403,7 @@ extension DatabaseManager {
             location: UserDefaults.standard.string(forKey: "customLocation") ?? "",
             lat: Double(UserDefaults.standard.string(forKey: "lattitude") ?? "") ?? 0,
             long: Double(UserDefaults.standard.string(forKey: "longitude") ?? "") ?? 0,
-            origin: UserDefaults.standard.string(forKey: "origin") ?? "Null",
+            origin:     DriverInfo.origins /*UserDefaults.standard.string(forKey: "origin") ?? "Null"*/,
             isSynced: false,
             vehicleId: UserDefaults.standard.integer(forKey: "vehicleId"),
             trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
@@ -402,7 +412,7 @@ extension DatabaseManager {
             timestamp:TimeUtils.currentTimestamp(with: DriverInfo.timeZoneOffset),
               //CurrentTimeHelperStamp.currentTimestamp,
             // Int64(Date().timeIntervalSince1970),
-            identifier: Int.random(in: 1000...9999),
+            identifier: 0,
             remainingWeeklyTime: remainingWeeklyTime,
             remainingDriveTime: remainingDriveTime,
             remainingDutyTime: remainingDutyTime,
@@ -410,6 +420,7 @@ extension DatabaseManager {
             lastSleepTime: lastSleepTime,
             isSplit: 0,
             engineStatus: "Off", isCertifiedLog: ""
+            
         )
         
         insertLog(from: log)
@@ -450,9 +461,12 @@ extension DatabaseManager {
         let isSplit: Int
         let engineStatus: String
         let isCertifiedLog: String
+        
+        //Show latest
+
     }
-    
-    
+
+
     //MARK: -  Upload sync Data
     
     extension DatabaseManager {
@@ -642,3 +656,91 @@ extension DatabaseManager {
 
 
 
+
+
+
+
+
+
+//    func insertLog(from model: DriverLogModel){
+//        let skipStatuses: Set<String> = [
+//               DriverStatusConstants.weeklyCycle // Add more if needed
+//           ]
+//
+//           if skipStatuses.contains(model.status) {
+//               print(" Skipping log insert for status: \(model.status)")
+//               return
+//           }
+//
+//            do {
+//                let insert = driverLogs.insert(
+//                    status <- model.status,
+//                    startTime <- model.startTime,
+//                    userId <- model.userId,
+//                    day <- model.day,
+//                    isVoilationColumn <- model.isVoilations,
+//                    dutyType <- model.dutyType,
+//                    shift <- model.shift,
+//                    vehicleName <- model.vehicle,
+//                    odometer <- model.odometer,
+//                    engineHours <- model.engineHours,
+//                    location <- model.location,
+//                    lat <- model.lat,
+//                    long <- model.long,
+//                    origin <- model.origin,
+//                    isSynced <- model.isSynced,
+//                    vehicleId <- model.vehicleId,
+//                    trailers <- model.trailers,
+//                    notes <- model.notes,
+//                    serverId <- model.serverId,
+//                    timestamp <- model.timestamp,
+//                    identifier <- model.identifier,
+//                    remainingWeeklyTime <- model.remainingWeeklyTime ?? "NA",
+//                    remainingDriveTime <- model.remainingDriveTime ?? "NA",
+//                    remainingDutyTime <- model.remainingDutyTime ?? "NA",
+//                    remainingSleepTime <- model.remainingSleepTime ?? "NA",
+//                    lastSleepTime <- model.lastSleepTime,
+//                    isSplit <- model.isSplit,
+//                    engineStatus <- model.engineStatus
+//                )
+//                // Run insert and capture the auto-incremented ID
+//                let rowID = try db?.run(insert) ?? 0
+//                print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
+//
+//            } catch {
+//                print(" Insert Log Error: \(error.localizedDescription)")
+//            }
+//        }
+//
+////MARK: -  Using Last Day Recent Log Data
+//extension DatabaseManager {
+///// Returns the last saved (day, shift) for a given userId
+//func getLastDayAndShift(for userIdValue: Int) -> (day: Int, shift: Int) {
+//    guard let db = db else { return (1, 1) } //  default 1,1
+//    
+//    do {
+//        let query = driverLogs
+//            .filter(userId == userIdValue && (isVoilationColumn == 0 || isVoilationColumn == 1))
+//            .order(timestamp.desc)
+//            .limit(1)
+//        
+//        if let row = try db.pluck(query) {
+//            var lastDay = row[day]
+//            var lastShift = row[shift]
+//            
+//            //  Agar value 0 aayi to bhi default 1 le lo
+//            if lastDay == 0 { lastDay = 1 }
+//            if lastShift == 0 { lastShift = 1 }
+//            
+//            print(" Last recent log found → Day: \(lastDay), Shift: \(lastShift)")
+//            return (lastDay, lastShift)
+//        } else {
+//            print(" No log found for userId: \(userIdValue) → Returning default (1,1)")
+//        }
+//    } catch {
+//        print(" Error fetching last day/shift: \(error)")
+//    }
+//    
+//    return (1, 1) //  Default agar data na mile
+//}
+//}

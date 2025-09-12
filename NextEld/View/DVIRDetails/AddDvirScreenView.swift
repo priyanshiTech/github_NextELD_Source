@@ -38,13 +38,14 @@ struct AddDvirScreenView: View  {
     @State var driverDVIRId:Int = 0
     @State private var date: String = ""
     @State private var time: String = ""
-   // @State private var dateTime:String = ""
+   //@State private var dateTime:String = ""
     @State private var selectedCoDriver: String? = nil
     @State private var validationMessage: String = ""
     @State private var showSignaturePad = false
     @State private var showCoDriverPopup = false
     @EnvironmentObject var navManager: NavigationManager
     @EnvironmentObject var shippingVM: ShippingDocViewModel
+    
   
 
     @State private var showPopup = false
