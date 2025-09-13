@@ -80,6 +80,7 @@ struct RootView: View {
    
 
     
+    @available(iOS 16.0, *)
     var body: some View {
         
         NavigationStack(path: $navManager.path) {

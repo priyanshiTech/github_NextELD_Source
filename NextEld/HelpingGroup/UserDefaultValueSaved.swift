@@ -18,6 +18,9 @@ struct AppStorageKeys {
     static let coDriverId = "coDriverId"
     static let shift = "shift"
     static let clientId = "clientId"
+    static let cycleTime = "cycleTime"
+    static let cycleDays = "cycleDays"
+    static let cycleRestartTime = "cycleRestartTime"
 
 }
 
@@ -90,6 +93,25 @@ struct DriverInfo {
         static func setClientId(_ id: Int) {
             UserDefaults.standard.set(id, forKey: AppStorageKeys.clientId)
         }
+    //MARK: -  Login
     
+    static var cycleTime: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.cycleTime) as? Int
+    }
+    static func setcycleTime(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.cycleTime)
+    }
+    static var cycleDays: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.cycleDays) as? Int
+    }
+    static func setcycleDays(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.cycleDays)
+    }
+    static var cycleRestartTime: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.cycleRestartTime) as? Int
+    }
+    static func setcycleRestartTime(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.cycleRestartTime)
+    }
 }
 

@@ -10,11 +10,11 @@ struct HOSEvent: Identifiable {
     let dutyType: String
     var color: Color {
         switch dutyType {
-        case "OFF_DUTY": return Color(red: 0.2, green: 0.6, blue: 1.0)  // Light blue
-        case "SLEEP": return Color(red: 0.0, green: 0.4, blue: 0.8)     // Dark blue
-        case "DRIVE": return Color(red: 1.0, green: 0.6, blue: 0.0)     // Orange
-        case "ON_DUTY": return Color(red: 0.9, green: 0.5, blue: 0.0)   // Dark orange
-        default: return Color(red: 0.7, green: 0.7, blue: 0.7)          // Gray
+        case "OFF_DUTY": return .orange
+        case "ON_DUTY": return .blue
+        case "DRIVE": return .green
+        case "SLEEP": return .gray
+        default: return .gray
         }
     }
 }
@@ -23,6 +23,7 @@ struct HOSEvent: Identifiable {
 class HOSEventsChartViewModel: ObservableObject {
     @Published var events: [HOSEvent] = []
     @Published var refreshTrigger = UUID()
+    @Published var currentStatus: String = "OFF_DUTY"
 
     private var timer: Timer?
 
@@ -54,55 +55,64 @@ class HOSEventsChartViewModel: ObservableObject {
             }
         }
 
-        self.events = logs.map { log in
+        self.events = logs.enumerated().map { index, log in
             let normalizedStatus = normalizeStatus(log.status)
+            let isLastEvent = index == logs.count - 1
+            let endTime = isLastEvent ? Date() : log.endTime // Use current time for last event
+
+//            let isLastEvent = index == logs.count - 1
+//            let nextStart = isLastEvent ? Date() : logs[index + 1].startTime
+//            let endTime = min(log.endTime, nextStart)
+
+            
+            print(" Chart Event: \(log.status) -> \(normalizedStatus) (Color: \(normalizedStatus == "OFF_DUTY" ? "Orange" : normalizedStatus == "ON_DUTY" ? "Blue" : normalizedStatus == "DRIVE" ? "Green" : "Gray"))")
+            
             return HOSEvent(
                 id: log.id,
                 x: log.startTime,
-                event_end_time: log.endTime ?? Date(), //  for last active event
+                event_end_time: endTime,
                 label: normalizedStatus,
                 dutyType: normalizedStatus
             )
         }
 
-        refreshTrigger = UUID()
+        // Force immediate UI update
+        DispatchQueue.main.async {
+            self.refreshTrigger = UUID()
+        }
     }
 
     // MARK: - Timer that updates the last event's end_time every second
     func startLiveUpdateTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            guard !self.events.isEmpty else { return }
-
-            var updatedEvents = self.events
-            var last = updatedEvents.removeLast()
-
-            // Live update end_time of last event if it's today
-            if Calendar.current.isDateInToday(last.x) {
-                last = HOSEvent(
-                    id: last.id,
-                    x: last.x,
-                    event_end_time: Date(), //  NOW
-                    label: last.label,
-                    dutyType: last.dutyType
-                )
-                updatedEvents.append(last)
-
-                DispatchQueue.main.async {
-                    self.events = updatedEvents
-                    self.refreshTrigger = UUID() //  Redraw chart
-                }
-            }
+            // Reload from database to get latest status changes
+            self.loadEventsFromDatabase()
         }
     }
 
     private func normalizeStatus(_ status: String) -> String {
-        switch status.uppercased() {
+        switch status {
+        case "OnDuty": return "ON_DUTY"
+        case "OffDuty": return "OFF_DUTY"
+        case "OnSleep": return "SLEEP"
+        case "OnDrive": return "DRIVE"
         case "ON-DUTY": return "ON_DUTY"
         case "OFF-DUTY": return "OFF_DUTY"
         case "SLEEP": return "SLEEP"
         case "DRIVE": return "DRIVE"
         default: return "OFF_DUTY"
         }
+    }
+    
+    // MARK: - Force refresh method for immediate chart update
+    func forceRefresh() {
+        loadEventsFromDatabase()
+    }
+    
+    // MARK: - Update current status and refresh chart
+    func updateStatus(_ newStatus: String) {
+        currentStatus = newStatus
+        loadEventsFromDatabase()
     }
 }
                           
@@ -185,11 +195,11 @@ struct DutyLinePathView: View {
 
     private func colorForDutyType(_ dutyType: String) -> Color {
         switch dutyType {
-        case "ON_DUTY": return .blue
         case "OFF_DUTY": return .orange
-        case "SLEEP": return .gray
+        case "ON_DUTY": return .blue
         case "DRIVE": return .green
-        default: return .black
+        case "SLEEP": return .gray
+        default: return .gray
         }
     }
 
@@ -239,7 +249,7 @@ struct DutyLinePathView: View {
 
                 lastPoint = CGPoint(x: endX, y: y)
 
-                //  Use dashed blue style for Personal Use, otherwise normal
+                // Draw the line with appropriate color and style
                 if isPersonalUse(event) {
                     context.stroke(
                         segmentPath,
@@ -249,7 +259,7 @@ struct DutyLinePathView: View {
                 } else {
                     context.stroke(
                         segmentPath,
-                        with: .color(colorForDutyType(event.dutyType)),
+                        with: .color(event.color),
                         style: StrokeStyle(lineWidth: 2, lineCap: .round)
                     )
                 }
@@ -282,7 +292,14 @@ struct HOSEventsChart: View {
             let duration = event.event_end_time.timeIntervalSince(event.x)
             let label = normalizeLabel(event.dutyType)
             durations[label, default: 0] += duration
+            print("⏱️ Duration for \(event.dutyType) -> \(label): \(formatDuration(duration))")
         }
+        
+        // Debug: Print final durations
+        for (label, duration) in durations {
+            print(" Total \(label): \(formatDuration(duration))")
+        }
+        
         return durations
     }
     
@@ -369,7 +386,8 @@ struct HOSEventsChart: View {
                     
                     let durations = calculateDurations()
                     ForEach(dutyLabels, id: \.self) { label in
-                        Text(formatDuration(durations[label] ?? 0))
+                        let duration = durations[label] ?? 0
+                        Text(formatDuration(duration))
                             .font(.system(size: 8))
                             .foregroundColor(.black)
                             .frame(height: rowHeight)
@@ -442,123 +460,6 @@ extension Date {
         return formatter.string(from: self)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

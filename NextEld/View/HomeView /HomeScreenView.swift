@@ -347,6 +347,8 @@ struct TimeBox: View {
 
 
 // MARK: - Main View
+
+// MARK: - Main View
 struct HomeScreenView: View {
     
     @State private var labelValue = ""
@@ -522,7 +524,7 @@ struct HomeScreenView: View {
                                        ViolationBox(
                                            text: "14-hour rule exceeded",
                                            date: "2025-07-25",
-                                           time: "12:15 PM"
+                                           time: "12:25 PM"
                                        )
                                        .transition(.move(edge: .top).combined(with: .opacity))
                                        .animation(.spring(), value: showViolation)
@@ -581,7 +583,7 @@ struct HomeScreenView: View {
                             onClose: { showAlert = false },
                             onSubmit: { note in
                                 confirmedStatus = selected
-                                dutyManager.dutyStatus = selected 
+                                dutyManager.dutyStatus = selected
                                 print("Note for \(selected): \(note)")
                                 
                                 if selected == DriverStatusConstants.onDuty {
@@ -663,7 +665,8 @@ struct HomeScreenView: View {
                                 )
                                 let logs = DatabaseManager.shared.fetchLogs()
                                 print(" Total Logs in DB: \(logs.count)")
-                                hoseChartViewModel.loadEventsFromDatabase()
+                                // Force immediate chart refresh with new status
+                                hoseChartViewModel.updateStatus(selected)
                                 print("Saved \(selected) timer to DB at \(now)")
                             }
 
@@ -673,7 +676,7 @@ struct HomeScreenView: View {
                         CustomPopupAlert(
                             title: "Certify Log",
                             message: "please add DVIR before going to On-Drive",
-                            onOK: { 
+                            onOK: {
                                 confirmedStatus = selected
                                 dutyManager.dutyStatus = selected
                                 isDriveActive = true
@@ -702,7 +705,7 @@ struct HomeScreenView: View {
                                 
                                 print(" Saved Continue Drive timer to DB at \(now)")
                                 //MARK: -  RELOAD THE CHART DATA INSTANTLY
-                                hoseChartViewModel.loadEventsFromDatabase()
+                                hoseChartViewModel.updateStatus(DriverStatusConstants.onDrive)
                                 print("Saved Drive timer to DB at \(now)")
                             },
    
@@ -831,7 +834,7 @@ struct HomeScreenView: View {
                     }
             }
         }
-        //MARK: -  call sync API In every 10 sec 
+        //MARK: -  call sync API In every 10 sec
         .onAppear {
             timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
                 Task {
@@ -1106,7 +1109,7 @@ struct HomeScreenView: View {
             selectedStatus = DriverStatusConstants.offDuty
 
             // Reload Events after reset
-            hoseChartViewModel.loadEventsFromDatabase()
+            hoseChartViewModel.forceRefresh()
 
             // Save logs in DB for future restore
             let formatter = DateFormatter()

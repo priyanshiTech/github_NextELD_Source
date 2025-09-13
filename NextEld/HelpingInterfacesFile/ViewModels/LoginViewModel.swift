@@ -77,6 +77,26 @@ class LoginViewModel: ObservableObject {
                 if let clintId = response.result?.clientId {
                     UserDefaults.standard.set(clintId, forKey: "clientId")
                 }
+                //MARK: -  value get from Rule module in login
+                
+                if let cycleTime =  response.result?.rules?.first?.cycleTime{
+                    UserDefaults.standard.set(cycleTime, forKey: "cycleTime")
+                }
+                if let cycleDays = response.result?.rules?.first?.cycleDays{
+                    UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
+                }
+                if let cycleRestartTime = response.result?.rules?.first?.cycleDays{
+                    UserDefaults.standard.set(cycleRestartTime, forKey: "cycleRestartTime")
+                }
+//                if let cycleDays = response.result?.rules?.first?.cycleDays{
+//                    UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
+//                }
+//                if let cycleDays = response.result?.rules?.first?.cycleDays{
+//                    UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
+//                }
+//                if let cycleDays = response.result?.rules?.first?.cycleDays{
+//                    UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
+//                }
 
                 //MARK: - 
                 // Save Driver Name
