@@ -164,7 +164,6 @@ class DatabaseManager {
 
         for (index, log) in logs.enumerated() {
             
-            
             let originCode = UserDefaults.standard.integer(forKey: "origin") // or from API
             let originValue = OriginType(rawValue: originCode)?.description ?? "Driver" // default
 
