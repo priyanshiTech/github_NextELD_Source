@@ -88,15 +88,19 @@ class LoginViewModel: ObservableObject {
                 if let cycleRestartTime = response.result?.rules?.first?.cycleDays{
                     UserDefaults.standard.set(cycleRestartTime, forKey: "cycleRestartTime")
                 }
-//                if let cycleDays = response.result?.rules?.first?.cycleDays{
-//                    UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
-//                }
-//                if let cycleDays = response.result?.rules?.first?.cycleDays{
-//                    UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
-//                }
-//                if let cycleDays = response.result?.rules?.first?.cycleDays{
-//                    UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
-//                }
+                if let onDutyTime = response.result?.rules?.first?.onDutyTime{
+                    UserDefaults.standard.set(onDutyTime, forKey: "onDutyTime")
+                }
+                if let onDriveTime = response.result?.rules?.first?.onDriveTime{
+                    UserDefaults.standard.set(onDriveTime, forKey: "onDriveTime")
+                }
+                if let onSleepTime = response.result?.rules?.first?.onSleepTime{
+                    UserDefaults.standard.set(onSleepTime, forKey: "onSleepTime")
+                }
+                if let continueDriveTime =  response.result?.rules?.first?.continueDriveTime{
+                    UserDefaults.standard.set(continueDriveTime, forKey: "continueDriveTime")
+                }
+                
 
                 //MARK: - 
                 // Save Driver Name

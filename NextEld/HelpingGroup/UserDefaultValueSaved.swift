@@ -21,6 +21,12 @@ struct AppStorageKeys {
     static let cycleTime = "cycleTime"
     static let cycleDays = "cycleDays"
     static let cycleRestartTime = "cycleRestartTime"
+    static let onDutyTime = "onDutyTime"
+    static let onDriveTime = "onDriveTime"
+    static let onSleepTime = "onSleepTime"
+    static let continueDriveTime = "continueDriveTime"
+    
+    
 
 }
 
@@ -113,5 +119,34 @@ struct DriverInfo {
     static func setcycleRestartTime(_ id: Int) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.cycleRestartTime)
     }
+    //MARK: -  Timer Zone 
+    static var onDriveTime: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.onDriveTime) as? Int
+    }
+    static func setonDriveTime(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.onDriveTime)
+    }
+    
+    static var onDutyTime: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.onDutyTime) as? Int
+    }
+    static func setonDutyTime(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.onDutyTime)
+    }
+    
+    static var onSleepTime: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.onSleepTime) as? Int
+    }
+    static func setonSleepTime(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.onSleepTime)
+    }
+    static var continueDriveTime: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.continueDriveTime) as? Int
+    }
+    static func setcontinueDriveTime(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.continueDriveTime)
+    }
+    
+    
 }
 

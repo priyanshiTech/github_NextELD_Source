@@ -347,8 +347,6 @@ struct TimeBox: View {
 
 
 // MARK: - Main View
-
-// MARK: - Main View
 struct HomeScreenView: View {
     
     @State private var labelValue = ""
@@ -399,6 +397,10 @@ struct HomeScreenView: View {
     
     @State private var  TimeZone : String = ""
     @State private var  TimeZoneOffSet : String = ""
+    @State private var hasAppearedBefore = false
+    @State private var savedOnDutyRemaining: TimeInterval = 0
+    @State private var savedDriveRemaining: TimeInterval = 0
+    @State private var savedCycleRemaining: TimeInterval = 0
     
     
     init(presentSideMenu: Binding<Bool>, selectedSideMenuTab: Binding<Int>, session: SessionManager) {
@@ -413,6 +415,13 @@ struct HomeScreenView: View {
         let ContinueDriveTime = CountdownTimer.timeStringToSeconds("08:00:00")
         let breakTimer =  CountdownTimer.timeStringToSeconds("00:30:00")
         
+    /*    let onDutySeconds = CountdownTimer.timeStringToSeconds("\(DriverInfo.onDutyTime ?? 140000)")
+        let driveSeconds = CountdownTimer.timeStringToSeconds("\(DriverInfo.onDriveTime ?? 110000)")
+        let cycleSeconds = CountdownTimer.timeStringToSeconds("\(DriverInfo.cycleTime ?? 700000)")
+        let sleepSeconds = CountdownTimer.timeStringToSeconds("\(DriverInfo.onSleepTime ?? 100000)")
+        let ContinueDriveTime = CountdownTimer.timeStringToSeconds(" \( DriverInfo.continueDriveTime ??  080000)")
+        let breakTimer =  CountdownTimer.timeStringToSeconds("00:30:00")*/
+                                                                                                                                                                                                    
         _ONDuty = StateObject(wrappedValue: CountdownTimer(startTime: onDutySeconds))
         _driveTimer = StateObject(wrappedValue: CountdownTimer(startTime: driveSeconds))
         _cycleTimerOn = StateObject(wrappedValue: CountdownTimer(startTime: cycleSeconds))
@@ -481,12 +490,16 @@ struct HomeScreenView: View {
                         .frame(height: 0)
                     
                     TopBarView(
+                        
                         presentSideMenu: $presentSideMenu,
                         labelValue: labelValue,
                         showDeviceSelector: $showDeviceSelector
+                        
                     )
                 }
+                
                 UniversalScrollView {
+                    
                     VStack {
                         Text("Disconnected")
                             .font(.title2)
@@ -495,9 +508,8 @@ struct HomeScreenView: View {
                         VehicleInfoView(GadiNo: UserDefaults.standard.string(forKey: "truckNo") ?? "Not Found",
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                        
-                      
-                        
                         StatusView(
+                            
                             confirmedStatus: $confirmedStatus,
                             selectedStatus: $selectedStatus,
                             showAlert: $showAlert,
@@ -512,11 +524,9 @@ struct HomeScreenView: View {
                             sleepTimer: sleepTimer
                         )
                     
-
-                        
                         HOSEventsChartScreen()
                             .environmentObject(hoseChartViewModel)
-                 //MARK for voilation box
+                         //MARK for voilation box
                         ZStack(alignment: .top) {
                                    // Your existing home screen UI here...
 
@@ -577,15 +587,17 @@ struct HomeScreenView: View {
                         .ignoresSafeArea()
                         .zIndex(2)
                     
-                    if /* dutyManager.dutyStatus*/  selected == DriverStatusConstants.onSleep || selected == DriverStatusConstants.offDuty || selected == DriverStatusConstants.personalUse || selected == DriverStatusConstants.yardMove || selected == DriverStatusConstants.onDuty {
+                    if /*dutyManager.dutyStatus*/ selected == DriverStatusConstants.onSleep || selected == DriverStatusConstants.offDuty || selected == DriverStatusConstants.personalUse || selected == DriverStatusConstants.yardMove || selected == DriverStatusConstants.onDuty {
                         StatusDetailsPopup(
                             statusTitle: selected,
                             onClose: { showAlert = false },
                             onSubmit: { note in
+                                // Save current timer states before any status change
+                                saveCurrentTimerStatesBeforeSwitch()
+                                
                                 confirmedStatus = selected
                                 dutyManager.dutyStatus = selected
                                 print("Note for \(selected): \(note)")
-                                
                                 if selected == DriverStatusConstants.onDuty {
                                     sleepTimer.stop()
                                     let totalWorked = totalDutyLast7or8Days()
@@ -593,35 +605,74 @@ struct HomeScreenView: View {
                                     if Int(totalWorked) >= weeklyLimit{
                                         activeTimerAlert = TimerAlert(
                                             title: "Cycle Violation",
-                                            message: "You’ve exceeded your \(cycleType) duty hour limit.",
+                                            message: "You've exceeded your \(cycleType) duty hour limit.",
                                             backgroundColor: .red.opacity(0.9),
                                             isViolation: false
                                         )
                                         showAlert = false
                                         return
                                     }
+                                    
+                                    // Restore OnDuty timer with saved remaining time if available
+                                    if savedOnDutyRemaining > 0 {
+                                        print("💼 Restoring OnDuty with saved time: \(savedOnDutyRemaining/60) minutes")
+                                        ONDuty.reset(startTime: savedOnDutyRemaining)
+                                        savedOnDutyRemaining = 0 // Reset saved time
+                                    }
+                                    
+                                    // Restore Drive timer with saved remaining time if available
+                                    if savedDriveRemaining > 0 {
+                                        print("🚗 Restoring Drive with saved time: \(savedDriveRemaining/60) minutes")
+                                        driveTimer.reset(startTime: savedDriveRemaining)
+                                        savedDriveRemaining = 0 // Reset saved time
+                                    }
+                                    
+                                    // Restore Cycle timer with saved remaining time if available
+                                    if savedCycleRemaining > 0 {
+                                        print("🔄 Restoring Cycle with saved time: \(savedCycleRemaining/60) minutes")
+                                        cycleTimerOn.reset(startTime: savedCycleRemaining)
+                                        savedCycleRemaining = 0 // Reset saved time
+                                    }
+                                    
                                     dutyTimerOn.stop()
                                     ONDuty.start()
                                     cycleTimerOn.start()
-                                    breakTime.start()
+//                                    breakTime.start()
                                     isOnDutyActive = true
                                     checkAndStartCycleTimer()
                                     offDutySleepAccumulated = 0
                                     
                                 } else if selected == DriverStatusConstants.onSleep {
+                                    print("😴 Switching to Sleep - Timers already saved")
+                                    
+                                    // Update saved states with current values before stopping
+                                    savedOnDutyRemaining = ONDuty.remainingTime
+                                    savedDriveRemaining = driveTimer.remainingTime
+                                    savedCycleRemaining = cycleTimerOn.remainingTime
+                                    print(" Updated saved states - OnDuty: \(savedOnDutyRemaining/60) min, Drive: \(savedDriveRemaining/60) min, Cycle: \(savedCycleRemaining/60) min")
+                                    
                                     sleepTimer.start()
                                     dutyTimerOn.stop()
                                     cycleTimerOn.stop()
                                     driveTimer.stop()
-                                    ONDuty.stop()
+                                    ONDuty.stop() // Stop but don't reset
                                     DutyTime.stop()
                                     breakTime.start()
                                     checkFor10HourReset()
+                                    
                                 } else if selected == DriverStatusConstants.offDuty {
+                                    print(" Switching to OffDuty - Timers already saved")
+                                    
+                                    // Update saved states with current values before stopping
+                                    savedOnDutyRemaining = ONDuty.remainingTime
+                                    savedDriveRemaining = driveTimer.remainingTime
+                                    savedCycleRemaining = cycleTimerOn.remainingTime
+                                    print(" Updated saved states - OnDuty: \(savedOnDutyRemaining/60) min, Drive: \(savedDriveRemaining/60) min, Cycle: \(savedCycleRemaining/60) min")
+                                    
                                     let dutyTime = ONDuty.elapsed
                                     saveDailyDutyLog(duration: dutyTime)
                                     driveTimer.stop()
-                                    ONDuty.stop()
+                                    ONDuty.stop() // Stop but don't reset
                                     dutyTimerOn.stop()
                                     sleepTimer.stop()
                                     breakTime.start()
@@ -677,12 +728,35 @@ struct HomeScreenView: View {
                             title: "Certify Log",
                             message: "please add DVIR before going to On-Drive",
                             onOK: {
+                                // Save current timer states before switching to Drive
+                                saveCurrentTimerStatesBeforeSwitch()
+                                
                                 confirmedStatus = selected
                                 dutyManager.dutyStatus = selected
+                                
+                                // Restore timers with saved states
+                                if savedOnDutyRemaining > 0 {
+                                    print("💼 Restoring OnDuty with saved time: \(savedOnDutyRemaining/60) minutes")
+                                    ONDuty.reset(startTime: savedOnDutyRemaining)
+                                    savedOnDutyRemaining = 0
+                                }
+                                
+                                if savedDriveRemaining > 0 {
+                                    print("🚗 Restoring Drive with saved time: \(savedDriveRemaining/60) minutes")
+                                    driveTimer.reset(startTime: savedDriveRemaining)
+                                    savedDriveRemaining = 0
+                                }
+                                
+                                if savedCycleRemaining > 0 {
+                                    print("🔄 Restoring Cycle with saved time: \(savedCycleRemaining/60) minutes")
+                                    cycleTimerOn.reset(startTime: savedCycleRemaining)
+                                    savedCycleRemaining = 0
+                                }
+                                
                                 isDriveActive = true
                                 driveTimer.start()
-                               // dutyTimerOn.start()
-                                startCycleTimer()
+                                ONDuty.start()
+                                cycleTimerOn.start()
                                 sleepTimer.stop()
                                 breakTime.stop()
                                 offDutySleepAccumulated = 0
@@ -849,6 +923,20 @@ struct HomeScreenView: View {
             timer?.invalidate()
             timer = nil
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            // Save timer states when app goes to background
+            saveCurrentTimerStatesBeforeSwitch()
+            saveCurrentTimerStates()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            // Restore timer states when app becomes active
+            restoreAllTimers()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
+            // Save timer states when app is about to terminate
+            saveCurrentTimerStatesBeforeSwitch()
+            saveCurrentTimerStates()
+        }
 
         
         .onAppear {
@@ -862,18 +950,28 @@ struct HomeScreenView: View {
                 }
                 return
             }
-            //  Only executed if user exists
-            if confirmedStatus == nil {
-                selectedStatus = DriverStatusConstants.offDuty
-                confirmedStatus = DriverStatusConstants.offDuty
-                driveTimer.stop()
-                ONDuty.stop()
-                sleepTimer.stop()
-                cycleTimerOn.stop()
-                DutyTime.stop()
+            
+            // Check if we have any saved timer data
+            let hasSavedData = !DatabaseManager.shared.fetchLogs().isEmpty
+            
+            if hasSavedData {
+                print("🔄 Found saved data - restoring timers")
+                // Delay restoration to ensure UI is ready
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.restoreAllTimers()
+                }
+            } else {
+                print("🆕 No saved data - initializing fresh")
+                if !hasAppearedBefore {
+                    hasAppearedBefore = true
+                    if confirmedStatus == nil {
+                        selectedStatus = DriverStatusConstants.offDuty
+                        confirmedStatus = DriverStatusConstants.offDuty
+                    }
+                }
             }
+            
             checkFor34HourReset()
-            restoreAllTimers()
         }
 
         .onReceive(dutyTimerOn.$remainingTime) { remaining in
@@ -963,10 +1061,6 @@ struct HomeScreenView: View {
                 didShowDriveViolation = true
             }
             
-        }
-        //MARK: -  to show latest db time
-        .onAppear {
-            loadLatestTimersFromDB()
         }
         .onReceive(cycleTimerOn.$remainingTime) { remaining in
             
@@ -1095,7 +1189,7 @@ struct HomeScreenView: View {
             breakTime.stop()
 
             //Reset timers to full time (but DO NOT reset cycleTimerOn)
-            driveTimer.reset(startTime: CountdownTimer.timeStringToSeconds("11:00:00"))
+            driveTimer.reset(startTime: CountdownTimer.timeStringToSeconds("(11:00:00"))
             ONDuty.reset(startTime: CountdownTimer.timeStringToSeconds("14:00:00"))
             dutyTimerOn.reset(startTime: CountdownTimer.timeStringToSeconds("08:00:00"))
             sleepTimer.reset(startTime: CountdownTimer.timeStringToSeconds("10:00:00"))
@@ -1131,10 +1225,12 @@ struct HomeScreenView: View {
         }
     }
 
-    
+     
     
     //MARK: - #$ HOURS RESET WHEN  SHIFT IS START NEW
     func checkFor34HourReset() {
+        
+        
         if let lastOffDuty = offDutyStartTime {
             let elapsed = Date().timeIntervalSince(lastOffDuty)
             if elapsed >= 34 * 3600 {
@@ -1154,34 +1250,181 @@ struct HomeScreenView: View {
     
     //MARK: -  Restore & save time
     func restoreAllTimers() {
-        if let drive = loadLatestLog(for: "Drive"),
-           let remaining = drive.remainingDriveTime?.asTimeInterval(),
-           remaining > 0,
-           let startDate = drive.startTime.asDate() {
-            driveTimer.restore(from: remaining, startedAt: startDate, wasRunning: drive.isRunning)
+        let allLogs = DatabaseManager.shared.fetchLogs()
+        print(" Total logs in database: \(allLogs.count)")
+        
+        guard !allLogs.isEmpty else {
+            print(" No logs found, keeping timers as they are")
+            return
         }
         
-        if let duty = loadLatestLog(for: "On-Duty"),
-           let remaining = duty.remainingDutyTime?.asTimeInterval(),
-           remaining > 0,  // Only restore if non-zero
-           let started = duty.startTime.asDate() {
-            ONDuty.restore(from: remaining, startedAt: started, wasRunning: duty.isRunning)
+        // Get the most recent log
+        let latestLog = allLogs.last!
+        let currentStatus = latestLog.status
+        print("🔄 Latest log status: \(currentStatus)")
+        print(" Latest log time: \(latestLog.startTime)")
+        print(" Latest log remaining times - Duty: \(latestLog.remainingDutyTime ?? "nil"), Drive: \(latestLog.remainingDriveTime ?? "nil"), Cycle: \(latestLog.remainingWeeklyTime ?? "nil")")
+        
+        // Calculate elapsed time since the log was saved
+        let now = Date()
+        let logTime = latestLog.startTime.asDate() ?? now
+        let elapsedTime = now.timeIntervalSince(logTime)
+        
+        print("⏰ Current time: \(now)")
+        print(" Log time: \(logTime)")
+        print(" Elapsed time: \(elapsedTime) seconds (\(elapsedTime/60) minutes)")
+        
+        // Set the confirmed status from database
+        confirmedStatus = currentStatus
+        selectedStatus = currentStatus
+        
+        // Force stop all timers first
+        driveTimer.stop()
+        ONDuty.stop()
+        cycleTimerOn.stop()
+        sleepTimer.stop()
+        
+        // Always restore ALL timer values from database, regardless of current status
+        print("🔄 Restoring ALL timer values from database")
+        
+        // Restore OnDuty timer
+        if let dutyRemaining = latestLog.remainingDutyTime?.asTimeInterval(),
+           dutyRemaining > 0 {
+            //MARK:  -  Manage All TImer Values Properly
+            // Only start if current status is OnDuty or OnDrive (running timers)
+            if currentStatus == "OnDuty" || currentStatus == "OnDrive" {
+                // Running timer - subtract elapsed time
+                let adjustedDutyRemaining = max(0, dutyRemaining - elapsedTime)
+                ONDuty.reset(startTime: adjustedDutyRemaining)
+                ONDuty.start()
+                isOnDutyActive = true
+                print(" OnDuty timer restored: \(ONDuty.timeString) (running - elapsed time subtracted)")
+            } else {
+                // Stopped timer - use exact saved value
+                ONDuty.reset(startTime: dutyRemaining)
+                print(" OnDuty timer restored: \(ONDuty.timeString) (stopped - exact saved value)")
+            }
         }
         
-        
-        if let cycle = loadLatestLog(for: "Cycle"),
-           let remaining = cycle.remainingWeeklyTime?.asTimeInterval(),
-           remaining > 0,
-           let started = cycle.startTime.asDate() {
-            cycleTimerOn.restore(from: remaining, startedAt: started, wasRunning: cycle.isRunning)
+        // Restore Drive timer
+        if let driveRemaining = latestLog.remainingDriveTime?.asTimeInterval(),
+           driveRemaining > 0 {
+            
+            // Only start if current status is OnDrive (running timer)
+            if currentStatus == "OnDrive" {
+                // Running timer - subtract elapsed time
+                let adjustedDriveRemaining = max(0, driveRemaining - elapsedTime)
+                driveTimer.reset(startTime: adjustedDriveRemaining)
+                driveTimer.start()
+                isDriveActive = true
+                print(" Drive timer restored: \(driveTimer.timeString) (running - elapsed time subtracted)")
+            } else {
+                // Stopped timer - use exact saved value
+                driveTimer.reset(startTime: driveRemaining)
+                print(" Drive timer restored: \(driveTimer.timeString) (stopped - exact saved value)")
+            }
         }
         
-        if let sleep = loadLatestLog(for: "Sleep"),
-           let remaining = sleep.remainingSleepTime?.asTimeInterval(),
-           remaining > 0,
-           let startDate = sleep.startTime.asDate() {
-            sleepTimer.restore(from: remaining, startedAt: startDate, wasRunning: sleep.isRunning)
+        // Restore Cycle timer
+        if let cycleRemaining = latestLog.remainingWeeklyTime?.asTimeInterval(),
+           cycleRemaining > 0 {
+            
+            // Only start if current status is OnDuty or OnDrive (running timers)
+            if currentStatus == "OnDuty" || currentStatus == "OnDrive" {
+                // Running timer - subtract elapsed time
+                let adjustedCycleRemaining = max(0, cycleRemaining - elapsedTime)
+                cycleTimerOn.reset(startTime: adjustedCycleRemaining)
+                cycleTimerOn.start()
+                isCycleTimerActive = true
+                print(" Cycle timer restored: \(cycleTimerOn.timeString) (running - elapsed time subtracted)")
+            } else {
+                // Stopped timer - use exact saved value
+                cycleTimerOn.reset(startTime: cycleRemaining)
+                print(" Cycle timer restored: \(cycleTimerOn.timeString) (stopped - exact saved value)")
+            }
         }
+        
+        // Restore Sleep timer
+        if let sleepRemaining = latestLog.remainingSleepTime?.asTimeInterval(),
+           sleepRemaining > 0 {
+            
+            // Only start if current status is OnSleep (running timer)
+            if currentStatus == "OnSleep" {
+                // Running timer - subtract elapsed time
+                let adjustedSleepRemaining = max(0, sleepRemaining - elapsedTime)
+                sleepTimer.reset(startTime: adjustedSleepRemaining)
+                sleepTimer.start()
+                print(" Sleep timer restored: \(sleepTimer.timeString) (running - elapsed time subtracted)")
+            } else {
+                // Stopped timer - use exact saved value
+                sleepTimer.reset(startTime: sleepRemaining)
+                print(" Sleep timer restored: \(sleepTimer.timeString) (stopped - exact saved value)")
+            }
+        }
+        
+        print(" Timer restoration completed")
+    }
+    
+    //MARK: - Save current timer states before switching
+    func saveCurrentTimerStatesBeforeSwitch() {
+        // Save current timer states to our state variables
+        savedOnDutyRemaining = ONDuty.remainingTime
+        savedDriveRemaining = driveTimer.remainingTime
+        savedCycleRemaining = cycleTimerOn.remainingTime
+        
+        print(" Saving timer states before switch:")
+        print(" OnDuty: \(savedOnDutyRemaining/60) min, Drive: \(savedDriveRemaining/60) min, Cycle: \(savedCycleRemaining/60) min")
+    }
+    
+    //MARK: - Save current timer states
+    func saveCurrentTimerStates() {
+        guard let currentStatus = confirmedStatus else {
+            print(" No confirmed status, cannot save timer states")
+            return
+        }
+        
+        print(" Saving timer states for status: \(currentStatus)")
+        print(" Current timer values - Duty: \(ONDuty.timeString), Drive: \(driveTimer.timeString), Cycle: \(cycleTimerOn.timeString)")
+        print(" Saved timers - OnDuty: \(savedOnDutyRemaining/60) min, Drive: \(savedDriveRemaining/60) min, Cycle: \(savedCycleRemaining/60) min")
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let now = formatter.string(from: Date())
+        
+        // Use saved times if available, otherwise use current times
+        let dutyTimeToSave = savedOnDutyRemaining > 0 ? savedOnDutyRemaining : ONDuty.remainingTime
+        let driveTimeToSave = savedDriveRemaining > 0 ? savedDriveRemaining : driveTimer.remainingTime
+        let cycleTimeToSave = savedCycleRemaining > 0 ? savedCycleRemaining : cycleTimerOn.remainingTime
+        
+        // Format time intervals to HH:mm:ss strings
+        func formatTimeInterval(_ timeInterval: TimeInterval) -> String {
+            let hours = Int(timeInterval / 3600)
+            let minutes = Int((timeInterval.truncatingRemainder(dividingBy: 3600)) / 60)
+            let seconds = Int(timeInterval.truncatingRemainder(dividingBy: 60))
+            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        }
+        
+        let dutyTimeString = formatTimeInterval(dutyTimeToSave)
+        let driveTimeString = formatTimeInterval(driveTimeToSave)
+        let cycleTimeString = formatTimeInterval(cycleTimeToSave)
+        
+        // Save current timer states to database
+        DatabaseManager.shared.saveTimerLog(
+            status: currentStatus,
+            startTime: now,
+            remainingWeeklyTime: cycleTimeString,
+            remainingDriveTime: driveTimeString,
+            remainingDutyTime: dutyTimeString,
+            remainingSleepTime: sleepTimer.timeString,
+            lastSleepTime: breakTime.timeString,
+            RemaningRestBreak: "true",
+            isruning: true,
+            isVoilations: false
+            
+        )
+        
+        print(" Timer states saved successfully at \(now)")
+        print(" Times saved - OnDuty: \(dutyTimeString), Drive: \(driveTimeString), Cycle: \(cycleTimeString)")
     }
 
     
@@ -1295,6 +1538,8 @@ struct HomeScreenView: View {
    //#Preview {
    //    HomeScreenView()
   //}
+
+
 
 
 
