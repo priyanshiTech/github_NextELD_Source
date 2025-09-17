@@ -365,6 +365,7 @@ struct HomeScreenView: View {
     
     @State private var hoseEvents: [HOSEvent] = []
     @StateObject private var hoseChartViewModel = HOSEventsChartViewModel()
+    @State private var  isSleepTimerActive =  false
 
     
     //MARK: -  To show a static Data
@@ -477,7 +478,7 @@ struct HomeScreenView: View {
     @StateObject private var logoutVM = APILogoutViewModel()   //logout
     @State private var showsyncRefreshalert = RefreshViewModel()  // Refresh
     @EnvironmentObject var locationManager: LocationManager
-
+    @State private var savedSleepingRemaning: TimeInterval = 0
     
     var body: some View {
         
@@ -1098,7 +1099,7 @@ struct HomeScreenView: View {
                     if let driverId = DriverInfo.driverId {  //  Get from common storage
                         await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
                         showSuccessAlert = true // Show success after API
-                       
+                        deleteAllAppData()
                     } else {
                         print(" Driver ID not found in UserDefaults")
                     }
@@ -1486,7 +1487,60 @@ struct HomeScreenView: View {
         pastDutyLog[today, default: 0] += duration
         //  print(" Saved \(duration / 3600, specifier: "%.2f") hrs for \(formattedDate(today))")
     }
+    func deleteAllAppData() {
+        print(" Starting to delete all app data...")
+        
+        // 1. Clear all UserDefaults
+        let defaults = UserDefaults.standard
+        let allKeys = [
+            "driverName", "userId", "authToken", "isLoggedIn",
+            "companyId", "vehicleId", "coDriverId", "password",
+            "rememberMe", "lastLoginTime", "driverId", "clientId"
+        ]
+        
+        for key in allKeys {
+            defaults.removeObject(forKey: key)
+        }
+        
+        // 2. Clear KeyChain and Token
+        let keychain = KeychainHelper()
+        keychain.deleteToken()
+        
+        // 3. Clear SessionManager token
+        SessionManagerClass.shared.clearToken()
+        
+        // 4. Clear Database
+        DatabaseManager.shared.deleteAllLogs()
+        
+        // 5. Stop all timers
+        driveTimer.stop()
+        ONDuty.stop()
+        cycleTimerOn.stop()
+        sleepTimer.stop()
+        breakTime.stop()
+        
+        // 6. Reset all state variables
+        isDriveActive = false
+        isOnDutyActive = false
+        isCycleTimerActive = false
+        isSleepTimerActive = false
+        selectedStatus = DriverStatusConstants.offDuty
+        confirmedStatus = DriverStatusConstants.offDuty
+        labelValue = ""
+        
+        // 7. Clear saved timer states
+        savedDriveRemaining = 0
+        savedCycleRemaining = 0
+        savedSleepingRemaning = 0
+        // 8. Clear any other data
+        hasAppearedBefore = false
+        // 9. Show success message
+        showToast(message: "All data deleted successfully", color: .green)
 
+        print(" All app data deleted successfully")
+    }
+
+    
     
     func checkAndStartCycleTimer() {
         print(" Checking Cycle Timer: Drive=\(isDriveActive), Duty=\(isOnDutyActive)")

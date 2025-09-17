@@ -5,6 +5,7 @@
 //  Created by Priyanshi on 05/05/25.
 //
 
+
 import SwiftUI
 
 struct LoginScreen: View {
@@ -15,7 +16,9 @@ struct LoginScreen: View {
 
 
     @State private var alertVisible = false
-    @State private var email = ""
+    @State private var UserName = ""
+  //  @State private var email = ""
+
     @State private var password = ""
     @State private var isPasswordShowing = false
     @State private var txtFieldHeight: CGFloat = 56
@@ -37,15 +40,17 @@ struct LoginScreen: View {
             HStack {
                 Image(systemName: "envelope")
                     .foregroundColor(Color(uiColor: .wine))
-                TextField("Email", text: $email)
+                TextField("UserName", text: $UserName)
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)
             }
-            .inputBoxStyle(isValid: email.isEmpty || isValidEmail(email))
+            .inputBoxStyle(isValid: UserName.isEmpty || isValidUsername(UserName))
 
             // Inline validation message
-            if !email.isEmpty && !isValidEmail(email) {
-                Text("Enter a valid email address")
+            if !UserName.isEmpty && !isValidUsername(UserName) {
+               // Text("Enter a valid email address")
+                Text("Enter a  UserName")
+
                     .foregroundColor(.red)
                     .font(.caption)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -99,13 +104,13 @@ struct LoginScreen: View {
             //MARK:  With API Verification
 
             Button {
-                if !isValidEmail(email) || !isValidPassword(password) {
+                if !isValidUsername(UserName) || !isValidPassword(password) {
                     alertVisible = true
                     return
                 }
 
                 Task {
-                    let success = await loginVM.login(email: email, password: password)
+                    let success = await loginVM.login(email: UserName, password: password)
                     if success && SessionManagerClass.shared.isLoggedIn() {
                         
                         await viewModel.callLoginLogUpdateAPI()
@@ -123,12 +128,12 @@ struct LoginScreen: View {
                     .foregroundColor(Color(uiColor: .wine))
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background((isValidEmail(email) && isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
+                    .background((isValidUsername(UserName) && isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
                     .cornerRadius(10)
             }
 
             .frame(width: txtFieldWidth, height: txtFieldHeight)
-            .disabled(!isValidEmail(email) || !isValidPassword(password))
+            .disabled(!isValidUsername(UserName) || !isValidPassword(password))
 
 
             // Loading indicator
@@ -165,7 +170,7 @@ struct LoginScreen: View {
         .alert(isPresented: $alertVisible) {
             Alert(
                 title: Text("Validation Error"),
-                message: Text("Please enter a valid email and password."),
+                message: Text("Please enter a valid Username and password."),
                 dismissButton: .default(Text("OK"))
             )
         }
@@ -179,6 +184,12 @@ func isValidEmail(_ email: String) -> Bool {
 }
 
 
+// MARK: - Username Validation
+func isValidUsername(_ username: String) -> Bool {
+    //  letters, numbers 7 underscore allowed, length 3-15
+    let usernameRegex = "^[A-Za-z0-9_]{3,15}$"
+    return NSPredicate(format: "SELF MATCHES %@", usernameRegex).evaluate(with: username)
+}
 
 
 //  Password Validation (Only Numbers, min 4 digits)
