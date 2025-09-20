@@ -222,7 +222,7 @@ class LoginViewModel: ObservableObject {
                 if let cycleRestartTime =  response.result?.rules?.first?.cycleRestartTime{
                     UserDefaults.standard.set(cycleRestartTime, forKey: "cycleRestartTime")
                 }
-                    if let warningOnDutyTime1 =  response.result?.rules?.first?.warningBreakTime1{
+                    if let warningOnDutyTime1 =  response.result?.rules?.first?.warningOnDutyTime1{
                         UserDefaults.standard.set(warningOnDutyTime1, forKey: "warningOnDutyTime1")
                     }
                     if let warningOnDutyTime2 =  response.result?.rules?.first?.warningOnDutyTime2{

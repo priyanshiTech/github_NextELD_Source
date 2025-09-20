@@ -31,7 +31,7 @@ struct AppStorageKeys {
 
     static let breakTime = "breakTime"
     static let warningOnDutyTime2 = "warningOnDutyTime2"   // 13:50
-    static let warningOnDutyTime1 = "warningOnDutyTime1"
+    static let warningOnDutyTime1 =  "warningOnDutyTime1"
     static let warningOnDriveTime1 = "warningOnDriveTime1"
     static let warningOnDriveTime2 = "warningOnDriveTime2"
     static let warningBreakTime1 = "warningBreakTime1"
@@ -183,16 +183,16 @@ struct DriverInfo {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDutyTime1)
     }
     
-    static var setWarningOnDutyTime1: Int? {
-        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDutyTime1) as? Int
+    static var setWarningOnDutyTime1: Double? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDutyTime1) as? Double
     }
-    static func warningOnDutyTime2(_ id: Int) {
+    static func warningOnDutyTime2(_ id: Double) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDutyTime2)
     }
-    static var setWarningOnDutyTime2: Int? {
-        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDutyTime2) as? Int
+    static var setWarningOnDutyTime2: Double? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDutyTime2) as? Double
     }
-    static func warningOnDriveTime1(_ id: Int) {
+    static func warningOnDriveTime1(_ id: Double) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDriveTime1)
     }
     static func setWarningOnDriveTime1(_ id: Int) {

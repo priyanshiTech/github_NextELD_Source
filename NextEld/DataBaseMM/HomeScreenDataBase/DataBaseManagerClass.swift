@@ -683,7 +683,32 @@ func updateDayShiftInDB(day: Int, shift: Int, userId: Int) {
         print(" Error updating day/shift in DB: \(error)")
     }
 }
+
+    func updateVoilation(isVoilation: Bool , status: String) {
+        let voilationValue = isVoilation ? 1 : 0
+        guard let db = db else { return }
+        do {
+            if let row = try db.pluck(
+                driverLogs
+                    .order(timestamp.desc)
+                    .limit(1)
+            ) {
+                let logId = row[id]
+                let log = driverLogs.filter(id == logId)
+                
+                try db.run(log.update(self.isVoilationColumn <- voilationValue, self.status <- status))
+                print(" DB Updated → voilation")
+                
+            } else {
+                print(" No recent row found to update Day/Shift")
+            }
+        } catch {
+            print(" Error updating day/shift in DB: \(error)")
+        }
+    }
+   
 }
+
 
 
 

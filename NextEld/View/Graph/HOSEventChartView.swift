@@ -58,13 +58,15 @@ class HOSEventsChartViewModel: ObservableObject {
         self.events = logs.enumerated().map { index, log in
             let normalizedStatus = normalizeStatus(log.status)
             let isLastEvent = index == logs.count - 1
-            let endTime = isLastEvent ? Date() : log.endTime // Use current time for last event
+            let endTime =  isLastEvent ? Date() : log.endTime // Use current time for last event
+            
+            print("\(normalizedStatus) End Time \(log.endTime)")
 
 //            let isLastEvent = index == logs.count - 1
 //            let nextStart = isLastEvent ? Date() : logs[index + 1].startTime
 //            let endTime = min(log.endTime, nextStart)
 
-            
+
             print(" Chart Event: \(log.status) -> \(normalizedStatus) (Color: \(normalizedStatus == "OFF_DUTY" ? "Orange" : normalizedStatus == "ON_DUTY" ? "Blue" : normalizedStatus == "DRIVE" ? "Green" : "Gray"))")
             
             return HOSEvent(
@@ -215,14 +217,15 @@ struct DutyLinePathView: View {
             guard !sortedEvents.isEmpty else { return }
 
             var lastPoint: CGPoint? = nil
-
+            
             for event in sortedEvents {
                 guard
                     let startMin = minutesSinceMidnight(event.x),
                     let endMin = minutesSinceMidnight(event.event_end_time),
                     let level = levelMap[normalizeLabel(event.label)]
                 else { continue }
-
+                print("Graph: \(event.dutyType) Start Date=====> \(event.x)")
+                print("Graph: \(event.dutyType) End Date=====> \(event.event_end_time)")
                 let startX = CGFloat(startMin) * (hourWidth / 60)
                 let endX = CGFloat(endMin) * (hourWidth / 60)
                 let y = yPositionForLevel(level)
