@@ -656,6 +656,34 @@ extension DatabaseManager {
 
 
 
+//MARK: - - SAVE And updated
+extension DatabaseManager {
+func updateDayShiftInDB(day: Int, shift: Int, userId: Int) {
+    guard let db = db else { return }
+    do {
+        if let row = try db.pluck(
+            driverLogs
+                .filter(self.userId == userId)
+                .order(timestamp.desc)
+                .limit(1)
+        ) {
+            let logId = row[id]
+            let log = driverLogs.filter(id == logId)
+            
+            try db.run(log.update(self.day <- day, self.shift <- shift))
+            print(" DB Updated → Day: \(day), Shift: \(shift) for logId: \(logId)")
+            
+            // keep DatabaseManager cache also updated
+            self.lastDay = day
+            self.lastShift = shift
+        } else {
+            print(" No recent row found to update Day/Shift")
+        }
+    } catch {
+        print(" Error updating day/shift in DB: \(error)")
+    }
+}
+}
 
 
 

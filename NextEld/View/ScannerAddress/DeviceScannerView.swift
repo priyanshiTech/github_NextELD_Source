@@ -5,6 +5,13 @@
 //  Created by Priyanshi on 06/05/25.
 //
 
+//
+//  DeviceScannerView.swift
+//  NextEld
+//
+//  Created by Priyanshi on 06/05/25.
+//
+
 import SwiftUI
 
 struct DeviceScannerView: View {

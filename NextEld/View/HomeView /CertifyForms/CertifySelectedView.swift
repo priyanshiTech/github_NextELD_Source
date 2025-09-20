@@ -195,7 +195,7 @@ struct CertifySelectedView: View {
                                 userName: DriverInfo.UserName,
                                 startTime: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
                                 date: certifiedDate,
-                                shift: DriverInfo.shift,
+                                shift: "\(DriverInfo.shift ?? 1)",
                                 selectedVehicle: vehiclesc,
                                 selectedTrailer: trailerVM.trailers.isEmpty
                                     ? "None"

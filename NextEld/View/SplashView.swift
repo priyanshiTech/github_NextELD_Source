@@ -69,5 +69,3 @@ struct SplashView: View {
         .environmentObject(NavigationManager())
 
 }
-
-

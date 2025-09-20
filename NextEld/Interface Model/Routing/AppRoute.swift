@@ -179,7 +179,7 @@ struct RootView: View {
 //                    NewDriverLogin(isLoggedIn: $isLoggedIn, tittle: "Co-Driver Log-In", email: emailAuto)
                     
                 case .NewDriverLogin(let title, let email):
-                    NewDriverLogin(isLoggedIn: $isLoggedIn, tittle: title, email: email)
+                    NewDriverLogin(isLoggedIn: $isLoggedIn, tittle: title, UserName: email)
                         .id(email)
                     
                 case .AddVichleMode:

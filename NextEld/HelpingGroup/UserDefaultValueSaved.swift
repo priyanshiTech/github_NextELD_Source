@@ -16,6 +16,7 @@ struct AppStorageKeys {
     static let loginDateTime = "loginDateTime"
     static let TimeZoneOffset = "timezoneOffSet"
     static let coDriverId = "coDriverId"
+    static let CurrentDay = "days"
     static let shift = "shift"
     static let clientId = "clientId"
     static let cycleTime = "cycleTime"
@@ -26,6 +27,19 @@ struct AppStorageKeys {
     static let onSleepTime = "onSleepTime"
     static let continueDriveTime = "continueDriveTime"
     
+    //MARK: -  warning timer
+
+    static let breakTime = "breakTime"
+    static let warningOnDutyTime2 = "warningOnDutyTime2"   // 13:50
+    static let warningOnDutyTime1 = "warningOnDutyTime1"
+    static let warningOnDriveTime1 = "warningOnDriveTime1"
+    static let warningOnDriveTime2 = "warningOnDriveTime2"
+    static let warningBreakTime1 = "warningBreakTime1"
+    static let warningBreakTime2 = "warningBreakTime2"
+    
+    //MARK: -  Current Day's
+    
+   
     
 
 }
@@ -86,12 +100,22 @@ struct DriverInfo {
     static func setCoDriverId(_ id: Int) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.coDriverId)
     }
-    static var shift: String {
-        UserDefaults.standard.string(forKey: AppStorageKeys.shift) ?? ""
+
+    static var shift: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.shift) as? Int
     }
-    static func setShift(_ value: String) {
-        UserDefaults.standard.set(value, forKey: AppStorageKeys.shift)
+    static func setShift(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.shift)
     }
+    
+    static var CurrentDay: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.CurrentDay) as? Int
+    }
+    
+    static func CurrentDay(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.CurrentDay)
+    }
+    
     // MARK: - ClientId
         static var clientId: Int? {
             UserDefaults.standard.object(forKey: AppStorageKeys.clientId) as? Int
@@ -99,8 +123,7 @@ struct DriverInfo {
         static func setClientId(_ id: Int) {
             UserDefaults.standard.set(id, forKey: AppStorageKeys.clientId)
         }
-    //MARK: -  Login
-    
+    //MARK: -  Save All Timer in UD
     static var cycleTime: Int? {
         UserDefaults.standard.object(forKey: AppStorageKeys.cycleTime) as? Int
     }
@@ -119,32 +142,82 @@ struct DriverInfo {
     static func setcycleRestartTime(_ id: Int) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.cycleRestartTime)
     }
-    //MARK: -  Timer Zone 
-    static var onDriveTime: Int? {
-        UserDefaults.standard.object(forKey: AppStorageKeys.onDriveTime) as? Int
+
+    static var onDriveTime: Double? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.onDriveTime) as? Double
     }
-    static func setonDriveTime(_ id: Int) {
+    static func setonDriveTime(_ id: Double) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.onDriveTime)
     }
     
-    static var onDutyTime: Int? {
-        UserDefaults.standard.object(forKey: AppStorageKeys.onDutyTime) as? Int
+    static var onDutyTime: Double? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.onDutyTime) as? Double
     }
-    static func setonDutyTime(_ id: Int) {
+    static func setonDutyTime(_ id: Double) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.onDutyTime)
     }
     
-    static var onSleepTime: Int? {
-        UserDefaults.standard.object(forKey: AppStorageKeys.onSleepTime) as? Int
+    static var onSleepTime: Double? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.onSleepTime) as? Double
     }
-    static func setonSleepTime(_ id: Int) {
+    static func setonSleepTime(_ id: Double) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.onSleepTime)
     }
-    static var continueDriveTime: Int? {
-        UserDefaults.standard.object(forKey: AppStorageKeys.continueDriveTime) as? Int
+    static var continueDriveTime: Double? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.continueDriveTime) as? Double
     }
-    static func setcontinueDriveTime(_ id: Int) {
+    static func setcontinueDriveTime(_ id: Double) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.continueDriveTime)
+    }
+    
+    //MARK: -  Warning Time Saved From API
+    
+    static func breakTime(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.breakTime)
+    }
+    
+    static var setbreakTime: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.breakTime) as? Int
+    }
+    static func warningOnDutyTime1(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDutyTime1)
+    }
+    
+    static var setWarningOnDutyTime1: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDutyTime1) as? Int
+    }
+    static func warningOnDutyTime2(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDutyTime2)
+    }
+    static var setWarningOnDutyTime2: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDutyTime2) as? Int
+    }
+    static func warningOnDriveTime1(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDriveTime1)
+    }
+    static func setWarningOnDriveTime1(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDriveTime1)
+    }
+    
+    static var warningOnDriveTime2: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDriveTime2) as? Int
+    }
+    
+    static func setWarningOnDriveTime2(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDriveTime2)
+    }
+    
+    static var warningBreakTime1: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.warningBreakTime1) as? Int
+    }
+    static func setWarningBreakTime1(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.warningBreakTime1)
+    }
+    static var warningBreakTime2: Int? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.warningBreakTime2) as? Int
+    }
+    static func setWarningBreakTime2(_ id: Int) {
+        UserDefaults.standard.set(id, forKey: AppStorageKeys.warningBreakTime2)
     }
     
     

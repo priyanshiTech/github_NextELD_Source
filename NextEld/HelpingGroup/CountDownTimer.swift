@@ -29,7 +29,19 @@ class CountdownTimer: ObservableObject {
         let seconds = Int(remainingTime) % 60
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
-
+    // MARK: - Internal Timer Value (for database)
+    var internalTimeString: String {
+        let absTime = abs(remainingTime)
+        let hours = Int(absTime) / 3600
+        let minutes = (Int(absTime) % 3600) / 60
+        let seconds = Int(absTime) % 60
+        
+        if remainingTime <= 0 {
+            return String(format: "-%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        }
+    }
     // Timezone-aware time string
     var timezoneAwareTimeString: String {
         let currentTime = Date()
@@ -150,6 +162,12 @@ class CountdownTimer: ObservableObject {
         self.endDate = Date().addingTimeInterval(startTime)
     }
 
+    func resetsSleep(to seconds: Double) {
+        stop()
+        self.remainingTime = seconds  // Use the parameter instead of hardcoded 36000
+        self.endDate = nil             // calculation disable
+        isRunning = false              // paused state
+    }
 
 }
 
