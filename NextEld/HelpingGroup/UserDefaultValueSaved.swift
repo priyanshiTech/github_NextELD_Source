@@ -195,18 +195,16 @@ struct DriverInfo {
     static func warningOnDriveTime1(_ id: Double) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDriveTime1)
     }
-    static func setWarningOnDriveTime1(_ id: Int) {
-        UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDriveTime1)
+    static var setWarningOnDriveTime1 : Double? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDriveTime1) as? Double
     }
-    
-    static var warningOnDriveTime2: Int? {
-        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDriveTime2) as? Int
-    }
-    
-    static func setWarningOnDriveTime2(_ id: Int) {
+ 
+    static func warningOnDriveTime2 (_ id: Double) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDriveTime2)
     }
-    
+    static var setWarningOnDriveTime2 : Double? {
+        UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDriveTime2) as? Double
+    }
     static var warningBreakTime1: Int? {
         UserDefaults.standard.object(forKey: AppStorageKeys.warningBreakTime1) as? Int
     }

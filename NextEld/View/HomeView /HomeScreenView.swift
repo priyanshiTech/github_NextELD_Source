@@ -6,9 +6,6 @@
 import SwiftUI
 
 // MARK: - Subviews
-import SwiftUI
-
-// MARK: - Subviews
 
 struct TopBarView: View {
     @Binding var presentSideMenu: Bool
@@ -508,10 +505,9 @@ struct HomeScreenView: View {
     @State private var showsyncRefreshalert = RefreshViewModel()  // Refresh
     @EnvironmentObject var locationManager: LocationManager
 
-    @State private var warningBeforeEnd1: Double = (DriverInfo.setWarningOnDutyTime1 ?? 1800)
-    @State private var warningBeforeEnd2: Double = 900  // default 15 min
     @State private var hasRestoredTimers = false
-    
+    let times = DateTimeHelperVoilation.getLocalAndGMT()
+   
 
     var body: some View {
         
@@ -1044,14 +1040,14 @@ struct HomeScreenView: View {
 
         
         .onAppear {
+            
             if isOnAppearCalled { return }
             isOnAppearCalled = true
-            print("🏠 HomeScreenView onAppear called")
-            print("📊 Current status - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
+            print(" HomeScreenView onAppear called")
+            print(" Current status - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
             
             if let driverName = UserDefaults.standard.string(forKey: "driverName"),
                !driverName.isEmpty {
-                //  User found
                 labelValue = driverName
             } else {
                 DispatchQueue.main.async {
@@ -1062,18 +1058,18 @@ struct HomeScreenView: View {
             
             // Check if we have any saved timer data
             let hasSavedData = !DatabaseManager.shared.fetchLogs().isEmpty
-            print("💾 Has saved data: \(hasSavedData)")
+            print(" Has saved data: \(hasSavedData)")
             
             if hasSavedData {
-                print("🔄 Found saved data - restoring timers")
+                print(" Found saved data - restoring timers")
                 // Delay restoration to ensure UI is ready
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.restoreAllTimers()
                     hasRestoredTimers = true
-                    print("✅ Timer restoration completed - confirmedStatus: \(self.confirmedStatus ?? "nil"), selectedStatus: \(self.selectedStatus ?? "nil")")
+                    print(" Timer restoration completed - confirmedStatus: \(self.confirmedStatus ?? "nil"), selectedStatus: \(self.selectedStatus ?? "nil")")
                 }
             } else {
-                print("🆕 No saved data - initializing fresh")
+                print(" No saved data - initializing fresh")
                 if !hasAppearedBefore {
                     hasAppearedBefore = true
                 }
@@ -1092,7 +1088,7 @@ struct HomeScreenView: View {
                 print("🔧 Set status to OffDuty (fallback)")
             }
             
-            print("📊 Final status after onAppear - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
+            print(" Final status after onAppear - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
             checkFor34HourReset()
         }
 
@@ -1100,7 +1096,7 @@ struct HomeScreenView: View {
             if remaining <= 1800 && remaining >= 1700 && !didShowContinusDrivingVoilation {
                 activeTimerAlert = TimerAlert(
                     title: "Continue Drive",
-                    message: "30 min left for completing your ONDuty cycle for a day",
+                    message: "30 min left for completing your ONDuty cycle for a day \(times.local) GMT \(times.gmt)",
                     backgroundColor: Color(uiColor: .wine).opacity(0.6)
                 )
                 didShowContinusDrivingVoilation = true
@@ -1108,7 +1104,7 @@ struct HomeScreenView: View {
             else if remaining <= 900 && remaining >= 800 && !didShowContinusDrivingVoilation {
                 activeTimerAlert = TimerAlert(
                     title: "Continue Drive Alert",
-                    message: "15 min left for completing your ONDuty cycle for a day",
+                    message: "15 min left for completing your ONDuty cycle for a day \(times.local) GMT \(times.gmt)",
                     backgroundColor: .orange
                 )
                 didShowContinusDrivingVoilation = true
@@ -1116,7 +1112,7 @@ struct HomeScreenView: View {
             else if remaining <= 0 && !didShowContinusDrivingVoilation {
                 activeTimerAlert = TimerAlert(
                     title: "Continue Drive Violation",
-                    message: "You are continuously driving for 8 hours",
+                    message: "You are continuously driving for 8 hours\(times.local) GMT \(times.gmt)",
                     backgroundColor: .red.opacity(0.9),
                     isViolation: true
                 )
@@ -1128,17 +1124,60 @@ struct HomeScreenView: View {
 
 
 
+//        .onReceive(ONDuty.$remainingTime) { remainingTime in
+//            let totalDriveTime = DriverInfo.onDutyTime ?? 0
+//            let workingTime = Double(totalDriveTime) - remainingTime
+//            let violationThreshold = Double(totalDriveTime)
+//            // Debug logs
+//            print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
+//             if workingTime >= violationThreshold && !didShowViolation {
+//                activeTimerAlert = TimerAlert(
+//                    title: "On-Duty Violation",
+//                    message: "Your on duty time has been exceeded to 14 hours",
+//                    backgroundColor: .red.opacity(0.9),
+//                    isViolation: true
+//                )
+//                 didShowViolation = true
+//                 print(" Violation fired once")
+//                 DatabaseManager.shared.updateVoilation(isVoilation: true, status: "Your on duty time has been exceeded to 14 hours")
+//            } else {
+//                
+//                if workingTime >= DriverInfo.setWarningOnDutyTime1!  && !didShow30MinWarning {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "On-Duty Reminder",
+//                        message: "30 min left for completing your On Duty cycle for a day",
+//                        backgroundColor: .yellow
+//                    )
+//                    didShow30MinWarning = true
+//                    print(" 30min warning fired once")
+//                    DatabaseManager.shared.updateVoilation(isVoilation: false, status: "Your on duty time has been exceeded to 14 hours")
+//                }
+
+//                // 15-min warning
+//                else if workingTime >= DriverInfo.setWarningOnDutyTime2! && !didShow15MinWarning {
+//                    activeTimerAlert = TimerAlert(
+//                        title: "On-Duty Alert",
+//                        message: "15 minutes left For completing your On Duty Cycle Of The Day",
+//                        backgroundColor: .orange
+//                    )
+//                    didShow15MinWarning = true
+//                    print(" 15min warning fired once")
+//                    DatabaseManager.shared.updateVoilation(isVoilation: false, status: "Your on duty time has been exceeded to 14 hours")
+//                }
+//            }
+//        }
+
+        
         .onReceive(ONDuty.$remainingTime) { remainingTime in
             let totalDriveTime = DriverInfo.onDutyTime ?? 0
             let workingTime = Double(totalDriveTime) - remainingTime
-            
-//            let warningAt30Min = Double(totalDriveTime) - workingTime//(DriverInfo.setWarningOnDutyTime1 ?? 48600)
-//            let warningAt15Min = Double(totalDriveTime) - workingTime//(DriverInfo.setWarningOnDutyTime2 ?? 49500)
             let violationThreshold = Double(totalDriveTime)
 
             // Debug logs
             print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
-             if workingTime >= violationThreshold && !didShowViolation {
+            let times = DateTimeHelperVoilation.getLocalAndGMT()
+    
+            if workingTime >= violationThreshold && !didShowViolation {
                 activeTimerAlert = TimerAlert(
                     title: "On-Duty Violation",
                     message: "Your on duty time has been exceeded to 14 hours",
@@ -1146,288 +1185,348 @@ struct HomeScreenView: View {
                     isViolation: true
                 )
                 didShowViolation = true
-                print(" Violation fired once")
-                 DatabaseManager.shared.updateVoilation(isVoilation: true, status: "Your on duty time has been exceeded to 14 hours")
+                print("Violation fired once")
+                DatabaseManager.shared.updateVoilation(isVoilation: true,
+                DutyType: "Your on duty time has been exceeded to 14 hours \(times.local) ,GMT:\(times.gmt) ")
             } else {
-                
-                if workingTime >= DriverInfo.setWarningOnDutyTime1!  && !didShow30MinWarning {
+                // 30-min warning (safe unwrap)
+                if let warning1 = DriverInfo.setWarningOnDutyTime1,
+                   workingTime >= warning1,
+                   !didShow30MinWarning {
+                    
+           
+                    
                     activeTimerAlert = TimerAlert(
                         title: "On-Duty Reminder",
-                        message: "30 min left for completing your On Duty cycle for a day",
+                        message: """
+                        30 min left for completing your On Duty cycle for a day
+                        Local: \(times.local)
+                        GMT:   \(times.gmt)
+                        """,
+                        backgroundColor: .yellow
+                    )
+                    
+                    didShow30MinWarning = true
+                    print("30min warning fired once")
+                    DatabaseManager.shared.updateVoilation(isVoilation: false,
+                        DutyType:  "30 minutes left before On Duty time exceedsLocal: \(times.local) ,GMT:\(times.gmt)")
+                }
+
+                // 15-min warning (safe unwrap)
+                else if let warning2 = DriverInfo.setWarningOnDutyTime2,
+                        workingTime >= warning2,
+                        !didShow15MinWarning {
+                    
+                    activeTimerAlert = TimerAlert(
+                        title: "On-Duty Reminder",
+                        message: """
+                        15 min left for completing your On Duty cycle for a day
+                        Local: \(times.local)
+                        GMT:   \(times.gmt)
+                        """,
+                        backgroundColor: .orange
+                    )
+                    
+                    didShow15MinWarning = true
+                    print("15min warning fired once")
+                    DatabaseManager.shared.updateVoilation(isVoilation: false,
+                        DutyType: "15 minutes left before On Duty time exceeds  \(times.local) GMT \(times.gmt)")
+                }
+            }
+        }
+
+        // MARK: - OnDrive Timer Violation with Working Time
+
+        .onReceive(driveTimer.$remainingTime) { remainingTime in
+            let totalDriveTime = DriverInfo.onDriveTime ?? 0
+            let workingTime = Double(totalDriveTime) - remainingTime
+            let violationThreshold = Double(totalDriveTime)
+            
+            print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
+            // Violation check
+            if workingTime >= violationThreshold && !didShowViolation {
+                activeTimerAlert = TimerAlert(
+                    title: "On-Drive Violation",
+                    message: "Your drive time has been exceeded to 11 hours \(times.local) GMT \(times.gmt)",
+                    backgroundColor: .red.opacity(0.9),
+                    isViolation: true
+                )
+                didShowViolation = true
+                print("Violation fired once")
+                DatabaseManager.shared.updateVoilation(
+                    isVoilation: true,
+                    DutyType: "Your drive time has been exceeded to 11 hours \(times.local) GMT \(times.gmt)"
+                )
+
+                  } else {
+                // 30-min warning (safe unwrap)
+                if let warning1 = DriverInfo.setWarningOnDriveTime1,
+                   workingTime >= warning1,
+                   !didShow30MinWarning {
+                    activeTimerAlert = TimerAlert(
+                        title: "On-Drive Reminder",
+                        message: "30 minutes left for completing your Drive cycle of the day \(times.local) GMT \(times.gmt)",
                         backgroundColor: .yellow
                     )
                     didShow30MinWarning = true
-                    print(" 30min warning fired once")
-                    DatabaseManager.shared.updateVoilation(isVoilation: false, status: "Your on duty time has been exceeded to 14 hours")
+                    print("30min warning fired once")
+                    DatabaseManager.shared.updateVoilation(
+                        isVoilation: false,
+                        DutyType: "30 minutes left before Drive time exceeds"
+                    )
                 }
-
-                // 15-min warning
-                else if workingTime >= DriverInfo.setWarningOnDutyTime2! && !didShow15MinWarning {
+                
+                // 15-min warning (safe unwrap)
+                else if let warning2 = DriverInfo.setWarningOnDriveTime2,
+                        
+                        workingTime >= warning2,
+                        !didShow15MinWarning {
                     activeTimerAlert = TimerAlert(
-                        title: "On-Duty Alert",
-                        message: "15 minutes left For completing your On Duty Cycle Of The Day",
+                        title: "On-Drive Alert",
+                        message: "15 minutes left for completing your Drive cycle of the day \(times.local) GMT \(times.gmt)",
                         backgroundColor: .orange
                     )
                     didShow15MinWarning = true
-                    print(" 15min warning fired once")
-                    DatabaseManager.shared.updateVoilation(isVoilation: false, status: "Your on duty time has been exceeded to 14 hours")
+                    print("15min warning fired once")
+                    DatabaseManager.shared.updateVoilation(
+                        isVoilation: false,
+                        DutyType: "15 minutes left before Drive time exceeds"
+                    )
                 }
             }
-            
-            // 30-min warning
-            
-
-            // Violation
-//            else if workingTime >= violationThreshold && !didShowViolation {
-//               
-//            }
         }
-
-
-        
-//        .onReceive(driveTimer.$remainingTime) { remainingTime in
-//            let totalDriveTime = DriverInfo.onDriveTime ?? 0
-//            let workingTime = Double(totalDriveTime) - remainingTime
-//            
-//            let warningAt30Min = Double(totalDriveTime) - (DriverInfo.setWarningOnDutyTime1 ?? 48600)
-//            let warningAt15Min = Double(totalDriveTime) - (DriverInfo.setWarningOnDutyTime2 ?? 49500)
-//            let violationThreshold = Double(totalDriveTime)
-//
-//            // Debug logs
-//            print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
-//
-//            // 30-min warning
-//            if workingTime >= warningAt30Min && workingTime < warningAt15Min && !didShow30MinWarning {
-//                activeTimerAlert = TimerAlert(
-//                    title: "On-Drive Reminder",
-//                    message: "30 min left for completing your On Duty cycle for a day",
-//                    backgroundColor: .yellow
-//                )
-//                didShow30MinWarning = true
-//                print(" 30min warning fired once")
-//            }
-//
-//            // 15-min warning
-//            else if workingTime >= warningAt15Min && workingTime < violationThreshold && !didShow15MinWarning {
-//                activeTimerAlert = TimerAlert(
-//                    title: "On-Drive Alert",
-//                    message: "15 minutes left For completing your On Duty Cycle Of The Day",
-//                    backgroundColor: .orange
-//                )
-//                didShow15MinWarning = true
-//                print(" 15min warning fired once")
-//            }
-//
-//            // Violation
-//            else if workingTime >= violationThreshold && !didShowViolation {
-//                self.isVoilation = true
-//                activeTimerAlert = TimerAlert(
-//                    title: "On-Drive Violation",
-//                    message: "Your on duty time has been exceeded to 14 hours",
-//                    backgroundColor: .red.opacity(0.9),
-//                    isViolation: isVoilation
-//                )
-//                didShowViolation = true
-//                print(" Violation fired once")
-//                DatabaseManager.shared.updateVoilation(isVoilation: isVoilation, status: "Your on duty time has been exceeded to 14 hours")
-//                isVoilation = false
-//            }
-//        }
-
-
-
-        // MARK: - Cycle Timer Violation Logic with Working Time
-        .onReceive(cycleTimerOn.$remainingTime) { remainingTime in
             
-            // Calculate working time = Total time - Remaining time
-            let totalCycleTime = CountdownTimer.timeStringToSeconds("70:00:00") // 70 hours in seconds
-            let workingTime = totalCycleTime - remainingTime
-            
-            // Define warning thresholds based on working time
-            let warningAt30Min = totalCycleTime - 1800  // Show warning when 30 min left
-            let warningAt15Min = totalCycleTime - 900   // Show warning when 15 min left
-            let violationThreshold = totalCycleTime     // Violation when total time exceeded
-            
-            // Check violations based on working time
-            if workingTime >= warningAt30Min && workingTime < warningAt15Min && !didShowCycleViolation {
-                activeTimerAlert = TimerAlert(
-                    title: "Cycle Alert",
-                    message: "30 min left for completing your cycle for a day",
-                    backgroundColor: .purple.opacity(0.7)
-                )
-                didShowCycleViolation = true
-                print(" Cycle 30min warning: Worked \(workingTime/3600) hours, \(remainingTime/3600) hours remaining")
-            }
-            else if workingTime >= warningAt15Min && workingTime < violationThreshold && !didShowCycleViolation {
-                activeTimerAlert = TimerAlert(
-                    title: "Cycle Alert",
-                    message: "15 minutes left For completing your Cycle Of The Day",
-                    backgroundColor: .orange
-                )
-                didShowCycleViolation = true
-                print(" Cycle 15min warning: Worked \(workingTime/3600) hours, \(remainingTime/3600) hours remaining")
-            }
-            else if workingTime >= violationThreshold && !didShowCycleViolation {
-                activeTimerAlert = TimerAlert(
-                    title: "Cycle Violation",
-                    message: "Your weekly cycle has been exceeded to 70 hours",
-                    backgroundColor: .red.opacity(0.9),
-                    isViolation: true
-                )
-                didShowCycleViolation = true
-                print(" Cycle violation: Worked \(workingTime/3600) hours, exceeded limit!")
-            }
-        }
+            // MARK: - Cycle Timer Violation Logic with Working Time
+                .onReceive(cycleTimerOn.$remainingTime) { remainingTime in
+                    
+                 //   let totalCycleTime = CountdownTimer.timeStringToSeconds("70:00:00") // 70 hours in seconds
+                    let totalCycleTime = DriverInfo.cycleTime ?? 252000
+                    let workingTime = Double(totalCycleTime) - remainingTime
+                    let violationThreshold = totalCycleTime
+                    
+                    print(" Cycle 30min warning: Worked \(workingTime/3600) hours, \(remainingTime/3600) hours remaining")
+                    
+                    if Int(workingTime) >= violationThreshold && !didShowViolation {
+                        activeTimerAlert = TimerAlert(
+                            title: "On-Drive Violation",
+                            message:  "Your Cycle time has been exceeded to 70 hours \(times.local) GMT \(times.gmt)",
+                            backgroundColor: .red.opacity(0.9),
+                            isViolation: true
+                        )
+                        didShowViolation = true
+                        print("Violation fired once")
+                        DatabaseManager.shared.updateVoilation(
+                            isVoilation: true,
+                            DutyType: "Your Cycle time has been exceeded to 70 hours \(times.local) GMT \(times.gmt)"
+                        )
+                        
+                    }
+//                    else {
+//                        // 30-min warning (safe unwrap)
+//                        if let warning1 = DriverInfo.setWarningOnDriveTime1,
+//                           workingTime >= warning1,
+//                           !didShow30MinWarning {
+//                            activeTimerAlert = TimerAlert(
+//                                title: "Cycle Time Reminder",
+//                                message: "30 minutes left for completing your  cycle of the Week \(times.local) GMT \(times.gmt)",
+//                                backgroundColor: .yellow
+//                            )
+//                            didShow30MinWarning = true
+//                            print("30min warning fired once")
+//                            DatabaseManager.shared.updateVoilation(
+//                                isVoilation: false,
+//                                DutyType: "30 minutes left before Cycle time exceeds \(times.local) GMT \(times.gmt)"
+//                            )
+//                        }
+//                        
+//                        // 15-min warning (safe unwrap)
+//                        else if let warning2 = DriverInfo.setWarningOnDriveTime2,
+//                                
+//                                workingTime >= warning2,
+//                                !didShow15MinWarning {
+//                            activeTimerAlert = TimerAlert(
+//                                title: "cycle Alert",
+//                                message: "15 minutes left for completing your  cycle of the week \(times.local) GMT \(times.gmt)",
+//                                backgroundColor: .orange
+//                            )
+//                            didShow15MinWarning = true
+//                            print("15min warning fired once")
+//                            DatabaseManager.shared.updateVoilation(
+//                                isVoilation: false,
+//                                DutyType: "15 minutes left before Cycle time exceeds  \(times.local) GMT \(times.gmt)"
+//                            )
+//                        }
+//                    }
 
+                    
+                  
+                }
+            
+            
         // MARK: - Continue Drive Timer Violation Logic with Working Time
-        .onReceive(dutyTimerOn.$remainingTime) { remainingTime in
-            
-            // Calculate working time = Total time - Remaining time
-            let totalContinueDriveTime = CountdownTimer.timeStringToSeconds("08:00:00") // 8 hours in seconds
-            let workingTime = totalContinueDriveTime - remainingTime
-            
-            // Define warning thresholds based on working time
-            let warningAt30Min = totalContinueDriveTime - 1800  // Show warning when 30 min left
-            let warningAt15Min = totalContinueDriveTime - 900   // Show warning when 15 min left
-            let violationThreshold = totalContinueDriveTime     // Violation when total time exceeded
-            
-            // Check violations based on working time
-            if workingTime >= warningAt30Min && workingTime < warningAt15Min && !didShowContinusDrivingVoilation {
-                activeTimerAlert = TimerAlert(
-                    title: "Continue Drive",
-                    message: "30 min left for completing your ONDuty cycle for a day",
-                    backgroundColor: Color(uiColor: .wine).opacity(0.6)
-                )
-                didShowContinusDrivingVoilation = true
-                print(" Continue Drive 30min warning: Worked \(workingTime/3600) hours, \(remainingTime/3600) hours remaining")
-            }
-            else if workingTime >= warningAt15Min && workingTime < violationThreshold && !didShowContinusDrivingVoilation {
-                activeTimerAlert = TimerAlert(
-                    title: "Continue Drive Alert",
-                    message: "15 min left for completing your ONDuty cycle for a day",
-                    backgroundColor: .orange
-                )
-                didShowContinusDrivingVoilation = true
-                print(" Continue Drive 15min warning: Worked \(workingTime/3600) hours, \(remainingTime/3600) hours remaining")
-            }
-            else if workingTime >= violationThreshold && !didShowContinusDrivingVoilation {
-                activeTimerAlert = TimerAlert(
-                    title: "Continue Drive Violation",
-                    message: "You are continuously driving for 8 hours",
-                    backgroundColor: .red.opacity(0.9),
-                    isViolation: true
-                )
-                didShowContinusDrivingVoilation = true
-                print(" Continue Drive violation: Worked \(workingTime/3600) hours, exceeded limit!")
-            }
-        }
         
-        .onReceive(sleepTimer.$remainingTime) { remaining in
-          //  let totalSleepingTime = DriverInfo.onSleepTime ?? 36000 // default 10h
-            
-            print("Remaining Sleep Time: \(remaining)")
-            
-            if remaining <= 0 && !showSleepResetPopup {
-                showSleepResetPopup = true
-                hasShownSleepResetPopup =  true
-            }
-        }
-
-
-        .alert(isPresented: $showSleepResetPopup) {
-            let safeDay = daysCount ?? 1
-            let safeShift = ShiftCurrentDay ?? 1
-            
-            return Alert(
-                title: Text("Next Day Start"),
-                message: Text("Day \(safeDay)\nShift \(safeShift)"),
-                dismissButton: .default(Text("OK")) {
-                    daysCount = safeDay + 1
-                    ShiftCurrentDay = safeShift
+                .onReceive(driveTimer.$remainingTime) { remainingTime in
+                    let totalDriveTime = DriverInfo.continueDriveTime ?? 0
+                    let workingTime = Double(totalDriveTime) - remainingTime
+                    let violationThreshold = Double(totalDriveTime)
                     
+                    print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
                     
-                  //  Save updated values in UserDefaults
-                                UserDefaults.standard.set(daysCount, forKey: "days")
-                                UserDefaults.standard.set(ShiftCurrentDay, forKey: "shift")
-                                print("Updated Day: \(daysCount ?? 0), Shift: \(ShiftCurrentDay ?? 0)")
-                    
-                    
-                    DatabaseManager.shared.updateDayShiftInDB(
-                               day: daysCount ?? 1,
-                               shift: ShiftCurrentDay ?? 1,
-                               userId: UserDefaults.standard.integer(forKey: "userId")
-                           )
-                           
-                    
-                    // Reset timers with API values
-                    let sleepTime = DriverInfo.onSleepTime ?? 36000.0
-                    let onDutyTime = DriverInfo.onDutyTime ?? 50400.0
-                    let onDriveTime = DriverInfo.onDriveTime ?? 39600.0
-                    
-                    sleepTimer.resetsSleep(to: sleepTime)
-                    ONDuty.resetsSleep(to: onDutyTime)
-                    driveTimer.resetsSleep(to: onDriveTime)
-                    showSleepResetPopup = false
-                    
-                    // Reset status to Off-Duty after timer reset
-                    confirmedStatus = DriverStatusConstants.offDuty
-                    selectedStatus = DriverStatusConstants.offDuty
-                    
-                    saveNextDayLog()
-
-                    
-                }
-            )
-        }
-
-        
-        
-        
-        //MARK: -  For Deletation Alert
-        .alert("Are you sure you want to delete all data?", isPresented: $showDeleteConfirm) {
-            Button("Delete", role: .destructive) {
-                Task {
-                    if let driverId = DriverInfo.driverId {  //  Get from common storage
-                        await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
-                        showSuccessAlert = true // Show success after API
-                        deleteAllAppData()
-        
+                    //  Violation check at 8:00
+                    if workingTime >= violationThreshold && !didShowViolation {
+                        activeTimerAlert = TimerAlert(
+                            title: "Continue Violation",
+                            message: "Your drive time has been exceeded to 8 hours \(times.local) GMT \(times.gmt)",
+                            backgroundColor: .red.opacity(0.9),
+                            isViolation: true
+                        )
+                        didShowViolation = true
+                        print("Violation fired once")
+                        DatabaseManager.shared.updateVoilation(
+                            isVoilation: true,
+                          DutyType: "Your drive time has been exceeded to 8 hours \(times.local) GMT \(times.gmt)"
+                        )
                     } else {
-                        print(" Driver ID not found in UserDefaults")
+                        //  30-min warning at 7:30 (27000s)
+                        let warning30Min = 27000
+                        if Int(workingTime) >= warning30Min && !didShow30MinWarning {
+                            activeTimerAlert = TimerAlert(
+                                title: "Continue Drive Reminder",
+                                message: "30 minutes left before reaching 8 hours  \(times.local) GMT \(times.gmt)",
+                                backgroundColor: .yellow
+                            )
+                            didShow30MinWarning = true
+                            print("30min warning fired once")
+                            DatabaseManager.shared.updateVoilation(
+                                isVoilation: false,
+                                DutyType: "30 minutes left before Continue Drive time exceeds \(times.local) GMT \(times.gmt)"
+                            )
+                        }
+                        
+                        //  15-min warning at 7:45 (27900s)
+                        let warning15Min = 27900
+                        if Int(workingTime) >= warning15Min && !didShow15MinWarning {
+                            activeTimerAlert = TimerAlert(
+                                title: "Continue Drive Alert",
+                                message: "15 minutes left before reaching 8 hours  \(times.local) GMT \(times.gmt)",
+                                backgroundColor: .orange
+                            )
+                            didShow15MinWarning = true
+                            print("15min warning fired once")
+                            DatabaseManager.shared.updateVoilation(
+                                isVoilation: false,
+                                DutyType: "15 minutes left before Continue Drive time exceeds  \(times.local) GMT \(times.gmt)"
+                            )
+                        }
                     }
                 }
-         
-            }
-            
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This will permanently delete all logs Record.")
-        }
-       //MARK: - Showing Refresh Log alert
-        .alert("Are you sure you want to refresh all logs?", isPresented: $showSyncconfirmation) {
-            Button("Cancel", role: .cancel) {}
-            Button("OK", role: .destructive) {
-                Task {
-                    await viewModel.refresh()   //  Call your refresh API
-                   
+
+        
+        
+                .onReceive(sleepTimer.$remainingTime) { remaining in
+                    print("Remaining Sleep Time: \(remaining)")
+                    
+                    if remaining <= 0 && !showSleepResetPopup {
+                        showSleepResetPopup = true
+                        hasShownSleepResetPopup =  true
+                    }
                 }
-            }
-        } message: {
-            Text("This will refresh all your local logs with the server.")
-        }
-
-
-        //MARK: -   Success alert after deletion
-        .alert("Success", isPresented: $showSuccessAlert) {
-            Button("OK", role: .cancel) {
-                navmanager.navigate(to: AppRoute.Login)}
             
-        } message: {
-            Text("Data deleted successfully.")
+            
+                .alert(isPresented: $showSleepResetPopup) {
+                    let safeDay = daysCount ?? 1
+                    let safeShift = ShiftCurrentDay ?? 1
+                    
+                    return Alert(
+                        title: Text("Next Day Start"),
+                        message: Text("Day \(safeDay)\nShift \(safeShift)"),
+                        dismissButton: .default(Text("OK")) {
+                            daysCount = safeDay + 1
+                            ShiftCurrentDay = safeShift
+                            
+                            
+                            //  Save updated values in UserDefaults
+                            UserDefaults.standard.set(daysCount, forKey: "days")
+                            UserDefaults.standard.set(ShiftCurrentDay, forKey: "shift")
+                            print("Updated Day: \(daysCount ?? 0), Shift: \(ShiftCurrentDay ?? 0)")
+                            
+                            
+                            DatabaseManager.shared.updateDayShiftInDB(
+                                day: daysCount ?? 1,
+                                shift: ShiftCurrentDay ?? 1,
+                                userId: UserDefaults.standard.integer(forKey: "userId")
+                            )
+                            
+                            
+                            // Reset timers with API values
+                            let sleepTime = DriverInfo.onSleepTime ?? 36000.0
+                            let onDutyTime = DriverInfo.onDutyTime ?? 50400.0
+                            let onDriveTime = DriverInfo.onDriveTime ?? 39600.0
+                            
+                            sleepTimer.resetsSleep(to: sleepTime)
+                            ONDuty.resetsSleep(to: onDutyTime)
+                            driveTimer.resetsSleep(to: onDriveTime)
+                            showSleepResetPopup = false
+                            
+                            // Reset status to Off-Duty after timer reset
+                            confirmedStatus = DriverStatusConstants.offDuty
+                            selectedStatus = DriverStatusConstants.offDuty
+                            
+                            saveNextDayLog()
+                            
+                            
+                        }
+                    )
+                }
+            
+            
+            
+            
+            //MARK: -  For Deletation Alert
+                .alert("Are you sure you want to delete all data?", isPresented: $showDeleteConfirm) {
+                    Button("Delete", role: .destructive) {
+                        Task {
+                            if let driverId = DriverInfo.driverId {  //  Get from common storage
+                                await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
+                                showSuccessAlert = true // Show success after API
+                                deleteAllAppData()
+                                
+                            } else {
+                                print(" Driver ID not found in UserDefaults")
+                            }
+                        }
+                        
+                    }
+                    
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("This will permanently delete all logs Record.")
+                }
+            //MARK: - Showing Refresh Log alert
+                .alert("Are you sure you want to refresh all logs?", isPresented: $showSyncconfirmation) {
+                    Button("Cancel", role: .cancel) {}
+                    Button("OK", role: .destructive) {
+                        Task {
+                            await viewModel.refresh()   //  Call your refresh API
+                            
+                        }
+                    }
+                } message: {
+                    Text("This will refresh all your local logs with the server.")
+                }
+            
+            
+            //MARK: -   Success alert after deletion
+                .alert("Success", isPresented: $showSuccessAlert) {
+                    Button("OK", role: .cancel) {
+                        navmanager.navigate(to: AppRoute.Login)}
+                    
+                } message: {
+                    Text("Data deleted successfully.")
+                }
+            
+                .navigationBarBackButtonHidden()
         }
-
-        .navigationBarBackButtonHidden()
-    }
     
           //MARK: Function to Show Banner for 3 seconds
         func showToast(message: String, color: Color) {
@@ -1523,7 +1622,7 @@ struct HomeScreenView: View {
         let totalRest = offDutySleepAccumulated
          
         if totalRest >= 10 * 3600 {
-            print(" 10-hour reset reached. Resetting all timers except Cycle Timer.")
+            print("10-hour reset reached. Resetting all timers except Cycle Timer.")
 
             // Stop all timers
             driveTimer.stop()
@@ -1630,7 +1729,7 @@ struct HomeScreenView: View {
             selectedStatus = currentStatus
         }
         
-        print("✅ Status restored - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
+        print("&&&&&&&&&&&& Status restored - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
         
         // Force stop all timers first
         driveTimer.stop()
@@ -1640,7 +1739,7 @@ struct HomeScreenView: View {
         
         
         // Always restore ALL timer values from database, regardless of current status
-        print("🔄 Restoring ALL timer values from database")
+        print(" &&&&&&&&&&&&Restoring ALL timer values  &&&&&&&&&&&& from database &&&&&&&&&&&& ")
 
         
         // Restore OnDuty timer
@@ -1808,7 +1907,6 @@ struct HomeScreenView: View {
         }
     }
 
-    // MARK: - Delete All App Data
     // MARK: - Delete All App Data
     func deleteAllAppData() {
         print(" Starting to delete all app data...")

@@ -61,7 +61,6 @@ class HOSEventsChartViewModel: ObservableObject {
             let endTime =  isLastEvent ? Date() : log.endTime // Use current time for last event
             
             print("\(normalizedStatus) End Time \(log.endTime)")
-
 //            let isLastEvent = index == logs.count - 1
 //            let nextStart = isLastEvent ? Date() : logs[index + 1].startTime
 //            let endTime = min(log.endTime, nextStart)
@@ -77,7 +76,6 @@ class HOSEventsChartViewModel: ObservableObject {
                 dutyType: normalizedStatus
             )
         }
-
         // Force immediate UI update
         DispatchQueue.main.async {
             self.refreshTrigger = UUID()
@@ -121,11 +119,13 @@ class HOSEventsChartViewModel: ObservableObject {
 
 // MARK: - Grid Lines View
 struct GridLinesView: View {
+    
     let width: CGFloat
     let height: CGFloat
     let hourWidth: CGFloat
     
     var body: some View {
+        
         Canvas { context, size in
             // Draw vertical hour lines
             for hour in 0...24 {
@@ -147,7 +147,7 @@ struct GridLinesView: View {
                 context.stroke(path, with: .color(.gray.opacity(0.3)), lineWidth: 0.5)
             }
             
-            // Draw quarter hour marks with precise positioning
+            // Draw quarter hour marks with precise posit.ioning
             for hour in 0..<24 {
                 let hourX = CGFloat(hour) * hourWidth
                 for quarter in 1...3 {
@@ -270,8 +270,6 @@ struct DutyLinePathView: View {
         }
     }
 }
-
-
 
 // Add safe array access extension
 extension Array {

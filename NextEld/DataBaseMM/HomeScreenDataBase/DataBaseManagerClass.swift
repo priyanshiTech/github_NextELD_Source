@@ -684,7 +684,7 @@ func updateDayShiftInDB(day: Int, shift: Int, userId: Int) {
     }
 }
 
-    func updateVoilation(isVoilation: Bool , status: String) {
+    func updateVoilation(isVoilation: Bool , DutyType: String) {
         let voilationValue = isVoilation ? 1 : 0
         guard let db = db else { return }
         do {
