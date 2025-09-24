@@ -377,6 +377,7 @@ extension DatabaseManager {
     func saveTimerLog(
         status: String,
         startTime: String,
+        dutyType: String,
         remainingWeeklyTime: String,
         remainingDriveTime: String,
         remainingDutyTime: String,
