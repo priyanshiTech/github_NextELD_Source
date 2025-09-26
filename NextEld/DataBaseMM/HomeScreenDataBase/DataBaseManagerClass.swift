@@ -33,6 +33,7 @@ class DatabaseManager {
     let userId = Expression<Int>("userId")
     let day = Expression<Int>("day")
     let isVoilationColumn = Expression<Int>("isVoilation")
+  //  let isVoilationColumn = Expression<String>("isVoilation")
     let dutyType = Expression<String>("dutyType")
     let shift = Expression<Int>("shift")
     let vehicleName = Expression<String>("vehicleName") //instead of vehicle
@@ -114,10 +115,11 @@ class DatabaseManager {
         var logs: [DriverLogModel] = []
         do {
             for row in try db!.prepare(driverLogs) {
-                let violationValue = (try? row.get(isVoilationColumn)) ?? 0
+                
+               // let violationValue = "\((try? row.get(isVoilationColumn)) ?? 0)"
                             
                             //  Print before appending
-                print("📌 [DB LOG] Status: \(row[status]), isViolation: \(violationValue)")
+               // print(" [DB LOG] Status: \(row[status]), isViolation: \(violationValue)")
                 logs.append(DriverLogModel(
 
                     id: row[id],
@@ -126,6 +128,7 @@ class DatabaseManager {
                     userId: row[userId],
                     day: row[day],
                     isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
+                   // isVoilations: "\(try row.get(isVoilationColumn))",
                     dutyType: row[dutyType],
                     shift: row[shift],
                     vehicle: row[vehicleName] ,
@@ -386,6 +389,8 @@ extension DatabaseManager {
         RemaningRestBreak: String,
         isruning: Bool,
         isVoilations: Bool = false
+        //isVoilations: String
+
     ) {
         let log = DriverLogModel(
             id: nil,
@@ -394,7 +399,7 @@ extension DatabaseManager {
             userId: UserDefaults.standard.integer(forKey: "userId"),
             day: UserDefaults.standard.integer(forKey: "day"),
             isVoilations: isVoilations ? 1 : 0,   //  Actual Bool → Int
-            dutyType: status,
+            dutyType: dutyType,
             shift: UserDefaults.standard.integer(forKey: "shift"),
             vehicle: UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
             isRunning: isruning,
@@ -403,7 +408,7 @@ extension DatabaseManager {
             location: UserDefaults.standard.string(forKey: "customLocation") ?? "",
             lat: Double(UserDefaults.standard.string(forKey: "lattitude") ?? "") ?? 0,
             long: Double(UserDefaults.standard.string(forKey: "longitude") ?? "") ?? 0,
-            origin:     DriverInfo.origins /*UserDefaults.standard.string(forKey: "origin") ?? "Null"*/,
+            origin: DriverInfo.origins                                                   /*UserDefaults.standard.string(forKey: "origin") ?? "Null"*/,
             isSynced: false,
             vehicleId: UserDefaults.standard.integer(forKey: "vehicleId"),
             trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
@@ -436,6 +441,7 @@ extension DatabaseManager {
         let userId: Int
         let day: Int
         let isVoilations: Int
+       // let isVoilations: String
         let dutyType: String
         let shift: Int
         let vehicle: String
@@ -481,8 +487,35 @@ extension DatabaseManager {
             }
         }
     }
-    
-    
+    //MARK: - - SAVE And updated
+extension DatabaseManager {
+    func updateDayShiftInDB(day: Int, shift: Int, userId: Int) {
+        guard let db = db else { return }
+        do {
+            if let row = try db.pluck(
+                driverLogs
+                    .filter(self.userId == userId)
+                    .order(timestamp.desc)
+                    .limit(1)
+            ) {
+                let logId = row[id]
+                let log = driverLogs.filter(id == logId)
+                
+                try db.run(log.update(self.day <- day, self.shift <- shift))
+                print(" DB Updated → Day: \(day), Shift: \(shift) for logId: \(logId)")
+                
+                // keep DatabaseManager cache also updated
+                self.lastDay = day
+                self.lastShift = shift
+            } else {
+                print(" No recent row found to update Day/Shift")
+            }
+        } catch {
+            print(" Error updating day/shift in DB: \(error)")
+        }
+    }
+}
+
     //MARK++++++++++++++++++for hours recap
 
 extension DatabaseManager {
@@ -581,7 +614,6 @@ extension DatabaseManager {
                     if duration <= 2 * 3600 { dutySeconds += duration }
                 }
             }
-
             return dutySeconds
         }
 
@@ -591,7 +623,6 @@ extension DatabaseManager {
             let limit: TimeInterval = 14 * 3600
             return max(0, limit - worked)
         }
-
         /// Helper to format TimeInterval → HH:mm:ss
         func formatTime(_ seconds: TimeInterval) -> String {
             let hrs = Int(seconds) / 3600
@@ -646,45 +677,46 @@ extension DatabaseManager {
                 if duration <= 2 * 3600 { dutySeconds += duration }
             }
         }
-        
         // Cycle rule: 60h/7days
         let cycleLimit: TimeInterval = TimeInterval(limitHours * 3600)
         return max(0, cycleLimit - dutySeconds)
     }
-
+  
 }
-
-
-
 
 //MARK: - - SAVE And updated
 extension DatabaseManager {
-func updateDayShiftInDB(day: Int, shift: Int, userId: Int) {
-    guard let db = db else { return }
-    do {
-        if let row = try db.pluck(
-            driverLogs
-                .filter(self.userId == userId)
-                .order(timestamp.desc)
-                .limit(1)
-        ) {
-            let logId = row[id]
-            let log = driverLogs.filter(id == logId)
-            
-            try db.run(log.update(self.day <- day, self.shift <- shift))
-            print(" DB Updated → Day: \(day), Shift: \(shift) for logId: \(logId)")
-            
-            // keep DatabaseManager cache also updated
-            self.lastDay = day
-            self.lastShift = shift
-        } else {
-            print(" No recent row found to update Day/Shift")
-        }
-    } catch {
-        print(" Error updating day/shift in DB: \(error)")
-    }
-}
 
+    //MARK: -  to show a voilations today helping function in once a time
+      func hasViolationForToday(violationType: String) -> Bool {
+           guard let db = db else { return false }
+
+           do {
+               // Get today's date string
+               let formatter = DateFormatter()
+               formatter.dateFormat = "yyyy-MM-dd"
+               let todayString = formatter.string(from: Date())
+
+               // Check if there's already a violation for today with the same type
+               let query = driverLogs.filter(
+                   isVoilationColumn == 1 &&
+                   status == "Violation" &&
+                   dutyType.like("%\(violationType)%") &&
+                   startTime.like("\(todayString)%")
+               )
+
+               let count = try db.scalar(query.count)
+               print("Found \(count) violations for today with type: \(violationType)")
+               return count > 0
+
+           } catch {
+               print("Error checking violation for today: \(error)")
+               return false
+           }
+       }
+
+    
+    
     func updateVoilation(isVoilation: Bool , DutyType: String) {
         let voilationValue = isVoilation ? 1 : 0
         guard let db = db else { return }
@@ -708,7 +740,112 @@ func updateDayShiftInDB(day: Int, shift: Int, userId: Int) {
         }
     }
    
+    
+    // Add these methods inside the DatabaseManager extension (after hasViolationForToday)
+
+    func hasWarningForToday(warningType: String) -> Bool {
+        guard let db = db else { return false }
+        
+        do {
+            // Get today's date string
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            let todayString = formatter.string(from: Date())
+            
+            // Check if there's already a warning for today with the same type
+            let query = driverLogs.filter(
+                isVoilationColumn == 0 &&
+                status == "Warning" &&
+                dutyType.like("%\(warningType)%") &&
+                startTime.like("\(todayString)%")
+            )
+            
+            let count = try db.scalar(query.count)
+            print("Found \(count) warnings for today with type: \(warningType)")
+            return count > 0
+            
+        } catch {
+            print("Error checking warning for today: \(error)")
+            return false
+        }
+    }
+
+    func hasAnyViolationOrWarningForToday() -> (hasViolation: Bool, has30MinWarning: Bool, has15MinWarning: Bool) {
+        guard let db = db else { return (false, false, false) }
+        
+        do {
+            // Get today's date string
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            let todayString = formatter.string(from: Date())
+            
+            // Check for violations
+            let violationQuery = driverLogs.filter(
+                isVoilationColumn == 1 &&
+                status == "Violation" &&
+                startTime.like("\(todayString)%")
+            )
+            let violationCount = try db.scalar(violationQuery.count)
+            
+            // Check for 30min warnings
+            let warning30Query = driverLogs.filter(
+                isVoilationColumn == 0 &&
+                status == "Warning" &&
+                dutyType.like("%30 minutes%") &&
+                startTime.like("\(todayString)%")
+            )
+            let warning30Count = try db.scalar(warning30Query.count)
+            
+            // Check for 15min warnings
+            let warning15Query = driverLogs.filter(
+                isVoilationColumn == 0 &&
+                status == "Warning" &&
+                dutyType.like("%15 minutes%") &&
+                startTime.like("\(todayString)%")
+            )
+            let warning15Count = try db.scalar(warning15Query.count)
+            
+            return (
+                hasViolation: violationCount > 0,
+                has30MinWarning: warning30Count > 0,
+                has15MinWarning: warning15Count > 0
+            )
+            
+        } catch {
+            print("Error checking violations/warnings for today: \(error)")
+            return (false, false, false)
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -770,21 +907,21 @@ func updateDayShiftInDB(day: Int, shift: Int, userId: Int) {
 ///// Returns the last saved (day, shift) for a given userId
 //func getLastDayAndShift(for userIdValue: Int) -> (day: Int, shift: Int) {
 //    guard let db = db else { return (1, 1) } //  default 1,1
-//    
+//
 //    do {
 //        let query = driverLogs
 //            .filter(userId == userIdValue && (isVoilationColumn == 0 || isVoilationColumn == 1))
 //            .order(timestamp.desc)
 //            .limit(1)
-//        
+//
 //        if let row = try db.pluck(query) {
 //            var lastDay = row[day]
 //            var lastShift = row[shift]
-//            
+//
 //            //  Agar value 0 aayi to bhi default 1 le lo
 //            if lastDay == 0 { lastDay = 1 }
 //            if lastShift == 0 { lastShift = 1 }
-//            
+//
 //            print(" Last recent log found → Day: \(lastDay), Shift: \(lastShift)")
 //            return (lastDay, lastShift)
 //        } else {
@@ -793,7 +930,7 @@ func updateDayShiftInDB(day: Int, shift: Int, userId: Int) {
 //    } catch {
 //        print(" Error fetching last day/shift: \(error)")
 //    }
-//    
+//
 //    return (1, 1) //  Default agar data na mile
 //}
 //}
