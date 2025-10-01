@@ -750,10 +750,9 @@ struct HomeScreenView: View {
                                     
                                     // Check if coming from On-Drive status to start break timer
                                     if previousStatus == DriverStatusConstants.onDrive {
-                                        // Reset break timer to 30 minutes and start it when coming from On-Drive
-                                        breakTime.reset(startTime: 30 * 60)
+                                        // Start break timer (don't reset - keep current time)
                                         breakTime.start()
-                                        print(" Break timer reset to 30 minutes and started when switching from On-Drive to On-Duty")
+                                        print(" Break timer started when switching from On-Drive to On-Duty (not reset)")
                                         
                                         // Save or update continue drive data to database
                                         let formatter = DateFormatter()
@@ -849,23 +848,9 @@ struct HomeScreenView: View {
                                 }
                                 
                                 if selected == DriverStatusConstants.onSleep {
-                                    // Check if coming from On-Drive status to start break timer
-                                    if previousStatus == DriverStatusConstants.onDrive {
-                                        // Reset break timer to 30 minutes and start it when coming from On-Drive
-                                        breakTime.reset(startTime: 30 * 60)
-                                        breakTime.start()
-                                        print(" Break timer reset to 30 minutes and started when switching from On-Drive to Sleep")
-                                        
-                                    } else {
-                                        // Reset break timer to 30 minutes when switching to Sleep (incomplete break)
-                                        if breakTime.remainingTime < 30 * 60 {
-                                            breakTime.reset(startTime: 30 * 60)
-                                            print(" Break timer reset to 30 minutes (incomplete break: \(breakTime.timeString))")
-                                        } else {
-                                            breakTime.stop()
-                                            print("Break timer stopped when switching to Sleep")
-                                        }
-                                    }
+                                    // Keep break timer running when switching to Sleep (don't reset)
+                                    breakTime.start()
+                                    print(" Break timer continues running when switching to Sleep (not reset)")
                                     
                                     sleepTimer.start()
                                     let totalWorked = totalDutyLast7or8Days()
@@ -943,14 +928,9 @@ struct HomeScreenView: View {
                                 else if selected == DriverStatusConstants.offDuty {
                                     print(" Switching to OffDuty - Timers already saved")
                                     
-                                    // Reset break timer to 30 minutes when switching to Off-Duty (incomplete break)
-                                    if breakTime.remainingTime < 30 * 60 {
-                                        breakTime.reset(startTime: 30 * 60)
-                                        print(" Break timer reset to 30 minutes (incomplete break: \(breakTime.timeString))")
-                                    } else {
-                                        breakTime.stop()
-                                        print("Break timer stopped when switching to Off-Duty")
-                                    }
+                                    // Keep break timer running when switching to Off-Duty (don't reset)
+                                    breakTime.start()
+                                    print(" Break timer continues running when switching to Off-Duty (not reset)")
                                     
                                     // Update saved states with current values before stopping
                                     savedOnDutyRemaining = ONDuty.remainingTime
