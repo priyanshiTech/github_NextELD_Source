@@ -445,6 +445,8 @@ struct HomeScreenView: View {
     @StateObject var restBreakTimer = CountdownTimer(startTime: 0)
     @StateObject var breakTime: CountdownTimer
     
+    @State private var isBreakTimerCompleted: Bool = false  // Track if break timer completed
+    
     @State private var  TimeZone : String = ""
     @State private var  TimeZoneOffSet : String = ""
     @State private var hasAppearedBefore = false
@@ -1010,19 +1012,27 @@ struct HomeScreenView: View {
                                 dutyManager.dutyStatus = selected
                                 print("Previous status: \(previousStatus ?? "nil"), New status: \(selected)")
                                 
+                                //MARK: -  Check if break timer was completed and delete database entry
+                                if isBreakTimerCompleted {
+                                    print(" Break timer was completed - deleting Continue Drive database entry")
+                                    ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+                                    print(" Continue Drive database entry deleted - break was completed")
+                                    isBreakTimerCompleted = false  // Reset flag
+                                } else {
+                                    //MARK: -  Clear break time in Continue Drive database entry
+                                    let latestEntry = ContinueDriveDBManager.shared.fetchLatestContinueDriveData()
+                                    if let latest = latestEntry {
+                                        ContinueDriveDBManager.shared.updateLatestContinueDriveData(
+                                            breakTime: "" // Clear break time
+                                        )
+                                        print(" Break time cleared in Continue Drive database entry")
+                                    }
+                                }
+                                
                                 // Reset break timer to 30 minutes and stop when switching to On-Drive
                                 breakTime.reset(startTime: 30 * 60)
                                 breakTime.stop()
                                 print(" Break timer reset to 30 minutes and stopped when switching to On-Drive")
-                                
-                                //MARK: -  Clear break time in Continue Drive database entry
-                                let latestEntry = ContinueDriveDBManager.shared.fetchLatestContinueDriveData()
-                                if let latest = latestEntry {
-                                    ContinueDriveDBManager.shared.updateLatestContinueDriveData(
-                                        breakTime: "" // Clear break time
-                                    )
-                                    print(" Break time cleared in Continue Drive database entry")
-                                }
                                 
                                 // Reset NEXTDAY popup flag when starting new work day
                                 if selected == DriverStatusConstants.onDuty || selected == DriverStatusConstants.onDrive {
@@ -1573,15 +1583,11 @@ struct HomeScreenView: View {
             .onReceive(breakTime.$remainingTime) { remaining in
                 print("Remaining Break Time: \(remaining)")
                 
-                // Check if break timer has completed (30 minutes = 0) AND status is Driver
-                if remaining <= 0 && confirmedStatus == DriverStatusConstants.onDrive {
-                    print(" Break timer completed - 30 minutes break finished AND status is Driver")
-                    
-                    // Delete Continue Drive database entry when break is complete and status is Driver
-                    ContinueDriveDBManager.shared.deleteAllContinueDriveData()
-                    print(" Continue Drive database entry deleted - break completed with Driver status")
-                } else if remaining <= 0 {
-                    print(" Break timer completed but status is not Driver - no data deletion")
+                // Check if break timer has completed (30 minutes = 0)
+                if remaining <= 0 {
+                    print(" Break timer completed - 30 minutes break finished")
+                    isBreakTimerCompleted = true  // Set flag that break is completed
+                    print(" Break timer completion flag set to true")
                 }
             }
             
