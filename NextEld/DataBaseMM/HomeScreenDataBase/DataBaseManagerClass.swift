@@ -681,7 +681,6 @@ extension DatabaseManager {
         let cycleLimit: TimeInterval = TimeInterval(limitHours * 3600)
         return max(0, cycleLimit - dutySeconds)
     }
-  
 }
 
 //MARK: - - SAVE And updated

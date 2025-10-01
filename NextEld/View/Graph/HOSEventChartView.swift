@@ -14,6 +14,8 @@ struct HOSEvent: Identifiable {
         case "ON_DUTY": return .blue
         case "DRIVE": return .green
         case "SLEEP": return .gray
+        case "PERSONAL_USE": return .orange
+        case "YARD_MOVE": return .blue
         default: return .gray
         }
     }
@@ -21,6 +23,7 @@ struct HOSEvent: Identifiable {
 
 
 class HOSEventsChartViewModel: ObservableObject {
+    
     @Published var events: [HOSEvent] = []
     @Published var refreshTrigger = UUID()
     @Published var currentStatus: String = "OFF_DUTY"
@@ -58,14 +61,10 @@ class HOSEventsChartViewModel: ObservableObject {
         self.events = logs.enumerated().map { index, log in
             let normalizedStatus = normalizeStatus(log.status)
             let isLastEvent = index == logs.count - 1
-            let endTime =  isLastEvent ? Date() : log.endTime // Use current time for last event
+            let endTime = isLastEvent ? Date() : log.endTime // Use current time for last event
+
+
             
-            print("\(normalizedStatus) End Time \(log.endTime)")
-//            let isLastEvent = index == logs.count - 1
-//            let nextStart = isLastEvent ? Date() : logs[index + 1].startTime
-//            let endTime = min(log.endTime, nextStart)
-
-
             print(" Chart Event: \(log.status) -> \(normalizedStatus) (Color: \(normalizedStatus == "OFF_DUTY" ? "Orange" : normalizedStatus == "ON_DUTY" ? "Blue" : normalizedStatus == "DRIVE" ? "Green" : "Gray"))")
             
             return HOSEvent(
@@ -76,11 +75,13 @@ class HOSEventsChartViewModel: ObservableObject {
                 dutyType: normalizedStatus
             )
         }
+
         // Force immediate UI update
         DispatchQueue.main.async {
             self.refreshTrigger = UUID()
         }
     }
+
 
     // MARK: - Timer that updates the last event's end_time every second
     func startLiveUpdateTimer() {
@@ -96,10 +97,14 @@ class HOSEventsChartViewModel: ObservableObject {
         case "OffDuty": return "OFF_DUTY"
         case "OnSleep": return "SLEEP"
         case "OnDrive": return "DRIVE"
+        case "PersonalUse": return "PERSONAL_USE"
+        case "YardMove": return "YARD_MOVE"
         case "ON-DUTY": return "ON_DUTY"
         case "OFF-DUTY": return "OFF_DUTY"
         case "SLEEP": return "SLEEP"
         case "DRIVE": return "DRIVE"
+        case "PERSONAL_USE": return "PERSONAL_USE"
+        case "YARD_MOVE": return "YARD_MOVE"
         default: return "OFF_DUTY"
         }
     }
@@ -119,13 +124,11 @@ class HOSEventsChartViewModel: ObservableObject {
 
 // MARK: - Grid Lines View
 struct GridLinesView: View {
-    
     let width: CGFloat
     let height: CGFloat
     let hourWidth: CGFloat
     
     var body: some View {
-        
         Canvas { context, size in
             // Draw vertical hour lines
             for hour in 0...24 {
@@ -147,7 +150,7 @@ struct GridLinesView: View {
                 context.stroke(path, with: .color(.gray.opacity(0.3)), lineWidth: 0.5)
             }
             
-            // Draw quarter hour marks with precise posit.ioning
+            // Draw quarter hour marks with precise positioning
             for hour in 0..<24 {
                 let hourX = CGFloat(hour) * hourWidth
                 for quarter in 1...3 {
@@ -168,6 +171,10 @@ struct GridLinesView: View {
     }
 }
 
+
+
+
+
 struct DutyLinePathView: View {
     let events: [HOSEvent]
     let levelMap: [String: Int]
@@ -184,6 +191,13 @@ struct DutyLinePathView: View {
         guard let hour = components.hour, let minute = components.minute else { return nil }
         return (hour * 60) + minute
     }
+    func secondsSinceMidnight(_ date: Date) -> Int? {
+        let calendar = Calendar.current
+        let comps = calendar.dateComponents([.hour, .minute, .second], from: date)
+        guard let h = comps.hour, let m = comps.minute, let s = comps.second else { return nil }
+        return h * 3600 + m * 60 + s
+    }
+
 
     private func normalizeLabel(_ label: String) -> String {
         switch label {
@@ -206,9 +220,13 @@ struct DutyLinePathView: View {
     }
 
     private func isPersonalUse(_ event: HOSEvent) -> Bool {
-        // Customize this condition as per your database flag
-        // Example: If dutyType == "OFF_DUTY" and label contains "Personal Use"
-        return event.dutyType == "OFF_DUTY" && event.label.localizedCaseInsensitiveContains("Personal")
+        // Check if the event is Personal Use
+        return event.dutyType == "PERSONAL_USE" || event.label.localizedCaseInsensitiveContains("Personal")
+    }
+    
+    private func isYardMove(_ event: HOSEvent) -> Bool {
+        // Check if the event is Yard Move
+        return event.dutyType == "YARD_MOVE" || event.label.localizedCaseInsensitiveContains("Yard")
     }
 
     var body: some View {
@@ -217,15 +235,21 @@ struct DutyLinePathView: View {
             guard !sortedEvents.isEmpty else { return }
 
             var lastPoint: CGPoint? = nil
-            
+
             for event in sortedEvents {
                 guard
                     let startMin = minutesSinceMidnight(event.x),
-                    let endMin = minutesSinceMidnight(event.event_end_time),
-                    let level = levelMap[normalizeLabel(event.label)]
+                    let endMin = minutesSinceMidnight(event.event_end_time)
                 else { continue }
-                print("Graph: \(event.dutyType) Start Date=====> \(event.x)")
-                print("Graph: \(event.dutyType) End Date=====> \(event.event_end_time)")
+                
+                // Map Personal Use and Yard Move to OFF_DUTY level (row 0)
+                let level: Int
+                if isPersonalUse(event) || isYardMove(event) {
+                    level = levelMap["OF"] ?? 0
+                } else {
+                    level = levelMap[normalizeLabel(event.label)] ?? 0
+                }
+
                 let startX = CGFloat(startMin) * (hourWidth / 60)
                 let endX = CGFloat(endMin) * (hourWidth / 60)
                 let y = yPositionForLevel(level)
@@ -233,27 +257,30 @@ struct DutyLinePathView: View {
                 var segmentPath = Path()
 
                 if let last = lastPoint {
-                    // Step 1: horizontal from last point to this start
+                    // horizontal from last point to this start
                     segmentPath.move(to: last)
                     segmentPath.addLine(to: CGPoint(x: startX, y: last.y))
-
-                    // Step 2: vertical to new level if changed
+                    //  vertical to new level if changed
                     if last.y != y {
                         segmentPath.addLine(to: CGPoint(x: startX, y: y))
                     }
-
-                    // Step 3: horizontal segment for current event
+                    //horizontal segment for current event
                     segmentPath.addLine(to: CGPoint(x: endX, y: y))
-                } else {
-                    // First segment
+                    } else {
+                    //  segment
                     segmentPath.move(to: CGPoint(x: startX, y: y))
                     segmentPath.addLine(to: CGPoint(x: endX, y: y))
-                }
+                    }
 
                 lastPoint = CGPoint(x: endX, y: y)
-
                 // Draw the line with appropriate color and style
                 if isPersonalUse(event) {
+                    context.stroke(
+                        segmentPath,
+                        with: .color(.orange),
+                        style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [5, 3])
+                    )
+                } else if isYardMove(event) {
                     context.stroke(
                         segmentPath,
                         with: .color(.blue),
@@ -267,9 +294,16 @@ struct DutyLinePathView: View {
                     )
                 }
             }
+            
+            
+
+
         }
     }
 }
+
+
+
 
 // Add safe array access extension
 extension Array {
@@ -291,7 +325,15 @@ struct HOSEventsChart: View {
         var durations: [String: TimeInterval] = [:]
         for event in events {
             let duration = event.event_end_time.timeIntervalSince(event.x)
-            let label = normalizeLabel(event.dutyType)
+            
+            // Group Personal Use and Yard Move with OFF_DUTY
+            let label: String
+            if event.dutyType == "PERSONAL_USE" || event.dutyType == "YARD_MOVE" {
+                label = "OF"  // Group with OFF_DUTY
+            } else {
+                label = normalizeLabel(event.dutyType)
+            }
+            
             durations[label, default: 0] += duration
             print("⏱️ Duration for \(event.dutyType) -> \(label): \(formatDuration(duration))")
         }
@@ -317,6 +359,8 @@ struct HOSEventsChart: View {
         case "SLEEP": return "SB"
         case "DRIVE": return "D"
         case "OFF_DUTY": return "OF"
+        case "PERSONAL_USE": return "PU"
+        case "YARD_MOVE": return "YM"
         default: return "OF"
         }
     }
@@ -387,8 +431,9 @@ struct HOSEventsChart: View {
                     
                     let durations = calculateDurations()
                     ForEach(dutyLabels, id: \.self) { label in
-                        let duration = durations[label] ?? 0
-                        Text(formatDuration(duration))
+                        Text(formatDuration(durations[label] ?? 0))
+//                        let duration = durations[label] ?? 0
+//                        Text(formatDuration(duration))
                             .font(.system(size: 8))
                             .foregroundColor(.black)
                             .frame(height: rowHeight)
@@ -408,7 +453,7 @@ struct HOSEventsChart: View {
 
 // MARK: - Main Container View
 struct HOSEventsChartScreen: View {
-    
+    let currentStatus: String?
     
     @EnvironmentObject var viewModel: HOSEventsChartViewModel
     
@@ -429,15 +474,15 @@ struct HOSEventsChartScreen: View {
                 .id(viewModel.refreshTrigger) //Force redraw when UUID changes
                 .padding(.horizontal, 4)
             
-            HStack {
-                
-                Text("CanvasSF Trial")
-                Spacer()
-                Text("CanvasSF.com")
-                
-            }
-            .font(.caption2)
-            .foregroundColor(.gray)
+//            HStack {
+//              //  Text("CanvasSF Trial")
+//                Spacer()
+//               /// Text("CanvasSF.com")
+//
+//            }
+//            .font(.caption2)
+//            .foregroundColor(.gray)
+            
         }
         .padding(8)  // Reduced padding
         .background(Color.white)
@@ -461,6 +506,123 @@ extension Date {
         return formatter.string(from: self)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

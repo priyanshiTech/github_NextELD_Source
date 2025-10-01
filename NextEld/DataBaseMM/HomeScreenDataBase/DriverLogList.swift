@@ -84,7 +84,7 @@ struct DriverLogListView: View {
 
     }
 }
-
+ 
 
 struct DriverLogHeader: View {
 
@@ -98,7 +98,7 @@ struct DriverLogHeader: View {
             TableCell(text: "UserID", width: 100,isHeader: true)
             TableCell(text: "Day", width: 100,isHeader: true)
             TableCell(text: "isVoilation", width: 100,isHeader: true)
-            TableCell(text: "DutyType", width: 150,isHeader: true)
+            TableCell(text: "DutyType", width: 350,isHeader: true)
             TableCell(text: "Shift", width: 100,isHeader: true)
             TableCell(text: "Location", width: 600,isHeader: true)
             TableCell(text: "Lat", width: 100,isHeader: true)
@@ -138,7 +138,7 @@ struct DriverLogRow: View {
             TableCell(text: "\(DriverInfo.driverId ?? 0)", width: 100)
             TableCell(text: "\(log.day)", width: 100)
             TableCell(text: "\(log.isVoilations)", width: 100)
-            TableCell(text: log.dutyType, width: 150)
+            TableCell(text: log.dutyType, width: 350)
             TableCell(text: "\(log.shift)", width: 100)
            // TableCell(text: log.location, width: 600)
             TableCell(text: DVClocationManager.fullAddress ?? "not found" , width: 600)

@@ -184,7 +184,7 @@ struct EyeViewData: View {
                                 )
 
                                 VStack {
-                                    HOSEventsChartScreen()
+                                    HOSEventsChartScreen(currentStatus: nil)
                                 }
 
                                 VStack(alignment: .leading) {

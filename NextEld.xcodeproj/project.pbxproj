@@ -28,6 +28,8 @@
 		AF04B1BB2DE98DA600A5F3D1 /* SelectLanguagepopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */; };
 		AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */; };
 		AF0F71AF2E34FAA2005F950C /* TrailerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AD2E34FAA2005F950C /* TrailerView.swift */; };
+		AF3F86022E8CF11E00FC9525 /* ContinueDriveDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3F85FF2E8CF11E00FC9525 /* ContinueDriveDB.swift */; };
+		AF3F86032E8CF11E00FC9525 /* ContinueDriveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3F86002E8CF11E00FC9525 /* ContinueDriveView.swift */; };
 		AF58BFD82E69C7CE00F0E765 /* SignatureAddDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */; };
 		AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */; };
 		AF6532A52E66D07000FB2A11 /* SplashScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */; };
@@ -252,6 +254,8 @@
 		AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLanguagepopup.swift; sourceTree = "<group>"; };
 		AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerViewModel.swift; sourceTree = "<group>"; };
 		AF0F71AD2E34FAA2005F950C /* TrailerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerView.swift; sourceTree = "<group>"; };
+		AF3F85FF2E8CF11E00FC9525 /* ContinueDriveDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueDriveDB.swift; sourceTree = "<group>"; };
+		AF3F86002E8CF11E00FC9525 /* ContinueDriveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueDriveView.swift; sourceTree = "<group>"; };
 		AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureAddDvir.swift; sourceTree = "<group>"; };
 		AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashModel.swift; sourceTree = "<group>"; };
 		AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewModel.swift; sourceTree = "<group>"; };
@@ -656,6 +660,15 @@
 				AF0F71AD2E34FAA2005F950C /* TrailerView.swift */,
 			);
 			path = TraillerView;
+			sourceTree = "<group>";
+		};
+		AF3F86012E8CF11E00FC9525 /* ContinueDrive  */ = {
+			isa = PBXGroup;
+			children = (
+				AF3F85FF2E8CF11E00FC9525 /* ContinueDriveDB.swift */,
+				AF3F86002E8CF11E00FC9525 /* ContinueDriveView.swift */,
+			);
+			path = "ContinueDrive ";
 			sourceTree = "<group>";
 		};
 		AF58BFD62E69C7B100F0E765 /* SignatureViewADDDvir */ = {
@@ -1144,6 +1157,7 @@
 		AFC535552E0D5D5700AD10C9 /* DataBaseMM */ = {
 			isa = PBXGroup;
 			children = (
+				AF3F86012E8CF11E00FC9525 /* ContinueDrive  */,
 				AF66F78E2E4C6344009A13A0 /* DataBaseForCertify */,
 				AF7951172E3BA7B5005FFFBF /* DvirProDatabase */,
 				AF7951122E3BA766005FFFBF /* HomeScreenDataBase */,
@@ -1513,6 +1527,8 @@
 				AFA691012E5465ED0035D092 /* DefectAPicalling.swift in Sources */,
 				1065860D2DCCC75F003CE502 /* HoursOfServices.swift in Sources */,
 				AF04B1B62DE986F300A5F3D1 /* SupportView.swift in Sources */,
+				AF3F86022E8CF11E00FC9525 /* ContinueDriveDB.swift in Sources */,
+				AF3F86032E8CF11E00FC9525 /* ContinueDriveView.swift in Sources */,
 				AF7235092E55FC51009EAA9E /* RulesViewModels.swift in Sources */,
 				AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */,
 				AF900BD62E6329AD003D01A5 /* betteryLevelRealDevice.swift in Sources */,

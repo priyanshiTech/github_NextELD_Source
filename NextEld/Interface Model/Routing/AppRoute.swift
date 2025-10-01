@@ -30,7 +30,7 @@ enum AppRoute: Hashable {
     case DailyLogs(tittle: String)
     case emailLogs(tittle: String)
     case RecapHours(tittle: String)
-    
+    case ContinueDriveTableView
     case AddDvirScreenView(
         selectedVehicle: String,
         selectedRecord: DvirRecord
@@ -227,6 +227,8 @@ struct RootView: View {
                     
                 case .AddVehicleForDVIR:
                     AddVehicleForDvir(selectedVehicleNumber: $selectedVehicle, VechicleID: $VehicleID)
+                case .ContinueDriveTableView:
+                    ContinueDriveTableView()
                 }
                 
             }
