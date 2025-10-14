@@ -82,33 +82,34 @@ struct SideMenuView: View {
         }
     }
 
-    func handleSelection(_ row: SideMenuRowType) {
+func handleSelection(_ row: SideMenuRowType) {
        switch row {
+           
         case .DailyLogs:
-           navmanager.path.append(AppRoute.DailyLogs(tittle: "Daily Logs"))
+           navmanager.path.append(AppRoute.HomeFlow.DailyLogs(tittle: "Daily Logs"))
        case .DvirPriTrip:
-           navmanager.path.append(AppRoute.AddDvirPriTrip)
+           navmanager.path.append(AppRoute.HomeFlow.AddDvirPriTrip)
        case . DotInspection:
-           navmanager.path.append(AppRoute.DotInspection(tittle: "road Side inspection"))
+           navmanager.path.append(AppRoute.HomeFlow.DotInspection(tittle: "road Side inspection"))
        case .coDriver:
-           navmanager.path.append(AppRoute.CoDriverLogin)
+           navmanager.path.append(AppRoute.HomeFlow.CoDriverLogin)
        case .Vehicle:
-           navmanager.path.append(AppRoute.AddVichleMode)
+           navmanager.path.append(AppRoute.HomeFlow.AddVichleMode)
            
        case .companyInformation:
-           navmanager.path.append(AppRoute.CompanyInformationView)
+           navmanager.path.append(AppRoute.HomeFlow.CompanyInformationView)
        case .InformationPocket:
-           navmanager.path.append(AppRoute.InformationPacket)
+           navmanager.path.append(AppRoute.HomeFlow.InformationPacket)
        case .Rules:
-           navmanager.path.append(AppRoute.RulesView)
+           navmanager.path.append(AppRoute.HomeFlow.RulesView)
        case .ELDConnection:
-           navmanager.path.append(AppRoute.Scanner)
+           navmanager.path.append(AppRoute.HomeFlow.scanner)
        case .settings:
-           navmanager.path.append(AppRoute.Settings)
+           navmanager.path.append(AppRoute.HomeFlow.Settings)
        case .support:
-           navmanager.path.append(AppRoute.SupportView)
+           navmanager.path.append(AppRoute.HomeFlow.SupportView)
        case .FirmWareUpdate:
-           navmanager.path.append(AppRoute.FirmWare_Update)
+           navmanager.path.append(AppRoute.HomeFlow.FirmWare_Update)
        case .logout:
            showLogoutPopup = true
            presentSideMenu = false

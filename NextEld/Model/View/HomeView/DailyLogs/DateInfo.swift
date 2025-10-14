@@ -8,10 +8,16 @@
 import Foundation
 import SwiftUI
 
-struct WorkEntry: Identifiable, Hashable {
-    let id = UUID()
+struct WorkEntry: Identifiable, Hashable, Codable {
+    let id: UUID
     let date: Date
     let hoursWorked: Double
+    
+    init(date: Date, hoursWorked: Double) {
+        self.id = UUID()
+        self.date = date
+        self.hoursWorked = hoursWorked
+    }
 }
 
 func generateWorkEntries() -> [WorkEntry] {

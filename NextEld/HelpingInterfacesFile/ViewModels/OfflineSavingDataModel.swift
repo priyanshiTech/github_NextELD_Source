@@ -40,7 +40,7 @@ class SyncViewModel: ObservableObject {
                 engineStatus: log.engineStatus,
                 identifier: 0,
                 isSplit: log.isSplit,
-                isVoilation: log.isVoilations,
+                isVoilation: "\(log.isVoilations)",
                 lastOnSleepTime: Int(log.lastSleepTime) ?? 0,
                 lattitude: log.lat,
                 localId: "\(log.id ?? 0)",

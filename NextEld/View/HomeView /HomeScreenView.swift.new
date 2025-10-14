@@ -1,0 +1,131 @@
+//MARK: - DVIR Popup View
+struct DvirPopupView: View {
+    let dvirRecord: DvirRecord
+    let onClose: () -> Void
+    let onEdit: () -> Void
+    let onAddDvir: () -> Void
+    
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.5)
+                .ignoresSafeArea()
+                .zIndex(1)
+            
+            VStack(spacing: 0) {
+                // Header
+                HStack {
+                    Button("Edit") {
+                        onEdit()
+                    }
+                    .foregroundColor(.blue)
+                    
+                    Spacer()
+                    
+                    Text("Add Dvir")
+                        .font(.headline)
+                        .fontWeight(.bold)
+                    
+                    Spacer()
+                    
+                    Button(action: onClose) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.red)
+                            .font(.title2)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 15)
+                
+                Divider()
+                
+                // Content
+                ScrollView {
+                    VStack(spacing: 12) {
+                        // Driver
+                        InfoRowView(label: "Driver", value: dvirRecord.driver)
+                        
+                        // Time
+                        InfoRowView(label: "Time", value: dvirRecord.time)
+                        
+                        // Date
+                        InfoRowView(label: "Date", value: dvirRecord.date)
+                        
+                        // Odometer
+                        InfoRowView(label: "Odometer", value: String(format: "%.0f", dvirRecord.odometer))
+                        
+                        // Company
+                        InfoRowView(label: "Company", value: dvirRecord.company)
+                        
+                        // Location
+                        InfoRowView(label: "Location", value: dvirRecord.location)
+                        
+                        // Vehicle
+                        InfoRowView(label: "Vehicle", value: dvirRecord.vehicleID)
+                        
+                        // Trailer
+                        InfoRowView(label: "Trailer", value: dvirRecord.trailer.isEmpty ? "None" : dvirRecord.trailer)
+                        
+                        // Truck Defect
+                        InfoRowView(label: "Truck Defect", value: dvirRecord.truckDefect.isEmpty ? "None" : dvirRecord.truckDefect)
+                        
+                        // Trailer Defect
+                        InfoRowView(label: "Trailer Defect", value: dvirRecord.trailerDefect.isEmpty ? "None" : dvirRecord.trailerDefect)
+                        
+                        Divider()
+                            .padding(.vertical, 8)
+                        
+                        // Vehicle Condition
+                        InfoRowView(label: "Vehicle Condition", value: dvirRecord.vehicleCondition.isEmpty ? "Not Available" : dvirRecord.vehicleCondition)
+                        
+                        // Notes
+                        InfoRowView(label: "Notes", value: dvirRecord.notes.isEmpty ? "Not Available" : dvirRecord.notes)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 15)
+                }
+                
+                Divider()
+                
+                // Add Dvir Button
+                Button(action: onAddDvir) {
+                    Text("Add Dvir")
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 15)
+                        .background(Color.purple)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 15)
+            }
+            .background(Color.white)
+            .cornerRadius(15)
+            .shadow(radius: 10)
+            .frame(width: 350)
+            .zIndex(2)
+        }
+    }
+}
+
+//MARK: - Info Row View
+struct InfoRowView: View {
+    let label: String
+    let value: String
+    
+    var body: some View {
+        HStack {
+            Text(label)
+                .foregroundColor(.gray)
+                .font(.subheadline)
+            
+            Spacer()
+            
+            Text(value)
+                .foregroundColor(.black)
+                .font(.subheadline)
+                .multilineTextAlignment(.trailing)
+        }
+    }
+}

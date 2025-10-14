@@ -2,7 +2,7 @@
 //  CheckBoxView.swift
 //  NextEld
 //
-//  Created by AroGeek11 on 07/05/25.
+//  Created by priyanshi on 07/05/25.
 //
 
 import Foundation
@@ -25,22 +25,26 @@ struct CheckboxButton: View {
 }
 
 struct StatusCheckBox: View {
+    
+    
     var isClick: Bool
     var labelText: String
     var onTap: () -> Void
 
     var body: some View {
-        Button(action: onTap) {
-            ZStack {
-                Circle()
-                    .fill(isClick ? .green : .white)
-                    .frame(width: 80, height: 80)
-                    .shadow(radius: 4)
+        HStack {
+            Button(action: onTap) {
+                ZStack {
+                    Circle()
+                        .fill(isClick ? .green : .white)
+                        .shadow(radius: 4)
 
-                Text(labelText)
-                    .foregroundColor(isClick ? .white :  Color(uiColor: .wine))
-                    .font(.headline)
+                    Text(labelText)
+                        .foregroundColor(isClick ? .white :  Color(uiColor: .wine))
+                        .font(.headline)
+                }
             }
         }
+        .frame(maxWidth: .infinity)
     }
 }

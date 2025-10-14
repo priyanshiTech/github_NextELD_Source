@@ -9,13 +9,16 @@ import Foundation
 import SwiftUI
 
 
+class AppRootManager: ObservableObject {
+    @Published var currentRoot: ApplicationRoot = .splashScreen
+}
+
+
 class NavigationManager: ObservableObject {
     
-    @Published var path: [AppRoute] = []
-    @Published var currentRoute: AppRoute = .SplashScreen
+    @Published var path = NavigationPath()
 
-
-    func navigate(to route: AppRoute) {
+    func navigate(to route: any Hashable) {
         print("Navigating to \(route)")
         path.append(route)
     }
@@ -25,11 +28,19 @@ class NavigationManager: ObservableObject {
         path.removeLast()
     }
 
-    func reset(to route: AppRoute) {
-        path = [route]
+    func reset(to route: any Hashable) {
+        path = NavigationPath()
+        path.append(route)
+    }
+    
+    func reset() {
+        path = NavigationPath()
     }
 
 }
+
+
+
 
 
 

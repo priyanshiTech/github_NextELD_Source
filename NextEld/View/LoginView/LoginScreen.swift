@@ -7,15 +7,262 @@
 
 import SwiftUI
 
+
+
+import SwiftUI
+
 struct LoginScreen: View {
+    
+    @EnvironmentObject var appRootManager: AppRootManager
+    @StateObject var navManager: NavigationManager = NavigationManager()
+    @StateObject var loginVM: LoginViewModel = LoginViewModel()
+    @StateObject private var viewModel = APILoginLogViewModel()
+    
+    
+    @State private var alertVisible = false
+    @State private var UserName = "inurum"
+    //  @State private var email = ""
+    
+    @State private var password = "1234567890"
+    @State private var isPasswordShowing = false
+    @State private var txtFieldHeight: CGFloat = 56
+    @State private var txtFieldWidth: CGFloat = 320
+    // @Binding var isLoggedIn: Bool
+    @State private var hasNavigated = false
+
+    
+    var body: some View {
+        
+        NavigationStack(path: $navManager.path) {
+            VStack(spacing: 15) {
+                Spacer()
+                Text("Excel ELD")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .padding()
+                
+                //  Email field with validation
+                HStack {
+                    Image(systemName: "envelope")
+                        .foregroundColor(Color(uiColor: .wine))
+                    TextField("UserName", text: $UserName)
+                        .autocapitalization(.none)
+                        .keyboardType(.emailAddress)
+                }
+                .inputBoxStyle(isValid: UserName.isEmpty || isValidUsername(UserName))
+                
+                // Inline validation message
+                if !UserName.isEmpty && !isValidUsername(UserName) {
+                    // Text("Enter a valid email address")
+                    Text("Enter a  UserName")
+                    
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 5)
+                }
+                
+                //  Password field with validation
+                HStack {
+                    Image(systemName: "lock")
+                        .foregroundColor(Color(uiColor: .wine))
+                    
+                    if isPasswordShowing {
+                        TextField("Password", text: $password)
+                            .autocapitalization(.none)
+                    } else {
+                        SecureField("Password", text: $password)
+                            .autocapitalization(.none)
+                    }
+                    
+                    Button {
+                        isPasswordShowing.toggle()
+                    } label: {
+                        Image(systemName: isPasswordShowing ? "eye.fill" : "eye.slash.fill")
+                            .foregroundColor(Color(uiColor: .wine))
+                    }
+                }
+                .inputBoxStyle(isValid: password.isEmpty || isValidPassword(password))
+                
+                // Inline validation message
+                if !password.isEmpty && !isValidPassword(password) {
+                    // Text("Password must be 8+ chars, 1 uppercase, 1 number & 1 symbol")
+                    Text( "Password must be numeric (min 4 digits)")
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 5)
+                }
+                
+                // Forget Password
+                Button {
+                    navManager.navigate(to: AppRoute.LoginFlow.forgetPassword(tittle: "Forget Password"))
+                } label: {
+                    Text("Forget Password?")
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding(.horizontal, 20)
+                }
+                
+                //MARK:  With API Verification
+                
+                Button {
+                        if !isValidUsername(UserName) || !isValidPassword(password) {
+                            alertVisible = true
+                            return
+                        }
+        
+                        Task {
+                            let success = await loginVM.login(email: UserName, password: password)
+                            if success && SessionManagerClass.shared.isLoggedIn() {
+        
+                                await viewModel.callLoginLogUpdateAPI()
+                                appRootManager.currentRoot = .scanner
+                               // navManager.navigate(to: .SplashScreen)
+                                
+                            } else {
+                                alertVisible = true
+                            }
+                        }
+                    
+                } label: {
+                    Text("Log - In")
+                        .foregroundColor(Color(uiColor: .wine))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background((isValidUsername(UserName) && isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
+                        .cornerRadius(10)
+                }
+                
+                .frame(width: txtFieldWidth, height: txtFieldHeight)
+                .disabled(!isValidUsername(UserName) || !isValidPassword(password))
+                
+                
+              
+
+                
+                // Loading indicator
+                if loginVM.isLoading {
+                    ProgressView("Logging in...")
+                        .padding()
+                }
+                
+                Spacer()
+                
+                // Forget Username
+                Button {
+                    navManager.navigate(to: AppRoute.LoginFlow.forgetUser(tittle: "Forget Username"))
+                } label: {
+                    Text("Forget Username?")
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                }
+                
+                Spacer()
+                
+                // Error message from API
+                if let error = loginVM.errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                }
+            }
+            
+            .navigationDestination(for: AppRoute.LoginFlow.self, destination: { route in
+                switch route {
+                case .forgetPassword(let title):
+                    ForgetPasswordView(title: title)
+                case .forgetUser(let title):
+                    ForgetUserName(title: title)
+                }
+            })
+            
+            .padding()
+            .navigationBarBackButtonHidden()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(uiColor: .wine).ignoresSafeArea())
+            .alert(isPresented: $alertVisible) {
+                Alert(
+                    title: Text("Validation Error"),
+                    message: Text("Please enter a valid Username and password."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+        }
+        .environmentObject(navManager)
+    }
+    
+}
+
+//  Email Validation
+func isValidEmail(_ email: String) -> Bool {
+    let emailRegex = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+    return NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email)
+}
+
+
+// MARK: - Username Validation
+func isValidUsername(_ username: String) -> Bool {
+    //  letters, numbers 7 underscore allowed, length 3-15
+    let usernameRegex = "^[A-Za-z0-9_]{3,15}$"
+    return NSPredicate(format: "SELF MATCHES %@", usernameRegex).evaluate(with: username)
+}
+
+
+//  Password Validation (Only Numbers, min 4 digits)
+func isValidPassword(_ password: String) -> Bool {
+    let passwordRegex = "^[0-9]{4,}$"
+    return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*struct LoginScreen: View {
     @EnvironmentObject var navManager: NavigationManager
-    @EnvironmentObject var session: SessionManager
+  //  @EnvironmentObject var session: SessionManager
     @EnvironmentObject var loginVM: LoginViewModel
     @StateObject private var viewModel = APILoginLogViewModel()
 
 
     @State private var alertVisible = false
-    @State private var email = ""
+    @State private var UserName = ""
+  //  @State private var email = ""
+
     @State private var password = ""
     @State private var isPasswordShowing = false
     @State private var txtFieldHeight: CGFloat = 56
@@ -37,15 +284,17 @@ struct LoginScreen: View {
             HStack {
                 Image(systemName: "envelope")
                     .foregroundColor(Color(uiColor: .wine))
-                TextField("Email", text: $email)
+                TextField("UserName", text: $UserName)
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)
             }
-            .inputBoxStyle(isValid: email.isEmpty || isValidEmail(email))
+            .inputBoxStyle(isValid: UserName.isEmpty || isValidUsername(UserName))
 
             // Inline validation message
-            if !email.isEmpty && !isValidEmail(email) {
-                Text("Enter a valid email address")
+            if !UserName.isEmpty && !isValidUsername(UserName) {
+               // Text("Enter a valid email address")
+                Text("Enter a  UserName")
+
                     .foregroundColor(.red)
                     .font(.caption)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -86,7 +335,7 @@ struct LoginScreen: View {
 
             // Forget Password
             Button {
-                navManager.navigate(to: .ForgetPassword(tittle: "Forget Password"))
+                navManager.navigate(to: AppRoute.loginFlow(.ForgetPassword(title: "Forget Password")))
             } label: {
                 Text("Forget Password?")
                     .font(.callout)
@@ -99,36 +348,63 @@ struct LoginScreen: View {
             //MARK:  With API Verification
 
             Button {
-                if !isValidEmail(email) || !isValidPassword(password) {
+                if !isValidUsername(UserName) || !isValidPassword(password) {
                     alertVisible = true
                     return
                 }
-
                 Task {
-                    let success = await loginVM.login(email: email, password: password)
+                    let success = await loginVM.login(email: UserName, password: password)
+                    
                     if success && SessionManagerClass.shared.isLoggedIn() {
-                        
+                        // Call update API
                         await viewModel.callLoginLogUpdateAPI()
-
-                        isLoggedIn = true
-                       // navManager.navigate(to: .SplashScreen)
-                        navManager.navigate(to: .Scanner)
+                        
+                        // Safely fetch vehicleNo
+                        let vehicleNo = DriverInfo.vehicleNo
+                        //UserDefaults.standard.string(forKey: "vehicleNo") ?? ""
+                        print("Vehicle No after login: \(vehicleNo)")
+                        
+                        if vehicleNo.isEmpty || vehicleNo.lowercased() == "none" {
+                            // Navigate to Add Vehicle screen
+                            print(" Vehicle No is missing → navigating to AddVehicle screen")
+                            navManager.navigate(to: AppRoute.vehicleFlow(.AddVichleMode))
+                        } else {
+                            // Navigate to Scanner screen
+                            print(" Vehicle No found (\(vehicleNo)) → navigating to Scanner")
+                            isLoggedIn = true
+                            navManager.navigate(to: AppRoute.homeFlow(.Scanner))
+                        }
                     } else {
                         alertVisible = true
                     }
                 }
+
+
+//                Task {
+//                    let success = await loginVM.login(email: UserName, password: password)
+//                    if success && SessionManagerClass.shared.isLoggedIn() {
+//                        
+//                        await viewModel.callLoginLogUpdateAPI()
+//
+//                        isLoggedIn = true
+//                       // navManager.navigate(to: .SplashScreen)
+//                        navManager.navigate(to: .Scanner)
+//                    } else {
+//                        alertVisible = true
+//                    }
+//                }
                  
             } label: {
                 Text("Log - In")
                     .foregroundColor(Color(uiColor: .wine))
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background((isValidEmail(email) && isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
+                    .background((isValidUsername(UserName) && isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
                     .cornerRadius(10)
             }
 
             .frame(width: txtFieldWidth, height: txtFieldHeight)
-            .disabled(!isValidEmail(email) || !isValidPassword(password))
+            .disabled(!isValidUsername(UserName) || !isValidPassword(password))
 
 
             // Loading indicator
@@ -141,7 +417,7 @@ struct LoginScreen: View {
 
             // Forget Username
             Button {
-                navManager.navigate(to: .ForgetUser(tittle: "Forget Username"))
+                navManager.navigate(to: AppRoute.loginFlow(.ForgetUser(tittle: "Forget Username")))
             } label: {
                 Text("Forget Username?")
                     .font(.callout)
@@ -165,7 +441,7 @@ struct LoginScreen: View {
         .alert(isPresented: $alertVisible) {
             Alert(
                 title: Text("Validation Error"),
-                message: Text("Please enter a valid email and password."),
+                message: Text("Please enter a valid Username and password."),
                 dismissButton: .default(Text("OK"))
             )
         }
@@ -179,6 +455,12 @@ func isValidEmail(_ email: String) -> Bool {
 }
 
 
+// MARK: - Username Validation
+func isValidUsername(_ username: String) -> Bool {
+    //  letters, numbers 7 underscore allowed, length 3-15
+    let usernameRegex = "^[A-Za-z0-9_]{3,15}$"
+    return NSPredicate(format: "SELF MATCHES %@", usernameRegex).evaluate(with: username)
+}
 
 
 //  Password Validation (Only Numbers, min 4 digits)
@@ -205,7 +487,7 @@ extension View {
             )
     }
 }
-
+*/
 
 
 

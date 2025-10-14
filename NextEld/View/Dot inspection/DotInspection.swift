@@ -55,7 +55,7 @@ struct DotInspection: View {
                     
                     
                     Button(action: {
-                        navManager.navigate(to: .emailLogs(tittle: "Road Side inspection"))
+                       // navManager.navigate(to:AppRoute.logsFlow(.EmailLogs(title: "Road Side inspection")))
                     }) {
                         Text("Email Logs")
                             .fontWeight(.bold)
@@ -81,13 +81,15 @@ struct DotInspection: View {
                     
                     Button(action: {
                         // Data Transfer action
+                       // navManager.navigate(to: AppRoute.logsFlow(.DataTransferView))
                         navManager.navigate(to: AppRoute.DataTransferView)
                     }) {
                         Text("Data Transfer")
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color(uiColor: .wine))                            .foregroundColor(.white)
+                            .background(Color(uiColor: .wine))
+                            .foregroundColor(.white)
                             .cornerRadius(8)
                     }
                 }
@@ -104,13 +106,15 @@ struct DotInspection: View {
                     
                         Button(action: {
                             let selectedEntry = WorkEntry(date: Date(), hoursWorked: 0)
-                                    navManager.navigate(to: .LogsDetails(title: "Road Side Inspection", entry: selectedEntry))
+                            navManager.navigate(to: AppRoute.LogsDetails(title: "Road Side Inspection", entry: selectedEntry))
+                           // navManager.navigate(to: AppRoute.logsFlow(.LogsDetails(title: "Road Side Inspection", entry: selectedEntry)))
                         }) {
                             Text("Review On Device")
                                 .fontWeight(.bold)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color(uiColor: .wine))                                .foregroundColor(.white)
+                                .background(Color(uiColor: .wine))
+                                .foregroundColor(.white)
                                 .cornerRadius(8)
                         }
                     }
@@ -124,7 +128,8 @@ struct DotInspection: View {
                             .font(.callout)
                         
                         Button(action: {
-                            navManager.navigate(to: .DvirHostory(tittle: title))
+                           // navManager.navigate(to: AppRoute.logsFlow(.DvirHostory(title: title)))
+                             navManager.navigate(to: AppRoute.DvirFlow.DvirHostory(tittle: title))
                         }) {
                             Text("Email Dvir")
                                 .fontWeight(.bold)

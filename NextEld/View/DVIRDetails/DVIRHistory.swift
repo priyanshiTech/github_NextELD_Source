@@ -58,7 +58,6 @@ struct DVIRHistory: View {
                 
                // Image("email_icon_blue")
                 Image("gmail")
-              
                     .resizable()
                     .scaledToFit()
                     .frame(width: 30, height: 30)

@@ -69,20 +69,21 @@ struct DatabaseCertifyView: View {
             }
             .padding()
             
+            
             // MARK: - Delete All Button
-                     Button(role: .destructive) {
-                         CertifyDatabaseManager.shared.deleteAllRecords()
-                         loadRecords()
-                         currentPage = 0
-                     } label: {
-                         Text("Delete All Records")
-                             .frame(maxWidth: .infinity)
-                             .padding()
-                             .background(Color.red.opacity(0.9))
-                             .foregroundColor(.white)
-                             .cornerRadius(8)
-                     }
-                     .padding(.top, 10)
+//                     Button(role: .destructive) {
+//                         CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+//                         loadRecords()
+//                         currentPage = 0
+//                     } label: {
+//                         Text("Delete All Records")
+//                             .frame(maxWidth: .infinity)
+//                             .padding()
+//                             .background(Color.red.opacity(0.9))
+//                             .foregroundColor(.white)
+//                             .cornerRadius(8)
+//                     }
+//                     .padding(.top, 10)
         }
         .navigationTitle("Certify Records")
         .onAppear {
@@ -143,7 +144,7 @@ struct CertifyTableRow: View {
             TableCellCertify(text: record.userName, width: 150)
             TableCellCertify(text: record.startTime, width: 150)
             TableCellCertify(text: record.date, width: 120)
-            TableCellCertify(text: record.shift, width: 100)
+            TableCellCertify(text: String(record.shift), width: 100)
             TableCellCertify(text: String(record.selectedVehicle), width: 150)
             TableCellCertify(text: record.selectedTrailer, width: 150)
             TableCellCertify(text: record.selectedShippingDoc, width: 200)

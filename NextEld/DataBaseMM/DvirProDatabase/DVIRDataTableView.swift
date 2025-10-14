@@ -84,15 +84,14 @@ struct DvirListView: View {
 //   func loadRecords() {
 //        records = DvirDatabaseManager.shared.fetchAllRecords()
 //    }
-    
-    
+
 
     func loadRecords() {
         let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
 
         var seenKeys = Set<String>()
         records = allRecords.filter { record in
-            let key = "\(record.driver)-\(record.vehicleID)-\(record.trailer)"
+            let key = "\(record.UserID)-\(record.vechicleID)-\(record.Trailer)"
             if seenKeys.contains(key) {
                 return false
             } else {
@@ -101,67 +100,63 @@ struct DvirListView: View {
             }
         }
     }
-
 }
 
-// MARK: - Table Header
+//MARK: - Table Header
 struct DvirTableHeader: View {
+    
     var body: some View {
+        
         HStack(spacing: 5) {
-            TableCell(text: "Driver", width: 150, isHeader: true)
-            TableCell(text: "Vehicle", width: 150, isHeader: true)
-            TableCell(text: "Trailer", width: 150, isHeader: true)
-            TableCell(text: "Truck Defect", width: 200, isHeader: true)
-            TableCell(text: "Trailer Defect", width: 200, isHeader: true)
-            TableCell(text: "Date", width: 150, isHeader: true)
-            TableCell(text: "Time", width: 100, isHeader: true)
-            TableCell(text: "Notes", width: 250, isHeader: true)
-            TableCell(text: "Signature", width: 150, isHeader: true)
-            TableCell(text: "Vechicle Condition" , width: 250 ,  isHeader: true)
+            
+            TableCellDvirList(text: "ID", width: 50, isHeader: true)
+            TableCellDvirList(text: "Driver ID", width: 100, isHeader: true)
+            TableCellDvirList(text: "Driver Name", width: 150, isHeader: true)
+            TableCellDvirList(text: "Vehicle Name", width: 150, isHeader: true)
+            TableCellDvirList(text: "Vehicle ID", width: 100, isHeader: true)
+            TableCellDvirList(text: "Trailer", width: 150, isHeader: true)
+            TableCellDvirList(text: "Truck Defect", width: 200, isHeader: true)
+            TableCellDvirList(text: "Trailer Defect", width: 200, isHeader: true)
+            TableCellDvirList(text: "Vehicle Condition", width: 350, isHeader: true)
+            TableCellDvirList(text: "StartTime", width: 200, isHeader: true)
+            TableCellDvirList(text: "Day", width: 100, isHeader: true)
+            TableCellDvirList(text: "Shift", width: 60, isHeader: true)
+            TableCellDvirList(text: "Notes", width: 250, isHeader: true)
+            TableCellDvirList(text: "Signature", width: 250, isHeader: true)
         }
     }
 }
-
-// MARK: - Table Row
 struct DvirTableRow: View {
     let record: DvirRecord
 
     var body: some View {
         HStack(spacing: 5) {
-            TableCellDvirList(text: record.driver, width: 150)
-            TableCellDvirList(text: "\(record.vehicleID)", width: 150)
-            TableCellDvirList(text: record.trailer, width: 150)
+            TableCellDvirList(text: "\(record.id ?? 0)", width: 50)
+            TableCellDvirList(text: "\(DriverInfo.driverId ?? 0)", width: 100)
+            TableCellDvirList(text: record.UserName, width: 150)
+            TableCellDvirList(text: record.vehicleName, width: 150)
+            TableCellDvirList(text: record.vechicleID, width: 100)
+            TableCellDvirList(text: record.Trailer, width: 150)
             TableCellDvirList(text: record.truckDefect, width: 200)
             TableCellDvirList(text: record.trailerDefect, width: 200)
-             TableCellDvirList(text: record.date, width: 150)
-            TableCellDvirList(text: record.time, width: 100)
+            TableCellDvirList(text: record.vehicleCondition, width: 350)
+            TableCellDvirList(text: "\(DateTimeHelper.currentDate()) \(DateTimeHelper.currentTime())", width: 200)
+            TableCellDvirList(text: "\(DriverInfo.Days)", width: 100)
+            TableCellDvirList(text: "\(DriverInfo.shift)", width: 60)
             TableCellDvirList(text: record.notes, width: 250)
-            TableCellImageDvirList(width: 150) {
-                
-                if let imageData = record.signature,
-                   let uiImage = UIImage(data: imageData) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(.red)
-                        .frame(width: 100, height: 30)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .shadow(radius: 1)
-                } else {
-                    Text("No Signature")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
+
+            if let signatureData = record.signature,
+               let uiImage = UIImage(data: signatureData) {
+                TableCellImageDvirList(imageData: uiImage, width: 250)
+            } else {
+                TableCellDvirList(text: "No Signature", width: 250)
             }
-
-
-            TableCellDvirList(text: record.vehicleCondition, width: 250)
-
         }
+        .frame(height: 50)
     }
 }
 
-// MARK: - Reusable Cell View
+// Text Cell
 struct TableCellDvirList: View {
     let text: String
     let width: CGFloat
@@ -170,40 +165,27 @@ struct TableCellDvirList: View {
     var body: some View {
         Text(text)
             .font(isHeader ? .headline : .body)
-            .frame(width: width, height: 40)
-            .background(isHeader ? Color.gray.opacity(0.15) : Color.white)
+            .frame(width: width, height: 50)
+            .background(isHeader ? Color.gray.opacity(0.2) : Color.white)
             .border(Color.gray, width: 0.5)
             .lineLimit(1)
-            .minimumScaleFactor(0.8)
+            .minimumScaleFactor(0.7)
+            .multilineTextAlignment(.center)
     }
 }
 
-//MARK: -  for image
-struct TableCellImageDvirList<Content: View>: View {
-    var width: CGFloat
-    let content: () -> Content
-
-    init(width: CGFloat, @ViewBuilder content: @escaping () -> Content) {
-        self.width = width
-        self.content = content
-    }
+// Image Cell for Signature
+struct TableCellImageDvirList: View {
+    let imageData: UIImage
+    let width: CGFloat
 
     var body: some View {
-        VStack {
-            content()
-        }
-        .frame(width: width, alignment: .leading)
-        .padding(4)
-        .background(Color.white)
-        .border(Color.gray.opacity(0.2), width: 1)
-    }
-}
-
-
-// MARK: - Preview
-struct DvirListView_Previews: PreviewProvider {
-    static var previews: some View {
-        DvirListView()
+        Image(uiImage: imageData)
+            .resizable()
+            .scaledToFit()
+            .frame(width: width, height: 50)
+            .border(Color.gray, width: 0.5)
+            .clipShape(RoundedRectangle(cornerRadius: 4))
     }
 }
 
@@ -260,6 +242,6 @@ struct DvirListView_Previews: PreviewProvider {
 
 
 
-
-
-
+                    
+                
+            

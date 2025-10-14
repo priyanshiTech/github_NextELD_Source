@@ -59,14 +59,14 @@ struct CertifySelectedView: View {
                                 .imageScale(.large)
                         }.padding()
 
-                        Button(action: {
-                            navManager.navigate(to: .DatabaseCertifyView)
-                        }) {
+                      //  Button(action: {
+                       //     navManager.navigate(to: .DatabaseCertifyView)
+                      //  }) {
                             Text(title)
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .fontWeight(.semibold)
-                        }
+                  //      }
 
                         
                         Spacer()
@@ -74,7 +74,8 @@ struct CertifySelectedView: View {
                         CustomIconButton(
                             iconName: "alarm_icon",
                             title: "Event",
-                            action: { navManager.navigate(to: .RecapHours(tittle: "Hours Recap")) }
+                            action: { navManager.navigate(to: AppRoute.RecapHours(tittle: "Hours Recap")) }
+                          //  action: { navManager.navigate(to: AppRoute.logsFlow(.RecapHours(title: "Hours Recap"))) }
                         )
                         .padding()
                     }
@@ -121,12 +122,10 @@ struct CertifySelectedView: View {
                             value: $vehiclesc , // Direct binding
                             editable: true
                         ) {
-                            navManager.navigate(to: .ADDVehicle)
+                            navManager.navigate(to: AppRoute.HomeFlow.ADDVehicle)
                         }
 
-                        
-                        
-             
+
 
                         FormField(
                             label: "Trailer",
@@ -152,8 +151,11 @@ struct CertifySelectedView: View {
                             ),
                             editable: true
                         )
-{
-                            navManager.navigate(to: .trailerScreen)
+                         {
+                          //navManager.navigate(to: AppRoute.vehicleFlow(.trailerScreen))
+                
+                             navManager.path.append(AppRoute.DvirFlow.trailerScreen)
+                             
                         }
                         FormField(
                             label: "Shipping Docs",
@@ -170,8 +172,8 @@ struct CertifySelectedView: View {
                             ),
                             editable: true
                         )
-{
-                            navManager.navigate(to: .ShippingDocment) // shipping screen
+                       {
+                        // navManager.navigate(to: AppRoute.vehicleFlow(.ShippingDocment)) // shipping screen
                         }
 
                         FormField(
@@ -195,7 +197,7 @@ struct CertifySelectedView: View {
                                 userName: DriverInfo.UserName,
                                 startTime: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
                                 date: certifiedDate,
-                                shift: DriverInfo.shift,
+                                shift: DriverInfo.shift ?? 1,
                                 selectedVehicle: vehiclesc,
                                 selectedTrailer: trailerVM.trailers.isEmpty
                                     ? "None"

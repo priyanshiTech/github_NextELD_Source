@@ -79,7 +79,8 @@ struct CoDriverLogin: View {
                 Button(action: {
                                    if dutyManager.dutyStatus == DriverStatusConstants.offDuty {
                                        print(" Going to NewDriverLogin with email:", selectedCoDriverEmail)
-                                          navmanager.navigate(to: .NewDriverLogin(title: tittle, email: selectedCoDriverEmail))
+                                    //   navmanager.navigate(to: .loginFlow(.newDriverLogin(title: tittle, email: selectedCoDriverEmail)))
+
                                        
                                    } else {
                                        showAlert = true

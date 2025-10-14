@@ -17,19 +17,25 @@ class DvirDatabaseManager {
     private var db: Connection?
     private let dvirTable = Table("dvir_records")
     private let id = Expression<Int64>("id")
-    private let driver = Expression<String>("driver")
-    private let time = Expression<String>("time")
-    private let date = Expression<String>("date")
+    private let UserID = Expression<String>("UserID")
+    private let UserName = Expression<String>("UserName")
+    private let startTime = Expression<String>("startTime")
+    private let DAY = Expression<String>("DAY")
+    private let Shift = Expression<String>("Shift")
+    private let DvirTime = Expression<String>("DvirTime")
     private let odometer = Expression<Double?>("odometer")
-    private let company = Expression<String>("company")
     private let location = Expression<String>("location")
-    private let vehicle = Expression<String>("vehicle")
-    private let trailer = Expression<String>("trailer")
     private let truckDefect = Expression<String>("truckDefect")
     private let trailerDefect = Expression<String>("trailerDefect")
     private let vehicleCondition = Expression<String>("vehicleCondition")
     private let notes = Expression<String>("notes")
-    private let signature = Expression<Data?>("signature") //  define image column
+    private let vehicleName = Expression<String>("vehicleName")
+    private let vechicleID = Expression<String>("vechicleID")
+    private let Sync = Expression<Int>("Sync")
+    private let timestamp = Expression<String>("timestamp")
+    private let Server_ID = Expression<String>("Server_ID")
+    private let Trailer = Expression<String>("Trailer")
+    private let Signature = Expression<Data?>("Signature") //  define image column
     
     private init() {
         setupDatabase()
@@ -43,197 +49,282 @@ class DvirDatabaseManager {
     }
     
     private func createTable() {
-        try? db?.run(dvirTable.create(ifNotExists: true) { table in
-            table.column(id, primaryKey: .autoincrement)
-            table.column(driver)
-            table.column(time)
-            table.column(date)
-            table.column(odometer)
-            table.column(company)
-            table.column(location)
-            table.column(vehicle)
-            table.column(trailer)
-            table.column(truckDefect)
-            table.column(trailerDefect)
-            table.column(vehicleCondition)
-            table.column(notes)
-            table.column(signature) // image column in main table
-        })
+        do {
+            try db?.run(dvirTable.create(ifNotExists: true) { table in
+                table.column(id, primaryKey: .autoincrement)
+                table.column(UserID)
+                table.column(UserName)
+                table.column(startTime)
+                table.column(DAY)
+                table.column(Shift)
+                table.column(DvirTime)
+                table.column(odometer)
+                table.column(location)
+                table.column(truckDefect)
+                table.column(trailerDefect)
+                table.column(vehicleCondition)
+                table.column(notes)
+                table.column(vehicleName)
+                table.column(vechicleID)
+                table.column(Sync)
+                table.column(timestamp)
+                table.column(Server_ID)
+                table.column(Trailer)
+                table.column(Signature)// Data? type column for image or file data
+            })
+            print(" DVIR table created successfully (if not already present).")
+        } catch {
+            print(" Error creating DVIR table: \(error)")
+        }
     }
-    
+
 
     func insertRecord(_ record: DvirRecord) {
         do {
             let insert = dvirTable.insert(
-                driver <- record.driver,
-                time <- record.time,
-                date <- record.date,
-                odometer <- record.odometer ?? 0.0,
-                company <- record.company,
+                UserID <- record.UserID,
+                UserName <- record.UserName,
+                startTime <- record.startTime,
+                DAY <- record.DAY,
+                Shift <- record.Shift,
+                DvirTime <- record.DvirTime,
+                odometer <- record.odometer,
                 location <- record.location,
-                vehicle <- record.vehicleID,
-                trailer <- record.trailer,
                 truckDefect <- record.truckDefect,
                 trailerDefect <- record.trailerDefect,
                 vehicleCondition <- record.vehicleCondition,
                 notes <- record.notes,
-                signature <- record.signature
+                vehicleName <- record.vehicleName,
+                vechicleID <- record.vechicleID,
+                Sync <- record.Sync,
+                timestamp <- record.timestamp,
+                Server_ID <- record.Server_ID,
+                Trailer <- record.Trailer,
+                Signature <- record.signature
             )
             
             let rowId = try db?.run(insert)
-            print(" Record inserted with ID: \(rowId ?? -1)")
-            print(" Signature data size: \(record.signature?.count ?? 0) bytes")
+            print(" DVIR record inserted with ID: \(rowId ?? -1)")
+            if let dataSize = record.signature?.count {
+                print(" Trailer data size: \(dataSize) bytes")
+            }
         } catch {
             print(" Database insert error: \(error)")
         }
     }
+
     
-    
-        func fetchAllRecords() -> [DvirRecord] {
-            var records: [DvirRecord] = []
-            if let rows = try? db?.prepare(dvirTable) {
+    func fetchAllRecords() -> [DvirRecord] {
+        var records: [DvirRecord] = []
+        do {
+            if let rows = try db?.prepare(dvirTable) {
                 for row in rows {
-                    records.append(DvirRecord(
+                    let record = DvirRecord(
                         id: row[id],
-                        driver: row[driver],
-                        time: row[time],
-                        date: row[date],
-                        odometer: row[odometer] ?? 0.0,
-                        company: row[company],
+                        UserID: row[UserID],
+                        UserName: row[UserName],
+                        startTime: row[startTime],
+                        DAY: row[DAY],
+                        Shift: row[Shift],
+                        DvirTime: row[DvirTime],
+                        odometer: row[odometer],
                         location: row[location],
-                        vehicleID: row[vehicle],
-                        trailer: row[trailer],
                         truckDefect: row[truckDefect],
                         trailerDefect: row[trailerDefect],
                         vehicleCondition: row[vehicleCondition],
-                        notes: row[notes], engineHour: 0,
-                        signature: row[signature] // fetch image
-                    ))
+                        notes: row[notes],
+                        vehicleName: row[vehicleName],
+                        vechicleID: row[vechicleID],
+                        Sync: row[Sync],
+                        timestamp: row[timestamp],
+                        Server_ID: row[Server_ID],
+                        Trailer: row[Trailer],
+                        signature: row[Signature]
+                    )
+                    records.append(record)
                 }
             }
-            return records
+        } catch {
+            print(" Database fetch error: \(error)")
         }
+        return records
+    }
+
+    //MARK: -  Fetch today's last log
+    func fetchTodaysLastLog() -> DvirRecord? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        let today = formatter.string(from: Date())
+        
+        // Filter today's records and order by DvirTime descending
+        let query = dvirTable.filter(DAY == today).order(DvirTime.desc)
+        
+        do {
+            if let row = try db?.pluck(query) {
+                return DvirRecord(
+                    id: row[id],
+                    UserID: row[UserID],
+                    UserName: row[UserName],
+                    startTime: row[startTime],
+                    DAY: row[DAY],
+                    Shift: row[Shift],
+                    DvirTime: row[DvirTime],
+                    odometer: row[odometer],
+                    location: row[location],
+                    truckDefect: row[truckDefect],
+                    trailerDefect: row[trailerDefect],
+                    vehicleCondition: row[vehicleCondition],
+                    notes: row[notes],
+                    vehicleName: row[vehicleName],
+                    vechicleID: row[vechicleID],
+                    Sync: row[Sync],
+                    timestamp: row[timestamp],
+                    Server_ID: row[Server_ID],
+                    Trailer: row[Trailer],
+                    signature: row[Signature]
+                )
+            }
+        } catch {
+            print("Error fetching today's last DVIR log: \(error)")
+        }
+        
+        return nil
+    }
+
  
 }
 
 extension DvirDatabaseManager {
     
-    //  Fetch record for a specific date
-    func fetchRecord(for dateValue: String) -> DvirRecord? {
+    // MARK: - Fetch Record for a Specific Date
+    func fetchRecord(for dayValue: String) -> DvirRecord? {
         do {
-            let query = dvirTable.filter(date == dateValue)
+            let query = dvirTable.filter(DAY == dayValue)
             if let row = try db?.pluck(query) {
                 return DvirRecord(
                     id: row[id],
-                    driver: row[driver],
-                    time: row[time],
-                    date: row[date],
-                    odometer: row[odometer] ?? 0.0,
-                    company: row[company],
+                    UserID: row[UserID],
+                    UserName: row[UserName],
+                    startTime: row[startTime],
+                    DAY: row[DAY],
+                    Shift: row[Shift],
+                    DvirTime: row[DvirTime],
+                    odometer: row[odometer],
                     location: row[location],
-                    vehicleID: row[vehicle],
-                    trailer: row[trailer],
                     truckDefect: row[truckDefect],
                     trailerDefect: row[trailerDefect],
                     vehicleCondition: row[vehicleCondition],
-                    notes: row[notes], engineHour: 0,
-                    signature: row[signature]
+                    notes: row[notes],
+                    vehicleName: row[vehicleName],
+                    vechicleID: row[vechicleID],
+                    Sync: row[Sync],
+                    timestamp: row[timestamp],
+                    Server_ID: row[Server_ID],
+                    Trailer: row[Trailer],
+                    signature: row[Signature]
                 )
             }
         } catch {
-            print("Database fetch error: \(error)")
+            print(" Database fetch error: \(error)")
         }
         return nil
     }
     
-    //  Update existing record by ID
+    
+    // MARK: - Update Record by ID
     func updateRecord(_ record: DvirRecord) {
         guard let recordId = record.id else { return }
         let query = dvirTable.filter(id == recordId)
         
         do {
             try db?.run(query.update(
-                driver <- record.driver,
-                time <- record.time,
-                date <- record.date,
+                UserID <- record.UserID,
+                UserName <- record.UserName,
+                startTime <- record.startTime,
+                DAY <- record.DAY,
+                Shift <- record.Shift,
+                DvirTime <- record.DvirTime,
                 odometer <- record.odometer,
-                company <- record.company,
                 location <- record.location,
-                vehicle <- record.vehicleID,
-                trailer <- record.trailer,
                 truckDefect <- record.truckDefect,
                 trailerDefect <- record.trailerDefect,
                 vehicleCondition <- record.vehicleCondition,
                 notes <- record.notes,
-                signature <- record.signature
+                vehicleName <- record.vehicleName,
+                vechicleID <- record.vechicleID,
+                Sync <- record.Sync,
+                timestamp <- record.timestamp,
+                Server_ID <- record.Server_ID,
+                Trailer <- record.Trailer,
+                Signature <- record.signature
             ))
-            print(" Record updated with ID: \(recordId)")
+            print(" DVIR record updated with ID: \(recordId)")
         } catch {
-            print("Database update error: \(error)")
+            print(" Database update error: \(error)")
         }
     }
     
-    func recordExists(driver: String, date: String) -> Bool {
-            do {
-                guard let db = db else { return false }
-                let query = dvirTable.filter(self.driver == driver && self.date == date)
-                let count = try db.scalar(query.count)
-                return count > 0
-            } catch {
-                print("Error checking record existence: \(error)")
-                return false
-            }
-        }
     
 
-
-
-
-
-    // Update existing DVIR record (replace signature + details)
-    func updateRecord(_ record: DvirRecord, driver: String, date: String) {
+    
+    // MARK: - Update Record by User + Date (Alternative Update)
+    func updateRecord(_ record: DvirRecord, userID: String, day: String) {
         do {
             guard let db = db else { return }
-            let row = dvirTable.filter(self.driver == driver && self.date == date)
+            let row = dvirTable.filter(self.UserID == userID && self.DAY == day)
             try db.run(row.update(
-                self.time <- record.time,
-                self.vehicle <- record.vehicleID,
-                self.trailer <- record.trailer,
+                self.startTime <- record.startTime,
+                self.DvirTime <- record.DvirTime,
+                self.Shift <- record.Shift,
+                self.odometer <- record.odometer,
+                self.location <- record.location,
                 self.truckDefect <- record.truckDefect,
                 self.trailerDefect <- record.trailerDefect,
                 self.vehicleCondition <- record.vehicleCondition,
                 self.notes <- record.notes,
-                self.signature <- record.signature
+                self.vehicleName <- record.vehicleName,
+                self.vechicleID <- record.vechicleID,
+                self.Sync <- record.Sync,
+                self.timestamp <- record.timestamp,
+                self.Server_ID <- record.Server_ID,
+                self.Trailer <- record.Trailer,
+                self.Signature <- record.signature
             ))
-            print("DVIR record updated for \(driver) at \(date)")
+            print(" DVIR record updated for UserID: \(userID) on \(day)")
         } catch {
-            print("Error updating DVIR: \(error)")
+            print(" Error updating DVIR record: \(error)")
+        }
+    }
+    
+    
+    
+    //MARK: -  Checking  information same day, shift
+    func hasDvirFor(day: String, shift: String) -> Bool {
+        do {
+            guard let db = db else { return false }
+            
+            // Filter where both DAY and Shift match exactly
+            let query = dvirTable.filter(self.DAY == day && self.Shift == shift)
+            
+            // Count how many rows match this condition
+            let count = try db.scalar(query.count)
+            
+            // If one or more records found → return true (already exists)
+            return count > 0
+        } catch {
+            print("Error checking DVIR for day \(day) & shift \(shift): \(error)")
+            return false
+        }
+    }
+
+    
+    // MARK: - Delete All Records
+    func deleteAllRecordsForDvirDataBase() {
+        do {
+            let deletedCount = try db?.run(dvirTable.delete()) ?? 0
+            print(" Deleted all DVIR records (\(deletedCount) rows removed)")
+        } catch {
+            print(" Error deleting all DVIR records: \(error)")
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

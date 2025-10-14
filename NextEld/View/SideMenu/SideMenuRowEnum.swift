@@ -27,16 +27,17 @@ enum SideMenuRowType: Int, CaseIterable{
     case DotInspection
     case coDriver
     case Vehicle
+    case ELDConnection
     case Sync
     case companyInformation
     case InformationPocket
     case Rules
-    case ELDConnection
     case settings
     case support
     case FirmWareUpdate
     case logout
     case version
+
     // MARK: -  Daily Logs conected Pages
 //    case emailLogs
 //    case RecapHour
@@ -55,18 +56,19 @@ enum SideMenuRowType: Int, CaseIterable{
             return "Co-Driver"
         case .Vehicle:
             return "Vehicle"
+        case .ELDConnection:
+            return "ELD Connection"
         case .companyInformation:
             return "Company Info"
         case .InformationPocket:
             return "Information-Pocket"
         case .Rules:
-            return   "Rules"
+            return "Rules"
         case .settings:
             return "Settings"
         case .support:
             return "Support"
-        case .ELDConnection:
-            return "ELD Connection"
+     
         case .FirmWareUpdate:
             return "FirmWare Update"
         case .logout:

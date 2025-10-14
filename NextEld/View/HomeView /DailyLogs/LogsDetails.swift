@@ -55,11 +55,13 @@ struct LogsDetails: View {
                     HStack(spacing: 5) {
                        // CustomIconButton(iconName: "eye_fill_icon", title: "", action: { navManager.navigate(to: .EyeViewData(tittle: "daily Logs"))})
                         CustomIconButton(iconName: "eye_fill_icon", title: "", action: {
-                            navManager.navigate(to: .EyeViewData(
+                            
+                          //  navManager.navigate(to: .logsFlow(.EyeViewData(title: "Daily Logs", entry: entry)))
+                            
+                            navManager.navigate(to: AppRoute.EyeViewData(
                                 tittle: "Daily Logs",
-                                entry: entry,
-                              //  selectedDate: $selectedDate // pass binding
-                            ))
+                                entry: entry))
+
                         })
 
 
@@ -75,7 +77,7 @@ struct LogsDetails: View {
                 DateStepperView(currentDate: $selectedDate)
             }  .background(Color.white.shadow(radius: 5))
             VStack {
-                HOSEventsChartScreen()
+                HOSEventsChartScreen(currentStatus: nil)
             }.padding()
             VStack(alignment: .leading) {
                 Text("Version - OS/02/May")

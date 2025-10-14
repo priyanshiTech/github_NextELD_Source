@@ -12,7 +12,7 @@ struct SelectLanguagepopup:View {
     
     @Binding var selectedlanguage: String?
     @Binding var isPresented: Bool
-    let languagesSelect: [String] = ["English" , "Hindi" , "Panjabi"]
+    let languagesSelect: [String] = ["English" , "Panjabi"]
     
     var body: some View {
         VStack(spacing: 10) {

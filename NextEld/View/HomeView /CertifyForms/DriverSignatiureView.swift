@@ -209,21 +209,28 @@ struct SignatureCertifyView: View {
                     }
                     // 7) Save locally (DVIR)
                     let record = DvirRecord(
-                        driver: DriverInfo.UserName,
-                        time: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
-                        date: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none),
+                        id: nil,
+                        UserID: "\(DriverInfo.driverId ?? 0)",        // Driver ID
+                        UserName: DriverInfo.UserName,                // Driver Name
+                        startTime: "\(DateTimeHelper.currentDate()) \(DateTimeHelper.currentTime())",
+                        DAY: DateTimeHelper.currentDate(),
+                        Shift: "\(DriverInfo.shift ?? 1)",               // Default shift
+                        DvirTime: DateTimeHelper.currentTime(),
                         odometer: 0.0,
-                        company: "",
                         location: "",
-                        vehicleID: selectedVehicle,
-                        trailer: selectedTrailer,
                         truckDefect: "",
                         trailerDefect: "",
                         vehicleCondition: "",
                         notes: "",
-                        engineHour: 0, signature: imageData,
+                        vehicleName: selectedVehicle,                 // Vehicle Name
+                        vechicleID: "\(selectedVehicle)",             // Vehicle ID as string
+                        Sync: 0,                                    // Default not synced
+                        timestamp: DateTimeHelper.currentTime(),
+                        Server_ID: "",
+                        Trailer: selectedTrailer                       // Optional trailer data
                     )
-                   // DvirDatabaseManager.shared.insertRecord(record)
+
+                    DvirDatabaseManager.shared.insertRecord(record)
                 }) {
                     Text(isLoading ? "Please wait..." : "Agree")
                 }

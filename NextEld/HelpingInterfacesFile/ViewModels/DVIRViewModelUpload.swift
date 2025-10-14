@@ -71,7 +71,7 @@ struct DvirRecordRequestModel {
     var companyName: String
     var odometer: Double
     var engineHour: Int
-    var vehicleId: Int
+    var vehicleId: String
     var timestampDvir: String
     var tokenNo: String
     var clientId: Int

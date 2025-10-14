@@ -1,7 +1,7 @@
 //
 //  DeleteViewModel.swift
 //  NextEld
-//
+//DELETE API FOR WHOLE APP
 //  Created by Priyanshi on 22/07/25.
 //
 import Foundation
@@ -23,6 +23,10 @@ class DeleteViewModel: ObservableObject {
 
                 //MARK: -   Delete all local DB data
                 DatabaseManager.shared.deleteAllLogs()
+                ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+                DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
+                CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+                
             } else {
                 self.apiMessage = response.message ?? "Failed to delete"
             }

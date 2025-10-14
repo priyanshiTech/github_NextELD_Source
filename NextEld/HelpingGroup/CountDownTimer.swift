@@ -9,7 +9,8 @@ import Foundation
 import Combine
 
 class CountdownTimer: ObservableObject {
-    @Published var remainingTime: TimeInterval = 0
+    var remainingTime: TimeInterval = 0
+    
     private var timer: Timer?
     private var endDate: Date?
     var isRunning: Bool = false
@@ -24,10 +25,29 @@ class CountdownTimer: ObservableObject {
 
     // MARK: - Timer Display
     var timeString: String {
+        // Always show 00:00:00 in UI when time is up
+        if remainingTime <= 0 {
+            return "00:00:00"
+        }
+        
         let hours = Int(remainingTime) / 3600
         let minutes = (Int(remainingTime) % 3600) / 60
         let seconds = Int(remainingTime) % 60
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+    
+    // MARK: - Internal Timer Value (for database)
+    var internalTimeString: String {
+        let absTime = abs(remainingTime)
+        let hours = Int(absTime) / 3600
+        let minutes = (Int(absTime) % 3600) / 60
+        let seconds = Int(absTime) % 60
+        
+        if remainingTime <= 0 {
+            return String(format: "-%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        }
     }
 
     // Timezone-aware time string
@@ -96,12 +116,8 @@ class CountdownTimer: ObservableObject {
             guard let endDate = self.endDate else { return }
 
             let timeLeft = endDate.timeIntervalSinceNow
-            if timeLeft > 0 {
-                self.remainingTime = timeLeft
-            } else {
-                self.remainingTime = 0
-                self.stop()
-            }
+            self.remainingTime = timeLeft
+            // Keep timer running even when negative - don't stop it
         }
     }
 
@@ -124,7 +140,6 @@ class CountdownTimer: ObservableObject {
         }
     }
 
-
     // MARK: - Save state
     func getState() -> (remaining: TimeInterval, startedAt: Date?, isRunning: Bool) {
         return (remainingTime, Date(), isRunning)
@@ -142,7 +157,7 @@ class CountdownTimer: ObservableObject {
         let hours = parts[0], minutes = parts[1], seconds = parts[2]
         return TimeInterval(hours * 3600 + minutes * 60 + seconds)
     }
-    
+  
    
     func reset(startTime: TimeInterval) {
         stop()
@@ -150,7 +165,13 @@ class CountdownTimer: ObservableObject {
         self.endDate = Date().addingTimeInterval(startTime)
     }
 
-
+    func resetsSleep(to seconds: Double) {
+        stop()
+        self.remainingTime = seconds  // Use the parameter instead of hardcoded 36000
+        self.endDate = nil             // calculation disable
+        isRunning = false              // paused state
+    }
+  
 }
 
 
@@ -158,14 +179,19 @@ class CountdownTimer: ObservableObject {
 import Foundation
 
 extension String {
-    /// Convert `HH:mm:ss` string to TimeInterval
+    /// Convert `HH:mm:ss` or `-HH:mm:ss` string to TimeInterval
     func asTimeInterval() -> TimeInterval {
-        let parts = self.split(separator: ":").compactMap { Int($0) }
+        let isNegative = self.hasPrefix("-")
+        let cleanString = isNegative ? String(self.dropFirst()) : self
+        
+        let parts = cleanString.split(separator: ":").compactMap { Int($0) }
         guard parts.count == 3 else { return 0 }
         let hours = parts[0]
         let minutes = parts[1]
         let seconds = parts[2]
-        return TimeInterval(hours * 3600 + minutes * 60 + seconds)
+        
+        let timeInterval = TimeInterval(hours * 3600 + minutes * 60 + seconds)
+        return isNegative ? -timeInterval : timeInterval
     }
 
     /// Convert `yyyy-MM-dd HH:mm:ss` string to Date
@@ -178,13 +204,14 @@ extension String {
 
 
 
-
-
-
-
-func formatTime(_ time: TimeInterval) -> String {
-    let hrs = Int(time) / 3600
-    let mins = (Int(time) % 3600) / 60
-    let secs = Int(time) % 60
-    return String(format: "%02d:%02d:%02d", hrs, mins, secs)
+func formatTime(_ timeInterval: TimeInterval) -> String {
+    // Always show 00:00:00 in UI when time is up
+    if timeInterval <= 0 {
+        return "00:00:00"
+    }
+    
+    let hours = Int(timeInterval) / 3600
+    let minutes = (Int(timeInterval) % 3600) / 60
+    let seconds = Int(timeInterval) % 60
+    return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
 }

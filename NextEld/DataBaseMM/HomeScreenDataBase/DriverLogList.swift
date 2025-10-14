@@ -26,62 +26,90 @@ struct DriverLogListView: View {
     }
 
     var body: some View {
+        NavigationView {
+            VStack {
+                // MARK: - Header with title
+                HStack {
+                    Text("Driver Logs")
+                        .font(.title2)
+                        .bold()
+                    Spacer()
+                    Text("Total: \(viewModel.logs.count)")
+                        .foregroundColor(.gray)
+                }
+                .padding()
+                
+                // MARK: - Table Section
+                UniversalScrollView(axis: .horizontal, showsIndicators: true) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        
+                        // MARK: -  Header
+                        DriverLogHeader()
+                            .background(Color.gray.opacity(0.2))
+                            .padding(.vertical, 0) // No extra padding
 
-        VStack {
-            // MARK: - Table Section
-            UniversalScrollView(axis: .horizontal, showsIndicators: true) {
-                VStack(alignment: .leading, spacing: 0) {
-                    
-                    // MARK: -  Header
-                    DriverLogHeader()
-                        .background(Color.gray.opacity(0.2))
-                        .padding(.vertical, 0) // No extra padding
-
-                    // MARK: - Rows (same scroll view for alignment)
-                    UniversalScrollView(axis: .vertical, showsIndicators: true) {
-                        LazyVStack(spacing: 0) {
-                            ForEach(paginatedLogs) { log in
-                                DriverLogRow(log: log)
-                                    .background(Color.white)
-                                Divider().background(Color.gray.opacity(0.5))
+                        // MARK: - Rows (same scroll view for alignment)
+                        UniversalScrollView(axis: .vertical, showsIndicators: true) {
+                            LazyVStack(spacing: 0) {
+                                if viewModel.logs.isEmpty {
+                                    VStack {
+                                        Spacer()
+                                        Text("No logs found")
+                                            .foregroundColor(.gray)
+                                            .font(.title3)
+                                        Text("Start using the app to see logs here")
+                                            .foregroundColor(.gray)
+                                        Spacer()
+                                    }
+                                    .frame(height: 200)
+                                } else {
+                                    ForEach(paginatedLogs) { log in
+                                        DriverLogRow(log: log)
+                                            .background(Color.white)
+                                        Divider().background(Color.gray.opacity(0.5))
+                                    }
+                                }
                             }
                         }
                     }
+                    .padding(0) // Remove padding, keeps column widths exact
                 }
-                .padding(0) // Remove padding, keeps column widths exact
-            }
 
-            Divider()
-        
+                Divider()
+            
 
-            // MARK: - Pagination Controls
-            HStack {
-                Button("Previous") {
-                    if currentPage > 0 {
-                        currentPage -= 1
+                // MARK: - Pagination Controls
+                HStack {
+                    Button("Previous") {
+                        if currentPage > 0 {
+                            currentPage -= 1
+                        }
                     }
-                }
-                .disabled(currentPage == 0)
+                    .disabled(currentPage == 0)
 
-                Spacer()
+                    Spacer()
 
-                Text("Page \(currentPage + 1) of \(totalPages)")
-                    .bold()
-                Spacer()
-                Button("Next") {
-                    if (currentPage + 1) * logsPerPage < viewModel.logs.count {
-                        currentPage += 1
+                    Text("Page \(currentPage + 1) of \(totalPages)")
+                        .bold()
+                    Spacer()
+                    Button("Next") {
+                        if (currentPage + 1) * logsPerPage < viewModel.logs.count {
+                            currentPage += 1
+                        }
                     }
-                }
-                .disabled((currentPage + 1) * logsPerPage >= viewModel.logs.count)
+                    .disabled((currentPage + 1) * logsPerPage >= viewModel.logs.count)
 
+                }
+                .padding()
             }
-            .padding()
+            .navigationTitle("Driver Logs")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
+            print("🔄 DriverLogListView appeared - loading logs...")
             viewModel.loadLogs()
+            print("📊 Loaded \(viewModel.logs.count) logs")
         }
-
     }
 }
 
@@ -98,7 +126,7 @@ struct DriverLogHeader: View {
             TableCell(text: "UserID", width: 100,isHeader: true)
             TableCell(text: "Day", width: 100,isHeader: true)
             TableCell(text: "isVoilation", width: 100,isHeader: true)
-            TableCell(text: "DutyType", width: 150,isHeader: true)
+            TableCell(text: "DutyType", width: 350,isHeader: true)
             TableCell(text: "Shift", width: 100,isHeader: true)
             TableCell(text: "Location", width: 600,isHeader: true)
             TableCell(text: "Lat", width: 100,isHeader: true)
@@ -127,7 +155,7 @@ struct DriverLogHeader: View {
 }
 struct DriverLogRow: View {
     let log: DriverLogModel
-    @EnvironmentObject var DVClocationManager: DeviceLocationManager
+    @StateObject private var locationManager = DeviceLocationManager()
 
     var body: some View {
 
@@ -138,10 +166,9 @@ struct DriverLogRow: View {
             TableCell(text: "\(DriverInfo.driverId ?? 0)", width: 100)
             TableCell(text: "\(log.day)", width: 100)
             TableCell(text: "\(log.isVoilations)", width: 100)
-            TableCell(text: log.dutyType, width: 150)
+            TableCell(text: log.dutyType, width: 350)
             TableCell(text: "\(log.shift)", width: 100)
-           // TableCell(text: log.location, width: 600)
-            TableCell(text: DVClocationManager.fullAddress ?? "not found" , width: 600)
+            TableCell(text: log.location.isEmpty ? "Not Available" : log.location, width: 600)
             TableCell(text: "\(log.lat)", width: 100)
             TableCell(text: "\(log.long)", width: 100)
             TableCell(text: log.vehicle, width: 100)
@@ -155,10 +182,10 @@ struct DriverLogRow: View {
             TableCell(text: log.serverId.map { String($0) } ?? "-", width: 300)
             TableCell(text: "\(log.timestamp)", width: 250)
             TableCell(text: "\(log.identifier)", width: 100)
-            TableCell(text: "\(convertToSeconds(log.remainingWeeklyTime))", width: 220)
-            TableCell(text: "\(convertToSeconds(log.remainingDriveTime))", width: 220)
-            TableCell(text: "\(convertToSeconds(log.remainingDutyTime))", width: 220)
-            TableCell(text: "\(convertToSeconds(log.remainingSleepTime))", width: 220)
+            TableCell(text: log.remainingWeeklyTime ?? "N/A", width: 220)
+            TableCell(text: log.remainingDriveTime ?? "N/A", width: 220)
+            TableCell(text: log.remainingDutyTime ?? "N/A", width: 220)
+            TableCell(text: log.remainingSleepTime ?? "N/A", width: 220)
             TableCell(text: "\(log.isSplit)", width: 80)
             TableCell(text: log.engineStatus, width: 120)
         }

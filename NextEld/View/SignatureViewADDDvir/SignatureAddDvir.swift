@@ -129,43 +129,6 @@ struct SignatureCanvas: View {
 }
 
 
-
-
-
-
-
-
-
-// Helper: Path -> UIImage
-//func signatureToImage(points: [CGPoint], size: CGSize) -> UIImage {
-//    let path = Path { p in
-//        if let first = points.first {
-//            p.move(to: first)
-//            for pt in points.dropFirst() {
-//                p.addLine(to: pt)
-//            }
-//        }
-//    }
-//    let controller = UIHostingController(rootView:
-//        path.stroke(Color.black, lineWidth: 2)
-//            .background(Color.white)
-//            .frame(width: size.width, height: size.height)
-//    )
-//    let view = controller.view
-//    let renderer = UIGraphicsImageRenderer(size: size)
-//    return renderer.image { _ in
-//        view?.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
-//    }
-//}
-//// MARK: - Preview
-//struct SignaturePopupView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SignatureAddDvir(isPresented: .constant(true))
-//    }
-//}
-
-
-
 /*struct SignatureAddDvir: View {
     @Binding var isPresented: Bool
     @State private var points: [CGPoint] = []

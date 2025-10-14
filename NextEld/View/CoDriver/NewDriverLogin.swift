@@ -15,7 +15,9 @@ struct NewDriverLogin: View {
 
     @Binding var isLoggedIn: Bool
     
-    @State private var emailText: String = ""   // start empty, sync later
+    @State private var UserText: String = ""   // start empty, sync later
+   // @State private var emailText: String = ""   // start empty, sync later
+
     @State private var password = ""
     @State private var isPasswordShowing = false
     @State private var alertVisible = false
@@ -23,8 +25,8 @@ struct NewDriverLogin: View {
     @State private var txtFieldWidth: CGFloat = 320
     
     var tittle: String
-    var email: String   // coming from CoDriverLogin
-
+  //  var email: String   // coming from CoDriverLogin
+    var UserName: String
     var body: some View {
         VStack(spacing: 30) {
             //  Header
@@ -54,7 +56,7 @@ struct NewDriverLogin: View {
             HStack {
                 Image(systemName: "envelope.fill")
                     .foregroundColor(Color(uiColor: .wine))
-                TextField("Email", text: $emailText)
+                TextField("UserName", text: $UserText)
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)
             }
@@ -104,11 +106,12 @@ struct NewDriverLogin: View {
                            await logoutVM.callLogoutAPI()
                        }
                        //  Now run login API
-                       let success = await loginVM.login(email: emailText, password: password)
+                       let success = await loginVM.login(email: UserText, password: password)
                        if success && SessionManagerClass.shared.isLoggedIn() {
                            await viewModel.callLoginLogUpdateAPI()
                            isLoggedIn = true
-                           navManager.navigate(to: .Scanner)
+                           //navManager.navigate(to: AppRoute.homeFlow(.Scanner))
+                           navManager.navigate(to: ApplicationRoot.scanner)
                        } else {
                            alertVisible = true
                        }
@@ -132,7 +135,7 @@ struct NewDriverLogin: View {
         }
         //  Auto-fill email whenever screen appears
         .onAppear {
-            self.emailText = email
+            self.UserText = UserText
         }
     }
 }

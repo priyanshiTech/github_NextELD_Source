@@ -12,7 +12,8 @@ struct AddVichleMode: View {
 
     @EnvironmentObject var navmanager: NavigationManager
     @Binding var selectedVehicle: String
-    
+    @Binding var selectedVehicleId: Int
+
     //  use AddMacAddressViewModel here
     @StateObject private var viewModel = AddMacAddressViewModel(
         networkManager: NetworkManager()
@@ -50,7 +51,7 @@ struct AddVichleMode: View {
             //MARK: -  Vehicle selection
             CardContainer {
                 Button(action: {
-                    navmanager.navigate(to: .ADDVehicle)
+                    navmanager.navigate(to: AppRoute.HomeFlow.ADDVehicle)
                 }) {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
@@ -58,10 +59,12 @@ struct AddVichleMode: View {
                                 .font(.headline)
                                 .foregroundColor(.black)
 
-                            Text("\(selectedVehicle)") // show selected data
+                            Text("\(selectedVehicle)")
+                           // show selected data
                                 .font(.headline)
                                 .foregroundColor(.black)
                         }
+                       
                         Spacer()
                         Image("pencil").foregroundColor(.gray)
                     }
@@ -75,15 +78,24 @@ struct AddVichleMode: View {
             Button(action: {
                 Task {
                     await viewModel.addMacAddress(
-                        macAddress: "E0:09:DC:C3:7F:4B", // example values
-                        modelNo: "ModelX",
-                        version: "1.0",
-                        serialNo: "123456"
+                        macAddress: "", // example values
+                        modelNo: "",
+                        version: "",
+                        serialNo: "",
+                        vehicleId: selectedVehicleId
                     )
                     
+          
                     if viewModel.responseMessage != nil {
+                        print(viewModel.responseMessage as Any)
                         // Navigate only on success
-                        navmanager.navigate(to: .Scanner)
+                        
+                        UserDefaults.standard.set(selectedVehicle, forKey: "vehicleNo")
+                         print("Saved selected vehicle: \(selectedVehicle)")
+                        UserDefaults.standard.set(selectedVehicleId, forKey: "vehicleId")
+                        print(" Saved vehicle: \(selectedVehicle), ID: \(selectedVehicleId)")
+
+                        navmanager.navigate(to: ApplicationRoot.scanner)
                     }
                 }
             }) {

@@ -14,21 +14,22 @@ struct AddDvirScreenView: View  {
     @State private var showSignaturePopup = false
     @State private var signaturePath = Path()
     //MARK: -  to show a selected data @binding use
-    @Binding var selectedVehicle: String
-    @Binding var selectedVehicleId: Int   // get vehicle id
+//    @Binding var selectedVehicle: String
+//    @Binding var selectedVehicleId: Int   // get vehicle id
     @State private var truckDefectSelection: String? = nil
     @State private var trailerDefectSelection: String? = nil
     
     @State private var Showpopup: Bool = false
     @State private var selectedTab = ""
-    @EnvironmentObject var trailerVM: TrailerViewModel
+    @StateObject var trailerVM: TrailerViewModel = .init()
     
     @State private var showPopupVechicle = false
-    @EnvironmentObject var vehicleVM: VehicleConditionViewModel
-    @EnvironmentObject var DVClocationManager: DeviceLocationManager
+    @StateObject var vehicleVM: VehicleConditionViewModel = .init()
+    @StateObject var DVClocationManager: DeviceLocationManager = .init()
     @State private var showValidationAlert = false
 
-    let selectedRecord: DvirRecord
+    @Binding var selectedRecord: DvirRecord?
+    var isFromHome: Bool = false    //MARK: -  To handle Home Screen flag
 
     @State  var driverName:String = ""
     @State  var odometer : Double = 0.0
@@ -36,8 +37,8 @@ struct AddDvirScreenView: View  {
     @State  var Location: String  = ""
     @State  var  driverID: String  = ""
     @State var driverDVIRId:Int = 0
-    @State private var date: String = ""
-    @State private var time: String = ""
+    @State private var StartTime: String = ""
+    @State private var Drivetime: String = ""
    //@State private var dateTime:String = ""
     @State private var selectedCoDriver: String? = nil
     @State private var validationMessage: String = ""
@@ -55,6 +56,9 @@ struct AddDvirScreenView: View  {
     @State private var signaturePoints: [CGPoint] = []
     @State private var signatureImage: UIImage? = nil
     var existingRecord: DvirRecord?    // for editiong
+    
+    
+  
     
     var body: some View {
        
@@ -78,23 +82,18 @@ struct AddDvirScreenView: View  {
                         Button(action: {
                             navmanager.goBack()
                             
-                        }) {
+                        }){
                             Image(systemName: "arrow.left")
                                 .bold()
                                 .foregroundColor(.white)
                                 .imageScale(.large)
                         }
-                        
-                        Button(action: {
-                            navmanager.navigate(to: AppRoute.DvirDataListView)
-                        }){
-                            
-                            
-                            Text("Add Dvir")
+
+                            Text("Add DVIR")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .fontWeight(.semibold)
-                        }
+         
                         
                         Spacer()
                     }
@@ -111,8 +110,8 @@ struct AddDvirScreenView: View  {
                         CardContainer {
                             VStack(alignment: .leading, spacing: 15) {
                                 DvirField(label: "Driver", value: driverName)
-                                DvirField(label: "Time", value: time)
-                                DvirField(label: "Date", value: date)
+                                DvirField(label: "Time", value: StartTime)
+                                DvirField(label: "Date", value: Drivetime )
                                 DvirField(label: "Odometer", value: "0")
                                 DvirField(label: "Company", value: companyName)
                                // DvirField(label: "Location", value: Location)
@@ -123,10 +122,11 @@ struct AddDvirScreenView: View  {
                         
                         // Vehicle
                         CardContainer {
+                            
                             Button(action: {
                                 
                                // navmanager.navigate(to: .ADDVehicle)
-                                navmanager.navigate(to: AppRoute.AddVehicleForDVIR)
+                                navmanager.navigate(to: AppRoute.DvirFlow.AddVehicleForDVIR)
 
                             }) {
                                 HStack {
@@ -136,13 +136,11 @@ struct AddDvirScreenView: View  {
                                             .foregroundColor(.black)
                                         
                                         //MARK: -  to show a selected data
-                                        Text("\(selectedVehicle)")
-                                        //Text("Selected Vehicle: \(selectedVehicle.isEmpty ? "None" : selectedVehicle)")
+                                        Text("\((selectedRecord?.vehicleName))")
                                             .font(.headline)
                                             .foregroundColor(.black)
                                            
                                     }
-                                    
                                     Spacer()
                                     Image("pencil").foregroundColor(.gray)
                                 }
@@ -155,7 +153,10 @@ struct AddDvirScreenView: View  {
                         // Trailer
                         CardContainer {
                             Button(action: {
-                                navmanager.navigate(to: AppRoute.trailerScreen)   //MARK: -  26 july
+                               // navmanager.navigate(to: AppRoute.vehicleFlow(.trailerScreen))   //MARK: -  26 july
+                               
+                                navmanager.path.append(AppRoute.DvirFlow.trailerScreen)
+
                             }) {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
@@ -265,23 +266,25 @@ struct AddDvirScreenView: View  {
 
                     .onAppear {
                         loadLoginData()
+                        guard  let selectedRecord else{
+                            return
+                        }
                         
                         if selectedRecord.id != nil {   // Editing existing record
-                            driverName = selectedRecord.driver
+                            driverName = selectedRecord.UserName ?? ""
                             odometer = odometer
-                            companyName = selectedRecord.company
                             Location = selectedRecord.location
                             truckDefectSelection = selectedRecord.truckDefect
                             trailerDefectSelection = selectedRecord.trailerDefect
-                            date = selectedRecord.date   //  always keep record date
-                            time = selectedRecord.time   //  always keep record time
+                            StartTime = selectedRecord.startTime   //  always keep record date
+                            Drivetime = selectedRecord.DvirTime  //  always keep record time
                             if vehicleVM.selectedCondition == nil || vehicleVM.selectedCondition == "None" {
                                 vehicleVM.selectedCondition = selectedRecord.vehicleCondition
                             }
-                            selectedVehicle = selectedRecord.vehicleID
+                           // selectedVehicle = self.selectedRecord.vehicleName
                         } else {   // Adding new record
-                            date = DateTimeHelper.currentDate()
-                            time = DateTimeHelper.currentTime()
+                            StartTime = DateTimeHelper.currentDate()
+                             Drivetime = DateTimeHelper.currentTime()
                             //selectedVehicle = ""
                         }
                     }
@@ -289,34 +292,46 @@ struct AddDvirScreenView: View  {
 
                     
                     Button(action: {
+                        guard  let selectedRecord else{
+                            return
+                        }
                         if let errorMessage = validateForm() {
                             validationMessage = errorMessage
                             showValidationAlert = true
                         } else {
+                            let currentDay = DateTimeHelper.currentDate()
+                            let currentTime = DateTimeHelper.currentTime()
                             let signatureImage = signatureToImage(points: signaturePoints,
                                                                   size: CGSize(width: 300, height: 150))
                             let signatureData = signatureImage.pngData()
+                       
 
                             var record = DvirRecord(
-                                driver: driverName,
-                                time: time,
-                                date: date,
+                                id: existingRecord?.id,
+                                UserID: driverID,
+                                UserName: driverName,
+                                startTime: "\(currentDay) \(currentTime)",
+                                DAY: currentDay,
+                                Shift: "\(DriverInfo.shift)",
+                                DvirTime: currentTime,
                                 odometer: odometer,
-                                company: companyName,
                                 location: Location,
-                                vehicleID:  "\(selectedVehicleId)",
-                                trailer: trailerVM.trailers.first ?? "None",
-                                truckDefect: truckDefectSelection ?? "no",
-                                trailerDefect: trailerDefectSelection ?? "no",
+                                truckDefect: truckDefectSelection ?? "No",
+                                trailerDefect: trailerDefectSelection ?? "No",
                                 vehicleCondition: vehicleVM.selectedCondition ?? "None",
                                 notes: notesText,
-                                engineHour: 0,
-                                signature: signatureData
+                                vehicleName: selectedRecord.vehicleName,
+                                vechicleID: "\(selectedRecord.vechicleID)",
+                                Sync: 1,
+                                timestamp: "\(Int(Date().timeIntervalSince1970 * 1000))",
+                                Server_ID: existingRecord?.Server_ID ?? "",
+                                Trailer: existingRecord?.Trailer ?? ""  //  Convert Data to String
                             )
+
                             
                           let DvirRecord = DvirRecordRequestModel(
                             driverId: driverDVIRId,
-                             dateTime:"\(record.date) \(record.time)" ,
+                             dateTime:"\(record.startTime) \(record.DAY)" ,
                             locationDvir: Location,
                              truckDefect: truckDefectSelection ?? "no",
                              trailerDefect: trailerDefectSelection ?? "no",
@@ -325,7 +340,7 @@ struct AddDvirScreenView: View  {
                             companyName: companyName,
                             odometer: odometer,
                              engineHour: 0,
-                             vehicleId: selectedVehicleId,
+                            vehicleId: selectedRecord.vechicleID,
                             timestampDvir: "\(currentTimestampMillis())",
                             tokenNo: DriverInfo.authToken,
                             clientId: DriverInfo.clientId ?? 0 ,
@@ -339,7 +354,6 @@ struct AddDvirScreenView: View  {
                                 record.id = existingId
                                 DvirDatabaseManager.shared.updateRecord(record)
                                 updateDvirDataUsingCommonService(record: record, dvirLogId: driverID)
-
                                 print(" Record updated with ID: \(existingId)")
                                 if let signatureData = signatureData {
                                     print(" Signature updated successfully! Size: \(signatureData.count) bytes")
@@ -351,7 +365,6 @@ struct AddDvirScreenView: View  {
                    
                                 DvirDatabaseManager.shared.insertRecord(record)
                                 uploadDvirDataUsingCommonService(record: DvirRecord)
-
                                 print(" New record inserted")
                                 if let signatureData = signatureData {
                                     print(" Signature saved successfully! Size: \(signatureData.count) bytes")
@@ -360,14 +373,21 @@ struct AddDvirScreenView: View  {
                                 }
 
                             }
+                            if isFromHome {
+                               // navmanager.navigate(to: .homeFlow(.home))
+                                navmanager.navigate(to: AppRoute.HomeFlow.Home)
+                                
+                            } else {
+                               // navmanager.navigate(to: .logsFlow(.AddDvirPriTrip))
+                                navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
+                                
+                            }
+
                         }
                     }) {
                         Text("Add Dvir")
-                          //  .frame(width: 350, height: 50)
                             .frame(maxWidth: .infinity)
                             .frame(height: 50)// Expand fully in parent
-                           // .frame(width: UIScreen.main.bounds.width * 0.8, height: 50)
-
                             .foregroundColor(.white)
                             .background(Color(UIColor.wine))
                             .cornerRadius(10)
@@ -386,6 +406,20 @@ struct AddDvirScreenView: View  {
                 .padding(.horizontal, 5)
             }
             .navigationBarBackButtonHidden()
+            
+            .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
+                switch type {
+                case .trailerScreen:
+                    TrailerView(tittle: AppConstants.trailersTittle)
+                    
+                case .ShippingDocment:
+                    ShippingDocView(tittle: AppConstants.shippingTittle)
+                     
+                default:
+                    EmptyView()
+                }
+                
+            })
             
             // MARK: - Signature Popup Overlay
 
@@ -458,10 +492,10 @@ struct AddDvirScreenView: View  {
     // MARK: - Validation that returns custom error message
     func validateForm() -> String? {
         if driverName.isEmpty { return "Please enter Driver Name" }
-        if time.isEmpty { return "Please enter Time" }
-        if date.isEmpty { return "Please enter Date" }
+        if StartTime.isEmpty { return "Please enter Time" }
+        if Drivetime.isEmpty { return "Please enter Day" }
 
-        if selectedVehicle.isEmpty { return "Please select a Vehicle" } 
+        if ((selectedRecord?.vehicleName.isEmpty) != nil) { return "Please select a Vehicle" }
         if (trailerVM.trailers.first ?? "").isEmpty { return "Please select a Trailer" }
         if truckDefectSelection == nil { return "Please select Truck Defect status" }
         if trailerDefectSelection == nil { return "Please select Trailer Defect status" }
@@ -477,7 +511,7 @@ struct AddDvirScreenView: View  {
 }
 
 //MARK: -   ADdd a validation  for input fields
-//struct DefectsSection: View  a
+//struct DefectsSection: View  
 
 
 struct DefectsSection: View {

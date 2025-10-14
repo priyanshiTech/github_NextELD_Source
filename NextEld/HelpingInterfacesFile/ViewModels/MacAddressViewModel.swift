@@ -27,7 +27,8 @@ class AddMacAddressViewModel: ObservableObject {
         macAddress: String = "",
         modelNo: String = "",
         version: String = "",
-        serialNo: String = "") async {
+        serialNo: String = "",
+        vehicleId: Int) async {
         
         isLoading = true
         errorMessage = nil
@@ -37,7 +38,7 @@ class AddMacAddressViewModel: ObservableObject {
             macAddress: macAddress,
             driverId: DriverInfo.driverId ?? 0,
             tokenNo: DriverInfo.authToken,
-            vehicleId: DriverInfo.vehicleId ?? 0,
+            vehicleId: vehicleId  ,
             modelNo: modelNo,
             version: version,
             serialNo: serialNo

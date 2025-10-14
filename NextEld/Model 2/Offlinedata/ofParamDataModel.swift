@@ -31,7 +31,8 @@ struct DriveringStatusData: Codable {
     let engineStatus: String
     let identifier: Int
     let isSplit: Int
-    let isVoilation: Int
+   // let isVoilation: Int
+    let isVoilation: String
     let lastOnSleepTime: Int
     let lattitude: Double
     let localId: String

@@ -58,7 +58,9 @@ struct EyeViewData: View {
                     Spacer()
                     
                     HStack(spacing: 5) {
-                        CustomIconButton(iconName: "eye_fill_icon", title: "", action: { navManager.navigate(to: .EyeViewData(tittle: "daily Logs", entry: entry))})
+                        CustomIconButton(iconName: "eye_fill_icon", title: "", action: {
+                            navManager.navigate(to: AppRoute.EyeViewData(tittle: "daily Logs", entry: entry))
+                       /*     navManager.navigate(to: .logsFlow(.EyeViewData(title: "Daily Logs", entry: entry)))*/})
                     }
                 }
                 .padding(.horizontal) // or even remove entirely to test
@@ -184,7 +186,7 @@ struct EyeViewData: View {
                                 )
 
                                 VStack {
-                                    HOSEventsChartScreen()
+                                    HOSEventsChartScreen(currentStatus: nil)
                                 }
 
                                 VStack(alignment: .leading) {

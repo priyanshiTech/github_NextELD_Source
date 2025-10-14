@@ -21,30 +21,43 @@ struct DailyLogView: View {
     @EnvironmentObject var navManager: NavigationManager
     let entry: WorkEntry  //passed from previous screen
     
-    //MARK: -  Sample list of dates
+    //MARK: -  Database dates for last 7 days
     private var logDates: [LogDate] {
         let calendar = Calendar.current
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy"  // Changed to match the display format
+        formatter.dateFormat = "dd-MM-yyyy"
         
-        // DB se dates nikalo
+        // Get today's date
+        let today = Date()
+        
+        // Calculate date range for last 7 days
+        guard let sevenDaysAgo = calendar.date(byAdding: .day, value: -6, to: today) else {
+            return []
+        }
+        
+        // DB se logs nikalo
         let logs = DatabaseManager.shared.fetchLogs()
-        let logDatesFromDB = Set(logs.compactMap { $0.startTime.toDate() }).map { formatter.string(from: $0) }
         
-        // Last 7 din ki continuous list banao
-        let last7Days = (0..<5).compactMap { i -> String? in
-            guard let date = calendar.date(byAdding: .day, value: -i, to: Date()) else { return nil }
-            return formatter.string(from: date)
-        }
-        // Ab list banani hai with missing check
-        let finalList: [LogDate] = last7Days.map { day in
-            if logDatesFromDB.contains(day) {
-                return LogDate(date: day, isMissing: false)
-            } else {
-                return LogDate(date: day, isMissing: true)
+        // Filter logs for last 7 days and extract unique dates
+        let logsInRange = logs.compactMap { log -> String? in
+            guard let logDate = log.startTime.toDate() else { return nil }
+            
+            // Check if log date is within last 7 days
+            if logDate >= sevenDaysAgo && logDate <= today {
+                return formatter.string(from: logDate)
             }
+            return nil
         }
-        return finalList.sorted { $0.date > $1.date } // latest -> oldest
+        
+        // Get unique dates and sort them
+        let uniqueDates = Array(Set(logsInRange)).sorted { date1, date2 in
+            guard let d1 = formatter.date(from: date1),
+                  let d2 = formatter.date(from: date2) else { return false }
+            return d1 > d2 // latest first
+        }
+        
+        // Convert to LogDate objects (all dates from DB are not missing)
+        return uniqueDates.map { LogDate(date: $0, isMissing: false) }
     }
     //MARK: - Database records for certification check
     private var certifiedRecords: [CertifyRecord] {
@@ -148,10 +161,16 @@ struct DailyLogView: View {
                         .fontWeight(.semibold)
                     Spacer()
                     
+//                    HStack(spacing: 5) {
+//                        CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: AppRoute.logsFlow(.EmailLogs(title: " Daily Logs")))})
+//                            .padding()
+//                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: AppRoute.logsFlow(.RecapHours(title: "Hours Recap")))})
+//                            .foregroundColor(.black)
+//                    }
                     HStack(spacing: 5) {
-                        CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: .emailLogs(tittle: " Daily Logs"))})
+                        CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: AppRoute.DvirFlow.emailLogs(tittle: " Daily Logs"))})
                             .padding()
-                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: .RecapHours(tittle: "Hours Recap"))})
+                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: AppRoute.RecapHours(tittle: "Hours Recap"))})
                             .foregroundColor(.black)
                     }
                 }
@@ -172,7 +191,6 @@ struct DailyLogView: View {
             .padding()
             
             //MARK: -  List Section
-            
             List(logDates) { log in
                 HStack {
                     Text(dateFormattedString(log.date))
@@ -186,7 +204,7 @@ struct DailyLogView: View {
                     
                     if isCertified {
                         Button(action: {
-                            navManager.navigate(to: .CertifySelectedView(tittle: dateFormattedString(log.date)))
+                            navManager.navigate(to: AppRoute.HomeFlow.CertifySelectedView(tittle: dateFormattedString(log.date)))
                             print("Certified tapped for \(dateFormattedString(log.date))")
                         }) {
                             Text("Certified")
@@ -199,7 +217,7 @@ struct DailyLogView: View {
                         }
                     } else {
                         Button(action: {
-                            navManager.navigate(to: .CertifySelectedView(tittle: dateFormattedString(log.date)))
+                            navManager.navigate(to: AppRoute.HomeFlow.CertifySelectedView(tittle: dateFormattedString(log.date)))
                             print("Uncertified tapped for \(dateFormattedString(log.date))")
                         }) {
                             Text("Uncertified")
@@ -214,6 +232,48 @@ struct DailyLogView: View {
                 }
                 .contentShape(Rectangle())
             }
+            
+//            List(logDates) { log in
+//                HStack {
+//                    Text(dateFormattedString(log.date))
+//                        .foregroundColor(.primary)
+//                    
+//                    Spacer()
+//                    
+//                    // Condition: Check if date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
+//                    let isCertified = isDateFullyCertified(log.date)
+//                  //  print(" Final result for \(log.date): isCertified = \(isCertified)")
+//                    
+//                    if isCertified {
+//                        Button(action: {
+//                            navManager.navigate(to: AppRoute.logsFlow(.CertifySelectedView(title: dateFormattedString(log.date))))
+//                            print("Certified tapped for \(dateFormattedString(log.date))")
+//                        }) {
+//                            Text("Certified")
+//                                .foregroundColor(.green)
+//                                .fontWeight(.semibold)
+//                                .padding(.horizontal, 12)
+//                                .padding(.vertical, 8)
+//                                .background(Color.green.opacity(0.1))
+//                                .cornerRadius(6)
+//                        }
+//                    } else {
+//                        Button(action: {
+//                            navManager.navigate(to: AppRoute.logsFlow(.CertifySelectedView(title: dateFormattedString(log.date))))
+//                            print("Uncertified tapped for \(dateFormattedString(log.date))")
+//                        }) {
+//                            Text("Uncertified")
+//                                .foregroundColor(.red)
+//                                .fontWeight(.semibold)
+//                                .padding(.horizontal, 12)
+//                                .padding(.vertical, 8)
+//                                .background(Color.red.opacity(0.1))
+//                                .cornerRadius(6)
+//                        }
+//                    }
+//                }
+//                .contentShape(Rectangle())
+//            }
             .onAppear {
                 // Debug information
                 let allDates = logDates.map { dateFormattedString($0.date) }
@@ -260,6 +320,26 @@ struct DailyLogView: View {
         return date
     }
     
+    //MARK: - Today's Working Details
+    private func getTodaysWorkingDetails() -> (workedHours: String, availableHours: String, cycleHoursRemaining: String) {
+        let dbManager = DatabaseManager.shared
+        let today = Date()
+        
+        // Total worked hours today
+        let workedHours = dbManager.totalWorkedHours(for: today)
+        let workedHoursFormatted = dbManager.formatTime(workedHours)
+        
+        // Available hours today (14 hour limit)
+        let availableHours = dbManager.availableHoursToday()
+        let availableHoursFormatted = dbManager.formatTime(availableHours)
+        
+        // Cycle hours remaining (70 hour/7 days)
+        let cycleHours = dbManager.availableCycleHours(days: 7, limitHours: 70)
+        let cycleHoursFormatted = dbManager.formatTime(cycleHours)
+        
+        return (workedHoursFormatted, availableHoursFormatted, cycleHoursFormatted)
+    }
+    
     
 }
 
@@ -285,17 +365,6 @@ extension String {
     }
 
 }
-
-
-
-//#Preview {
-//    let sampleEntry = WorkEntry(date: Date(), hoursWorked: 8.0)
-//    DailyLogView(title: "Daily Logs", entry: sampleEntry, logs: [DriverLogModel])
-//        .environmentObject(NavigationManager())
-//}
-
-
-
 
 //#Preview {
 //    let sampleEntry = WorkEntry(date: Date(), hoursWorked: 8.0)
