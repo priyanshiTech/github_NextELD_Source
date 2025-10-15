@@ -52,8 +52,8 @@ struct AvailableHoursView: View {
                     ForEach(timerTypes, id: \.self) { type in
                         TimeBox(
                             type: type,
-                            title: homeViewModel.getTimerInfo(for: type).title,
-                            time: homeViewModel.getTimerInfo(for: type).timer
+                            title: type.getName(),
+                            time: returnRemaingTime(for: type)
                         )
                     }
                    
@@ -77,5 +77,22 @@ struct AvailableHoursView: View {
         }
     }
     
+    
+    private func returnRemaingTime(for type: TimerType) -> String {
+        var timer = ""
+        switch type {
+        case .onDuty:
+                timer = homeViewModel.onDutyTimer?.remainingTime.timeString ?? ""
+        case .cycleTimer:
+                timer = homeViewModel.cycleTimer?.remainingTime.timeString ?? ""
+        case .sleepTimer:
+                timer = homeViewModel.sleepTimer?.remainingTime.timeString ?? ""
+        case .onDrive:
+                timer = homeViewModel.onDriveTimer?.remainingTime.timeString ?? ""
+        default:
+            break
+        }
+        return timer
+    }
     
 }

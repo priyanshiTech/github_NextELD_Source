@@ -50,11 +50,11 @@ class DatabaseManager {
     let serverId = Expression<String?>("serverId")
     let timestamp = Expression<Int64>("timestamp")
     let identifier = Expression<Int>("identifier")
-    let remainingWeeklyTime = Expression<String>("remainingWeeklyTime")
-    let remainingDriveTime = Expression<String>("remainingDriveTime")
-    let remainingDutyTime = Expression<String>("remainingDutyTime")
-    let remainingSleepTime = Expression<String>("remainingSleepTime")
-    let lastSleepTime = Expression<String>("lastSleepTime")
+    let remainingWeeklyTime = Expression<Int>("remainingWeeklyTime")
+    let remainingDriveTime = Expression<Int>("remainingDriveTime")
+    let remainingDutyTime = Expression<Int>("remainingDutyTime")
+    let remainingSleepTime = Expression<Int>("remainingSleepTime")
+    let lastSleepTime = Expression<Int>("lastSleepTime")
     let isSplit = Expression<Int>("isSplit")
     let engineStatus = Expression<String>("engineStatus")
     
@@ -195,11 +195,11 @@ class DatabaseManager {
                 serverId: log._id,
                 timestamp: Int64(log.dateTime ?? "0") ?? 0,
                 identifier: log.identifier ?? 0,
-                remainingWeeklyTime: log.remainingWeeklyTime ?? "0",
-                remainingDriveTime: log.remainingDriveTime ?? "0",
-                remainingDutyTime: log.remainingDutyTime ?? "0",
-                remainingSleepTime: log.remainingSleepTime ?? "0",
-                lastSleepTime: log.lastOnSleepTime ?? "0",
+                remainingWeeklyTime: log.remainingWeeklyTime ?? 0,
+                remainingDriveTime: log.remainingDriveTime ?? 0,
+                remainingDutyTime: log.remainingDutyTime ?? 0,
+                remainingSleepTime: log.remainingSleepTime ?? 0,
+                lastSleepTime: log.lastOnSleepTime ?? 0,
                 isSplit: 0,
                 engineStatus: "Off", isCertifiedLog: ""
             )
@@ -256,10 +256,10 @@ class DatabaseManager {
                 serverId <- model.serverId,
                 timestamp <- model.timestamp,
                 identifier <- model.identifier,
-                remainingWeeklyTime <- model.remainingWeeklyTime ?? "NA",
-                remainingDriveTime <- model.remainingDriveTime ?? "NA",
-                remainingDutyTime <- model.remainingDutyTime ?? "NA",
-                remainingSleepTime <- model.remainingSleepTime ?? "NA",
+                remainingWeeklyTime <- model.remainingWeeklyTime ?? 0,
+                remainingDriveTime <- model.remainingDriveTime ?? 0,
+                remainingDutyTime <- model.remainingDutyTime ?? 0,
+                remainingSleepTime <- model.remainingSleepTime ?? 0,
                 lastSleepTime <- model.lastSleepTime,
                 isSplit <- model.isSplit,
                 engineStatus <- model.engineStatus
@@ -386,11 +386,11 @@ extension DatabaseManager {
         status: String,
         startTime: String,
         dutyType: String,
-        remainingWeeklyTime: String,
-        remainingDriveTime: String,
-        remainingDutyTime: String,
-        remainingSleepTime: String,
-        lastSleepTime: String,
+        remainingWeeklyTime: Int,
+        remainingDriveTime: Int,
+        remainingDutyTime: Int,
+        remainingSleepTime: Int,
+        lastSleepTime: Int,
         RemaningRestBreak: String,
         isruning: Bool,
         isVoilations: Bool = false
@@ -464,11 +464,11 @@ extension DatabaseManager {
         let serverId: String?
         let timestamp: Int64
         let identifier: Int
-        let remainingWeeklyTime: String?
-        let remainingDriveTime: String?
-        let remainingDutyTime: String?
-        let remainingSleepTime: String?
-        let lastSleepTime: String
+        let remainingWeeklyTime: Int?
+        let remainingDriveTime: Int?
+        let remainingDutyTime: Int?
+        let remainingSleepTime: Int?
+        let lastSleepTime: Int
         let isSplit: Int
         let engineStatus: String
         let isCertifiedLog: String

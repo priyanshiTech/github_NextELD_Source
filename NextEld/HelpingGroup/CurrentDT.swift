@@ -19,6 +19,7 @@ struct DateTimeHelper {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: DriverInfo.timezone) ?? .current
+        calendar.locale = Locale(identifier: "en_US_POSIX")
         return calendar
     }
     
@@ -27,12 +28,16 @@ struct DateTimeHelper {
         let timezoneOffset = DriverInfo.timeZoneOffset
         
         // Convert current time to user's timezone
-        let userTime = convertToUserTimezone(currentTime, offset: timezoneOffset)
-        return userTime
+        if let userTime = convertToUserTimezone(currentTime, offset: timezoneOffset) {
+            return userTime // current
+        } else {
+            return currentTime // UTC
+        }
+            
     }
 
     // Helper function to convert time to user's timezone
-    static func convertToUserTimezone(_ date: Date, offset: String) -> Date {
+    static func convertToUserTimezone(_ date: Date, offset: String) -> Date? {
         let offsetString = offset.replacingOccurrences(of: ":", with: "")
         let sign = String(offsetString.prefix(1))
         let hours = Int(offsetString.dropFirst().prefix(2)) ?? 0
@@ -44,15 +49,15 @@ struct DateTimeHelper {
         }
         
         let offsetSeconds = TimeInterval(totalMinutes * 60)
-        return date.addingTimeInterval(offsetSeconds)
+        return calendar.date(byAdding: .second, value: Int(offsetSeconds), to: date)//date.addingTimeInterval(offsetSeconds)
     }
     
     static func getCurrentDateTimeString() -> String {
-        return getStringFromDate(currentDateTime())
+        return getStringFromDate(Date())
     }
     
     static func currentTime() -> String {
-        let currentDate = currentDateTime()
+        let currentDate = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatterConstants.timeFormat.rawValue
         formatter.timeZone = TimeZone(identifier: DriverInfo.timezone)
@@ -60,7 +65,7 @@ struct DateTimeHelper {
     }
 
     static func currentDate() -> String {
-        let currentDate = currentDateTime()
+        let currentDate = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatterConstants.dateForaat.rawValue
         formatter.timeZone = TimeZone(identifier: DriverInfo.timezone)
@@ -84,7 +89,7 @@ struct DateTimeHelper {
         return dateFormatter.string(from: date)
     }
     
-    static func getDateStringFrom(_ fromString: String, toString: String, fromDateFormat: DateFormatterConstants, toDateFromat: DateFormatterConstants) -> String {
+    static func getDateStringFrom(_ fromString: String, fromDateFormat: DateFormatterConstants, toDateFromat: DateFormatterConstants) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = fromDateFormat.rawValue
         let dateFromOldFormat = dateFormatter.date(from: fromString) ?? Date()
@@ -93,6 +98,14 @@ struct DateTimeHelper {
         dateFormatter2.dateFormat = toDateFromat.rawValue
         let stringFromNewFormat = dateFormatter.string(from: dateFromOldFormat)
         return stringFromNewFormat
+    }
+    
+    static func getDateFromString(_ dateString: String, format: DateFormatterConstants = .defaultDateTime) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format.rawValue
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        return dateFormatter.date(from: dateString) ?? Date()
     }
 }
 

@@ -26,14 +26,14 @@ struct DriverLog: Decodable {
     let isVoilation: Int?
     let logType: String?
     let statusId: Int?
-    let remainingWeeklyTime: String?
-    let remainingDutyTime: String?
-    let remainingDriveTime: String?
-    let remainingSleepTime: String?
+    let remainingWeeklyTime: Int?
+    let remainingDutyTime: Int?
+    let remainingDriveTime: Int?
+    let remainingSleepTime: Int?
     let shift: Int?
     let days: Int?
     let identifier: Int?
-    let lastOnSleepTime: String?
+    let lastOnSleepTime: Int?
     let truckNo: String?
     let trailers: [String]?
 }

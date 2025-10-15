@@ -12,7 +12,7 @@ class CountdownTimer: ObservableObject {
     var remainingTime: TimeInterval = 0
     
     private var timer: Timer?
-    private var endDate: Date?
+  //  private var endDate: Date?
     var isRunning: Bool = false
     
     let startDuration: TimeInterval  // original duration (e.g. 14 * 3600)
@@ -24,17 +24,7 @@ class CountdownTimer: ObservableObject {
     }
 
     // MARK: - Timer Display
-    var timeString: String {
-        // Always show 00:00:00 in UI when time is up
-        if remainingTime <= 0 {
-            return "00:00:00"
-        }
-        
-        let hours = Int(remainingTime) / 3600
-        let minutes = (Int(remainingTime) % 3600) / 60
-        let seconds = Int(remainingTime) % 60
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-    }
+    
     
     // MARK: - Internal Timer Value (for database)
     var internalTimeString: String {
@@ -98,7 +88,8 @@ class CountdownTimer: ObservableObject {
 
     // MARK: - Start Timer
     func start() {
-        endDate = Date().addingTimeInterval(remainingTime)
+       // endDate = DateTimeHelper.currentDateTime().addingTimeInterval(remainingTime)
+        
         isRunning = true
         startTimer()
     }
@@ -113,10 +104,10 @@ class CountdownTimer: ObservableObject {
     private func startTimer() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            guard let endDate = self.endDate else { return }
+            //guard let endDate = self.endDate else { return }
 
-            let timeLeft = endDate.timeIntervalSinceNow
-            self.remainingTime = timeLeft
+           // let timeLeft = endDate.timeIntervalSinceNow
+            self.remainingTime -= 1
             // Keep timer running even when negative - don't stop it
         }
     }
@@ -128,7 +119,7 @@ class CountdownTimer: ObservableObject {
             return
         }
 
-        let elapsed = Date().timeIntervalSince(startedAt)
+        let elapsed = DateTimeHelper.currentDateTime().timeIntervalSince(startedAt)
         let newRemaining = max(remaining - elapsed + 10, 0) // buffer
 
         self.remainingTime = newRemaining
@@ -162,13 +153,13 @@ class CountdownTimer: ObservableObject {
     func reset(startTime: TimeInterval) {
         stop()
         self.remainingTime = startTime
-        self.endDate = Date().addingTimeInterval(startTime)
+     //   self.endDate = Date().addingTimeInterval(startTime)
     }
 
     func resetsSleep(to seconds: Double) {
         stop()
         self.remainingTime = seconds  // Use the parameter instead of hardcoded 36000
-        self.endDate = nil             // calculation disable
+     //   self.endDate = nil             // calculation disable
         isRunning = false              // paused state
     }
   

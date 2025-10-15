@@ -47,12 +47,12 @@ struct StatusView: View {
                 HStack(spacing: 10) {
                     
                     StatusBox(
-                              title: homeViewModel.getTimerInfo(for: .continueDrive).title,
-                              time: homeViewModel.getTimerInfo(for: .continueDrive).timer
+                        title: TimerType.continueDrive.getName(),
+                              time: homeViewModel.continueDriveTimer?.remainingTime.timeString ?? ""
                     )
                     StatusBox(
-                        title: homeViewModel.getTimerInfo(for: .breakTimer).title,
-                        time: homeViewModel.getTimerInfo(for: .breakTimer).timer
+                        title: TimerType.breakTimer.getName(),
+                        time: homeViewModel.breakTimer?.remainingTime.timeString ?? ""
                     )
 
                 }
@@ -195,6 +195,9 @@ struct StatusView: View {
             .onChange(of: homeViewModel.currentDriverStatus) { newValue in
                 self.selectedDriverStatus = newValue
             }
+        }
+        .onAppear {
+            selectedDriverStatus = homeViewModel.currentDriverStatus
         }
     }
  

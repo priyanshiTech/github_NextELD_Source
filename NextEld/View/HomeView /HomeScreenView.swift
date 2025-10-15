@@ -70,11 +70,11 @@ struct HomeScreenView: View {
             Trailer: ""
         )
     }
-
-
+    
+    
     @StateObject var dutyManager: DutyStatusManager = DutyStatusManager()
     @EnvironmentObject var navManager: NavigationManager
-
+    
     
     @StateObject private var ONDuty: CountdownTimer
     
@@ -102,21 +102,21 @@ struct HomeScreenView: View {
     @State private var didShow30MinWarning = false
     @State private var didShow15MinWarning = false
     @State private var didShowViolation = false
-
+    
     // Add separate flags for each timer type
     @State private var didShowOnDutyViolation = false
     @State private var didShowOnDuty30MinWarning = false
     @State private var didShowOnDuty15MinWarning = false
-
+    
     @State private var didShowOnDriveViolation = false
     @State private var didShowOnDrive30MinWarning = false
     @State private var didShowOnDrive15MinWarning = false
-
+    
     @State private var didShowCycleViolation = false
     @State private var didShowCycle30MinWarning = false
     @State private var didShowCycle15MinWarning = false
     @EnvironmentObject var navmanager: NavigationManager
-
+    
     
     // Add this method in your HomeScreenView struct
     func initializeViolationFlags() {
@@ -139,10 +139,10 @@ struct HomeScreenView: View {
     @State private var violationBoxes: [ViolationBoxData] = []
     @State private var showViolationBoxes = false
     
-
+    
     
     init() {
-         let breakTimer =  CountdownTimer.timeStringToSeconds("00:30:00")
+        let breakTimer =  CountdownTimer.timeStringToSeconds("00:30:00")
         _ONDuty = StateObject(wrappedValue: CountdownTimer(startTime: DriverInfo.onDutyTime ?? 140000))
         _driveTimer = StateObject(wrappedValue: CountdownTimer(startTime: DriverInfo.onDriveTime ?? 110000))
         _cycleTimerOn = StateObject(wrappedValue: CountdownTimer(startTime: TimeInterval(DriverInfo.cycleTime ?? 700000)))
@@ -150,9 +150,9 @@ struct HomeScreenView: View {
         _continueDriveTime = StateObject(wrappedValue: CountdownTimer(startTime: DriverInfo.continueDriveTime ??  080000))
         _breakTime = StateObject(wrappedValue: CountdownTimer(startTime: breakTimer))
     }
-
     
-   // let session: SessionManager
+    
+    // let session: SessionManager
     @State private var activeTimerAlert: TimerAlert?
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
     @StateObject private var viewModel = RefreshViewModel()
@@ -174,7 +174,7 @@ struct HomeScreenView: View {
     @State private var driveStopStartTime: Date? = nil
     @State private var showDriveStopPrompt: Bool = false
     @State private var driveStopPromptTimer: Timer? = nil
-//MARK: -  SHOw Slep Timer Popup
+    //MARK: -  SHOw Slep Timer Popup
     @State private var showSleepResetPopup = false
     @State private var showNextDayPopup = false
     @AppStorage("hasShownNextDayPopup") private var hasShownNextDayPopup = false
@@ -191,8 +191,8 @@ struct HomeScreenView: View {
     @State private var offDutySleepAccumulated: TimeInterval = 0
     @State private var lastStatusChangeTime: Date? = nil
     @State private var timer: Timer? = nil
-
-//MARK: -  For Delete API's
+    
+    //MARK: -  For Delete API's
     @State private var showDeleteConfirm = false
     @StateObject private var deleteViewModel = DeleteViewModel()
     @State private var showSuccessAlert = false
@@ -201,12 +201,12 @@ struct HomeScreenView: View {
     @StateObject private var logoutVM = APILogoutViewModel()   //logout
     @State private var showsyncRefreshalert = RefreshViewModel()  // Refresh
     @EnvironmentObject var locationManager: LocationManager
-
+    
     @State private var hasRestoredTimers = false
     let times = DateTimeHelperVoilation.getLocalAndGMT()
     @State private var showDvirPopup = false
     @StateObject var deviceLocationManager = DeviceLocationManager()
-
+    
     var body: some View {
         
         ZStack(alignment: .leading) {
@@ -224,7 +224,7 @@ struct HomeScreenView: View {
                     )
                 }
                 
-                    
+                
                 UniversalScrollView {
                     VStack {
                         Text("Disconnected")
@@ -238,6 +238,7 @@ struct HomeScreenView: View {
                             // passing a new status to assign this new status to current status after the alert submit button clicked
                             homeVM.showDriverStatusAlert = (true, status)
                         }
+
                         
                         AvailableHoursView(homeViewModel: homeVM)
                         
@@ -250,12 +251,12 @@ struct HomeScreenView: View {
                             
                             VStack(spacing: 12) {
                                 ForEach(violationBoxes) { violation in
-                                       ViolationBox(
+                                    ViolationBox(
                                         text: violation.text,
                                         date: violation.date,
                                         time: violation.time
-                                       )
-                                       .transition(.move(edge: .top).combined(with: .opacity))
+                                    )
+                                    .transition(.move(edge: .top).combined(with: .opacity))
                                 }
                             }
                             .padding(.horizontal, 16)
@@ -270,7 +271,7 @@ struct HomeScreenView: View {
                 }
                 .scrollIndicators(.hidden)
                 .onAppear {
-                    loadViolationsFromDatabase()
+                    //  loadViolationsFromDatabase()
                     initializeViolationFlags()
                 }
                 .scrollIndicators(.hidden)
@@ -300,51 +301,51 @@ struct HomeScreenView: View {
                 .zIndex(1)
             }
             
-          // Showing Driver Status Alerts
+            // Showing Driver Status Alerts
             if homeVM.showDriverStatusAlert.showAlert {
-                        // Popup content
-                    StatusDetailsPopup(
-                        statusTitle: homeVM.showDriverStatusAlert.status.getName(),
-                        onClose: { homeVM.showDriverStatusAlert.showAlert = false },
-                        onSubmit: { note in
-                            let status = homeVM.showDriverStatusAlert.status
-                            homeVM.saveCurrentTimerStates()
-
-                                
-                                // Set new status and start timers
-                                homeVM.setDriverStatus(status: status)
-                                
-                                // Save new timer state after status change
-                            homeVM.saveTimerStateForStatus(status: status.getName(), note: note)
-                            // Close the popup after submit
-                            homeVM.showDriverStatusAlert.showAlert = false
-                        },
-                        DVClocationManager: deviceLocationManager
-                    )
-                }
- //nitin
+                // Popup content
+                StatusDetailsPopup(
+                    statusTitle: homeVM.showDriverStatusAlert.status.getName(),
+                    onClose: { homeVM.showDriverStatusAlert.showAlert = false },
+                    onSubmit: { note in
+                        let status = homeVM.showDriverStatusAlert.status
+                        homeVM.saveCurrentTimerStates()
+                        
+                        
+                        // Set new status and start timers
+                        homeVM.setDriverStatus(status: status)
+                        
+                        // Save new timer state after status change
+                        homeVM.saveTimerStateForStatus(status: status.getName(), note: note)
+                        // Close the popup after submit
+                        homeVM.showDriverStatusAlert.showAlert = false
+                    },
+                    DVClocationManager: deviceLocationManager
+                )
+            }
+            //nitin
             
             //MARK: -  Show Certify popup
-//            if showCertifyLogAlert {
-//                  Color.black.opacity(0.4)
-//                      .ignoresSafeArea()
-//                      .zIndex(9)
-//
-//                  CustomPopupAlert(
-//                      title: "Certify Log",
-//                      message: "Please certify your previous day log before going to On-Duty",
-//                      onOK: {
-//                          showCertifyLogAlert = false
-//                          navmanager.navigate(to: AppRoute.DailyLogs(tittle: ""))
-//                      },
-//                      onCancel: {
-//                          showCertifyLogAlert = false
-//                      }
-//                  )
-//                  .zIndex(10)
-//                  .transition(.opacity)
-//                  .animation(.easeInOut, value: showCertifyLogAlert)
-//              }
+            //            if showCertifyLogAlert {
+            //                  Color.black.opacity(0.4)
+            //                      .ignoresSafeArea()
+            //                      .zIndex(9)
+            //
+            //                  CustomPopupAlert(
+            //                      title: "Certify Log",
+            //                      message: "Please certify your previous day log before going to On-Duty",
+            //                      onOK: {
+            //                          showCertifyLogAlert = false
+            //                          navmanager.navigate(to: AppRoute.DailyLogs(tittle: ""))
+            //                      },
+            //                      onCancel: {
+            //                          showCertifyLogAlert = false
+            //                      }
+            //                  )
+            //                  .zIndex(10)
+            //                  .transition(.opacity)
+            //                  .animation(.easeInOut, value: showCertifyLogAlert)
+            //              }
             
             
             
@@ -354,14 +355,14 @@ struct HomeScreenView: View {
                     message: "Please add DVIR before going to On-Drive",
                     onOK: {
                         
-//                        navmanager.navigate(to: .vehicleFlow(.AddDvirScreenView(
-//                                                                   selectedVehicle: "",
-//                                                                   selectedRecord: emptyDvirRecord,
-//                                                                   isFromHome: true
-//                                                               )))
+                        //                        navmanager.navigate(to: .vehicleFlow(.AddDvirScreenView(
+                        //                                                                   selectedVehicle: "",
+                        //                                                                   selectedRecord: emptyDvirRecord,
+                        //                                                                   isFromHome: true
+                        //                                                               )))
                         
                         
-//                        navmanager.navigate(to: <#T##any Hashable#>)
+                        //                        navmanager.navigate(to: })
                         
                         
                         showDvirPopup = false
@@ -370,21 +371,21 @@ struct HomeScreenView: View {
                 )
                 .zIndex(3)
             }
-
+            
             if showCertifyLogAlert {
                 ZStack {
                     // Dimmed background
                     Color.black.opacity(0.4)
                         .ignoresSafeArea()
                         .zIndex(9)
-
+                    
                     // Centered Popup
                     CustomPopupAlert(
                         title: "Certify Log",
                         message: "Please certify your previous day log before going to On-Duty",
                         onOK: {
                             showCertifyLogAlert = false
-                          //  navmanager.navigate(to: .logsFlow(.DailyLogs(title: "Today's Logs")))
+                            //  navmanager.navigate(to: .logsFlow(.DailyLogs(title: "Today's Logs")))
                         },
                         onCancel: {
                             showCertifyLogAlert = false
@@ -404,7 +405,7 @@ struct HomeScreenView: View {
                 .ignoresSafeArea()
                 .zIndex(10)
             }
-
+            
             if showLogoutPopup {
                 Color.black.opacity(0.5)
                     .ignoresSafeArea()
@@ -427,7 +428,7 @@ struct HomeScreenView: View {
                             UserDefaults.standard.removeObject(forKey: AppStorageKeys.timezone)
                             UserDefaults.standard.removeObject(forKey: "timezoneOffSet")
                             
-                           // session.logOut() // Nitin
+                            // session.logOut() // Nitin
                             SessionManagerClass.shared.clearToken()
                             //navmanager.navigate(to: AppRoute.homeFlow(.splashScreen))
                             
@@ -454,9 +455,9 @@ struct HomeScreenView: View {
                         onConnect: {
                             showDeviceSelector = false
                             if selectedDevice == "NT-11" {
-                               // navmanager.navigate(to:    AppRoute.vehicleFlow(.NT11Connection))
+                                // navmanager.navigate(to:    AppRoute.vehicleFlow(.NT11Connection))
                             } else if selectedDevice == "PT30" {
-                               // navmanager.navigate(to: AppRoute.vehicleFlow(.PT30Connection))
+                                // navmanager.navigate(to: AppRoute.vehicleFlow(.PT30Connection))
                                 
                             }
                         }
@@ -493,11 +494,12 @@ struct HomeScreenView: View {
                 .animation(.easeInOut, value: showBanner)
             }
         }
-        .onReceive(homeVM.onDutyTimer.publisher, perform: { timer in
-            print(timer.remainingTime)
-            // Auto-save timer state every 30 seconds
-            autoSaveTimerState()
-        })
+        .id(homeVM.refreshView)
+//        .onReceive(homeVM.onDutyTimer.publisher, perform: { timer in
+//            print(timer.remainingTime)
+//            // Auto-save timer state every 30 seconds
+//            //   autoSaveTimerState()
+//        })
         .onChange(of: networkMonitor.isConnected) { newValue in
             if newValue {
                 showToast(message: " Internet Connected Successfully", color: .green)
@@ -505,10 +507,10 @@ struct HomeScreenView: View {
                 showToast(message: " No Internet Connection", color: .red)
             }
         }
-
+        
         .onAppear {
-           // homeVM.startTimer(for: [.onDuty])
-            loadTodayHOSEvents()
+            // homeVM.startTimer(for: [.onDuty])
+          //  loadTodayHOSEvents()
         }
         //(_)(+)_(_+(_+(_+)()_(+)_
         ZStack {
@@ -529,14 +531,14 @@ struct HomeScreenView: View {
         }
         //MARK: -  call sync API In every 10 sec
         .onAppear {
-//            timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
-//                Task {
-//                    await syncVM.syncOfflineData()
-//                }
-//            }
-//            Task {
-//                await syncVM.syncOfflineData()
-//            }
+            //            timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+            //                Task {
+            //                    await syncVM.syncOfflineData()
+            //                }
+            //            }
+            //            Task {
+            //                await syncVM.syncOfflineData()
+            //            }
         }
         .onDisappear {
             timer?.invalidate()
@@ -555,10 +557,10 @@ struct HomeScreenView: View {
             // Save timer states when app is about to terminate
             homeVM.saveCurrentTimerStatesBeforeSwitch()
             homeVM.saveCurrentTimerStates()
-
+            
             homeVM.restoreAllTimersFromLastStatus()
         }
-
+        
         
         .onAppear {
             
@@ -571,463 +573,463 @@ struct HomeScreenView: View {
                !driverName.isEmpty {
                 labelValue = driverName
             }
-            homeVM.restoreAllTimersFromLastStatus()  //#p
+          //  homeVM.restoreAllTimersFromLastStatus()  //#p
         }
         
         
-//            else {
-//                DispatchQueue.main.async {
-//                   // navmanager.navigate(to: AppRoute.loginFlow(.login))
-//                    navmanager.navigate(to: ApplicationRoot.login)
-//                    appRootManager.currentRoot = .login
-//                }
-//                return
-//            }
-//            
-//           //  Check if we have any saved timer data
-//            let hasSavedData = !DatabaseManager.shared.fetchLogs().isEmpty
-//                        print(" Has saved data: \(hasSavedData)")
-//            
-//            if hasSavedData {
-//                            print(" Found saved data - restoring timers")
-//             //    Delay restoration to ensure UI is ready
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//                    self.restoreAllTimers()
-//                    hasRestoredTimers = true
-//                    print(" Timer restoration completed - confirmedStatus: \(self.confirmedStatus ?? "nil"), selectedStatus: \(self.selectedStatus ?? "nil")")
-//                }
-//            } else {
-//                      
-//                print(" No saved data - initializing fresh")
-//                if !hasAppearedBefore {
-//                    hasAppearedBefore = true
-//                            }
-//                         //    Always ensure status is set to Off-Duty if no saved data
-//            if confirmedStatus == nil {
-//                selectedStatus = DriverStatusConstants.offDuty
-//                confirmedStatus = DriverStatusConstants.offDuty
-//                                print(" Set status to OffDuty (no saved data)")
-//                            }
-//                        }
-//            
-//                       //  Always ensure status is properly set when view appears
-//                        if confirmedStatus == nil {
-//                            selectedStatus = DriverStatusConstants.offDuty
-//                            confirmedStatus = DriverStatusConstants.offDuty
-//                            print("🔧 Set status to OffDuty (fallback)")
-//                        }
-//            
-//                        print(" Final status after onAppear - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
-//                        
-//                      //   Check and reset daily violations
-//                        checkAndResetDailyViolations()
-//            
-//            checkFor34HourReset()
-//        }
-
+        //            else {
+        //                DispatchQueue.main.async {
+        //                   // navmanager.navigate(to: AppRoute.loginFlow(.login))
+        //                    navmanager.navigate(to: ApplicationRoot.login)
+        //                    appRootManager.currentRoot = .login
+        //                }
+        //                return
+        //            }
+        //
+        //           //  Check if we have any saved timer data
+        //            let hasSavedData = !DatabaseManager.shared.fetchLogs().isEmpty
+        //                        print(" Has saved data: \(hasSavedData)")
+        //
+        //            if hasSavedData {
+        //                            print(" Found saved data - restoring timers")
+        //             //    Delay restoration to ensure UI is ready
+        //                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        //                    self.restoreAllTimers()
+        //                    hasRestoredTimers = true
+        //                    print(" Timer restoration completed - confirmedStatus: \(self.confirmedStatus ?? "nil"), selectedStatus: \(self.selectedStatus ?? "nil")")
+        //                }
+        //            } else {
+        //
+        //                print(" No saved data - initializing fresh")
+        //                if !hasAppearedBefore {
+        //                    hasAppearedBefore = true
+        //                            }
+        //                         //    Always ensure status is set to Off-Duty if no saved data
+        //            if confirmedStatus == nil {
+        //                selectedStatus = DriverStatusConstants.offDuty
+        //                confirmedStatus = DriverStatusConstants.offDuty
+        //                                print(" Set status to OffDuty (no saved data)")
+        //                            }
+        //                        }
+        //
+        //                       //  Always ensure status is properly set when view appears
+        //                        if confirmedStatus == nil {
+        //                            selectedStatus = DriverStatusConstants.offDuty
+        //                            confirmedStatus = DriverStatusConstants.offDuty
+        //                            print("🔧 Set status to OffDuty (fallback)")
+        //                        }
+        //
+        //                        print(" Final status after onAppear - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
+        //
+        //                      //   Check and reset daily violations
+        //                        checkAndResetDailyViolations()
+        //
+        //            checkFor34HourReset()
+        //        }
+        
         // nitin
-            
-            //***************************+++++++++++++++++++++++++++******************************************************************************************************
-    // MARK: - OnDuty Timer Violation Logic with Working Time
-
-//        .onChange(of: homeVM.onDutyTimer?.remainingTime) { newValue in
-//            
-//        }
+        
+        //***************************+++++++++++++++++++++++++++******************************************************************************************************
+        // MARK: - OnDuty Timer Violation Logic with Working Time
+        
+        //        .onChange(of: homeVM.onDutyTimer?.remainingTime) { newValue in
+        //
+        //        }
         /* // nitin
          
-        
-        .onReceive(ONDuty.remainingTime) { remainingTime in
-            let totalDriveTime = DriverInfo.onDutyTime ?? 0
-            let workingTime = Double(totalDriveTime) - remainingTime
-            let violationThreshold = Double(totalDriveTime)
-            print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
-
-            // Violation check - use daily tracking
-            if workingTime >= violationThreshold && !didShowOnDutyViolationToday {
-                activeTimerAlert = TimerAlert(
-                    title: "On-Duty Violation",
-                    message: "Your Onduty time has been exceeded to 14 hours",
-                    backgroundColor: .red.opacity(0.9),
-                    isViolation: true
-                )
-                didShowOnDutyViolationToday = true
-                didShowOnDutyViolation = true
-                didShowViolation = true  // Keep global flag for compatibility
-                addViolationBox(text: "Your On Duty time has been exceeded to 14 hours")
-                print("OnDuty Violation fired once")
-                
-                saveViolationToDatabase(status: "Violation", DutyType: "Your On-Duty time has been exceeded to 14 hours \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
-            } else {
-            // 30-min warning
-                if let warning1 = DriverInfo.setWarningOnDutyTime1,
-                   Int(workingTime) >= Int(warning1),
-                   !didShowOnDuty30MinToday {
-                    
-                activeTimerAlert = TimerAlert(
-                    title: "On-Duty Reminder",
-                        message: """
-                30 min left for completing your On-Duty cycle for a day
-                Local: \(times.local)
-                GMT:   \(times.gmt)
-                """,
-                    backgroundColor: .yellow
-                )
-                    didShowOnDuty30MinToday = true
-                    didShowOnDuty30MinWarning = true
-                    didShow30MinWarning = true  // Keep global flag for compatibility
-                    
-                    print("OnDuty 30min warning fired once")
-                    saveViolationToDatabase(status: "Warning", DutyType: "30 minutes left before On-Duty time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
-                }
-            // 15-min warning
-                else if let warning2 = DriverInfo.setWarningOnDutyTime2,
-                        Int(workingTime) >= Int(warning2),
-                        !didShowOnDuty15MinToday {
-                    
-                activeTimerAlert = TimerAlert(
-                        title: "On-Duty Reminder",
-                        message: """
-                15 min left for completing your On Duty cycle for a day
-                Local: \(times.local)
-                  GMT:   \(times.gmt)
-                """,
-                    backgroundColor: .orange
-                )
-                    didShowOnDuty15MinToday = true
-                    didShowOnDuty15MinWarning = true
-                    didShow15MinWarning = true  // Keep global flag for compatibility
-                    print("OnDuty 15min warning fired once")
-                    saveViolationToDatabase(status: "Warning", DutyType: "15 minutes left before On Duty time exceedsLocal: \(times.local) ,GMT:\(times.gmt)", isVoilation: false)
-                }
-            }
-        }
-        
-            // MARK: - OnDrive Timer Violation with Working Time **************************************************************************************************
-        
-        .onReceive(driveTimer.$remainingTime) { remainingTime in
-            let totalDriveTime = DriverInfo.onDriveTime ?? 0
-            let workingTime = Double(totalDriveTime) - remainingTime
-            let violationThreshold = Double(totalDriveTime)
-
-            print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
-                    // Violation check - use daily tracking
-                    if workingTime >= violationThreshold && !didShowDriveViolationToday {
-                        activeTimerAlert = TimerAlert(
-                            title: "On-Drive Violation",
-                            message: "Your Ondrive time has been exceeded to 11 hours",
-                            backgroundColor: .red.opacity(0.9),
-                            isViolation: true
-                        )
-                        didShowDriveViolationToday = true
-                        didShowViolation = true
-                        addViolationBox(text: "Your On Drive time has been exceeded to 11 hours")
-                        print("Drive Violation fired once")
-                        saveViolationToDatabase(status: "Violation", DutyType: "Your On Drive time has been exceeded to 11 hours \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
-                        
-                    } else {
-                        // 30-min warning - NO violation box
-                        if let warning1 =  DriverInfo.setWarningOnDriveTime1,
-                           Int(workingTime) >= Int(warning1),
-                           !didShowDrive30MinToday {
-                            
-                activeTimerAlert = TimerAlert(
-                    title: "On-Drive Reminder",
-                                message: """
-                        30 min left for completing your On Drive cycle for a day
-                        Local: \(times.local)
-                        GMT:   \(times.gmt)
-                        """,
-                    backgroundColor: .yellow
-                )
-                            didShowDrive30MinToday = true
-                didShow30MinWarning = true
-                            
-                            print("Drive 30min warning fired once")
-                            // Save as warning, not violation - NO violation box
-                            saveViolationToDatabase(status: "Warning", DutyType: "30 minutes left before On Drive time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
-                        }
-                        
-                        // 15-min warning - NO violation box
-                        else if let warning2 =   DriverInfo.setWarningOnDriveTime2,
-                                Int(workingTime) >= Int(warning2),
-                                !didShowDrive15MinToday {
-                            
-                activeTimerAlert = TimerAlert(
-                                title: "On-Drive Reminder",
-                                message: """
-                        15 min left for completing your On Drive cycle for a day
-                        Local: \(times.local)
-                        GMT:   \(times.gmt)
-                        """,
-                    backgroundColor: .orange
-                )
-                            didShowDrive15MinToday = true
-                didShow15MinWarning = true
-                            print("Drive 15min warning fired once")
-                            // Save as warning, not violation - NO violation box
-                            saveViolationToDatabase(status: "Warning", DutyType: "15 minutes left before On Drive time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
-                        }
-                        
-                        
-                    }
-                    
-                }
-        
-        // MARK: - Continue Drive Timer Violation Logic with Working Time*****************************************************************************************
-        
-            .onReceive(continueDriveTime.$remainingTime) { remainingTime in
-                let totalDriveTime = DriverInfo.continueDriveTime ?? 0
-                let workingTime = Double(totalDriveTime) - remainingTime
-                let violationThreshold = Double(totalDriveTime)
-                
-                print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
-                
-                //  Violation check at 8:00 - use daily tracking
-                if workingTime >= violationThreshold && !didShowContinueDriveViolationToday {
-                activeTimerAlert = TimerAlert(
-                        title: "Continue Violation",
-                        message: "Your drive time has been exceeded to 8 hours \(times.local) GMT \(times.gmt)",
-                    backgroundColor: .red.opacity(0.9),
-                    isViolation: true
-                )
-                    didShowContinueDriveViolationToday = true
-                didShowViolation = true
-                    print("Continue Drive Violation fired once")
-                    
-                    saveViolationToDatabase(status: "voilation", DutyType: " Your drive time has been exceeded to 8 hours : \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
-                    
-                    
-                } else {
-                    //  30-min warning at 7:30 (27000s) - use daily tracking
-                    let warning30Min = DriverInfo.warningBreakTime1
-                    if Int(workingTime) >= warning30Min ?? 0 && !didShowDrive30MinToday {
-                        activeTimerAlert = TimerAlert(
-                            title: "Continue Drive Reminder",
-                            message: "30 minutes left before reaching 8 hours  \(times.local) GMT \(times.gmt)",
-                            backgroundColor: .yellow
-                        )
-                        
-                        didShowDrive30MinToday = true
-                        didShow30MinWarning = true
-                        
-                        print("Continue Drive 30min warning fired once")
-                        saveViolationToDatabase(status: "voilation", DutyType: "30 minutes left before Continue Drive time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
-                        
-                    }
-                    
-                    //  15-min warning at 7:45 (27900s) - use daily tracking
-                    let warning15Min = DriverInfo.warningBreakTime1
-                    if Int(workingTime) >= warning15Min ?? 0 && !didShowDrive15MinToday {
-                activeTimerAlert = TimerAlert(
-                            title: "Continue Drive Alert",
-                            message: "15 minutes left before reaching 8 hours  \(times.local) GMT \(times.gmt)",
-                    backgroundColor: .orange
-                )
-                   
-                            didShowDrive15MinToday = true
-                            didShow15MinWarning = true
-                        print("Continue Drive 15min warning fired once")
-                        saveViolationToDatabase(status: "warning", DutyType: "15 minutes left before Continue Drive time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
-                        
-                    }
-                }
-            }
-        
-        
-            //** MARK: - Cycle Timer Violation Logic with Working Time**********************************************************************************************
-                .onReceive(cycleTimerOn.$remainingTime) { remainingTime in
-                    
-                    //   let totalCycleTime = CountdownTimer.timeStringToSeconds("70:00:00") // 70 hours in seconds
-                    let totalCycleTime = DriverInfo.cycleTime ?? 252000
-                    let workingTime = Double(totalCycleTime) - remainingTime
-                    let violationThreshold = totalCycleTime
-                    
-                    print(" Cycle 30min warning: Worked \(workingTime/3600) hours, \(remainingTime/3600) hours remaining")
-                    
-                    if Int(workingTime) >= violationThreshold && !didShowCycleViolationToday {
-                activeTimerAlert = TimerAlert(
-                            title: "cycle Violation",
-                            message:  "Your Cycle time has been exceeded to 70 hours \(times.local) GMT \(times.gmt)",
-                            backgroundColor: .red.opacity(0.9),
-                            isViolation: true
-                        )
-                        
-                        didShowCycleViolationToday = true
-                        didShowViolation = true
-                        print("Cycle Violation fired once")
-                        saveViolationToDatabase(status: "Voilation", DutyType: "70 Hours cycle time exceed: \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
-                        
-                    }
-                    else {
-                        // 30-min warning (safe unwrap) - use daily tracking
-                        if let warning1 = DriverInfo.cycleRestartTime,
-                           //DriverInfo.setWarningOnDriveTime1,
-                           Int(workingTime) >= warning1,
-                           !didShowDrive30MinToday {
-                activeTimerAlert = TimerAlert(
-                                title: "Cycle Time Reminder",
-                                message: "30 minutes left for completing your  cycle of the Week \(times.local) GMT \(times.gmt)",
-                                backgroundColor: .yellow
-                            )
-                            didShowDrive30MinToday = true
-                            didShow30MinWarning = true
-                            print("Cycle 30min warning fired once")
-                            
-                            saveViolationToDatabase(status: "Warning", DutyType: "30 minutes left before cycle time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
-                            
-                            //
-                        }
-                        
-                        // 15-min warning (safe unwrap) - use daily tracking
-                        else if let warning2 = DriverInfo.cycleRestartTime                                                                                                                                                           ,
-                                
-                                    Int(workingTime) >= warning2,
-                                !didShowDrive15MinToday {
-                activeTimerAlert = TimerAlert(
-                                title: "cycle Alert",
-                                message: "15 minutes left for completing your  cycle of the week \(times.local) GMT \(times.gmt)",
-                                backgroundColor: .orange
-                            )
-                            didShowDrive15MinToday = true
-                            didShow15MinWarning = true
-                            print("Cycle 15min warning fired once")
-                            
-                            saveViolationToDatabase(status: "Warning", DutyType: "15 minutes left before cycle time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
-                            
-                        }
-                    }
-  
-                }
-            
-            //MARK: -  Break Timer Completion Logic
-            .onReceive(breakTime.$remainingTime) { remaining in
-                print("Remaining Break Time: \(remaining)")
-                
-                // Check if break timer has completed (30 minutes = 0)
-                if remaining <= 0 {
-                    print(" Break timer completed - 30 minutes break finished")
-                    isBreakTimerCompleted = true  // Set flag that break is completed
-                    print(" Break timer completion flag set to true")
-                }
-            }
-            
-            //MARK: -  SleepTimer Logic
-            
-            .onReceive(sleepTimer.$remainingTime) { remaining in
-            print("Remaining Sleep Time: \(remaining)")
-            
-            if remaining <= 0 && !showSleepResetPopup {
-                showSleepResetPopup = true
-                hasShownSleepResetPopup =  true
-            }
-                    
-                    // Calculate off-duty and sleep time from database
-                    let calculatedTimes = calculateOffDutyAndSleepTime()
-                    let totalOffDuty = calculatedTimes.offDuty
-                    let totalSleep = calculatedTimes.sleep
-                    let totalRestTime = totalOffDuty + totalSleep
-                    
-                    print(" Calculated Times - OffDuty: \(totalOffDuty/3600)h, Sleep: \(totalSleep/3600)h, Total Rest: \(totalRestTime/3600)h")
-                    
-                    let tenHours: TimeInterval = 10 * 60 * 60
-                    // Show NEXTDAY popup when 10 hours of rest time is reached
-                    if totalRestTime >= tenHours && !showNextDayPopup && !hasShownNextDayPopup {
-                        print(" 10-hour reset condition met! Total rest time: \(totalRestTime/3600) hours - Showing NEXTDAY popup")
-                        // Reset timers immediately when popup appears
-                        resetTimersForNextDay()
-                        showNextDayPopup = true
-                        hasShownNextDayPopup = true
-                        // Auto dismiss after 3 seconds
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                            showNextDayPopup = false
-                            print(" NEXTDAY popup auto-dismissed after 3 seconds")
-                        }
-                    }
-                    // Also show sleep reset popup for sleep timer completion
-                    if remaining <= 0 && !showSleepResetPopup {
-                        showSleepResetPopup = true
-                        hasShownSleepResetPopup = true
-                    }
-                }
-            */
+         
+         .onReceive(ONDuty.remainingTime) { remainingTime in
+         let totalDriveTime = DriverInfo.onDutyTime ?? 0
+         let workingTime = Double(totalDriveTime) - remainingTime
+         let violationThreshold = Double(totalDriveTime)
+         print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
+         
+         // Violation check - use daily tracking
+         if workingTime >= violationThreshold && !didShowOnDutyViolationToday {
+         activeTimerAlert = TimerAlert(
+         title: "On-Duty Violation",
+         message: "Your Onduty time has been exceeded to 14 hours",
+         backgroundColor: .red.opacity(0.9),
+         isViolation: true
+         )
+         didShowOnDutyViolationToday = true
+         didShowOnDutyViolation = true
+         didShowViolation = true  // Keep global flag for compatibility
+         addViolationBox(text: "Your On Duty time has been exceeded to 14 hours")
+         print("OnDuty Violation fired once")
+         
+         saveViolationToDatabase(status: "Violation", DutyType: "Your On-Duty time has been exceeded to 14 hours \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
+         } else {
+         // 30-min warning
+         if let warning1 = DriverInfo.setWarningOnDutyTime1,
+         Int(workingTime) >= Int(warning1),
+         !didShowOnDuty30MinToday {
+         
+         activeTimerAlert = TimerAlert(
+         title: "On-Duty Reminder",
+         message: """
+         30 min left for completing your On-Duty cycle for a day
+         Local: \(times.local)
+         GMT:   \(times.gmt)
+         """,
+         backgroundColor: .yellow
+         )
+         didShowOnDuty30MinToday = true
+         didShowOnDuty30MinWarning = true
+         didShow30MinWarning = true  // Keep global flag for compatibility
+         
+         print("OnDuty 30min warning fired once")
+         saveViolationToDatabase(status: "Warning", DutyType: "30 minutes left before On-Duty time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
+         }
+         // 15-min warning
+         else if let warning2 = DriverInfo.setWarningOnDutyTime2,
+         Int(workingTime) >= Int(warning2),
+         !didShowOnDuty15MinToday {
+         
+         activeTimerAlert = TimerAlert(
+         title: "On-Duty Reminder",
+         message: """
+         15 min left for completing your On Duty cycle for a day
+         Local: \(times.local)
+         GMT:   \(times.gmt)
+         """,
+         backgroundColor: .orange
+         )
+         didShowOnDuty15MinToday = true
+         didShowOnDuty15MinWarning = true
+         didShow15MinWarning = true  // Keep global flag for compatibility
+         print("OnDuty 15min warning fired once")
+         saveViolationToDatabase(status: "Warning", DutyType: "15 minutes left before On Duty time exceedsLocal: \(times.local) ,GMT:\(times.gmt)", isVoilation: false)
+         }
+         }
+         }
+         
+         // MARK: - OnDrive Timer Violation with Working Time **************************************************************************************************
+         
+         .onReceive(driveTimer.$remainingTime) { remainingTime in
+         let totalDriveTime = DriverInfo.onDriveTime ?? 0
+         let workingTime = Double(totalDriveTime) - remainingTime
+         let violationThreshold = Double(totalDriveTime)
+         
+         print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
+         // Violation check - use daily tracking
+         if workingTime >= violationThreshold && !didShowDriveViolationToday {
+         activeTimerAlert = TimerAlert(
+         title: "On-Drive Violation",
+         message: "Your Ondrive time has been exceeded to 11 hours",
+         backgroundColor: .red.opacity(0.9),
+         isViolation: true
+         )
+         didShowDriveViolationToday = true
+         didShowViolation = true
+         addViolationBox(text: "Your On Drive time has been exceeded to 11 hours")
+         print("Drive Violation fired once")
+         saveViolationToDatabase(status: "Violation", DutyType: "Your On Drive time has been exceeded to 11 hours \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
+         
+         } else {
+         // 30-min warning - NO violation box
+         if let warning1 =  DriverInfo.setWarningOnDriveTime1,
+         Int(workingTime) >= Int(warning1),
+         !didShowDrive30MinToday {
+         
+         activeTimerAlert = TimerAlert(
+         title: "On-Drive Reminder",
+         message: """
+         30 min left for completing your On Drive cycle for a day
+         Local: \(times.local)
+         GMT:   \(times.gmt)
+         """,
+         backgroundColor: .yellow
+         )
+         didShowDrive30MinToday = true
+         didShow30MinWarning = true
+         
+         print("Drive 30min warning fired once")
+         // Save as warning, not violation - NO violation box
+         saveViolationToDatabase(status: "Warning", DutyType: "30 minutes left before On Drive time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
+         }
+         
+         // 15-min warning - NO violation box
+         else if let warning2 =   DriverInfo.setWarningOnDriveTime2,
+         Int(workingTime) >= Int(warning2),
+         !didShowDrive15MinToday {
+         
+         activeTimerAlert = TimerAlert(
+         title: "On-Drive Reminder",
+         message: """
+         15 min left for completing your On Drive cycle for a day
+         Local: \(times.local)
+         GMT:   \(times.gmt)
+         """,
+         backgroundColor: .orange
+         )
+         didShowDrive15MinToday = true
+         didShow15MinWarning = true
+         print("Drive 15min warning fired once")
+         // Save as warning, not violation - NO violation box
+         saveViolationToDatabase(status: "Warning", DutyType: "15 minutes left before On Drive time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
+         }
+         
+         
+         }
+         
+         }
+         
+         // MARK: - Continue Drive Timer Violation Logic with Working Time*****************************************************************************************
+         
+         .onReceive(continueDriveTime.$remainingTime) { remainingTime in
+         let totalDriveTime = DriverInfo.continueDriveTime ?? 0
+         let workingTime = Double(totalDriveTime) - remainingTime
+         let violationThreshold = Double(totalDriveTime)
+         
+         print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
+         
+         //  Violation check at 8:00 - use daily tracking
+         if workingTime >= violationThreshold && !didShowContinueDriveViolationToday {
+         activeTimerAlert = TimerAlert(
+         title: "Continue Violation",
+         message: "Your drive time has been exceeded to 8 hours \(times.local) GMT \(times.gmt)",
+         backgroundColor: .red.opacity(0.9),
+         isViolation: true
+         )
+         didShowContinueDriveViolationToday = true
+         didShowViolation = true
+         print("Continue Drive Violation fired once")
+         
+         saveViolationToDatabase(status: "voilation", DutyType: " Your drive time has been exceeded to 8 hours : \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
+         
+         
+         } else {
+         //  30-min warning at 7:30 (27000s) - use daily tracking
+         let warning30Min = DriverInfo.warningBreakTime1
+         if Int(workingTime) >= warning30Min ?? 0 && !didShowDrive30MinToday {
+         activeTimerAlert = TimerAlert(
+         title: "Continue Drive Reminder",
+         message: "30 minutes left before reaching 8 hours  \(times.local) GMT \(times.gmt)",
+         backgroundColor: .yellow
+         )
+         
+         didShowDrive30MinToday = true
+         didShow30MinWarning = true
+         
+         print("Continue Drive 30min warning fired once")
+         saveViolationToDatabase(status: "voilation", DutyType: "30 minutes left before Continue Drive time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
+         
+         }
+         
+         //  15-min warning at 7:45 (27900s) - use daily tracking
+         let warning15Min = DriverInfo.warningBreakTime1
+         if Int(workingTime) >= warning15Min ?? 0 && !didShowDrive15MinToday {
+         activeTimerAlert = TimerAlert(
+         title: "Continue Drive Alert",
+         message: "15 minutes left before reaching 8 hours  \(times.local) GMT \(times.gmt)",
+         backgroundColor: .orange
+         )
+         
+         didShowDrive15MinToday = true
+         didShow15MinWarning = true
+         print("Continue Drive 15min warning fired once")
+         saveViolationToDatabase(status: "warning", DutyType: "15 minutes left before Continue Drive time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
+         
+         }
+         }
+         }
+         
+         
+         //** MARK: - Cycle Timer Violation Logic with Working Time**********************************************************************************************
+           .onReceive(cycleTimerOn.$remainingTime) { remainingTime in
+           
+           //   let totalCycleTime = CountdownTimer.timeStringToSeconds("70:00:00") // 70 hours in seconds
+           let totalCycleTime = DriverInfo.cycleTime ?? 252000
+           let workingTime = Double(totalCycleTime) - remainingTime
+           let violationThreshold = totalCycleTime
+           
+           print(" Cycle 30min warning: Worked \(workingTime/3600) hours, \(remainingTime/3600) hours remaining")
+           
+           if Int(workingTime) >= violationThreshold && !didShowCycleViolationToday {
+           activeTimerAlert = TimerAlert(
+           title: "cycle Violation",
+           message:  "Your Cycle time has been exceeded to 70 hours \(times.local) GMT \(times.gmt)",
+           backgroundColor: .red.opacity(0.9),
+           isViolation: true
+           )
+           
+           didShowCycleViolationToday = true
+           didShowViolation = true
+           print("Cycle Violation fired once")
+           saveViolationToDatabase(status: "Voilation", DutyType: "70 Hours cycle time exceed: \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
+           
+           }
+           else {
+           // 30-min warning (safe unwrap) - use daily tracking
+           if let warning1 = DriverInfo.cycleRestartTime,
+           //DriverInfo.setWarningOnDriveTime1,
+           Int(workingTime) >= warning1,
+           !didShowDrive30MinToday {
+           activeTimerAlert = TimerAlert(
+           title: "Cycle Time Reminder",
+           message: "30 minutes left for completing your  cycle of the Week \(times.local) GMT \(times.gmt)",
+           backgroundColor: .yellow
+           )
+           didShowDrive30MinToday = true
+           didShow30MinWarning = true
+           print("Cycle 30min warning fired once")
+           
+           saveViolationToDatabase(status: "Warning", DutyType: "30 minutes left before cycle time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
+           
+           //
+           }
+           
+           // 15-min warning (safe unwrap) - use daily tracking
+           else if let warning2 = DriverInfo.cycleRestartTime                                                                                                                                                           ,
+           
+           Int(workingTime) >= warning2,
+           !didShowDrive15MinToday {
+           activeTimerAlert = TimerAlert(
+           title: "cycle Alert",
+           message: "15 minutes left for completing your  cycle of the week \(times.local) GMT \(times.gmt)",
+           backgroundColor: .orange
+           )
+           didShowDrive15MinToday = true
+           didShow15MinWarning = true
+           print("Cycle 15min warning fired once")
+           
+           saveViolationToDatabase(status: "Warning", DutyType: "15 minutes left before cycle time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
+           
+           }
+           }
+           
+           }
+           
+           //MARK: -  Break Timer Completion Logic
+           .onReceive(breakTime.$remainingTime) { remaining in
+           print("Remaining Break Time: \(remaining)")
+           
+           // Check if break timer has completed (30 minutes = 0)
+           if remaining <= 0 {
+           print(" Break timer completed - 30 minutes break finished")
+           isBreakTimerCompleted = true  // Set flag that break is completed
+           print(" Break timer completion flag set to true")
+           }
+           }
+           
+           //MARK: -  SleepTimer Logic
+           
+           .onReceive(sleepTimer.$remainingTime) { remaining in
+           print("Remaining Sleep Time: \(remaining)")
+           
+           if remaining <= 0 && !showSleepResetPopup {
+           showSleepResetPopup = true
+           hasShownSleepResetPopup =  true
+           }
+           
+           // Calculate off-duty and sleep time from database
+           let calculatedTimes = calculateOffDutyAndSleepTime()
+           let totalOffDuty = calculatedTimes.offDuty
+           let totalSleep = calculatedTimes.sleep
+           let totalRestTime = totalOffDuty + totalSleep
+           
+           print(" Calculated Times - OffDuty: \(totalOffDuty/3600)h, Sleep: \(totalSleep/3600)h, Total Rest: \(totalRestTime/3600)h")
+           
+           let tenHours: TimeInterval = 10 * 60 * 60
+           // Show NEXTDAY popup when 10 hours of rest time is reached
+           if totalRestTime >= tenHours && !showNextDayPopup && !hasShownNextDayPopup {
+           print(" 10-hour reset condition met! Total rest time: \(totalRestTime/3600) hours - Showing NEXTDAY popup")
+           // Reset timers immediately when popup appears
+           resetTimersForNextDay()
+           showNextDayPopup = true
+           hasShownNextDayPopup = true
+           // Auto dismiss after 3 seconds
+           DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+           showNextDayPopup = false
+           print(" NEXTDAY popup auto-dismissed after 3 seconds")
+           }
+           }
+           // Also show sleep reset popup for sleep timer completion
+           if remaining <= 0 && !showSleepResetPopup {
+           showSleepResetPopup = true
+           hasShownSleepResetPopup = true
+           }
+           }
+           */
          */ // nitin
         
         /*
-        .alert(isPresented: $showSleepResetPopup) {
-                    
-            let safeDay = daysCount ?? 1
-            let safeShift = ShiftCurrentDay ?? 1
-            
-            return Alert(
-                title: Text("Next Day Start"),
-                message: Text("Day \(safeDay)\nShift \(safeShift)"),
-                dismissButton: .default(Text("OK")) {
-                    daysCount = safeDay + 1
-                    ShiftCurrentDay = safeShift
-                    
-                    
-                  //  Save updated values in UserDefaults
-                                UserDefaults.standard.set(daysCount, forKey: "days")
-                                UserDefaults.standard.set(ShiftCurrentDay, forKey: "shift")
-                                print("Updated Day: \(daysCount ?? 0), Shift: \(ShiftCurrentDay ?? 0)")
-                    
-                    
-                    DatabaseManager.shared.updateDayShiftInDB(
-                               day: daysCount ?? 1,
-                               shift: ShiftCurrentDay ?? 1,
-                               userId: UserDefaults.standard.integer(forKey: "userId")
-                           )
-                           
-                    
-                    // Reset timers with API values
-                    let sleepTime = DriverInfo.onSleepTime ?? 36000.0
-                    let onDutyTime = DriverInfo.onDutyTime ?? 50400.0
-                    let onDriveTime = DriverInfo.onDriveTime ?? 39600.0
-                    
-                    sleepTimer.resetsSleep(to: sleepTime)
-                    ONDuty.resetsSleep(to: onDutyTime)
-                    driveTimer.resetsSleep(to: onDriveTime)
-                    showSleepResetPopup = false
-                    
-                            // Reset status to Off-Duty after timer reset
-                            confirmedStatus = DriverStatusConstants.offDuty
-                            selectedStatus = DriverStatusConstants.offDuty
-                    saveNextDayLog()
-                            
-                        }
-                    )
-                }
-            
-            //MARK: - NEXTDAY Popup Alert (Auto-dismiss after 3 seconds)
-                .alert(isPresented: $showNextDayPopup) {
-                    let safeDay = daysCount ?? 1
-                    let safeShift = ShiftCurrentDay ?? 1
-                    
-                    return Alert(
-                        
-                        title: Text("NEXTDAY"),
-                        message: Text("10 hours of rest time completed!\nTimers have been reset.\nDay \(safeDay)\nShift \(safeShift)")
-                        
-                        
-                    )
-                }
-        
-        
-   
-       //MARK: - Showing Refresh Log alert
-        .alert("Are you sure you want to refresh all logs?", isPresented: $showSyncconfirmation) {
-            Button("Cancel", role: .cancel) {}
-            Button("OK", role: .destructive) {
-                Task {
-                    await viewModel.refresh()   //  Call your refresh API
-                   
-                }
-            }
-        } message: {
-            Text("This will refresh all your local logs with the server.")
-        }
-
-
+         .alert(isPresented: $showSleepResetPopup) {
+         
+         let safeDay = daysCount ?? 1
+         let safeShift = ShiftCurrentDay ?? 1
+         
+         return Alert(
+         title: Text("Next Day Start"),
+         message: Text("Day \(safeDay)\nShift \(safeShift)"),
+         dismissButton: .default(Text("OK")) {
+         daysCount = safeDay + 1
+         ShiftCurrentDay = safeShift
+         
+         
+         //  Save updated values in UserDefaults
+         UserDefaults.standard.set(daysCount, forKey: "days")
+         UserDefaults.standard.set(ShiftCurrentDay, forKey: "shift")
+         print("Updated Day: \(daysCount ?? 0), Shift: \(ShiftCurrentDay ?? 0)")
+         
+         
+         DatabaseManager.shared.updateDayShiftInDB(
+         day: daysCount ?? 1,
+         shift: ShiftCurrentDay ?? 1,
+         userId: UserDefaults.standard.integer(forKey: "userId")
+         )
+         
+         
+         // Reset timers with API values
+         let sleepTime = DriverInfo.onSleepTime ?? 36000.0
+         let onDutyTime = DriverInfo.onDutyTime ?? 50400.0
+         let onDriveTime = DriverInfo.onDriveTime ?? 39600.0
+         
+         sleepTimer.resetsSleep(to: sleepTime)
+         ONDuty.resetsSleep(to: onDutyTime)
+         driveTimer.resetsSleep(to: onDriveTime)
+         showSleepResetPopup = false
+         
+         // Reset status to Off-Duty after timer reset
+         confirmedStatus = DriverStatusConstants.offDuty
+         selectedStatus = DriverStatusConstants.offDuty
+         saveNextDayLog()
+         
+         }
+         )
+         }
+         
+         //MARK: - NEXTDAY Popup Alert (Auto-dismiss after 3 seconds)
+         .alert(isPresented: $showNextDayPopup) {
+         let safeDay = daysCount ?? 1
+         let safeShift = ShiftCurrentDay ?? 1
+         
+         return Alert(
+         
+         title: Text("NEXTDAY"),
+         message: Text("10 hours of rest time completed!\nTimers have been reset.\nDay \(safeDay)\nShift \(safeShift)")
+         
+         
+         )
+         }
+         
+         
+         
+         //MARK: - Showing Refresh Log alert
+         .alert("Are you sure you want to refresh all logs?", isPresented: $showSyncconfirmation) {
+         Button("Cancel", role: .cancel) {}
+         Button("OK", role: .destructive) {
+         Task {
+         await viewModel.refresh()   //  Call your refresh API
+         
+         }
+         }
+         } message: {
+         Text("This will refresh all your local logs with the server.")
+         }
+         
+         
          
          */
         
@@ -1054,19 +1056,19 @@ struct HomeScreenView: View {
                         // Delete all Continue Drive data
                         ContinueDriveDBManager.shared.deleteAllContinueDriveData()
                         print(" Continue Drive data deleted successfully")
-        
+                        
                     } else {
                         print(" Driver ID not found in UserDefaults")
                     }
                 }
-         
+                
             }
             
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("This will permanently delete all logs Record.")
         }
-
+        
         .navigationBarBackButtonHidden()
         
         .navigationDestination(for: AppRoute.DatabaseFlow.self, destination: { type in
@@ -1083,18 +1085,18 @@ struct HomeScreenView: View {
                 
             case  .DriverLogListView:
                 DriverLogListView()
-
+                
             }
             
         })
     }
     
-          //MARK: Function to Show Banner for 3 seconds
-        func showToast(message: String, color: Color) {
+    //MARK: Function to Show Banner for 3 seconds
+    func showToast(message: String, color: Color) {
         bannerMessage = message
         bannerColor = color
         showBanner = true
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             withAnimation {
                 showBanner = false
@@ -1104,52 +1106,54 @@ struct HomeScreenView: View {
     
     // Add this function to save NEXTDAY log
     private func saveNextDayLog() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let now = formatter.string(from: Date())
-        
-        // Create a custom log model for NEXTDAY
-        let nextDayLog = DriverLogModel(
-            id: nil,
-            status: "NEXTDAY",
-            startTime: now,
-            userId: UserDefaults.standard.integer(forKey: "userId"),
-            day: UserDefaults.standard.integer(forKey: "day"),
-            isVoilations: 0,
-            dutyType: "NewShift",
-            shift: 1,
-            vehicle: UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
-            isRunning: false,
-            odometer: 0.0,
-            engineHours: "0",
-            location: UserDefaults.standard.string(forKey: "customLocation") ?? "",
-            lat: Double(UserDefaults.standard.string(forKey: "lattitude") ?? "") ?? 0,
-            long: Double(UserDefaults.standard.string(forKey: "longitude") ?? "") ?? 0,
-            origin: "Unidentified",
-            isSynced: false,
-            vehicleId: UserDefaults.standard.integer(forKey: "vehicleId"),
-            trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
-            notes: "New day",
-            serverId: nil,
-            timestamp: TimeUtils.currentTimestamp(with: DriverInfo.timeZoneOffset),
-            identifier: 0,
-            remainingWeeklyTime: cycleTimerOn.internalTimeString,
-            remainingDriveTime:  driveTimer.internalTimeString,
-            remainingDutyTime: ONDuty.internalTimeString,
-            remainingSleepTime: sleepTimer.internalTimeString,
-            lastSleepTime: breakTime.internalTimeString,
-            isSplit: 0,
-            engineStatus: "Off",
-            isCertifiedLog: ""
-        )
-        
-        // Insert the log directly using the existing insertLog method
-        DatabaseManager.shared.insertLog(from: nextDayLog)
-        print(" NEXTDAY log saved to database at \(now)")
+        /*
+         let formatter = DateFormatter()
+         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+         let now = formatter.string(from: Date())
+         
+         // Create a custom log model for NEXTDAY
+         let nextDayLog = DriverLogModel(
+         id: nil,
+         status: "NEXTDAY",
+         startTime: now,
+         userId: UserDefaults.standard.integer(forKey: "userId"),
+         day: UserDefaults.standard.integer(forKey: "day"),
+         isVoilations: 0,
+         dutyType: "NewShift",
+         shift: 1,
+         vehicle: UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
+         isRunning: false,
+         odometer: 0.0,
+         engineHours: "0",
+         location: UserDefaults.standard.string(forKey: "customLocation") ?? "",
+         lat: Double(UserDefaults.standard.string(forKey: "lattitude") ?? "") ?? 0,
+         long: Double(UserDefaults.standard.string(forKey: "longitude") ?? "") ?? 0,
+         origin: "Unidentified",
+         isSynced: false,
+         vehicleId: UserDefaults.standard.integer(forKey: "vehicleId"),
+         trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
+         notes: "New day",
+         serverId: nil,
+         timestamp: TimeUtils.currentTimestamp(with: DriverInfo.timeZoneOffset),
+         identifier: 0,
+         remainingWeeklyTime: cycleTimerOn.internalTimeString,
+         remainingDriveTime:  driveTimer.internalTimeString,
+         remainingDutyTime: ONDuty.internalTimeString,
+         remainingSleepTime: sleepTimer.internalTimeString,
+         lastSleepTime: breakTime.internalTimeString,
+         isSplit: 0,
+         engineStatus: "Off",
+         isCertifiedLog: ""
+         )
+         
+         // Insert the log directly using the existing insertLog method
+         DatabaseManager.shared.insertLog(from: nextDayLog)
+         print(" NEXTDAY log saved to database at \(now)")
+         */
     }
     
     
-       private func loadTodayHOSEvents() {
+    private func loadTodayHOSEvents() {
         let todayLogs = DatabaseManager.shared.fetchDutyEventsForToday()
         print(" Logs fetched from DB: \(todayLogs.count)")
         for log in todayLogs {
@@ -1167,55 +1171,55 @@ struct HomeScreenView: View {
         hoseEvents = converted
     }
     
-        //MARK: -  VoilationBox Function
-        func addViolationBox(text: String) {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM dd"
-            let dateString = formatter.string(from: Date())
-            
-            formatter.dateFormat = "HH:mm:ss"
-            let timeString = formatter.string(from: Date())
-            
-            let violationData = ViolationBoxData(
-                text: text,
-                date: dateString,
-                time: timeString,
-                timestamp: Date()
-            )
-            
-            violationBoxes.append(violationData)
-            showViolationBoxes = true
-            
-            // Auto-hide after 25 seconds
-            DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
-                violationBoxes.removeAll { $0.timestamp == violationData.timestamp }
-                if violationBoxes.isEmpty {
-                    showViolationBoxes = false
-                }
+    //MARK: -  VoilationBox Function
+    func addViolationBox(text: String) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM dd"
+        let dateString = formatter.string(from: Date())
+        
+        formatter.dateFormat = "HH:mm:ss"
+        let timeString = formatter.string(from: Date())
+        
+        let violationData = ViolationBoxData(
+            text: text,
+            date: dateString,
+            time: timeString,
+            timestamp: Date()
+        )
+        
+        violationBoxes.append(violationData)
+        showViolationBoxes = true
+        
+        // Auto-hide after 25 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+            violationBoxes.removeAll { $0.timestamp == violationData.timestamp }
+            if violationBoxes.isEmpty {
+                showViolationBoxes = false
             }
         }
-
+    }
+    
     
     // MARK: - Check for 10-hour reset (Off-Duty + Sleep)
     
-     func checkFor10HourReset() {
+    func checkFor10HourReset() {
         //MARK: -  Total Off-Duty + Sleep time
         let totalRest = offDutySleepAccumulated
-            
+        
         if totalRest >= 10 * 3600 {
-                print("10-hour reset reached. Resetting all timers except Cycle Timer.")
-
+            print("10-hour reset reached. Resetting all timers except Cycle Timer.")
+            
             // Stop all timers
             driveTimer.stop()
             ONDuty.stop()
-                continueDriveTime.stop()
+            continueDriveTime.stop()
             sleepTimer.stop()
             breakTime.stop()
-
+            
             //Reset timers to full time (but DO NOT reset cycleTimerOn)
             driveTimer.reset(startTime: CountdownTimer.timeStringToSeconds("(11:00:00"))
             ONDuty.reset(startTime: CountdownTimer.timeStringToSeconds("14:00:00"))
-                continueDriveTime.reset(startTime: CountdownTimer.timeStringToSeconds("08:00:00"))
+            continueDriveTime.reset(startTime: CountdownTimer.timeStringToSeconds("08:00:00"))
             sleepTimer.reset(startTime: CountdownTimer.timeStringToSeconds("10:00:00"))
             breakTime.reset(startTime: CountdownTimer.timeStringToSeconds("00:30:00"))
             // Clear accumulated rest time
@@ -1223,407 +1227,411 @@ struct HomeScreenView: View {
             // Refresh UI (On-Duty will start again when user selects status)
             confirmedStatus = DriverStatusConstants.offDuty
             selectedStatus = DriverStatusConstants.offDuty
-
+            
             // Reload Events after reset
             hoseChartViewModel.forceRefresh()
-
+            
             // Save logs in DB for future restore
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let now = formatter.string(from: Date())
-
-            DatabaseManager.shared.saveTimerLog(
-                status: "Reset After 10 Hour Rest",
-                    startTime: now, dutyType: "Reset After 10 Hour Rest",
-                remainingWeeklyTime: cycleTimerOn.internalTimeString, // keep same cycle time
-                remainingDriveTime: driveTimer.internalTimeString,
-                remainingDutyTime: ONDuty.internalTimeString,
-                remainingSleepTime: sleepTimer.internalTimeString,
-                lastSleepTime: breakTime.internalTimeString,
-                RemaningRestBreak: "false",
-                isruning: false,
-                isVoilations: false
-            )
+            /*
+             DatabaseManager.shared.saveTimerLog(
+             status: "Reset After 10 Hour Rest",
+             startTime: now, dutyType: "Reset After 10 Hour Rest",
+             remainingWeeklyTime: cycleTimerOn.internalTimeString, // keep same cycle time
+             remainingDriveTime: driveTimer.internalTimeString,
+             remainingDutyTime: ONDuty.internalTimeString,
+             remainingSleepTime: sleepTimer.internalTimeString,
+             lastSleepTime: breakTime.internalTimeString,
+             RemaningRestBreak: "false",
+             isruning: false,
+             isVoilations: false
+             )
+             
+             */
         }
-    }
-
-    
-    
-    //MARK: - #$ HOURS RESET WHEN  SHIFT IS START NEW
-    func checkFor34HourReset() {
-        
-        
-        if let lastOffDuty = offDutyStartTime {
-            let elapsed = Date().timeIntervalSince(lastOffDuty)
-            if elapsed >= 34 * 3600 {
-                pastDutyLog.removeAll()
-                print(" 34-hour break complete. Cycle reset.")
-            }
-        }
-    }
-    //MARK: TO RELOAD DATA
-    
-    func loadLatestLog(for status: String) -> DriverLogModel? {
-        return DatabaseManager.shared.fetchLogs()
-            .filter { $0.status == status }
-            .sorted { $0.timestamp > $1.timestamp }
-            .first
-    }
-    
-
-    
-    //MARK: -  Restore & save time
-   /* func restoreAllTimers(){
-        isRestoringTimers = true  // Prevent auto-save during restoration
-        print(" Starting timer restoration - preventing auto-saves")
-
-        let allLogs = DatabaseManager.shared.fetchLogs()
-        print(" Total logs in database: \(allLogs.count)")
-        
-        guard !allLogs.isEmpty else {
-            print(" No logs found, keeping timers as they are")
-            isRestoringTimers = false
-            return
         }
         
-        // Get the most recent log
-        let latestLog = allLogs.last!
-        let currentStatus = latestLog.status
-        print(" Latest log status: \(currentStatus)")
-        print(" Latest log time: \(latestLog.startTime)")
-        print(" Remaining times - Duty: \(latestLog.remainingDutyTime ?? "nil"), Drive: \(latestLog.remainingDriveTime ?? "nil"), Cycle: \(latestLog.remainingWeeklyTime ?? "nil")")
         
-        // Calculate elapsed time since log was saved
-        let now = Date()
-        let logTime = latestLog.startTime.asDate() ?? now
-        let elapsedTime = now.timeIntervalSince(logTime)
-        print(" Elapsed time since log: \(elapsedTime) seconds (\(elapsedTime/60) minutes)")
         
-        // Restore status
-        if currentStatus == "NEXTDAY" {
-            confirmedStatus = DriverStatusConstants.offDuty
-            selectedStatus = DriverStatusConstants.offDuty
-            print(" Mapped NEXTDAY to OffDuty for UI display")
-        } else {
-            confirmedStatus = currentStatus
-            selectedStatus = currentStatus
-        }
-        print(" Status restored - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
-        
-        // Stop all timers before restoration
-        onDriveTimer?.stop()
-        onDutyTimer?.stop()
-        cycleTimer?.stop()
-        sleepTimer?.stop()
-        breakTimer?.stop()
-        
-        print(" Restoring all timer values from database...")
-
-        // --- Restore OnDuty Timer ---
-        if let dutyRemaining = latestLog.remainingDutyTime?.asTimeInterval() {
-            if currentStatus == "OnDuty" || currentStatus == "OnDrive" || currentStatus == "YardMove" {
-                let adjustedDutyRemaining = dutyRemaining - elapsedTime
-                onDutyTimer?.reset(startTime: adjustedDutyRemaining)
-                onDutyTimer?.start()
-                isOnDutyActive = true
-                print(" OnDuty timer restored & running: \(onDutyTimer?.timeString ?? "")")
-            } else {
-                onDutyTimer?.reset(startTime: dutyRemaining)
-                print(" OnDuty timer restored (stopped): \(onDutyTimer?.timeString ?? "")")
-            }
-        }
-        
-        // --- Restore Drive Timer ---
-        if let driveRemaining = latestLog.remainingDriveTime?.asTimeInterval() {
-            if currentStatus == "OnDrive" {
-                let adjustedDriveRemaining = driveRemaining - elapsedTime
-                onDriveTimer?.reset(startTime: adjustedDriveRemaining)
-                onDriveTimer?.start()
-                isDriveActive = true
-                print(" Drive timer restored & running: \(onDriveTimer?.timeString ?? "")")
-            } else {
-                onDriveTimer?.reset(startTime: driveRemaining)
-                print(" Drive timer restored (stopped): \(onDriveTimer?.timeString ?? "")")
-            }
-        }
-        
-        // --- Restore Cycle Timer ---
-        if let cycleRemaining = latestLog.remainingWeeklyTime?.asTimeInterval() {
-            if currentStatus == "OnDuty" || currentStatus == "OnDrive" || currentStatus == "YardMove" {
-                let adjustedCycleRemaining = cycleRemaining - elapsedTime
-                cycleTimer?.reset(startTime: adjustedCycleRemaining)
-                cycleTimer?.start()
-                isCycleTimerActive = true
-                print(" Cycle timer restored & running: \(cycleTimer?.timeString ?? "")")
-            } else {
-                cycleTimer?.reset(startTime: cycleRemaining)
-                print(" Cycle timer restored (stopped): \(cycleTimer?.timeString ?? "")")
-            }
-        }
-
-        // --- Restore Sleep Timer ---
-        if let sleepRemaining = latestLog.remainingSleepTime?.asTimeInterval() {
-            if currentStatus == "OnSleep" {
-                let adjustedSleepRemaining = sleepRemaining - elapsedTime
-                sleepTimer?.reset(startTime: adjustedSleepRemaining)
-                sleepTimer?.start()
-                print(" Sleep timer restored & running: \(sleepTimer?.timeString ?? "")")
-            } else {
-                sleepTimer?.reset(startTime: sleepRemaining)
-                print(" Sleep timer restored (stopped): \(sleepTimer?.timeString ?? "")")
-            }
-        }
-
-        // --- Restore Break Timer ---
-        let breakRemaining = latestLog.lastSleepTime.asTimeInterval()
-        if breakRemaining > 0 {
-            let adjustedBreakRemaining = breakRemaining - elapsedTime
-            breakTimer?.reset(startTime: adjustedBreakRemaining)
-            breakTimer?.start()
-            print(" Break timer restored & running: \(breakTimer?.timeString ?? "")")
-        } else {
-            breakTimer?.reset(startTime: 30 * 60)
-            print(" Break timer reset to 30 minutes (no saved break time)")
-        }
-
-        print(" Timer restoration completed")
-        isRestoringTimers = false
-        print(" Auto-saves re-enabled")
-    }*/
-    
-    
-
-    // Add these new functions to track shown violations
-    func checkAndShowViolationsForCurrentDayShift(day: Int, shift: Int) {
-        let allLogs = DatabaseManager.shared.fetchLogs()
-        
-        // Filter violations for current day and shift
-        let currentDayShiftViolations = allLogs.filter { log in
-            log.isVoilations == 1 &&
-            log.status == "Violation" &&
-            log.day == day &&
-            log.shift == shift
-        }
-        
-        // Check if we've already shown violations for this day/shift
-        let shownViolationsKey = "shownViolations_\(day)_\(shift)"
-        let hasShownViolations = UserDefaults.standard.bool(forKey: shownViolationsKey)
-        
-        if !currentDayShiftViolations.isEmpty && !hasShownViolations {
-            print(" Found \(currentDayShiftViolations.count) violations for day \(day), shift \(shift)")
+        //MARK: - #$ HOURS RESET WHEN  SHIFT IS START NEW
+        func checkFor34HourReset() {
             
-            // Show the most recent violation
-            if let latestViolation = currentDayShiftViolations.last {
-                showViolationAlert(violation: latestViolation)
+            
+            if let lastOffDuty = offDutyStartTime {
+                let elapsed = Date().timeIntervalSince(lastOffDuty)
+                if elapsed >= 34 * 3600 {
+                    pastDutyLog.removeAll()
+                    print(" 34-hour break complete. Cycle reset.")
+                }
+            }
+        }
+        //MARK: TO RELOAD DATA
+        
+        func loadLatestLog(for status: String) -> DriverLogModel? {
+            return DatabaseManager.shared.fetchLogs()
+                .filter { $0.status == status }
+                .sorted { $0.timestamp > $1.timestamp }
+                .first
+        }
+        
+        
+        
+        //MARK: -  Restore & save time
+        /* func restoreAllTimers(){
+         isRestoringTimers = true  // Prevent auto-save during restoration
+         print(" Starting timer restoration - preventing auto-saves")
+         
+         let allLogs = DatabaseManager.shared.fetchLogs()
+         print(" Total logs in database: \(allLogs.count)")
+         
+         guard !allLogs.isEmpty else {
+         print(" No logs found, keeping timers as they are")
+         isRestoringTimers = false
+         return
+         }
+         
+         // Get the most recent log
+         let latestLog = allLogs.last!
+         let currentStatus = latestLog.status
+         print(" Latest log status: \(currentStatus)")
+         print(" Latest log time: \(latestLog.startTime)")
+         print(" Remaining times - Duty: \(latestLog.remainingDutyTime ?? "nil"), Drive: \(latestLog.remainingDriveTime ?? "nil"), Cycle: \(latestLog.remainingWeeklyTime ?? "nil")")
+         
+         // Calculate elapsed time since log was saved
+         let now = Date()
+         let logTime = latestLog.startTime.asDate() ?? now
+         let elapsedTime = now.timeIntervalSince(logTime)
+         print(" Elapsed time since log: \(elapsedTime) seconds (\(elapsedTime/60) minutes)")
+         
+         // Restore status
+         if currentStatus == "NEXTDAY" {
+         confirmedStatus = DriverStatusConstants.offDuty
+         selectedStatus = DriverStatusConstants.offDuty
+         print(" Mapped NEXTDAY to OffDuty for UI display")
+         } else {
+         confirmedStatus = currentStatus
+         selectedStatus = currentStatus
+         }
+         print(" Status restored - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
+         
+         // Stop all timers before restoration
+         onDriveTimer?.stop()
+         onDutyTimer?.stop()
+         cycleTimer?.stop()
+         sleepTimer?.stop()
+         breakTimer?.stop()
+         
+         print(" Restoring all timer values from database...")
+         
+         // --- Restore OnDuty Timer ---
+         if let dutyRemaining = latestLog.remainingDutyTime?.asTimeInterval() {
+         if currentStatus == "OnDuty" || currentStatus == "OnDrive" || currentStatus == "YardMove" {
+         let adjustedDutyRemaining = dutyRemaining - elapsedTime
+         onDutyTimer?.reset(startTime: adjustedDutyRemaining)
+         onDutyTimer?.start()
+         isOnDutyActive = true
+         print(" OnDuty timer restored & running: \(onDutyTimer?.timeString ?? "")")
+         } else {
+         onDutyTimer?.reset(startTime: dutyRemaining)
+         print(" OnDuty timer restored (stopped): \(onDutyTimer?.timeString ?? "")")
+         }
+         }
+         
+         // --- Restore Drive Timer ---
+         if let driveRemaining = latestLog.remainingDriveTime?.asTimeInterval() {
+         if currentStatus == "OnDrive" {
+         let adjustedDriveRemaining = driveRemaining - elapsedTime
+         onDriveTimer?.reset(startTime: adjustedDriveRemaining)
+         onDriveTimer?.start()
+         isDriveActive = true
+         print(" Drive timer restored & running: \(onDriveTimer?.timeString ?? "")")
+         } else {
+         onDriveTimer?.reset(startTime: driveRemaining)
+         print(" Drive timer restored (stopped): \(onDriveTimer?.timeString ?? "")")
+         }
+         }
+         
+         // --- Restore Cycle Timer ---
+         if let cycleRemaining = latestLog.remainingWeeklyTime?.asTimeInterval() {
+         if currentStatus == "OnDuty" || currentStatus == "OnDrive" || currentStatus == "YardMove" {
+         let adjustedCycleRemaining = cycleRemaining - elapsedTime
+         cycleTimer?.reset(startTime: adjustedCycleRemaining)
+         cycleTimer?.start()
+         isCycleTimerActive = true
+         print(" Cycle timer restored & running: \(cycleTimer?.timeString ?? "")")
+         } else {
+         cycleTimer?.reset(startTime: cycleRemaining)
+         print(" Cycle timer restored (stopped): \(cycleTimer?.timeString ?? "")")
+         }
+         }
+         
+         // --- Restore Sleep Timer ---
+         if let sleepRemaining = latestLog.remainingSleepTime?.asTimeInterval() {
+         if currentStatus == "OnSleep" {
+         let adjustedSleepRemaining = sleepRemaining - elapsedTime
+         sleepTimer?.reset(startTime: adjustedSleepRemaining)
+         sleepTimer?.start()
+         print(" Sleep timer restored & running: \(sleepTimer?.timeString ?? "")")
+         } else {
+         sleepTimer?.reset(startTime: sleepRemaining)
+         print(" Sleep timer restored (stopped): \(sleepTimer?.timeString ?? "")")
+         }
+         }
+         
+         // --- Restore Break Timer ---
+         let breakRemaining = latestLog.lastSleepTime.asTimeInterval()
+         if breakRemaining > 0 {
+         let adjustedBreakRemaining = breakRemaining - elapsedTime
+         breakTimer?.reset(startTime: adjustedBreakRemaining)
+         breakTimer?.start()
+         print(" Break timer restored & running: \(breakTimer?.timeString ?? "")")
+         } else {
+         breakTimer?.reset(startTime: 30 * 60)
+         print(" Break timer reset to 30 minutes (no saved break time)")
+         }
+         
+         print(" Timer restoration completed")
+         isRestoringTimers = false
+         print(" Auto-saves re-enabled")
+         }*/
+        
+        
+        
+        // Add these new functions to track shown violations
+        func checkAndShowViolationsForCurrentDayShift(day: Int, shift: Int) {
+            let allLogs = DatabaseManager.shared.fetchLogs()
+            
+            // Filter violations for current day and shift
+            let currentDayShiftViolations = allLogs.filter { log in
+                log.isVoilations == 1 &&
+                log.status == "Violation" &&
+                log.day == day &&
+                log.shift == shift
+            }
+            
+            // Check if we've already shown violations for this day/shift
+            let shownViolationsKey = "shownViolations_\(day)_\(shift)"
+            let hasShownViolations = UserDefaults.standard.bool(forKey: shownViolationsKey)
+            
+            if !currentDayShiftViolations.isEmpty && !hasShownViolations {
+                print(" Found \(currentDayShiftViolations.count) violations for day \(day), shift \(shift)")
                 
-                // Mark as shown for this day/shift
-                UserDefaults.standard.set(true, forKey: shownViolationsKey)
-                print(" Marked violations as shown for day \(day), shift \(shift)")
-            }
-        } else if hasShownViolations {
-            print(" Violations already shown for day \(day), shift \(shift) - skipping")
-        }
-    }
-
-    func showViolationAlert(violation: DriverLogModel) {
-        activeTimerAlert = TimerAlert(
-            title: "Violation Detected",
-            message: violation.dutyType,
-            backgroundColor: .red.opacity(0.9),
-            isViolation: true
-        )
-        
-        // Add to violation boxes
-        addViolationBox(text: violation.dutyType)
-        
-        print(" Showing violation alert: \(violation.dutyType)")
-    }
-
-    // Add this function to reset violation tracking for new day/shift
-    func resetViolationTrackingForNewDayShift() {
-        let currentDay = UserDefaults.standard.integer(forKey: "days")
-        let currentShift = UserDefaults.standard.integer(forKey: "shift")
-        
-        // Clear all previous day/shift violation tracking
-        let defaults = UserDefaults.standard
-        let keys = defaults.dictionaryRepresentation().keys
-        for key in keys {
-            if key.hasPrefix("shownViolations_") {
-                defaults.removeObject(forKey: key)
+                // Show the most recent violation
+                if let latestViolation = currentDayShiftViolations.last {
+                    showViolationAlert(violation: latestViolation)
+                    
+                    // Mark as shown for this day/shift
+                    UserDefaults.standard.set(true, forKey: shownViolationsKey)
+                    print(" Marked violations as shown for day \(day), shift \(shift)")
+                }
+            } else if hasShownViolations {
+                print(" Violations already shown for day \(day), shift \(shift) - skipping")
             }
         }
         
-        print(" Reset violation tracking for new day \(currentDay), shift \(currentShift)")
-    }
-    
-
-
-    // MARK: - Auto-save timer state (called periodically)
-    @State private var lastAutoSaveTime: Date = Date()
-    
-    func autoSaveTimerState() {
-        // Only auto-save every 30 seconds to avoid too frequent database writes
-        let now = Date()
-        if now.timeIntervalSince(lastAutoSaveTime) >= 30 {
-            lastAutoSaveTime = now
-            
-            guard let currentStatus = confirmedStatus else { return }
-            
-            print(" Auto-saving timer state for \(currentStatus)")
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            let nowString = formatter.string(from: now) 
-            
-            
-            // Get current timer values
-            let dutyTimeString = homeVM.onDutyTimer?.timeString ?? ONDuty.timeString
-            let driveTimeString = homeVM.onDriveTimer?.timeString ?? driveTimer.timeString
-            let cycleTimeString = homeVM.cycleTimer?.timeString ?? cycleTimerOn.timeString
-            let sleepTimeString = homeVM.sleepTimer?.timeString ?? sleepTimer.timeString
-            let breakTimeString = homeVM.breakTimer?.timeString ?? breakTime.timeString
-            
-            // Save to database
-            DatabaseManager.shared.saveTimerLog(
-                status: currentStatus,
-                startTime: nowString,
-                dutyType: currentStatus,
-                remainingWeeklyTime: cycleTimeString,
-                remainingDriveTime: driveTimeString,
-                remainingDutyTime: dutyTimeString,
-                remainingSleepTime: sleepTimeString,
-                lastSleepTime: breakTimeString,
-                RemaningRestBreak: "true",
-                isruning: true,
-                isVoilations: false
+        func showViolationAlert(violation: DriverLogModel) {
+            activeTimerAlert = TimerAlert(
+                title: "Violation Detected",
+                message: violation.dutyType,
+                backgroundColor: .red.opacity(0.9),
+                isViolation: true
             )
             
-            print(" Auto-save completed for \(currentStatus)")
+            // Add to violation boxes
+            addViolationBox(text: violation.dutyType)
+            
+            print(" Showing violation alert: \(violation.dutyType)")
         }
-    }
-    
-    //MARK: - Save current timer states
-//    func saveCurrentTimerStates(){
-//    guard let currentStatus = confirmedStatus else {
-//        print(" No confirmed status, cannot save timer states")
-//        return
-//    }
-//    
-//    // Prevent auto-save during timer restoration
-//    if isRestoringTimers {
-//        print(" Skipping auto-save during timer restoration")
-//        return
-//    }
-//    
-//    print(" Saving timer states for status: \(currentStatus)")
-//    print("Current timer values - Duty: \(onDutyTimer?.timeString ?? ""), Drive: \(onDriveTimer?.timeString ?? ""), Cycle: \(cycleTimer?.timeString ?? "")")
-//    print("Saved timers - OnDuty: \(savedOnDutyRemaining / 60) min, Drive: \(savedDriveRemaining / 60) min, Cycle: \(savedCycleRemaining / 60) min")
-//    // Use saved times if available, otherwise use current times
-//    let dutyTimeToSave = savedOnDutyRemaining != 0 ? savedOnDutyRemaining : (onDutyTimer?.remainingTime ?? 0)
-//    let driveTimeToSave = savedDriveRemaining != 0 ? savedDriveRemaining : (onDriveTimer?.remainingTime ?? 0)
-//    let cycleTimeToSave = savedCycleRemaining != 0 ? savedCycleRemaining : (cycleTimer?.remainingTime ?? 0)
-//    
-//    // Use internal strings for storage
-//    let dutyTimeString = onDutyTimer?.internalTimeString ?? "00:00:00"
-//    let driveTimeString = onDriveTimer?.internalTimeString ?? "00:00:00"
-//    let cycleTimeString = cycleTimer?.internalTimeString ?? "00:00:00"
-//    let sleepTimeString = sleepTimer?.timeString ?? "00:00:00"
-//    let breakTimeString = breakTimer?.timeString ?? "00:00:00"
-//    
-//    DatabaseManager.shared.saveTimerLog(
-//        status: currentStatus,
-//        startTime: DateTimeHelper.getCurrentDateTimeString(),
-//        dutyType: currentStatus,
-//        remainingWeeklyTime: cycleTimeString,
-//        remainingDriveTime: driveTimeString,
-//        remainingDutyTime: dutyTimeString,
-//        remainingSleepTime: sleepTimeString,
-//        lastSleepTime: breakTimeString,
-//        RemaningRestBreak: "true",
-//        isruning: true,
-//        isVoilations: false
-//    )
-//    print(" Timer states saved successfully at \(DateTimeHelper.getCurrentDateTimeString())")
-//    print("Times saved - OnDuty: \(dutyTimeString), Drive: \(driveTimeString), Cycle: \(cycleTimeString)")
-//}
-    
-  
-
-
-    
-  
-    // MARK: - Delete All App Data
-//    func deleteAllAppData()
-
-    
-    //MARK: -  6 add funct to calculate 70 hour cycle
-    func totalDutyLast7or8Days() -> TimeInterval {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let daysToInclude = (cycleType == "7/60") ? 7 : 8
         
-        var total: TimeInterval = 0
-        
-        for i in 0..<daysToInclude {
-            if let date = calendar.date(byAdding: .day, value: -i, to: today),
-               let time = pastDutyLog[calendar.startOfDay(for: date)] {
-                total += time
+        // Add this function to reset violation tracking for new day/shift
+        func resetViolationTrackingForNewDayShift() {
+            let currentDay = UserDefaults.standard.integer(forKey: "days")
+            let currentShift = UserDefaults.standard.integer(forKey: "shift")
+            
+            // Clear all previous day/shift violation tracking
+            let defaults = UserDefaults.standard
+            let keys = defaults.dictionaryRepresentation().keys
+            for key in keys {
+                if key.hasPrefix("shownViolations_") {
+                    defaults.removeObject(forKey: key)
+                }
             }
+            
+            print(" Reset violation tracking for new day \(currentDay), shift \(currentShift)")
         }
-        return total
-    }
-    
-    func saveDailyDutyLog(duration: TimeInterval) {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        pastDutyLog[today, default: 0] += duration
-        //  print(" Saved \(duration / 3600, specifier: "%.2f") hrs for \(formattedDate(today))")
-    }
-
-    
-//    func checkAndStartCycleTimer() {
-//        print(" Checking Cycle Timer: Drive=\(isDriveActive), Duty=\(isOnDutyActive)")
-//        
-//        if isOnDutyActive {
-//            startCycleTimer()
-//        }else if   isDriveActive {
-//            startCycleTimer()
-//        }
-//        else {
-//            stopCycleTimer()
-//        }
-//    }
-    
-//    func startCycleTimer() {
-//        guard !isCycleTimerActive else { return }
-//        print(" Starting Cycle Timer")
-//        isCycleTimerActive = true
-//            cycleTimerOn.start()          //MARK: - this is the CountdownTimer you passed to AvailableHoursView
-//        
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        let now = formatter.string(from: Date())
-//        
-//        DatabaseManager.shared.saveTimerLog(
-//            status: "Cycle",
-//            startTime: now, dutyType: "Cycle",
-//            remainingWeeklyTime: cycleTimerOn.internalTimeString,
-//            remainingDriveTime: driveTimer.internalTimeString,
-//            remainingDutyTime: ONDuty.internalTimeString,
-//            remainingSleepTime: sleepTimer.internalTimeString,
-//            lastSleepTime: "", RemaningRestBreak: breakTime.internalTimeString, isruning: false,
-//        )
-//        
-//            print(" Saved Cycle timer to DB at \(now)")
-//    }
-    
-//    func stopCycleTimer() {
-//        guard isCycleTimerActive else { return }
-//        isCycleTimerActive = false
-//        cycleTimerOn.stop() //  stop your cycle countdown
-//        print(" Cycle Timer Stopped")
-//    }
-    
+        
+        
+        
+        // MARK: - Auto-save timer state (called periodically)
+        //  @State private var lastAutoSaveTime: Date = Date()
+        
+        func autoSaveTimerState() {
+            /*
+             // Only auto-save every 30 seconds to avoid too frequent database writes
+             let now = Date()
+             if now.timeIntervalSince(lastAutoSaveTime) >= 30 {
+             lastAutoSaveTime = now
+             
+             guard let currentStatus = confirmedStatus else { return }
+             
+             print(" Auto-saving timer state for \(currentStatus)")
+             
+             let formatter = DateFormatter()
+             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+             let nowString = formatter.string(from: now)
+             
+             
+             // Get current timer values
+             let dutyTimeString = homeVM.onDutyTimer?.timeString ?? ONDuty.timeString
+             let driveTimeString = homeVM.onDriveTimer?.timeString ?? driveTimer.timeString
+             let cycleTimeString = homeVM.cycleTimer?.timeString ?? cycleTimerOn.timeString
+             let sleepTimeString = homeVM.sleepTimer?.timeString ?? sleepTimer.timeString
+             let breakTimeString = homeVM.breakTimer?.timeString ?? breakTime.timeString
+             
+             // Save to database
+             DatabaseManager.shared.saveTimerLog(
+             status: currentStatus,
+             startTime: nowString,
+             dutyType: currentStatus,
+             remainingWeeklyTime: cycleTimeString,
+             remainingDriveTime: driveTimeString,
+             remainingDutyTime: dutyTimeString,
+             remainingSleepTime: sleepTimeString,
+             lastSleepTime: breakTimeString,
+             RemaningRestBreak: "true",
+             isruning: true,
+             isVoilations: false
+             )
+             
+             print(" Auto-save completed for \(currentStatus)")
+             }
+             */
+        }
+        
+        //MARK: - Save current timer states
+        //    func saveCurrentTimerStates(){
+        //    guard let currentStatus = confirmedStatus else {
+        //        print(" No confirmed status, cannot save timer states")
+        //        return
+        //    }
+        //
+        //    // Prevent auto-save during timer restoration
+        //    if isRestoringTimers {
+        //        print(" Skipping auto-save during timer restoration")
+        //        return
+        //    }
+        //
+        //    print(" Saving timer states for status: \(currentStatus)")
+        //    print("Current timer values - Duty: \(onDutyTimer?.timeString ?? ""), Drive: \(onDriveTimer?.timeString ?? ""), Cycle: \(cycleTimer?.timeString ?? "")")
+        //    print("Saved timers - OnDuty: \(savedOnDutyRemaining / 60) min, Drive: \(savedDriveRemaining / 60) min, Cycle: \(savedCycleRemaining / 60) min")
+        //    // Use saved times if available, otherwise use current times
+        //    let dutyTimeToSave = savedOnDutyRemaining != 0 ? savedOnDutyRemaining : (onDutyTimer?.remainingTime ?? 0)
+        //    let driveTimeToSave = savedDriveRemaining != 0 ? savedDriveRemaining : (onDriveTimer?.remainingTime ?? 0)
+        //    let cycleTimeToSave = savedCycleRemaining != 0 ? savedCycleRemaining : (cycleTimer?.remainingTime ?? 0)
+        //
+        //    // Use internal strings for storage
+        //    let dutyTimeString = onDutyTimer?.internalTimeString ?? "00:00:00"
+        //    let driveTimeString = onDriveTimer?.internalTimeString ?? "00:00:00"
+        //    let cycleTimeString = cycleTimer?.internalTimeString ?? "00:00:00"
+        //    let sleepTimeString = sleepTimer?.timeString ?? "00:00:00"
+        //    let breakTimeString = breakTimer?.timeString ?? "00:00:00"
+        //
+        //    DatabaseManager.shared.saveTimerLog(
+        //        status: currentStatus,
+        //        startTime: DateTimeHelper.getCurrentDateTimeString(),
+        //        dutyType: currentStatus,
+        //        remainingWeeklyTime: cycleTimeString,
+        //        remainingDriveTime: driveTimeString,
+        //        remainingDutyTime: dutyTimeString,
+        //        remainingSleepTime: sleepTimeString,
+        //        lastSleepTime: breakTimeString,
+        //        RemaningRestBreak: "true",
+        //        isruning: true,
+        //        isVoilations: false
+        //    )
+        //    print(" Timer states saved successfully at \(DateTimeHelper.getCurrentDateTimeString())")
+        //    print("Times saved - OnDuty: \(dutyTimeString), Drive: \(driveTimeString), Cycle: \(cycleTimeString)")
+        //}
+        
+        
+        
+        
+        
+        
+        // MARK: - Delete All App Data
+        //    func deleteAllAppData()
+        
+        
+        //MARK: -  6 add funct to calculate 70 hour cycle
+        func totalDutyLast7or8Days() -> TimeInterval {
+            let calendar = Calendar.current
+            let today = calendar.startOfDay(for: Date())
+            let daysToInclude = (cycleType == "7/60") ? 7 : 8
+            
+            var total: TimeInterval = 0
+            
+            for i in 0..<daysToInclude {
+                if let date = calendar.date(byAdding: .day, value: -i, to: today),
+                   let time = pastDutyLog[calendar.startOfDay(for: date)] {
+                    total += time
+                }
+            }
+            return total
+        }
+        
+        func saveDailyDutyLog(duration: TimeInterval) {
+            let calendar = Calendar.current
+            let today = calendar.startOfDay(for: Date())
+            pastDutyLog[today, default: 0] += duration
+            //  print(" Saved \(duration / 3600, specifier: "%.2f") hrs for \(formattedDate(today))")
+        }
+        
+        
+        //    func checkAndStartCycleTimer() {
+        //        print(" Checking Cycle Timer: Drive=\(isDriveActive), Duty=\(isOnDutyActive)")
+        //
+        //        if isOnDutyActive {
+        //            startCycleTimer()
+        //        }else if   isDriveActive {
+        //            startCycleTimer()
+        //        }
+        //        else {
+        //            stopCycleTimer()
+        //        }
+        //    }
+        
+        //    func startCycleTimer() {
+        //        guard !isCycleTimerActive else { return }
+        //        print(" Starting Cycle Timer")
+        //        isCycleTimerActive = true
+        //            cycleTimerOn.start()          //MARK: - this is the CountdownTimer you passed to AvailableHoursView
+        //
+        //        let formatter = DateFormatter()
+        //        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        //        let now = formatter.string(from: Date())
+        //
+        //        DatabaseManager.shared.saveTimerLog(
+        //            status: "Cycle",
+        //            startTime: now, dutyType: "Cycle",
+        //            remainingWeeklyTime: cycleTimerOn.internalTimeString,
+        //            remainingDriveTime: driveTimer.internalTimeString,
+        //            remainingDutyTime: ONDuty.internalTimeString,
+        //            remainingSleepTime: sleepTimer.internalTimeString,
+        //            lastSleepTime: "", RemaningRestBreak: breakTime.internalTimeString, isruning: false,
+        //        )
+        //
+        //            print(" Saved Cycle timer to DB at \(now)")
+        //    }
+        
+        //    func stopCycleTimer() {
+        //        guard isCycleTimerActive else { return }
+        //        isCycleTimerActive = false
+        //        cycleTimerOn.stop() //  stop your cycle countdown
+        //        print(" Cycle Timer Stopped")
+        //    }
+        
         //MARK: - Reset Timers for Next Day
         func resetTimersForNextDay() {
             print(" Resetting timers for NEXTDAY...")
@@ -1725,19 +1733,20 @@ struct HomeScreenView: View {
             let now = formatter.string(from: Date())
             
             print(" Saving violation to database: \(DutyType) for status: \(status)")
-            
-            DatabaseManager.shared.saveTimerLog(
-                status: status,
-                startTime: now, dutyType: DutyType,
-                remainingWeeklyTime: cycleTimerOn.internalTimeString,
-                remainingDriveTime: driveTimer.internalTimeString,
-                remainingDutyTime: ONDuty.internalTimeString,
-                remainingSleepTime: sleepTimer.internalTimeString,
-                lastSleepTime: breakTime.internalTimeString,
-                RemaningRestBreak: "true",
-                isruning: false,
-                isVoilations: true
-            )
+            /*
+             DatabaseManager.shared.saveTimerLog(
+             status: status,
+             startTime: now, dutyType: DutyType,
+             remainingWeeklyTime: cycleTimerOn.internalTimeString,
+             remainingDriveTime: driveTimer.internalTimeString,
+             remainingDutyTime: ONDuty.internalTimeString,
+             remainingSleepTime: sleepTimer.internalTimeString,
+             lastSleepTime: breakTime.internalTimeString,
+             RemaningRestBreak: "true",
+             isruning: false,
+             isVoilations: true
+             )
+             */
             print(" Violation saved to database successfully")
         }
         
@@ -1781,120 +1790,120 @@ struct HomeScreenView: View {
                 showViolationBoxes = true
             }
         }
-
-    // MARK: - Check if new day and reset violation flags
-    func checkAndResetDailyViolations() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let today = formatter.string(from: Date())
         
-        if lastViolationDate != today {
-            print(" New day detected - resetting violation flags")
-            lastViolationDate = today
+        // MARK: - Check if new day and reset violation flags
+        func checkAndResetDailyViolations() {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            let today = formatter.string(from: Date())
             
-            // Reset all daily violation flags
-            didShowOnDuty30MinToday = false
-            didShowOnDuty15MinToday = false
-            didShowOnDutyViolationToday = false
-            didShowDrive30MinToday = false
-            didShowDrive15MinToday = false
-            didShowDriveViolationToday = false
-            didShowCycleViolationToday = false
-            didShowContinueDriveViolationToday = false
+            if lastViolationDate != today {
+                print(" New day detected - resetting violation flags")
+                lastViolationDate = today
+                
+                // Reset all daily violation flags
+                didShowOnDuty30MinToday = false
+                didShowOnDuty15MinToday = false
+                didShowOnDutyViolationToday = false
+                didShowDrive30MinToday = false
+                didShowDrive15MinToday = false
+                didShowDriveViolationToday = false
+                didShowCycleViolationToday = false
+                didShowContinueDriveViolationToday = false
+                
+                print(" All violation flags reset for new day")
+            }
+        }
+        
+        // MARK: - Stop All Timers
+        func stopAllTimers() {
+            print(" Stopping all timers for Personal Use")
             
-            print(" All violation flags reset for new day")
-        }
-    }
-    
-    // MARK: - Stop All Timers
-    func stopAllTimers() {
-        print(" Stopping all timers for Personal Use")
-        
-        // Stop all active timers
-        if isOnDutyActive {
-            ONDuty.stop()
-            isOnDutyActive = false
-        }
-        
-        if isDriveActive {
-            driveTimer.stop()
-            isDriveActive = false
-        }
-        
-        if isCycleTimerActive {
-            cycleTimerOn.stop()
-            isCycleTimerActive = false
-        }
-        
-        if isSleepTimerActive {
-            sleepTimer.stop()
-            isSleepTimerActive = false
+            // Stop all active timers
+            if isOnDutyActive {
+                ONDuty.stop()
+                isOnDutyActive = false
+            }
+            
+            if isDriveActive {
+                driveTimer.stop()
+                isDriveActive = false
+            }
+            
+            if isCycleTimerActive {
+                cycleTimerOn.stop()
+                isCycleTimerActive = false
+            }
+            
+            if isSleepTimerActive {
+                sleepTimer.stop()
+                isSleepTimerActive = false
+            }
+            
+            // Stop break timer
+            breakTime.stop()
+            
+            print(" All timers stopped for Personal Use")
         }
         
-        // Stop break timer
-        breakTime.stop()
-        
-        print(" All timers stopped for Personal Use")
-    }
-    
-    // MARK: - Start OnDuty and Cycle Timers for Yard Move
-    func startYardMoveTimers() {
-        print(" Starting OnDuty and Cycle timers for Yard Move")
-        
-        // Start OnDuty timer
-        if !isOnDutyActive {
-            ONDuty.start()
-            isOnDutyActive = true
-            print(" OnDuty timer started for Yard Move")
+        // MARK: - Start OnDuty and Cycle Timers for Yard Move
+        func startYardMoveTimers() {
+            print(" Starting OnDuty and Cycle timers for Yard Move")
+            
+            // Start OnDuty timer
+            if !isOnDutyActive {
+                ONDuty.start()
+                isOnDutyActive = true
+                print(" OnDuty timer started for Yard Move")
+            }
+            
+            // Start Cycle timer
+            if !isCycleTimerActive {
+                cycleTimerOn.start()
+                isCycleTimerActive = true
+                print(" Cycle timer started for Yard Move")
+            }
+            
+            // Stop other timers that shouldn't run during Yard Move
+            if isDriveActive {
+                driveTimer.stop()
+                isDriveActive = false
+                print(" Drive timer stopped for Yard Move")
+            }
+            
+            if isSleepTimerActive {
+                sleepTimer.stop()
+                isSleepTimerActive = false
+                print(" Sleep timer stopped for Yard Move")
+            }
+            
+            print(" Yard Move timers configured")
         }
         
-        // Start Cycle timer
-        if !isCycleTimerActive {
-            cycleTimerOn.start()
-            isCycleTimerActive = true
-            print(" Cycle timer started for Yard Move")
+        // MARK: - Save Violation to Database
+        func saveViolationToDatabase(status: String, violationType: String, dutyType:String) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let now = formatter.string(from: Date())
+            
+            print(" Saving violation to database: \(violationType) for status: \(status)")
+            /*
+             DatabaseManager.shared.saveTimerLog(
+             status: status,
+             startTime: now, dutyType: dutyType,
+             remainingWeeklyTime: cycleTimerOn.internalTimeString,
+             remainingDriveTime: driveTimer.internalTimeString,
+             remainingDutyTime: ONDuty.internalTimeString,
+             remainingSleepTime: sleepTimer.internalTimeString,
+             lastSleepTime: breakTime.internalTimeString,
+             RemaningRestBreak: "true",
+             isruning: false,
+             isVoilations: true
+             )
+             */
+            print(" Violation saved to database successfully")
         }
         
-        // Stop other timers that shouldn't run during Yard Move
-        if isDriveActive {
-            driveTimer.stop()
-            isDriveActive = false
-            print(" Drive timer stopped for Yard Move")
-        }
-        
-        if isSleepTimerActive {
-            sleepTimer.stop()
-            isSleepTimerActive = false
-            print(" Sleep timer stopped for Yard Move")
-        }
-        
-        print(" Yard Move timers configured")
-    }
-    
-    // MARK: - Save Violation to Database
-    func saveViolationToDatabase(status: String, violationType: String, dutyType:String) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let now = formatter.string(from: Date())
-        
-        print(" Saving violation to database: \(violationType) for status: \(status)")
-        
-        DatabaseManager.shared.saveTimerLog(
-            status: status,
-            startTime: now, dutyType: dutyType,
-            remainingWeeklyTime: cycleTimerOn.internalTimeString,
-            remainingDriveTime: driveTimer.internalTimeString,
-            remainingDutyTime: ONDuty.internalTimeString,
-            remainingSleepTime: sleepTimer.internalTimeString,
-            lastSleepTime: breakTime.internalTimeString,
-            RemaningRestBreak: "true",
-            isruning: false,
-            isVoilations: true
-        )
-        
-        print(" Violation saved to database successfully")
-    }
-
     }
 
 
