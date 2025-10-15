@@ -41,10 +41,6 @@ struct AppStorageKeys {
     static let warningBreakTime2 = "warningBreakTime2"
     
     //MARK: -  Current Day's
-    
-   
-    
-
 }
 
 struct DriverInfo {
@@ -208,7 +204,6 @@ struct DriverInfo {
     static var setWarningOnDutyTime2: Int? {
         UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDutyTime2) as? Int
     }
-   
     static func warningOnDriveTime1(_ id: Int) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDriveTime1)
     }
@@ -216,16 +211,12 @@ struct DriverInfo {
     static var setWarningOnDriveTime1: Int? {
         UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDriveTime1) as? Int
     }
-    
     static func warningOnDriveTime2(_ id: Int) {
         UserDefaults.standard.set(id, forKey: AppStorageKeys.warningOnDriveTime2)
     }
- 
     static var setWarningOnDriveTime2: Int? {
         UserDefaults.standard.object(forKey: AppStorageKeys.warningOnDriveTime2) as? Int
     }
-
-    
     static var warningBreakTime1: Int? {
         UserDefaults.standard.object(forKey: AppStorageKeys.warningBreakTime1) as? Int
     }

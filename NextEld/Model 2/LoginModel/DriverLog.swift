@@ -30,6 +30,7 @@ struct DriverLog: Decodable {
     let remainingDutyTime: Int?
     let remainingDriveTime: Int?
     let remainingSleepTime: Int?
+    let breaktimerRemaning: Int?
     let shift: Int?
     let days: Int?
     let identifier: Int?

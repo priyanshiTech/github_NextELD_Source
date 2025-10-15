@@ -131,38 +131,7 @@ class CertifyDatabaseManager {
         }
         return records
     }
-    
-    
-    //    func fetchAllRecords(for date: String, userID: String) -> [CertifyRecord] {
-    //        var records: [CertifyRecord] = []
-    //        do {
-    //            let query = certifyTable.filter(self.date == date && self.userID == userID)
-    //            if let rows = try db?.prepare(query) {
-    //                for row in rows {
-    //                    records.append(CertifyRecord(
-    //                        userID: row[self.userID],
-    //                        userName: row[self.userName],
-    //                        startTime: row[self.startTime],
-    //                        date: row[self.date],
-    //                        shift: row[self.shift],
-    //                        selectedVehicle: row[self.selectedVehicle],
-    //                        selectedTrailer: row[self.selectedTrailer],
-    //                        selectedShippingDoc: row[self.selectedShippingDoc],
-    //                        selectedCoDriver: row[self.selectedCoDriver],
-    //                        vehicleID: row[self.vehicleID],
-    //                        coDriverID: row[self.coDriverID],
-    //                        syncStatus: row[self.isSynced],
-    //                        isCertify: row[self.isLogcertified]
-    //                    ))
-    //                }
-    //            }
-    //        } catch {
-    //            print("Error fetching records for date \(date) and user \(userID): \(error)")
-    //        }
-    //        return records
-    //    }
-    
-    
+
     
     //MARK: -  For Update Records
     func saveRecord(_ record: CertifyRecord) {

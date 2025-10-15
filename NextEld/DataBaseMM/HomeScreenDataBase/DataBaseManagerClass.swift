@@ -54,6 +54,7 @@ class DatabaseManager {
     let remainingDriveTime = Expression<Int>("remainingDriveTime")
     let remainingDutyTime = Expression<Int>("remainingDutyTime")
     let remainingSleepTime = Expression<Int>("remainingSleepTime")
+    let breaktimerRemaning = Expression<Int>("breaktimerRemaning")
     let lastSleepTime = Expression<Int>("lastSleepTime")
     let isSplit = Expression<Int>("isSplit")
     let engineStatus = Expression<String>("engineStatus")
@@ -101,6 +102,7 @@ class DatabaseManager {
                 t.column(remainingDriveTime)
                 t.column(remainingDutyTime)
                 t.column(remainingSleepTime)
+                t.column(breaktimerRemaning)
                 t.column(lastSleepTime)
                 t.column(isSplit)
                 t.column(engineStatus)
@@ -151,6 +153,7 @@ class DatabaseManager {
                     remainingDriveTime: row[remainingDriveTime],
                     remainingDutyTime: row[remainingDutyTime],
                     remainingSleepTime: row[remainingSleepTime],
+                    breaktimerRemaning: row[breaktimerRemaning],
                     lastSleepTime: row[lastSleepTime],
                     isSplit: row[isSplit],
                     engineStatus: row[engineStatus], isCertifiedLog: ""
@@ -198,7 +201,7 @@ class DatabaseManager {
                 remainingWeeklyTime: log.remainingWeeklyTime ?? 0,
                 remainingDriveTime: log.remainingDriveTime ?? 0,
                 remainingDutyTime: log.remainingDutyTime ?? 0,
-                remainingSleepTime: log.remainingSleepTime ?? 0,
+                remainingSleepTime: log.remainingSleepTime ?? 0, breaktimerRemaning: log.breaktimerRemaning,
                 lastSleepTime: log.lastOnSleepTime ?? 0,
                 isSplit: 0,
                 engineStatus: "Off", isCertifiedLog: ""
@@ -260,6 +263,7 @@ class DatabaseManager {
                 remainingDriveTime <- model.remainingDriveTime ?? 0,
                 remainingDutyTime <- model.remainingDutyTime ?? 0,
                 remainingSleepTime <- model.remainingSleepTime ?? 0,
+                breaktimerRemaning <- model.breaktimerRemaning ?? 0,
                 lastSleepTime <- model.lastSleepTime,
                 isSplit <- model.isSplit,
                 engineStatus <- model.engineStatus
@@ -270,8 +274,8 @@ class DatabaseManager {
 
             //  Update lastDay & lastShift after every insert
             self.updateLastDayAndShift(for: model.userId)
-            print("👉 Last Day: \(DatabaseManager.shared.lastDay)")
-            print("👉 Last Shift: \(DatabaseManager.shared.lastShift)")
+            print("Last Day: \(DatabaseManager.shared.lastDay)")
+            print(" Last Shift: \(DatabaseManager.shared.lastShift)")
         } catch {
             print(" Insert Log Error: \(error.localizedDescription)")
         }
@@ -390,6 +394,7 @@ extension DatabaseManager {
         remainingDriveTime: Int,
         remainingDutyTime: Int,
         remainingSleepTime: Int,
+        breakTimeRemaning: Int,
         lastSleepTime: Int,
         RemaningRestBreak: String,
         isruning: Bool,
@@ -406,16 +411,18 @@ extension DatabaseManager {
             isVoilations: isVoilations ? 1 : 0,   //  Actual Bool → Int
             dutyType: dutyType,
             shift: UserDefaults.standard.integer(forKey: "shift"),
-            vehicle: UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
+            vehicle: DriverInfo.vehicleNo,
+                //UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
             isRunning: isruning,
             odometer: 0.0,
             engineHours: "0",
             location: UserDefaults.standard.string(forKey: "customLocation") ?? "",
             lat: Double(UserDefaults.standard.string(forKey: "lattitude") ?? "") ?? 0,
             long: Double(UserDefaults.standard.string(forKey: "longitude") ?? "") ?? 0,
-            origin: DriverInfo.origins                                                   /*UserDefaults.standard.string(forKey: "origin") ?? "Null"*/,
+            origin: DriverInfo.origins,
             isSynced: false,
-            vehicleId: UserDefaults.standard.integer(forKey: "vehicleId"),
+            vehicleId: DriverInfo.vehicleId ?? 0,
+                //UserDefaults.standard.integer(forKey: "vehicleId"),
             trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
             notes: "",
             serverId: nil,
@@ -426,7 +433,7 @@ extension DatabaseManager {
             remainingWeeklyTime: remainingWeeklyTime,
             remainingDriveTime: remainingDriveTime,
             remainingDutyTime: remainingDutyTime,
-            remainingSleepTime: remainingSleepTime,
+            remainingSleepTime: remainingSleepTime, breaktimerRemaning: breakTimeRemaning,
             lastSleepTime: lastSleepTime,
             isSplit: 0,
             engineStatus: "Off", isCertifiedLog: ""
@@ -468,6 +475,7 @@ extension DatabaseManager {
         let remainingDriveTime: Int?
         let remainingDutyTime: Int?
         let remainingSleepTime: Int?
+        let breaktimerRemaning:Int?
         let lastSleepTime: Int
         let isSplit: Int
         let engineStatus: String

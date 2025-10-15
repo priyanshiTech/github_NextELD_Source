@@ -353,21 +353,7 @@ class ContinueDriveViewModel: ObservableObject {
         loadContinueDriveData()
     }
     
-    func updateLatestContinueDriveData(
-        status: String? = nil,
-        startTime: String? = nil,
-        endTime: String? = nil,
-        breakTime: String? = nil
-    ) {
-        ContinueDriveDBManager.shared.updateLatestContinueDriveData(
-            status: status,
-            startTime: startTime,
-            endTime: endTime,
-            breakTime: breakTime
-        )
-        
-        loadContinueDriveData()
-    }
+
     
     func updateContinueDriveDataByUserId(
         userId: Int,
@@ -386,26 +372,7 @@ class ContinueDriveViewModel: ObservableObject {
         
         loadContinueDriveData()
     }
-    
-    func updateCompleteContinueDriveRecord(
-        id: Int64,
-        userId: Int,
-        status: String,
-        startTime: String,
-        endTime: String,
-        breakTime: String
-    ) {
-        ContinueDriveDBManager.shared.updateCompleteContinueDriveRecord(
-            id: id,
-            userId: userId,
-            status: status,
-            startTime: startTime,
-            endTime: endTime,
-            breakTime: breakTime
-        )
-        
-        loadContinueDriveData()
-    }
+
     
     func deleteAllContinueDriveData() {
         ContinueDriveDBManager.shared.deleteAllContinueDriveData()

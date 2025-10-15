@@ -234,7 +234,7 @@ struct HomeScreenView: View {
                         VehicleInfoView(GadiNo: UserDefaults.standard.string(forKey: "truckNo") ?? "Not Found",
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                         
-                        StatusView(homeViewModel: homeVM) { status in
+                            StatusView(homeViewModel: homeVM) { status in
                             // passing a new status to assign this new status to current status after the alert submit button clicked
                             homeVM.showDriverStatusAlert = (true, status)
                         }
@@ -309,12 +309,10 @@ struct HomeScreenView: View {
                     onClose: { homeVM.showDriverStatusAlert.showAlert = false },
                     onSubmit: { note in
                         let status = homeVM.showDriverStatusAlert.status
-                        homeVM.saveCurrentTimerStates()
                         
                         
                         // Set new status and start timers
-                        homeVM.setDriverStatus(status: status)
-                        
+                       homeVM.setDriverStatus(status: status)
                         // Save new timer state after status change
                         homeVM.saveTimerStateForStatus(status: status.getName(), note: note)
                         // Close the popup after submit
@@ -555,8 +553,8 @@ struct HomeScreenView: View {
         //        }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
             // Save timer states when app is about to terminate
-            homeVM.saveCurrentTimerStatesBeforeSwitch()
-            homeVM.saveCurrentTimerStates()
+           // homeVM.saveCurrentTimerStatesBeforeSwitch()
+            //homeVM.saveCurrentTimerStates()
             
             homeVM.restoreAllTimersFromLastStatus()
         }
@@ -573,7 +571,12 @@ struct HomeScreenView: View {
                !driverName.isEmpty {
                 labelValue = driverName
             }
-          //  homeVM.restoreAllTimersFromLastStatus()  //#p
+               //For show restore all timer #priyanshi
+                    if !homeVM.isRestoringTimers {
+                        homeVM.restoreAllTimersFromLastStatus()
+                    }
+            
+
         }
         
         
@@ -1202,56 +1205,56 @@ struct HomeScreenView: View {
     
     // MARK: - Check for 10-hour reset (Off-Duty + Sleep)
     
-    func checkFor10HourReset() {
-        //MARK: -  Total Off-Duty + Sleep time
-        let totalRest = offDutySleepAccumulated
-        
-        if totalRest >= 10 * 3600 {
-            print("10-hour reset reached. Resetting all timers except Cycle Timer.")
-            
-            // Stop all timers
-            driveTimer.stop()
-            ONDuty.stop()
-            continueDriveTime.stop()
-            sleepTimer.stop()
-            breakTime.stop()
-            
-            //Reset timers to full time (but DO NOT reset cycleTimerOn)
-            driveTimer.reset(startTime: CountdownTimer.timeStringToSeconds("(11:00:00"))
-            ONDuty.reset(startTime: CountdownTimer.timeStringToSeconds("14:00:00"))
-            continueDriveTime.reset(startTime: CountdownTimer.timeStringToSeconds("08:00:00"))
-            sleepTimer.reset(startTime: CountdownTimer.timeStringToSeconds("10:00:00"))
-            breakTime.reset(startTime: CountdownTimer.timeStringToSeconds("00:30:00"))
-            // Clear accumulated rest time
-            offDutySleepAccumulated = 0
-            // Refresh UI (On-Duty will start again when user selects status)
-            confirmedStatus = DriverStatusConstants.offDuty
-            selectedStatus = DriverStatusConstants.offDuty
-            
-            // Reload Events after reset
-            hoseChartViewModel.forceRefresh()
-            
-            // Save logs in DB for future restore
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            let now = formatter.string(from: Date())
-            /*
-             DatabaseManager.shared.saveTimerLog(
-             status: "Reset After 10 Hour Rest",
-             startTime: now, dutyType: "Reset After 10 Hour Rest",
-             remainingWeeklyTime: cycleTimerOn.internalTimeString, // keep same cycle time
-             remainingDriveTime: driveTimer.internalTimeString,
-             remainingDutyTime: ONDuty.internalTimeString,
-             remainingSleepTime: sleepTimer.internalTimeString,
-             lastSleepTime: breakTime.internalTimeString,
-             RemaningRestBreak: "false",
-             isruning: false,
-             isVoilations: false
-             )
-             
-             */
-        }
-        }
+//    func checkFor10HourReset() {
+//        //MARK: -  Total Off-Duty + Sleep time
+//        let totalRest = offDutySleepAccumulated
+//        
+//        if totalRest >= 10 * 3600 {
+//            print("10-hour reset reached. Resetting all timers except Cycle Timer.")
+//            
+//            // Stop all timers
+//            driveTimer.stop()
+//            ONDuty.stop()
+//            continueDriveTime.stop()
+//            sleepTimer.stop()
+//            breakTime.stop()
+//            
+//            //Reset timers to full time (but DO NOT reset cycleTimerOn)
+//            driveTimer.reset(startTime: CountdownTimer.timeStringToSeconds("(11:00:00"))
+//            ONDuty.reset(startTime: CountdownTimer.timeStringToSeconds("14:00:00"))
+//            continueDriveTime.reset(startTime: CountdownTimer.timeStringToSeconds("08:00:00"))
+//            sleepTimer.reset(startTime: CountdownTimer.timeStringToSeconds("10:00:00"))
+//            breakTime.reset(startTime: CountdownTimer.timeStringToSeconds("00:30:00"))
+//            // Clear accumulated rest time
+//            offDutySleepAccumulated = 0
+//            // Refresh UI (On-Duty will start again when user selects status)
+//            confirmedStatus = DriverStatusConstants.offDuty
+//            selectedStatus = DriverStatusConstants.offDuty
+//            
+//            // Reload Events after reset
+//            hoseChartViewModel.forceRefresh()
+//            
+//            // Save logs in DB for future restore
+//            let formatter = DateFormatter()
+//            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//            let now = formatter.string(from: Date())
+//            /*
+//             DatabaseManager.shared.saveTimerLog(
+//             status: "Reset After 10 Hour Rest",
+//             startTime: now, dutyType: "Reset After 10 Hour Rest",
+//             remainingWeeklyTime: cycleTimerOn.internalTimeString, // keep same cycle time
+//             remainingDriveTime: driveTimer.internalTimeString,
+//             remainingDutyTime: ONDuty.internalTimeString,
+//             remainingSleepTime: sleepTimer.internalTimeString,
+//             lastSleepTime: breakTime.internalTimeString,
+//             RemaningRestBreak: "false",
+//             isruning: false,
+//             isVoilations: false
+//             )
+//             
+//             */
+//        }
+//        }
         
         
         
@@ -1279,126 +1282,7 @@ struct HomeScreenView: View {
         
         
         //MARK: -  Restore & save time
-        /* func restoreAllTimers(){
-         isRestoringTimers = true  // Prevent auto-save during restoration
-         print(" Starting timer restoration - preventing auto-saves")
-         
-         let allLogs = DatabaseManager.shared.fetchLogs()
-         print(" Total logs in database: \(allLogs.count)")
-         
-         guard !allLogs.isEmpty else {
-         print(" No logs found, keeping timers as they are")
-         isRestoringTimers = false
-         return
-         }
-         
-         // Get the most recent log
-         let latestLog = allLogs.last!
-         let currentStatus = latestLog.status
-         print(" Latest log status: \(currentStatus)")
-         print(" Latest log time: \(latestLog.startTime)")
-         print(" Remaining times - Duty: \(latestLog.remainingDutyTime ?? "nil"), Drive: \(latestLog.remainingDriveTime ?? "nil"), Cycle: \(latestLog.remainingWeeklyTime ?? "nil")")
-         
-         // Calculate elapsed time since log was saved
-         let now = Date()
-         let logTime = latestLog.startTime.asDate() ?? now
-         let elapsedTime = now.timeIntervalSince(logTime)
-         print(" Elapsed time since log: \(elapsedTime) seconds (\(elapsedTime/60) minutes)")
-         
-         // Restore status
-         if currentStatus == "NEXTDAY" {
-         confirmedStatus = DriverStatusConstants.offDuty
-         selectedStatus = DriverStatusConstants.offDuty
-         print(" Mapped NEXTDAY to OffDuty for UI display")
-         } else {
-         confirmedStatus = currentStatus
-         selectedStatus = currentStatus
-         }
-         print(" Status restored - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
-         
-         // Stop all timers before restoration
-         onDriveTimer?.stop()
-         onDutyTimer?.stop()
-         cycleTimer?.stop()
-         sleepTimer?.stop()
-         breakTimer?.stop()
-         
-         print(" Restoring all timer values from database...")
-         
-         // --- Restore OnDuty Timer ---
-         if let dutyRemaining = latestLog.remainingDutyTime?.asTimeInterval() {
-         if currentStatus == "OnDuty" || currentStatus == "OnDrive" || currentStatus == "YardMove" {
-         let adjustedDutyRemaining = dutyRemaining - elapsedTime
-         onDutyTimer?.reset(startTime: adjustedDutyRemaining)
-         onDutyTimer?.start()
-         isOnDutyActive = true
-         print(" OnDuty timer restored & running: \(onDutyTimer?.timeString ?? "")")
-         } else {
-         onDutyTimer?.reset(startTime: dutyRemaining)
-         print(" OnDuty timer restored (stopped): \(onDutyTimer?.timeString ?? "")")
-         }
-         }
-         
-         // --- Restore Drive Timer ---
-         if let driveRemaining = latestLog.remainingDriveTime?.asTimeInterval() {
-         if currentStatus == "OnDrive" {
-         let adjustedDriveRemaining = driveRemaining - elapsedTime
-         onDriveTimer?.reset(startTime: adjustedDriveRemaining)
-         onDriveTimer?.start()
-         isDriveActive = true
-         print(" Drive timer restored & running: \(onDriveTimer?.timeString ?? "")")
-         } else {
-         onDriveTimer?.reset(startTime: driveRemaining)
-         print(" Drive timer restored (stopped): \(onDriveTimer?.timeString ?? "")")
-         }
-         }
-         
-         // --- Restore Cycle Timer ---
-         if let cycleRemaining = latestLog.remainingWeeklyTime?.asTimeInterval() {
-         if currentStatus == "OnDuty" || currentStatus == "OnDrive" || currentStatus == "YardMove" {
-         let adjustedCycleRemaining = cycleRemaining - elapsedTime
-         cycleTimer?.reset(startTime: adjustedCycleRemaining)
-         cycleTimer?.start()
-         isCycleTimerActive = true
-         print(" Cycle timer restored & running: \(cycleTimer?.timeString ?? "")")
-         } else {
-         cycleTimer?.reset(startTime: cycleRemaining)
-         print(" Cycle timer restored (stopped): \(cycleTimer?.timeString ?? "")")
-         }
-         }
-         
-         // --- Restore Sleep Timer ---
-         if let sleepRemaining = latestLog.remainingSleepTime?.asTimeInterval() {
-         if currentStatus == "OnSleep" {
-         let adjustedSleepRemaining = sleepRemaining - elapsedTime
-         sleepTimer?.reset(startTime: adjustedSleepRemaining)
-         sleepTimer?.start()
-         print(" Sleep timer restored & running: \(sleepTimer?.timeString ?? "")")
-         } else {
-         sleepTimer?.reset(startTime: sleepRemaining)
-         print(" Sleep timer restored (stopped): \(sleepTimer?.timeString ?? "")")
-         }
-         }
-         
-         // --- Restore Break Timer ---
-         let breakRemaining = latestLog.lastSleepTime.asTimeInterval()
-         if breakRemaining > 0 {
-         let adjustedBreakRemaining = breakRemaining - elapsedTime
-         breakTimer?.reset(startTime: adjustedBreakRemaining)
-         breakTimer?.start()
-         print(" Break timer restored & running: \(breakTimer?.timeString ?? "")")
-         } else {
-         breakTimer?.reset(startTime: 30 * 60)
-         print(" Break timer reset to 30 minutes (no saved break time)")
-         }
-         
-         print(" Timer restoration completed")
-         isRestoringTimers = false
-         print(" Auto-saves re-enabled")
-         }*/
-        
-        
-        
+ 
         // Add these new functions to track shown violations
         func checkAndShowViolationsForCurrentDayShift(day: Int, shift: Int) {
             let allLogs = DatabaseManager.shared.fetchLogs()
