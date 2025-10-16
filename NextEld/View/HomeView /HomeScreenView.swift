@@ -470,11 +470,25 @@ struct HomeScreenView: View {
             }
         }
         .id(homeVM.refreshView)
-//        .onReceive(homeVM.onDutyTimer.publisher, perform: { timer in
-//            print(timer.remainingTime)
-//            // Auto-save timer state every 30 seconds
-//            //   autoSaveTimerState()
-//        })
+        .onChange(of: homeVM.onDutyTimer?.remainingTime) { oldValue, newValue in
+            homeVM.onChangeRemaingTime(type: .onDuty, remainigTime: newValue ?? 0)
+        }
+        .onChange(of: homeVM.cycleTimer?.remainingTime) { oldValue, newValue in
+            homeVM.onChangeRemaingTime(type: .cycleTimer, remainigTime: newValue ?? 0)
+        }
+        .onChange(of: homeVM.onDriveTimer?.remainingTime) { oldValue, newValue in
+            homeVM.onChangeRemaingTime(type: .onDrive, remainigTime: newValue ?? 0)
+        }
+        .onChange(of: homeVM.breakTimer?.remainingTime) { oldValue, newValue in
+            homeVM.onChangeRemaingTime(type: .breakTimer, remainigTime: newValue ?? 0)
+        }
+        .onChange(of: homeVM.continueDriveTimer?.remainingTime) { oldValue, newValue in
+            homeVM.onChangeRemaingTime(type: .continueDrive, remainigTime: newValue ?? 0)
+        }
+        .onChange(of: homeVM.sleepTimer?.remainingTime) { oldValue, newValue in
+            homeVM.onChangeRemaingTime(type: .sleepTimer, remainigTime: newValue ?? 0)
+        }
+    
         .onChange(of: networkMonitor.isConnected) { newValue in
             if newValue {
                 showToast(message: " Internet Connected Successfully", color: .green)
@@ -531,9 +545,10 @@ struct HomeScreenView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
             // Save timer states when app is about to terminate
            // homeVM.saveCurrentTimerStatesBeforeSwitch()
-            //homeVM.saveCurrentTimerStates()
+            homeVM.saveTimerStateForStatus(status: homeVM.currentDriverStatus.getName(), note: "")
             
-            homeVM.restoreAllTimersFromLastStatus()
+          //  homeVM.restoreAllTimersFromLastStatus()
+            //homeVM.addPublishers()
         }
         
         
@@ -549,9 +564,9 @@ struct HomeScreenView: View {
                 labelValue = driverName
             }
                //For show restore all timer #priyanshi
-                    if !homeVM.isRestoringTimers {
+                //    if !homeVM.isRestoringTimers {
                         homeVM.restoreAllTimersFromLastStatus()
-                    }
+                //    }
             
 
         }

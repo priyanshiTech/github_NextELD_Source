@@ -84,21 +84,83 @@ enum TimerType: Hashable, CaseIterable {
     }
 }
 
-enum VoilationType: Hashable {
-    case onDutyVoilation
-    case onContinueDriveVoilation
-    case onDriveVoilation
-    case cycleTimerVoilation
+enum ViolationType: Hashable {
+    case onDutyViolation
+    case onContinueDriveViolation
+    case onDriveViolation
+    case cycleTimerViolation
     case none
+    
+    func getFifteenMinWarningText() -> String {
+        switch self {
+        case .onDutyViolation:
+            return AppConstants.onDuty
+        case .onContinueDriveViolation:
+            return AppConstants.continueDrive
+        case .onDriveViolation:
+            return AppConstants.onDrive
+        case .cycleTimerViolation:
+            return AppConstants.cycle
+        case .none:
+            return ""
+        }
+    }
+    
+    func getThirtyMinWarningText() -> String {
+        switch self {
+        case .onDutyViolation:
+            return AppConstants.onDuty
+        case .onContinueDriveViolation:
+            return AppConstants.continueDrive
+        case .onDriveViolation:
+            return AppConstants.onDrive
+        case .cycleTimerViolation:
+            return AppConstants.cycle
+        case .none:
+            return ""
+        }
+    }
+    
+    func getViolationText() -> String {
+        switch self {
+        case .onDutyViolation:
+            return AppConstants.onDuty
+        case .onContinueDriveViolation:
+            return AppConstants.continueDrive
+        case .onDriveViolation:
+            return AppConstants.onDrive
+        case .cycleTimerViolation:
+            return AppConstants.cycle
+        case .none:
+            return ""
+        }
+    }
+    
+    
 }
 
 struct ViolationData: Equatable {
-    var violationType: VoilationType = .none
+    var violationType: ViolationType = .none
     var thirtyMinWarning: Bool = false
     var fifteenMinWarning: Bool = false
     var violation: Bool = false
     
+    func getWarningText() -> String {
+        var warningText: String = ""
+        if self.thirtyMinWarning {
+            warningText = violationType.getThirtyMinWarningText()
+        }
+        if self.fifteenMinWarning {
+            warningText  = violationType.getFifteenMinWarningText()
+        }
+        if violation {
+            warningText  = violationType.getViolationText()
+        }
+        return warningText
+    }
+    
 }
+
 struct ViolationBoxData: Identifiable {
     let id = UUID()
     let text: String
@@ -114,7 +176,7 @@ class HomeViewModel: ObservableObject {
     @Published var currentDriverStatus: DriverStutusType = .offDuty
     
     // Violation publiser to show alerts on view
-    @Published var violationType: ViolationData = ViolationData()
+    @Published var violationDataArray: [ViolationData] = []
 
     @Published  var showSyncconfirmation  =  false
     // Showing the alert on Home when change the driver Status
@@ -131,13 +193,7 @@ class HomeViewModel: ObservableObject {
     @Published var refreshView: UUID = UUID()
     
     //Create #P
-    @Published var isRestoringTimers: Bool = false
     var cancellable: Set<AnyCancellable> = []
-    
- //   #P commit
-//    init() {
-//        restoreAllTimersFromLastStatus()
-//    }
     
     deinit {
         debugPrint("Deinit called...")
@@ -231,7 +287,7 @@ class HomeViewModel: ObservableObject {
         SessionManagerClass.shared.clearToken()
         DatabaseManager.shared.deleteAllLogs()
         stopTimers(for: TimerType.allCases)
-       currentDriverStatus = .offDuty
+        currentDriverStatus = .offDuty
         print(" All app data deleted successfully")
     }
 
@@ -259,14 +315,20 @@ class HomeViewModel: ObservableObject {
             }
 
         case .onDrive:
-            
-            if let breakTimer = breakTimer, isTimerRunning(.breakTimer) {
-               // breakTimer.reset(startTime: breakTimer.startDuration)
-                breakTimer.reset(startTime: Double(DriverInfo.breakTime ?? 0))
-                breakTimer.stop()
+            if isTimerRunning(.breakTimer) {
+                breakTimer?.stop()
+                breakTimer?.reset(startTime: breakTimer?.startDuration ?? 0)
                 updateContinueDriveDBEndTime()
             }
-            timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive, ]
+            timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
+            
+//            if let breakTimer = breakTimer, isTimerRunning(.breakTimer) {
+//               // breakTimer.reset(startTime: breakTimer.startDuration)
+//                breakTimer.reset(startTime: Double(DriverInfo.breakTime ?? 0))
+//                breakTimer.stop()
+//                updateContinueDriveDBEndTime()
+//            }
+//            timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive, ]
 
         case .sleep:
             timerTypes = [.sleepTimer]
@@ -290,6 +352,7 @@ class HomeViewModel: ObservableObject {
         }
 
         startTimers(for: timerTypes)
+        
 
         // Explicitly start break timer if restoring after app relaunch
         if restoreBreakTimerRunning, let breakTimer = breakTimer, !breakTimer.isRunning {
@@ -304,22 +367,13 @@ class HomeViewModel: ObservableObject {
     // # changes by priyanshi - compact + safe version
     
     func restoreAllTimersFromLastStatus() {
-        print("Restoring timers from last saved log...")
-
         guard let latestLog = DatabaseManager.shared.fetchLogs().last else {
             currentDriverStatus = .offDuty
             resetToInitialState()
             return
         }
-
-        guard let savedDate = DateTimeHelper.getDateFromString(latestLog.startTime) else { return }
-        let elapsed = DateTimeHelper.currentDateTime().timeIntervalSince(savedDate)
+        let elapsed = getElapsedTime(lastLog: latestLog)
         let status = DriverStutusType(fromName: latestLog.status) ?? .none
-
-        func adjusted(_ value: Int?, active: Bool) -> TimeInterval {
-            let time = TimeInterval(value ?? 0)
-            return active ? max(0, time - elapsed) : time
-        }
 
         // Active flags
         let isOnDuty  = (status == .onDuty)
@@ -327,170 +381,90 @@ class HomeViewModel: ObservableObject {
         let isSleep   = (status == .sleep)
         let isCycle   = !(status == .offDuty || status == .sleep)
         let isContDrv = (status == .onDrive)
+        let isBreak   = TimeInterval(latestLog.breaktimerRemaning ?? 0) > 0 && status != .onDrive
 
+        let onDutyRemainingTime = adjusted(latestLog.remainingDutyTime, elapsed: elapsed, active: isOnDuty)
+        let onDriveRemainingTime = adjusted(latestLog.remainingDriveTime, elapsed: elapsed, active: isDrive)
+        let cycleRemainingTime = adjusted(latestLog.remainingWeeklyTime, elapsed: elapsed, active: isCycle)
+        let sleepRemainingTime = adjusted(latestLog.remainingSleepTime, elapsed: elapsed, active: isSleep)
+        let continueDriveRemainingTime = adjusted(Int(DriverInfo.continueDriveTime ?? 0), elapsed: elapsed, active: isContDrv)
+        let breakRemainingTime = adjusted(Int(DriverInfo.breakTime ?? 0), elapsed: elapsed, active: isBreak)
+        
+        
         // Timers
-        onDutyTimer        = CountdownTimer(startTime: adjusted(latestLog.remainingDutyTime, active: isOnDuty))
-        onDriveTimer       = CountdownTimer(startTime: adjusted(latestLog.remainingDriveTime, active: isDrive))
-        cycleTimer         = CountdownTimer(startTime: adjusted(latestLog.remainingWeeklyTime, active: isCycle))
-        sleepTimer         = CountdownTimer(startTime: adjusted(latestLog.remainingSleepTime, active: isSleep))
-        continueDriveTimer = CountdownTimer(startTime: adjusted(Int(DriverInfo.continueDriveTime ?? 0), active: isContDrv))
-
-        // Break timer
-        let breakSaved = TimeInterval(latestLog.breaktimerRemaning ?? 0)
-        let breakRunning = breakSaved > 0 && status != .onDrive
-        let breakRemain = breakRunning ? max(0, breakSaved - elapsed) : breakSaved
-        breakTimer = CountdownTimer(startTime: breakRemain)
+        onDutyTimer        = CountdownTimer(startTime: onDutyRemainingTime)
+        onDriveTimer       = CountdownTimer(startTime: onDriveRemainingTime)
+        cycleTimer         = CountdownTimer(startTime: cycleRemainingTime)
+        sleepTimer         = CountdownTimer(startTime: sleepRemainingTime)
+        continueDriveTimer = CountdownTimer(startTime: continueDriveRemainingTime)
+        breakTimer         = CountdownTimer(startTime: breakRemainingTime)
 
         // Resume
-        setDriverStatus(status: status, restoreBreakTimerRunning: breakRunning)
+        setDriverStatus(status: status, restoreBreakTimerRunning: isBreak)
         refreshView = UUID()
     }
 
+    func adjusted(_ value: Int?, elapsed: TimeInterval, active: Bool) -> TimeInterval {
+        let time = TimeInterval(value ?? 0)
+        return active ? max(0, time - elapsed) : time
+    }
+    
+    
+    private func getElapsedTime(lastLog: DriverLogModel) -> TimeInterval {
+        
+        guard let savedDate = DateTimeHelper.getDateFromString(lastLog.startTime) else {
+            return 0
+        }
 
-
-
-    private func startBreakTimerIfNeeded() {
-        guard let breakTimer = breakTimer else { return }
-        if !isTimerRunning(.breakTimer) {
-            breakTimer.start()
-            print(" Break timer started (On-Drive → On-Duty transition)")
+        // Get current time in the same timezone as saved time
+        let currentTime = DateTimeHelper.currentDateTime()
+        
+        // Time elapsed since last save (both in same timezone)
+        let elapsed = currentTime.timeIntervalSince(savedDate)
+        
+        print("Difference in current time and last saved time : \(elapsed)")
+        
+        return elapsed
+    }
+    
+    
+    func onChangeRemaingTime(type: TimerType, remainigTime: TimeInterval) {
+        switch type {
+        case .onDuty:
+            let warning1 = TimeInterval(Int(DriverInfo.onDutyTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime1 ?? 0))
+            let warning2 = TimeInterval(Int(DriverInfo.onDutyTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime2 ?? 0))
+            checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDutyViolation)
+        case .onDrive:
+            let warning1 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime1 ?? 0))
+            let warning2 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime2 ?? 0))
+            checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDriveViolation)
+        case .breakTimer:
+            break
+        case .sleepTimer:
+            break
+        case .continueDrive:
+            break
+        case .cycleTimer:
+            break
+        case .none:
+            break
+        }
+    }
+    
+    func checkViolation(for warning1: TimeInterval, for warning2: TimeInterval, remainingTime: TimeInterval, type: ViolationType) {
+        var violationData = ViolationData()
+        if remainingTime <= 0 {
+            // Violation
+            violationData.violation = true
+        } else if remainingTime <= warning1 && remainingTime > 0 {
+            violationData.fifteenMinWarning = true
+        } else if remainingTime <= warning2 && remainingTime > warning1 {
+            violationData.thirtyMinWarning = true
+        }
+        if violationData.violationType != .none {
+            violationData.violationType = .onDutyViolation
+            violationDataArray.append(violationData)
         }
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    // MARK: - Helper function to map DriverStatusConstants to AppConstants format
-//    private func mapDriverStatusToEnum(_ status: String) -> String {
-//        switch status {
-//        case DriverStatusConstants.onDuty:
-//            return AppConstants.on_Duty
-//        case DriverStatusConstants.onDrive:
-//            return AppConstants.on_Drive
-//        case DriverStatusConstants.offDuty:
-//            return AppConstants.off_Duty
-//        case DriverStatusConstants.onSleep:
-//            return AppConstants.sleep
-//        case DriverStatusConstants.personalUse:
-//            return AppConstants.personalUse
-//        case DriverStatusConstants.yardMove:
-//            return AppConstants.yardMove
-//        default:
-//            return status
-//        }
-//    }
-
-
-    //MARK: - Save current timer states before switching
-
-//    func saveCurrentTimerStatesBeforeSwitch() {
-//        // Save current timer states to our state variables
-//        savedOnDutyRemaining = onDutyTimer?.remainingTime ?? 0
-//        savedDriveRemaining = onDriveTimer?.remainingTime ?? 0
-//        savedCycleRemaining = cycleTimer?.remainingTime ?? 0
-//        savedSleepingRemaning = sleepTimer?.remainingTime ?? 0
-//        savedBreakRemaining = breakTime?.remainingTime ?? 0
-//        
-//        print(" Saving timer states before switch:")
-//        print(" OnDuty: \(savedOnDutyRemaining/60) min, Drive: \(savedDriveRemaining/60) min, Cycle: \(savedCycleRemaining/60) min")
-//        print(" Sleep: \(savedSleepingRemaning/60) min, Break: \(savedBreakRemaining/60) min")
-//    }
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    func saveEntriesToDB(type: DriverStutusType)  {
-//        let remainingTime = getRemainingTime(type: type)
-//        let driverModel = DriverLogModel(status: type.getName(),
-//                                         startTime: <#T##String#>, userId: <#T##Int#>, day: <#T##Int#>, isVoilations: <#T##Int#>, dutyType: <#T##String#>, shift: <#T##Int#>, vehicle: <#T##String#>, isRunning: <#T##Bool#>, odometer: <#T##Double#>, engineHours: <#T##String#>, location: <#T##String#>, lat: <#T##Double#>, long: <#T##Double#>, origin: <#T##String#>, isSynced: <#T##Bool#>, vehicleId: <#T##Int#>, trailers: <#T##String#>, notes: <#T##String#>, serverId: <#T##String?#>, timestamp: <#T##Int64#>, identifier: <#T##Int#>, remainingWeeklyTime: <#T##String?#>, remainingDriveTime: <#T##String?#>, remainingDutyTime: <#T##String?#>, remainingSleepTime: <#T##String?#>, lastSleepTime: <#T##String#>, isSplit: <#T##Int#>, engineStatus: <#T##String#>, isCertifiedLog: <#T##String#>)
-//
-//        DatabaseManager.shared.insertLog(from: driverModel)
-//    }
-//    
-//    func getRemainingTime(type: DriverStutusType)  -> Int {
-//        switch type {
-//            case .onDuty:
-//
-//        case .offDuty:
-//            <#code#>
-//        case .onDrive:
-//            <#code#>
-//        case .sleep:
-//            <#code#>
-//        case .personalUse:
-//            <#code#>
-//        case .yardMode:
-//            <#code#>
-//        case .none:
-//            <#code#>
-//        }
-//    }
-//}
