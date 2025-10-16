@@ -195,6 +195,10 @@ class HomeViewModel: ObservableObject {
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     
+    init() {
+        restoreAllTimersFromLastStatus()
+    }
+    
     deinit {
         debugPrint("Deinit called...")
         _ = cancellable.map({$0.cancel()})

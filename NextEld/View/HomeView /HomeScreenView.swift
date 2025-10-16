@@ -565,7 +565,7 @@ struct HomeScreenView: View {
             }
                //For show restore all timer #priyanshi
                 //    if !homeVM.isRestoringTimers {
-                        homeVM.restoreAllTimersFromLastStatus()
+                        
                 //    }
             
 
