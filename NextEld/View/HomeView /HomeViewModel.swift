@@ -460,10 +460,10 @@ class HomeViewModel: ObservableObject {
         if remainingTime <= 0 {
             // Violation
             violationData.violation = true
-        } else if remainingTime <= warning1 && remainingTime > 0 {
-            violationData.fifteenMinWarning = true
-        } else if remainingTime <= warning2 && remainingTime > warning1 {
-            violationData.thirtyMinWarning = true
+        } else if remainingTime <= warning2 && remainingTime > 0 {
+            violationData.fifteenMinWarning = true // 15 min
+        } else if remainingTime <= warning1 && remainingTime > warning2 {
+            violationData.thirtyMinWarning = true // 30 min
         }
         if violationData.violationType != .none {
             violationData.violationType = .onDutyViolation
