@@ -197,7 +197,7 @@ struct HomeScreenView: View {
     @StateObject private var deleteViewModel = DeleteViewModel()
     @State private var showSuccessAlert = false
     @State private var showViolation = true
-    @State private var showSyncconfirmation  =  false
+
     @StateObject private var logoutVM = APILogoutViewModel()   //logout
     @State private var showsyncRefreshalert = RefreshViewModel()  // Refresh
     @EnvironmentObject var locationManager: LocationManager
@@ -292,7 +292,7 @@ struct HomeScreenView: View {
                     selectedSideMenuTab: $selectedSideMenuTab,
                     presentSideMenu: $presentSideMenu,
                     showLogoutPopup: $showLogoutPopup,
-                    showDeleteConfirm: $showDeleteConfirm, showSyncConfirmation: $showSyncconfirmation ,
+                    showDeleteConfirm: $showDeleteConfirm, showSyncConfirmation:  $homeVM.showSyncconfirmation,
                     
                 )
                 .frame(width: 250)
@@ -310,7 +310,6 @@ struct HomeScreenView: View {
                     onSubmit: { note in
                         let status = homeVM.showDriverStatusAlert.status
                         
-                        
                         // Set new status and start timers
                        homeVM.setDriverStatus(status: status)
                         // Save new timer state after status change
@@ -324,28 +323,6 @@ struct HomeScreenView: View {
             //nitin
             
             //MARK: -  Show Certify popup
-            //            if showCertifyLogAlert {
-            //                  Color.black.opacity(0.4)
-            //                      .ignoresSafeArea()
-            //                      .zIndex(9)
-            //
-            //                  CustomPopupAlert(
-            //                      title: "Certify Log",
-            //                      message: "Please certify your previous day log before going to On-Duty",
-            //                      onOK: {
-            //                          showCertifyLogAlert = false
-            //                          navmanager.navigate(to: AppRoute.DailyLogs(tittle: ""))
-            //                      },
-            //                      onCancel: {
-            //                          showCertifyLogAlert = false
-            //                      }
-            //                  )
-            //                  .zIndex(10)
-            //                  .transition(.opacity)
-            //                  .animation(.easeInOut, value: showCertifyLogAlert)
-            //              }
-            
-            
             
             if showDvirPopup {
                 CustomPopupAlert(
@@ -358,8 +335,6 @@ struct HomeScreenView: View {
                         //                                                                   selectedRecord: emptyDvirRecord,
                         //                                                                   isFromHome: true
                         //                                                               )))
-                        
-                        
                         //                        navmanager.navigate(to: })
                         
                         
@@ -419,16 +394,18 @@ struct HomeScreenView: View {
                             }
                             showLogoutPopup = false
                             presentSideMenu = false
+//                            UserDefaults.standard.set(false, forKey: "isLoggedIn")
+//                            UserDefaults.standard.removeObject(forKey: "userEmail")
+//                            UserDefaults.standard.removeObject(forKey: "authToken")
+//                            UserDefaults.standard.removeObject(forKey: "driverName")
+//                            UserDefaults.standard.removeObject(forKey: AppStorageKeys.timezone)
+//                            UserDefaults.standard.removeObject(forKey: "timezoneOffSet")
                             UserDefaults.standard.set(false, forKey: "isLoggedIn")
-                            UserDefaults.standard.removeObject(forKey: "userEmail")
-                            UserDefaults.standard.removeObject(forKey: "authToken")
-                            UserDefaults.standard.removeObject(forKey: "driverName")
-                            UserDefaults.standard.removeObject(forKey: AppStorageKeys.timezone)
-                            UserDefaults.standard.removeObject(forKey: "timezoneOffSet")
-                            
+                            ["userEmail","authToken","driverName",AppStorageKeys.timezone,"timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
+
                             // session.logOut() // Nitin
                             SessionManagerClass.shared.clearToken()
-                            //navmanager.navigate(to: AppRoute.homeFlow(.splashScreen))
+                            appRootManager.currentRoot = .splashScreen
                             
                         },
                         onCancel: {
@@ -1019,22 +996,22 @@ struct HomeScreenView: View {
          
          
          
-         //MARK: - Showing Refresh Log alert
-         .alert("Are you sure you want to refresh all logs?", isPresented: $showSyncconfirmation) {
-         Button("Cancel", role: .cancel) {}
-         Button("OK", role: .destructive) {
-         Task {
-         await viewModel.refresh()   //  Call your refresh API
-         
-         }
-         }
-         } message: {
-         Text("This will refresh all your local logs with the server.")
-         }
-         
+
          
          
          */
+        //MARK: -  #P for refresh All logs popup
+      
+        .alert("Are you sure you want to refresh all logs?", isPresented: $homeVM.showSyncconfirmation) {
+        Button("Cancel", role: .cancel) {}
+        Button("OK", role: .destructive) {
+        Task {
+        await viewModel.refresh()   //  Call your refresh API
+        }
+        }
+        } message: {
+        Text("This will refresh all your local logs with the server.")
+        }
         
         
         //MARK: -   Success alert after deletion
@@ -1073,7 +1050,6 @@ struct HomeScreenView: View {
         }
         
         .navigationBarBackButtonHidden()
-        
         .navigationDestination(for: AppRoute.DatabaseFlow.self, destination: { type in
             switch type {
                 

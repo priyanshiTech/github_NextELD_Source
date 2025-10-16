@@ -43,7 +43,7 @@ extension HomeViewModel {
             remainingSleepTime: Int(sleepTimer?.remainingTime ?? 0),
             breakTimeRemaning: Int(breakTimer?.remainingTime ?? 0),
             lastSleepTime: Int(breakTimer?.remainingTime ?? 0),
-            RemaningRestBreak: "true",
+            RemaningRestBreak: "True",
             isruning: true,
             isVoilations: false
         )

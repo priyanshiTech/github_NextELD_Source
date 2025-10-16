@@ -59,15 +59,8 @@ struct TopBarView: View {
                 }
                 
                 Button("Certify Log") {
-                    navManager.navigate(to: AppRoute.DatabaseFlow.ContinueDriveTableView)
+                    navManager.navigate(to: AppRoute.DatabaseFlow.DatabaseCertifyView)
                 }
-//                Button("Continue Drive") {
-//                    navManager.navigate(to: AppRoute.logsFlow(.continueDriveTableView))
-//                }
-//                Button("Cerify Records") {
-//                    navManager.navigate(to: .DatabaseCertifyView)
-//                }
-                   
             } label: {
                 Text(labelValue)
                     .font(.system(size: 20))

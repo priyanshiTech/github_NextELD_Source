@@ -115,7 +115,8 @@ class HomeViewModel: ObservableObject {
     
     // Violation publiser to show alerts on view
     @Published var violationType: ViolationData = ViolationData()
-    
+
+    @Published  var showSyncconfirmation  =  false
     // Showing the alert on Home when change the driver Status
     @Published var showDriverStatusAlert: (showAlert: Bool, status: DriverStutusType) = (false, .offDuty)
     
@@ -148,6 +149,7 @@ class HomeViewModel: ObservableObject {
         cycleTimer = nil
         continueDriveTimer = nil
     }
+    
     
     func stopTimers(for types: [TimerType]) {
         for type in types {
@@ -213,7 +215,6 @@ class HomeViewModel: ObservableObject {
     }
     
     func resetToInitialState() {
-        
         onDutyTimer = CountdownTimer(startTime: DriverInfo.onDutyTime ?? 0)
         breakTimer = CountdownTimer(startTime: TimeInterval(DriverInfo.breakTime ?? 0))
         sleepTimer = CountdownTimer(startTime: DriverInfo.onSleepTime ?? 0)
@@ -234,121 +235,118 @@ class HomeViewModel: ObservableObject {
         print(" All app data deleted successfully")
     }
 
+
     
     
-    func setDriverStatus(status: DriverStutusType) {
+    func setDriverStatus(status: DriverStutusType, restoreBreakTimerRunning: Bool = false) {
         let previousStatus = currentDriverStatus
         currentDriverStatus = status
-        
+
         var timerTypes: [TimerType] = []
-        
+
         switch status {
-            
+
         case .onDuty:
-            if previousStatus == .onDrive {
-                timerTypes = [.breakTimer, .onDuty, .cycleTimer]
-                startBreakTimerIfNeeded()
+            
+            timerTypes = [.onDuty, .cycleTimer]
+            if restoreBreakTimerRunning {
+                timerTypes.append(.breakTimer) // include break timer to start
+            }
+            if previousStatus == .onDrive{
+                timerTypes.append(.continueDrive)
                 saveContinueDriveDB(status: AppConstants.onDuty)
-            } else {
-                timerTypes = [.cycleTimer, .onDuty]
+                timerTypes = [.breakTimer , .onDuty, .cycleTimer]
             }
-            
+
         case .onDrive:
-            if let breakTimer = breakTimer {
-                if isTimerRunning(.breakTimer) {
-                    breakTimer.stop()
-                    breakTimer.reset(startTime: breakTimer.startDuration)
-                    updateContinueDriveDBEndTime()
-                }
-            }
-            timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
             
+            if let breakTimer = breakTimer, isTimerRunning(.breakTimer) {
+               // breakTimer.reset(startTime: breakTimer.startDuration)
+                breakTimer.reset(startTime: Double(DriverInfo.breakTime ?? 0))
+                breakTimer.stop()
+                updateContinueDriveDBEndTime()
+            }
+            timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive, ]
+
         case .sleep:
-            timerTypes = isTimerRunning(.breakTimer) ? [.sleepTimer, .breakTimer] : [.sleepTimer]
-            saveContinueDriveDB(status: AppConstants.sleep)
-            
-        case .offDuty:
-            if isTimerRunning(.breakTimer) {
-                timerTypes = [.onDuty, .cycleTimer, .breakTimer]
-            } else {
-                timerTypes = [.breakTimer]
+            timerTypes = [.sleepTimer]
+            if restoreBreakTimerRunning {
+                timerTypes.append(.breakTimer)
             }
-            saveContinueDriveDB(status: AppConstants.offDuty)
-            
+            timerTypes = [.breakTimer, .sleepTimer]
+            saveContinueDriveDB(status: AppConstants.sleep)
+
+        case .offDuty:
+            timerTypes = [.breakTimer]
+
         case .personalUse:
-            timerTypes = isTimerRunning(.breakTimer) ? [.breakTimer] : [.breakTimer]
-            saveContinueDriveDB(status: AppConstants.personalUse)
-            
+            timerTypes = [.breakTimer]
+
         case .yardMode:
             timerTypes = [.cycleTimer, .onDuty]
-            
+
         case .none:
             timerTypes = []
         }
-        
+
         startTimers(for: timerTypes)
+
+        // Explicitly start break timer if restoring after app relaunch
+        if restoreBreakTimerRunning, let breakTimer = breakTimer, !breakTimer.isRunning {
+            breakTimer.start()
+            print("Break timer auto-started on app launch")
+        }
     }
 
-    //MARK: -  Restore All Timer
+    
 
+    
+    // # changes by priyanshi - compact + safe version
+    
     func restoreAllTimersFromLastStatus() {
-      //  isRestoringTimers = true
-        print(" Restoring timers from last saved log...")
+        print("Restoring timers from last saved log...")
 
-        // Fetch the last saved record from database
         guard let latestLog = DatabaseManager.shared.fetchLogs().last else {
-            print(" No saved logs found. Starting fresh.")
-            print(" Setting default status to Off Duty")
             currentDriverStatus = .offDuty
             resetToInitialState()
             return
         }
-        
-        print(" Found saved log with status: \(latestLog.status)")
-        print(" Current driver status before restoration: \(currentDriverStatus.getName())")
 
-        // Extract last saved date - use timezone-aware parsing
-        guard let savedDate = DateTimeHelper.getDateFromString(latestLog.startTime) else {
-            return
+        guard let savedDate = DateTimeHelper.getDateFromString(latestLog.startTime) else { return }
+        let elapsed = DateTimeHelper.currentDateTime().timeIntervalSince(savedDate)
+        let status = DriverStutusType(fromName: latestLog.status) ?? .none
+
+        func adjusted(_ value: Int?, active: Bool) -> TimeInterval {
+            let time = TimeInterval(value ?? 0)
+            return active ? max(0, time - elapsed) : time
         }
 
-        // Get current time in the same timezone as saved time
-        let currentTime = DateTimeHelper.currentDateTime()
-        
-        // Time elapsed since last save (both in same timezone)
-        let elapsed = currentTime.timeIntervalSince(savedDate)
-        print(" Elapsed since saved: \(Int(elapsed)) sec (\(elapsed/60) min)")
-        print(" Saved time: \(latestLog.startTime)")
-        print(" Current time: \(DateTimeHelper.getCurrentDateTimeString())")
+        // Active flags
+        let isOnDuty  = (status == .onDuty)
+        let isDrive   = (status == .onDrive)
+        let isSleep   = (status == .sleep)
+        let isCycle   = !(status == .offDuty || status == .sleep)
+        let isContDrv = (status == .onDrive)
 
-        onDutyTimer = CountdownTimer(startTime: TimeInterval(latestLog.remainingDutyTime ?? 0) - elapsed)
+        // Timers
+        onDutyTimer        = CountdownTimer(startTime: adjusted(latestLog.remainingDutyTime, active: isOnDuty))
+        onDriveTimer       = CountdownTimer(startTime: adjusted(latestLog.remainingDriveTime, active: isDrive))
+        cycleTimer         = CountdownTimer(startTime: adjusted(latestLog.remainingWeeklyTime, active: isCycle))
+        sleepTimer         = CountdownTimer(startTime: adjusted(latestLog.remainingSleepTime, active: isSleep))
+        continueDriveTimer = CountdownTimer(startTime: adjusted(Int(DriverInfo.continueDriveTime ?? 0), active: isContDrv))
 
-        onDriveTimer = CountdownTimer(startTime: TimeInterval(latestLog.remainingDriveTime ?? 0) - elapsed)
+        // Break timer
+        let breakSaved = TimeInterval(latestLog.breaktimerRemaning ?? 0)
+        let breakRunning = breakSaved > 0 && status != .onDrive
+        let breakRemain = breakRunning ? max(0, breakSaved - elapsed) : breakSaved
+        breakTimer = CountdownTimer(startTime: breakRemain)
 
-        cycleTimer = CountdownTimer(startTime: TimeInterval(latestLog.remainingWeeklyTime ?? 0) - elapsed)
-
-        sleepTimer = CountdownTimer(startTime: TimeInterval(latestLog.remainingSleepTime ?? 0) - elapsed)
-
-      //  breakTimer = CountdownTimer(startTime: TimeInterval(DriverInfo.breakTime ?? 0) - elapsed)
-        breakTimer = CountdownTimer(startTime: TimeInterval(latestLog.breaktimerRemaning ?? 0) - elapsed)
-
-        
-        continueDriveTimer = CountdownTimer(startTime: TimeInterval(DriverInfo.continueDriveTime ?? 0) - elapsed)
-
-        let restoredStatus = DriverStutusType(fromName: latestLog.status) ?? .none
-        setDriverStatus(status: restoredStatus)
-        
-        // Check if break timer was running before and start it if needed
-        if let breakTimeRemaining = latestLog.breaktimerRemaning, breakTimeRemaining > 0 {
-            // Break timer was running before, start it
-            breakTimer?.start()
-            print(" Break timer auto-started after restoration: \(breakTimeRemaining) seconds remaining")
-        }
-        
+        // Resume
+        setDriverStatus(status: status, restoreBreakTimerRunning: breakRunning)
         refreshView = UUID()
-
     }
-    
+
+
 
 
     private func startBreakTimerIfNeeded() {

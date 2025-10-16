@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SplashView: View {
-   // @EnvironmentObject var navManager: NavigationManager
+    @EnvironmentObject var navManager: NavigationManager
     @EnvironmentObject var appRootManager: AppRootManager
     @State private var offSetImage: CGFloat = 300
     @State private var fadeOut: Bool = false
@@ -48,52 +48,49 @@ struct SplashView: View {
         }
     }
 
-    private func handleNavigation() {
-        if let savedToken = SessionManagerClass.shared.getToken(), !savedToken.isEmpty, DriverInfo.driverId != nil {
-            //  If token exists → call splash API
-            Task {
-                let success = await tokenVM.callSplashUpdateAPI()
-                if success {
-                    appRootManager.currentRoot = .scanner
-
-                } else {
-                    appRootManager.currentRoot = .login
-                }
-            }
-        } else {
-
-            appRootManager.currentRoot = .login
-        }
-    }
-    
-    
-    
-    
 //    private func handleNavigation() {
-//        if let savedToken = SessionManagerClass.shared.getToken(), !savedToken.isEmpty  , DriverInfo.driverId != nil {
+//        if let savedToken = SessionManagerClass.shared.getToken(), !savedToken.isEmpty, DriverInfo.driverId != nil {
 //            //  If token exists → call splash API
 //            Task {
 //                let success = await tokenVM.callSplashUpdateAPI()
 //                if success {
-//                    
-//                    navManager.navigate(to: AppRoute.homeFlow(.home))
-//                }
-//                else {
-//                    let vehicleNo = DriverInfo.vehicleNo
-//                    if vehicleNo.isEmpty || vehicleNo.lowercased() == "none" {
-//                        // Navigate to Add Vehicle screen
-//                        print(" Vehicle No is missing → navigating to AddVehicle screen")
-//                        navManager.navigate(to: AppRoute.vehicleFlow(.AddVichleMode))
-//                    }
-//                    else {
-//                        navManager.navigate(to: AppRoute.homeFlow(.Scanner))
-//                    }
+//                    appRootManager.currentRoot = .scanner
+//
+//                } else {
+//                    appRootManager.currentRoot = .login
 //                }
 //            }
 //        } else {
-//                navManager.navigate(to: AppRoute.loginFlow(.login))
+//
+//            appRootManager.currentRoot = .login
 //        }
 //    }
+
+    
+    private func handleNavigation() {
+        if let savedToken = SessionManagerClass.shared.getToken(), !savedToken.isEmpty  , DriverInfo.driverId != nil {
+            //  If token exists → call splash API
+            Task {
+                let success = await tokenVM.callSplashUpdateAPI()
+                if success {
+                    navManager.navigate(to: AppRoute.HomeFlow.Home)
+                }
+                else {
+                    let vehicleNo = DriverInfo.vehicleNo
+                    if vehicleNo.isEmpty || vehicleNo.lowercased() == "none" {
+                        // Navigate to Add Vehicle screen
+                        print(" Vehicle No is missing → navigating to AddVehicle screen")
+                        navManager.navigate(to: AppRoute.HomeFlow.AddVichleMode)
+                    }
+                    else {
+                        appRootManager.currentRoot = .scanner
+                    }
+                }
+            }
+        } else {
+            appRootManager.currentRoot = .login
+        }
+    }
     
 }
 //#Preview {
