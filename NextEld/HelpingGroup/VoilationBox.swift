@@ -8,18 +8,40 @@
 import Foundation
 import SwiftUI
 
-import SwiftUI
+enum ViolationBoxType {
+    case warning
+    case violation
+    
+    var color: Color {
+        switch self {
+        case .warning:
+            return .yellow
+        case .violation:
+            return .red
+        }
+    }
+    
+    var title: String {
+        switch self {
+        case .warning:
+            return "Warning"
+        case .violation:
+            return "Violation"
+        }
+    }
+}
 
 struct ViolationBox: View {
     let text: String
     let date: String
     let time: String
+    let type: ViolationBoxType
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Violation: \(text)")
+            Text("\(type.title): \(text)")
                 .font(.headline)
-                .foregroundColor(.red)
+                .foregroundColor(type.color)
 
             Text("Date: \(date)")
                 .font(.subheadline)
@@ -32,7 +54,7 @@ struct ViolationBox: View {
         .padding()
         .overlay(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.red, lineWidth: 2)
+                .stroke(type.color, lineWidth: 2)
         )
         .background(Color.white)
         .cornerRadius(8)

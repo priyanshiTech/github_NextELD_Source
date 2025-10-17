@@ -245,24 +245,7 @@ struct HomeScreenView: View {
                         HOSEventsChartScreen(currentStatus: confirmedStatus)
                             .environmentObject(hoseChartViewModel)
                         
-                        //MARK: - Violation Boxes (Part of Main Scroll)
-                        if showViolationBoxes && !violationBoxes.isEmpty {
-                            
-                            
-                            VStack(spacing: 12) {
-                                ForEach(violationBoxes) { violation in
-                                    ViolationBox(
-                                        text: violation.text,
-                                        date: violation.date,
-                                        time: violation.time
-                                    )
-                                    .transition(.move(edge: .top).combined(with: .opacity))
-                                }
-                            }
-                            .padding(.horizontal, 16)
-                            
-                            .animation(.spring(), value: violationBoxes.count)
-                        }
+                        //MARK: - Violation Boxes (Part of Main Scroll) - Removed, now using alerts
                         
                         VStack(alignment: .leading) {
                             Text("Version - OS/02/May")
@@ -270,10 +253,11 @@ struct HomeScreenView: View {
                     }
                 }
                 .scrollIndicators(.hidden)
-                .onAppear {
-                    //  loadViolationsFromDatabase()
-                    initializeViolationFlags()
-                }
+        .onAppear {
+            //  loadViolationsFromDatabase()
+            initializeViolationFlags()
+            homeVM.resetDailyViolationFlags() // Reset daily flags on app start
+        }
                 .scrollIndicators(.hidden)
             }
             .disabled(presentSideMenu || showLogoutPopup || ShowrefreshPopup )
@@ -538,10 +522,10 @@ struct HomeScreenView: View {
         //            saveCurrentTimerStatesBeforeSwitch()
         //            saveCurrentTimerStates()
         //        }
-        //        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-        //            // Restore timer states when app becomes active
-        //            restoreAllTimers()
-        //        }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                    // Restore timer states when app becomes active
+                    homeVM.restoreAllTimersFromLastStatus()
+                }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
             // Save timer states when app is about to terminate
            // homeVM.saveCurrentTimerStatesBeforeSwitch()
@@ -1064,6 +1048,15 @@ struct HomeScreenView: View {
             Text("This will permanently delete all logs Record.")
         }
         
+        //MARK: - Violation/Warning Alert
+        .alert(homeVM.alertTitle, isPresented: $homeVM.showViolationAlert) {
+            Button("OK", role: .cancel) {
+                homeVM.showViolationAlert = false
+            }
+        } message: {
+            Text(homeVM.alertMessage)
+        }
+        
         .navigationBarBackButtonHidden()
         .navigationDestination(for: AppRoute.DatabaseFlow.self, destination: { type in
             switch type {
@@ -1164,35 +1157,7 @@ struct HomeScreenView: View {
         }
         hoseEvents = converted
     }
-    
-    //MARK: -  VoilationBox Function
-    func addViolationBox(text: String) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM dd"
-        let dateString = formatter.string(from: Date())
-        
-        formatter.dateFormat = "HH:mm:ss"
-        let timeString = formatter.string(from: Date())
-        
-        let violationData = ViolationBoxData(
-            text: text,
-            date: dateString,
-            time: timeString,
-            timestamp: Date()
-        )
-        
-        violationBoxes.append(violationData)
-        showViolationBoxes = true
-        
-        // Auto-hide after 25 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
-            violationBoxes.removeAll { $0.timestamp == violationData.timestamp }
-            if violationBoxes.isEmpty {
-                showViolationBoxes = false
-            }
-        }
-    }
-    
+
     
     // MARK: - Check for 10-hour reset (Off-Duty + Sleep)
     
@@ -1276,6 +1241,7 @@ struct HomeScreenView: View {
  
         // Add these new functions to track shown violations
         func checkAndShowViolationsForCurrentDayShift(day: Int, shift: Int) {
+            
             let allLogs = DatabaseManager.shared.fetchLogs()
             
             // Filter violations for current day and shift
@@ -1289,7 +1255,7 @@ struct HomeScreenView: View {
             // Check if we've already shown violations for this day/shift
             let shownViolationsKey = "shownViolations_\(day)_\(shift)"
             let hasShownViolations = UserDefaults.standard.bool(forKey: shownViolationsKey)
-            
+
             if !currentDayShiftViolations.isEmpty && !hasShownViolations {
                 print(" Found \(currentDayShiftViolations.count) violations for day \(day), shift \(shift)")
                 
@@ -1315,7 +1281,7 @@ struct HomeScreenView: View {
             )
             
             // Add to violation boxes
-            addViolationBox(text: violation.dutyType)
+           //  addViolationBox(text: violation.dutyType)
             
             print(" Showing violation alert: \(violation.dutyType)")
         }
@@ -1641,7 +1607,7 @@ struct HomeScreenView: View {
                 return isViolation && isToday
             }
             
-            violationBoxes.removeAll()
+            homeVM.violationBoxes.removeAll()
             
             for log in violationLogs {
                 let formatter = DateFormatter()
@@ -1655,14 +1621,15 @@ struct HomeScreenView: View {
                     text: log.dutyType,
                     date: dateString,
                     time: timeString,
-                    timestamp: log.startTime.asDate() ?? Date()
+                    timestamp: log.startTime.asDate() ?? Date(),
+                    type: .violation // Database violations are always violations, not warnings
                 )
                 
-                violationBoxes.append(violationData)
+                homeVM.violationBoxes.append(violationData)
             }
             
-            if !violationBoxes.isEmpty {
-                showViolationBoxes = true
+            if !homeVM.violationBoxes.isEmpty {
+                homeVM.showViolationBoxes = true
             }
         }
         

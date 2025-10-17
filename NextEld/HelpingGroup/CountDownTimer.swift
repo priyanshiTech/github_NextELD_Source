@@ -9,13 +9,16 @@ import Foundation
 import Combine
 
 class CountdownTimer: ObservableObject {
-    var remainingTime: TimeInterval = 0
+    @Published var remainingTime: TimeInterval = 0
     
     private var timer: Timer?
   //  private var endDate: Date?
     var isRunning: Bool = false
     
     let startDuration: TimeInterval  // original duration (e.g. 14 * 3600)
+    
+    // Callback for time changes
+    var onTimeChanged: ((TimeInterval) -> Void)?
 
     // MARK: - Init
     init(startTime: TimeInterval) {
@@ -108,6 +111,10 @@ class CountdownTimer: ObservableObject {
 
            // let timeLeft = endDate.timeIntervalSinceNow
             self.remainingTime -= 1
+            
+            // Notify about time change
+            self.onTimeChanged?(self.remainingTime)
+            
             // Keep timer running even when negative - don't stop it
         }
     }

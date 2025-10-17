@@ -337,7 +337,7 @@ struct HOSEventsChart: View {
             }
             
             durations[label, default: 0] += duration
-            print("⏱️ Duration for \(event.dutyType) -> \(label): \(formatDuration(duration))")
+            print("***************** Duration for \(event.dutyType) -> \(label): \(formatDuration(duration))")
         }
         
         // Debug: Print final durations
@@ -434,8 +434,6 @@ struct HOSEventsChart: View {
                     let durations = calculateDurations()
                     ForEach(dutyLabels, id: \.self) { label in
                         Text(formatDuration(durations[label] ?? 0))
-//                        let duration = durations[label] ?? 0
-//                        Text(formatDuration(duration))
                             .font(.system(size: 8))
                             .foregroundColor(.black)
                             .frame(height: rowHeight)

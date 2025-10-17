@@ -1,35 +1,7 @@
 
 
 extension HomeViewModel {
-    
-    
-    // MARK: - Save timer state for specific status
-//    func saveTimerStateForStatus(status: String, note: String) {
-//        print("Saving timer state for status: \(status)")
-//
-//        // Safely unwrap all timer strings (use internal strings for consistency)
-//        let dutyTimeString = onDutyTimer?.remainingTime
-//        let driveTimeString = onDriveTimer?.remainingTime
-//        let cycleTimeString = cycleTimer?.remainingTime
-//        let sleepTimeString = sleepTimer?.remainingTime
-//        let breakTimeString = breakTimer?.remainingTime
-//
-//        // Save to database using your existing method
-//        DatabaseManager.shared.saveTimerLog(
-//            status: status,
-//            startTime: DateTimeHelper.getCurrentDateTimeString(),
-//            dutyType: status,
-//            remainingWeeklyTime: Int(cycleTimeString  ?? 0),
-//            remainingDriveTime: Int(driveTimeString  ?? 0) ,
-//            remainingDutyTime: Int(dutyTimeString  ?? 0),
-//            remainingSleepTime: Int(sleepTimeString  ?? 0),
-//            lastSleepTime: Int(breakTimeString  ?? 0),
-//            RemaningRestBreak: "true",
-//            isruning: true,
-//            isVoilations: false
-//        )
-//        print(" Timer state saved successfully for \(status)")
-//    }
+
     func saveTimerStateForStatus(status: String, note: String) {
         print("Saving timer state for status: \(status)")
 

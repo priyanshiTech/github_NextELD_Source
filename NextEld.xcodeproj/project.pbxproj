@@ -528,7 +528,6 @@
 			children = (
 				CBE886052E9969D300B7D581 /* Common */,
 				AFCE29E12E129C61001C6729 /* HelpingGroup */,
-				AFA98C832E0146C200E87802 /* Info.plist */,
 				108FF82C2DC89C620051671B /* Model 2 */,
 				AFC535552E0D5D5700AD10C9 /* DataBaseMM */,
 				AFFC64A32DCE1F73008D1CC0 /* Extensions */,
@@ -1367,6 +1366,7 @@
 		CBE886052E9969D300B7D581 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				AFA98C832E0146C200E87802 /* Info.plist */,
 				CBE886062E9969F300B7D581 /* AppConstants.swift */,
 			);
 			path = Common;
