@@ -426,11 +426,14 @@ struct HomeScreenView: View {
                 }
             }
             
-            if let alert = activeTimerAlert {
-                CommonTimerAlertView(alert: alert) {
-                    activeTimerAlert = nil
+            // Violation dialog
+            ForEach(Array(homeVM.violationDataArray.enumerated()), id: \.offset) { index, violationData in
+                CommonTimerAlertView(violationData: violationData) {
+                    homeVM.violationDataArray.removeLast()
                 }
+                .zIndex(Double(100+index))
             }
+            
             // MARK: -  Internet Status Banner
             if showBanner {
                 VStack {
@@ -454,25 +457,6 @@ struct HomeScreenView: View {
             }
         }
         .id(homeVM.refreshView)
-        .onChange(of: homeVM.onDutyTimer?.remainingTime) { oldValue, newValue in
-            homeVM.onChangeRemaingTime(type: .onDuty, remainigTime: newValue ?? 0)
-        }
-        .onChange(of: homeVM.cycleTimer?.remainingTime) { oldValue, newValue in
-            homeVM.onChangeRemaingTime(type: .cycleTimer, remainigTime: newValue ?? 0)
-        }
-        .onChange(of: homeVM.onDriveTimer?.remainingTime) { oldValue, newValue in
-            homeVM.onChangeRemaingTime(type: .onDrive, remainigTime: newValue ?? 0)
-        }
-        .onChange(of: homeVM.breakTimer?.remainingTime) { oldValue, newValue in
-            homeVM.onChangeRemaingTime(type: .breakTimer, remainigTime: newValue ?? 0)
-        }
-        .onChange(of: homeVM.continueDriveTimer?.remainingTime) { oldValue, newValue in
-            homeVM.onChangeRemaingTime(type: .continueDrive, remainigTime: newValue ?? 0)
-        }
-        .onChange(of: homeVM.sleepTimer?.remainingTime) { oldValue, newValue in
-            homeVM.onChangeRemaingTime(type: .sleepTimer, remainigTime: newValue ?? 0)
-        }
-    
         .onChange(of: networkMonitor.isConnected) { newValue in
             if newValue {
                 showToast(message: " Internet Connected Successfully", color: .green)

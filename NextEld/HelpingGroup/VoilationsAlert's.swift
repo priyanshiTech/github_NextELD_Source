@@ -17,20 +17,20 @@ struct TimerAlert: Identifiable {
     var isViolation: Bool = false // for styling later if needed
 }
 struct CommonTimerAlertView: View {
-    var alert: TimerAlert
-    var onDismiss: () -> Void
+    let violationData: ViolationData
+    let onDismiss: () -> Void
 
     var body: some View {
         ZStack {
             Color.black.opacity(0.4).ignoresSafeArea()
 
             VStack(spacing: 16) {
-                Text(alert.title)
+                Text(violationData.getTitle())
                     .font(.title2)
                     .bold()
-                    .foregroundColor(alert.isViolation ? .red : .black)
+                    .foregroundColor(violationData.violation ? .black : .red)
 
-                Text(alert.message)
+                Text(violationData.getWarningText())
                     .multilineTextAlignment(.center)
                     .foregroundColor(.black)
                     .padding(.horizontal)
@@ -46,10 +46,9 @@ struct CommonTimerAlertView: View {
                 }
             }
             .padding()
-            .background(alert.backgroundColor)
+            .background(violationData.getBackground())
             .cornerRadius(20)
             .padding(.horizontal, 30)
         }
-        .zIndex(100)
     }
 }
