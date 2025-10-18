@@ -196,6 +196,7 @@ extension String {
     func asDate() -> Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter.date(from: self)
     }
 }

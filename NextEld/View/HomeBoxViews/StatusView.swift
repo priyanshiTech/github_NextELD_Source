@@ -18,20 +18,20 @@ struct StatusView: View {
     //MARK: -  Continue Drive ,  Rest Break
 //    @ObservedObject var ContiueDrive:  CountdownTimer
 //    @ObservedObject var RestBreak: CountdownTimer
-    @State private var selectedDriverStatus: DriverStutusType = .offDuty
-    private var driverStatusTypes: Array<DriverStutusType> = [.onDuty, .onDrive, .offDuty, .sleep]
+    @State private var selectedDriverStatus: DriverStatusType = .offDuty
+    private var driverStatusTypes: Array<DriverStatusType> = [.onDuty, .onDrive, .offDuty, .sleep]
     let columns = [
         GridItem(.fixed(100), spacing: 80),
             GridItem(.fixed(100), spacing: 80)
         ]
     @ObservedObject var homeViewModel: HomeViewModel
-    var onDriveStatusSelection: ((DriverStutusType) -> Void)
+    var onDriveStatusSelection: ((DriverStatusType) -> Void)
     
     //MARK: - Timer control functions
 //    let onStopAllTimers: () -> Void
 //    let onStartYardMoveTimers: () -> Void
     
-    init(homeViewModel: HomeViewModel, onDriveStatusSelection: @escaping (DriverStutusType) -> Void) {
+    init(homeViewModel: HomeViewModel, onDriveStatusSelection: @escaping (DriverStatusType) -> Void) {
         self.homeViewModel = homeViewModel
         self.onDriveStatusSelection = onDriveStatusSelection
     }
@@ -155,7 +155,7 @@ struct StatusView: View {
                 //MARK: -  Personal Use and Yard Move buttons
                 HStack {
                     StatusButton(
-                        title: DriverStutusType.personalUse.getName(),
+                        title: DriverStatusType.personalUse.getName(),
                         action: {
                             selectedDriverStatus = .personalUse
                             onDriveStatusSelection(selectedDriverStatus)
@@ -173,7 +173,7 @@ struct StatusView: View {
                     
                     Spacer()
                     StatusButton(
-                        title: DriverStutusType.yardMode.getName(),
+                        title: DriverStatusType.yardMode.getName(),
                         action: {
                             selectedDriverStatus = .yardMode
                             onDriveStatusSelection(selectedDriverStatus)

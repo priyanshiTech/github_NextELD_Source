@@ -77,7 +77,7 @@ struct LogsDetails: View {
                 DateStepperView(currentDate: $selectedDate)
             }  .background(Color.white.shadow(radius: 5))
             VStack {
-                HOSEventsChartScreen(currentStatus: nil)
+                HOSEventsChartScreen(events: [])
             }.padding()
             VStack(alignment: .leading) {
                 Text("Version - OS/02/May")

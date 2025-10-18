@@ -6,122 +6,127 @@ struct HOSEvent: Identifiable {
     let id: Int
     let x: Date
     let event_end_time: Date
-    let label: String
-    let dutyType: String
+    let dutyType: DriverStatusType
     var color: Color {
         switch dutyType {
-        case "OFF_DUTY": return .orange
-        case "ON_DUTY": return .blue
-        case "DRIVE": return .green
-        case "SLEEP": return .gray
-        case "PERSONAL_USE": return .orange
-        case "YARD_MOVE": return .blue
-        default: return .gray
+        case .onDuty:
+            return .blue
+        case .offDuty:
+            return .orange
+        case .onDrive:
+            return .green
+        case .sleep:
+            return .gray
+        case .personalUse:
+            return .orange
+        case .yardMode:
+            return .blue
+        case .none:
+            return .gray
         }
     }
 }
 
 
-class HOSEventsChartViewModel: ObservableObject {
-    
-    @Published var events: [HOSEvent] = []
-    @Published var refreshTrigger = UUID()
-    @Published var currentStatus: String = "OFF_DUTY"
-
-    private var timer: Timer?
-
-    init(initialEvents: [HOSEvent]? = nil) {
-        if let events = initialEvents {
-            self.events = events
-        } else {
-            loadEventsFromDatabase()
-        }
-
-        // MARK: -  Start live refresh
-        startLiveUpdateTimer()
-    }
-
-    func loadEventsFromDatabase() {
-        var logs = DatabaseManager.shared.fetchDutyEventsForToday()
-        logs.sort { $0.startTime < $1.startTime }
-
-        //  Add dummy OFF_DUTY if needed
-        
-        if logs.isEmpty {
-            if let startOfDay = "\(DateTimeHelper.currentDate()) 00:00:00".asDate()
-            {
-                logs.append(DutyLog(
-                    id: -999,
-                    status: "OFF_DUTY",
-                    startTime: startOfDay,
-                    endTime: DateTimeHelper.currentDateTime()
-                ))
-            }
-        }
-
-        self.events = logs.enumerated().map { index, log in
-            let normalizedStatus = normalizeStatus(log.status)
-            var endDate = DateTimeHelper.currentDateTime()
-            if !(index == logs.count-1) {
-                let nextIndexLog = logs[index+1]
-                endDate = nextIndexLog.startTime
-            }
-            
-            print(" Chart Event: \(log.status) -> \(normalizedStatus) (Color: \(normalizedStatus == "OFF_DUTY" ? "Orange" : normalizedStatus == "ON_DUTY" ? "Blue" : normalizedStatus == "DRIVE" ? "Green" : "Gray"))")
-            
-            return HOSEvent(
-                id: log.id,
-                x: log.startTime,
-                event_end_time: endDate,
-                label: normalizedStatus,
-                dutyType: normalizedStatus
-            )
-        }
-
-        // Force immediate UI update
-        DispatchQueue.main.async {
-            self.refreshTrigger = UUID()
-        }
-    }
-
-
-    // MARK: - Timer that updates the last event's end_time every second
-    func startLiveUpdateTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            // Reload from database to get latest status changes
-            self.loadEventsFromDatabase()
-        }
-    }
-
-    private func normalizeStatus(_ status: String) -> String {
-        switch status {
-        case "OnDuty": return "ON_DUTY"
-        case "OffDuty": return "OFF_DUTY"
-        case "OnSleep": return "SLEEP"
-        case "OnDrive": return "DRIVE"
-        case "PersonalUse": return "PERSONAL_USE"
-        case "YardMove": return "YARD_MOVE"
-        case "ON-DUTY": return "ON_DUTY"
-        case "OFF-DUTY": return "OFF_DUTY"
-        case "SLEEP": return "SLEEP"
-        case "DRIVE": return "DRIVE"
-        case "PERSONAL_USE": return "PERSONAL_USE"
-        case "YARD_MOVE": return "YARD_MOVE"
-        default: return "OFF_DUTY"
-        }
-    }
-    
-    // MARK: - Force refresh method for immediate chart update
-    func forceRefresh() {
-        loadEventsFromDatabase()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-    }
-    
-    // MARK: - Update current status and refresh chart
-    func updateStatus(_ newStatus: String) {
-        currentStatus = newStatus
-        loadEventsFromDatabase()
-    }
-}
+//class HOSEventsChartViewModel: ObservableObject {
+//    
+//    @Published var events: [HOSEvent] = []
+//    @Published var refreshTrigger = UUID()
+//    @Published var currentStatus: String = "OFF_DUTY"
+//
+//    private var timer: Timer?
+//
+//    init(initialEvents: [HOSEvent]? = nil) {
+//        if let events = initialEvents {
+//            self.events = events
+//        } else {
+//            loadEventsFromDatabase()
+//        }
+//
+//        // MARK: -  Start live refresh
+//        startLiveUpdateTimer()
+//    }
+//
+//    func loadEventsFromDatabase() {
+//        var logs = DatabaseManager.shared.fetchDutyEventsForToday()
+//        logs.sort { $0.startTime < $1.startTime }
+//
+//        //  Add dummy OFF_DUTY if needed
+//        
+//        if logs.isEmpty {
+//            if let startOfDay = "\(DateTimeHelper.currentDate()) 00:00:00".asDate()
+//            {
+//                logs.append(DutyLog(
+//                    id: -999,
+//                    status: "OFF_DUTY",
+//                    startTime: startOfDay,
+//                    endTime: DateTimeHelper.currentDateTime()
+//                ))
+//            }
+//        }
+//
+//        self.events = logs.enumerated().map { index, log in
+//            let normalizedStatus = normalizeStatus(log.status)
+//            var endDate = DateTimeHelper.currentDateTime()
+//            if !(index == logs.count-1) {
+//                let nextIndexLog = logs[index+1]
+//                endDate = nextIndexLog.startTime
+//            }
+//            
+//            print(" Chart Event: \(log.status) -> \(normalizedStatus) (Color: \(normalizedStatus == "OFF_DUTY" ? "Orange" : normalizedStatus == "ON_DUTY" ? "Blue" : normalizedStatus == "DRIVE" ? "Green" : "Gray"))")
+//            
+//            return HOSEvent(
+//                id: log.id,
+//                x: log.startTime,
+//                event_end_time: endDate,
+//                dutyType: normalizedStatus
+//            )
+//        }
+//
+//        // Force immediate UI update
+//        DispatchQueue.main.async {
+//            self.refreshTrigger = UUID()
+//        }
+//    }
+//
+//
+//    // MARK: - Timer that updates the last event's end_time every second
+//    func startLiveUpdateTimer() {
+//        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+//            // Reload from database to get latest status changes
+//            self.loadEventsFromDatabase()
+//        }
+//    }
+//
+//    private func normalizeStatus(_ status: String) -> String {
+//        switch status {
+//        case "OnDuty": return "ON_DUTY"
+//        case "OffDuty": return "OFF_DUTY"
+//        case "OnSleep": return "SLEEP"
+//        case "OnDrive": return "DRIVE"
+//        case "PersonalUse": return "PERSONAL_USE"
+//        case "YardMove": return "YARD_MOVE"
+//        case "ON-DUTY": return "ON_DUTY"
+//        case "OFF-DUTY": return "OFF_DUTY"
+//        case "SLEEP": return "SLEEP"
+//        case "DRIVE": return "DRIVE"
+//        case "PERSONAL_USE": return "PERSONAL_USE"
+//        case "YARD_MOVE": return "YARD_MOVE"
+//        default: return "OFF_DUTY"
+//        }
+//    }
+//    
+//    // MARK: - Force refresh method for immediate chart update
+////    func forceRefresh() {
+////        loadEventsFromDatabase()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+////    }
+////    
+////    // MARK: - Update current status and refresh chart
+////    func updateStatus(_ newStatus: String) {
+////        currentStatus = newStatus
+////        loadEventsFromDatabase()
+////    }
+//}
                           
 
 // MARK: - Grid Lines View
@@ -188,25 +193,26 @@ struct DutyLinePathView: View {
     }
 
     func minutesSinceMidnight(_ date: Date) -> Int? {
-        let calendar = Calendar.current
+        let calendar = DateTimeHelper.calendar
+        
         let components = calendar.dateComponents([.hour, .minute], from: date)
         guard let hour = components.hour, let minute = components.minute else { return nil }
         return (hour * 60) + minute
     }
     func secondsSinceMidnight(_ date: Date) -> Int? {
-        let calendar = Calendar.current
+        let calendar = DateTimeHelper.calendar
         let comps = calendar.dateComponents([.hour, .minute, .second], from: date)
         guard let h = comps.hour, let m = comps.minute, let s = comps.second else { return nil }
         return h * 3600 + m * 60 + s
     }
 
 
-    private func normalizeLabel(_ label: String) -> String {
-        switch label {
-        case "ON_DUTY": return "ON"
-        case "DRIVE": return "D"
-        case "SLEEP": return "SB"
-        case "OFF_DUTY": return "OF"
+    private func getStatusLabel(_ dutyType: DriverStatusType) -> String {
+        switch dutyType {
+        case .onDuty: return "ON"
+        case .onDrive: return "D"
+        case .sleep: return "SB"
+        case .offDuty: return "OF"
         default: return "OF"
         }
     }
@@ -223,12 +229,12 @@ struct DutyLinePathView: View {
 
     private func isPersonalUse(_ event: HOSEvent) -> Bool {
         // Check if the event is Personal Use
-        return event.dutyType == "PERSONAL_USE" || event.label.localizedCaseInsensitiveContains("Personal")
+        return event.dutyType == .personalUse
     }
     
     private func isYardMove(_ event: HOSEvent) -> Bool {
         // Check if the event is Yard Move
-        return event.dutyType == "YARD_MOVE" || event.label.localizedCaseInsensitiveContains("Yard")
+        return event.dutyType == .yardMode
     }
 
     var body: some View {
@@ -249,7 +255,7 @@ struct DutyLinePathView: View {
                 if isPersonalUse(event) || isYardMove(event) {
                     level = levelMap["OF"] ?? 0
                 } else {
-                    level = levelMap[normalizeLabel(event.label)] ?? 0
+                    level = levelMap[getStatusLabel(event.dutyType)] ?? 0
                 }
 
                 let startX = CGFloat(startMin) * (hourWidth / 60)
@@ -296,10 +302,6 @@ struct DutyLinePathView: View {
                     )
                 }
             }
-            
-            
-
-
         }
     }
 }
@@ -330,10 +332,10 @@ struct HOSEventsChart: View {
             
             // Group Personal Use and Yard Move with OFF_DUTY
             let label: String
-            if event.dutyType == "PERSONAL_USE" || event.dutyType == "YARD_MOVE" {
+            if event.dutyType == .personalUse || event.dutyType == .yardMode {
                 label = "OF"  // Group with OFF_DUTY
             } else {
-                label = normalizeLabel(event.dutyType)
+                label = getStatusLabel(event.dutyType)
             }
             
             durations[label, default: 0] += duration
@@ -355,14 +357,12 @@ struct HOSEventsChart: View {
         return String(format: "%02d:%02d", hours, minutes)
     }
     
-    private func normalizeLabel(_ label: String) -> String {
-        switch label {
-        case "ON_DUTY": return "ON"
-        case "SLEEP": return "SB"
-        case "DRIVE": return "D"
-        case "OFF_DUTY": return "OF"
-        case "PERSONAL_USE": return "PU"
-        case "YARD_MOVE": return "YM"
+    private func getStatusLabel(_ dutyType: DriverStatusType) -> String {
+        switch dutyType {
+        case .onDuty: return "ON"
+        case .onDrive: return "D"
+        case .sleep: return "SB"
+        case .offDuty: return "OF"
         default: return "OF"
         }
     }
@@ -453,11 +453,8 @@ struct HOSEventsChart: View {
 
 // MARK: - Main Container View
 struct HOSEventsChartScreen: View {
-    let currentStatus: String?
-    
-    @EnvironmentObject var viewModel: HOSEventsChartViewModel
-    
-    
+    let events: [HOSEvent]
+
     var body: some View {
         VStack(spacing: 6) {  //MARK: -  Reduced spacing
             Text("Hours Of Service")
@@ -470,30 +467,14 @@ struct HOSEventsChartScreen: View {
 
             
             //MARK: -    HOSEventsChart(events: viewModel.events)
-            HOSEventsChart(events: viewModel.events)
-                .id(viewModel.refreshTrigger) //Force redraw when UUID changes
+            HOSEventsChart(events: events)
                 .padding(.horizontal, 4)
-            
-//            HStack {
-//              //  Text("CanvasSF Trial")
-//                Spacer()
-//               /// Text("CanvasSF.com")
-//                
-//            }
-//            .font(.caption2)
-//            .foregroundColor(.gray)
-            
+           
         }
         .padding(8)  // Reduced padding
         .background(Color.white)
         .cornerRadius(8)
         .shadow(radius: 1)
-        .onAppear {
-            
-            viewModel.loadEventsFromDatabase()
-            
-            
-        }
     }
     
 }

@@ -18,7 +18,7 @@ struct DateTimeHelper {
     
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: DriverInfo.timezone) ?? .current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .current
         calendar.locale = Locale(identifier: "en_US_POSIX")
         return calendar
     }

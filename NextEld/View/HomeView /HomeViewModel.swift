@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-enum DriverStutusType: Hashable, CaseIterable {
+enum DriverStatusType: Hashable, CaseIterable {
     case onDuty
     case offDuty
     case onDrive
@@ -135,8 +135,6 @@ enum ViolationType: Hashable {
             return ""
         }
     }
-    
-    
 }
 
 struct ViolationData: Equatable {
@@ -196,25 +194,19 @@ struct ViolationBoxData: Identifiable {
 class HomeViewModel: ObservableObject {
     
     // Driver Status to show selected status on view
-    @Published var currentDriverStatus: DriverStutusType = .offDuty
+    @Published var currentDriverStatus: DriverStatusType = .offDuty
     
     // Violation publiser to show alerts on view
     @Published var violationDataArray: [ViolationData] = []
 
-    @Published  var showSyncconfirmation  =  false
     // Showing the alert on Home when change the driver Status
-    @Published var showDriverStatusAlert: (showAlert: Bool, status: DriverStutusType) = (false, .offDuty)
-    //MARK: -  for Voilation box
-    @Published var violationBoxes: [ViolationBoxData] = []
-    @Published  var showViolationBoxes = false
+    @Published var showDriverStatusAlert: (showAlert: Bool, status: DriverStatusType) = (false, .offDuty)
     
-    //MARK: - Alert System
-    @Published var showViolationAlert: Bool = false
-    @Published var alertTitle: String = ""
-    @Published var alertMessage: String = ""
-    @Published var alertType: ViolationBoxType = .warning
+    // Events
+    @Published var graphEvents: [HOSEvent] = []
     
-    
+    @Published var showSyncconfirmation: Bool = false
+ 
     // Timer Publisher to show timer on view
     @Published var onDutyTimer: CountdownTimer? = nil
     @Published var cycleTimer: CountdownTimer? = nil
@@ -227,9 +219,17 @@ class HomeViewModel: ObservableObject {
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []
+    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
     init() {
         restoreAllTimersFromLastStatus()
+        self.loadEventsFromDatabase()
+        timer
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.loadEventsFromDatabase()
+            }
+            .store(in: &cancellable)
     }
     
     deinit {
@@ -353,7 +353,7 @@ class HomeViewModel: ObservableObject {
         print(" All app data deleted successfully")
     }
     
-    func setDriverStatus(status: DriverStutusType, restoreBreakTimerRunning: Bool = false) {
+    func setDriverStatus(status: DriverStatusType, restoreBreakTimerRunning: Bool = false) {
         let previousStatus = currentDriverStatus
         currentDriverStatus = status
 
@@ -418,6 +418,7 @@ class HomeViewModel: ObservableObject {
             breakTimer.start()
             print("Break timer auto-started on app launch")
         }
+        loadEventsFromDatabase()
     }
 
     
@@ -432,7 +433,7 @@ class HomeViewModel: ObservableObject {
             return
         }
         let elapsed = getElapsedTime(lastLog: latestLog)
-        let status = DriverStutusType(fromName: latestLog.status) ?? .none
+        let status = DriverStatusType(fromName: latestLog.status) ?? .none
 
         // Active flags
         let isOnDuty  = (status == .onDuty)
@@ -565,6 +566,28 @@ class HomeViewModel: ObservableObject {
         if violationData.violation || violationData.fifteenMinWarning || violationData.thirtyMinWarning {
             violationDataArray.append(violationData)
         }
+    }
+    
+    func isSleepAndOffDutyDurationCompleted() -> Bool {
+        var totalTime: TimeInterval = 0
+        // Get the last record
+        guard let latestLog = DatabaseManager.shared.fetchLogs().last else {
+            return false
+        }
+        // Get the status of last record(i.e: OnDuty, OnDrive)
+        let status = DriverStatusType(fromName: latestLog.status) ?? .none
+        
+        // Get the sleep time
+        if let sleepReaminingTime = sleepTimer?.remainingTime {
+            totalTime += TimeInterval(DriverInfo.onSleepTime ?? 0) - sleepReaminingTime
+        }
+        
+        // Get the elapsed time if last status is offDuty
+        if status == .offDuty || currentDriverStatus == .offDuty {
+            let elapsed = getElapsedTime(lastLog: latestLog)
+            totalTime += elapsed
+        }
+        return totalTime >= TimeInterval(DriverInfo.onSleepTime ?? 0)
     }
     
     // Helper function to get proper status text for each timer type

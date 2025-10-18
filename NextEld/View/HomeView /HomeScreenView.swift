@@ -24,7 +24,6 @@ struct HomeScreenView: View {
     @State private var selectedDevice: String? = nil
     @State private var hasShownSleepResetPopup = false  //For reset SLEpp Timer
     @State private var hoseEvents: [HOSEvent] = []
-    @StateObject private var hoseChartViewModel = HOSEventsChartViewModel()
   
     //MARK: - Daily violation tracking
     /*
@@ -53,7 +52,6 @@ struct HomeScreenView: View {
     }
     */
     
-    @StateObject var dutyManager: DutyStatusManager = DutyStatusManager()
     @EnvironmentObject var navManager: NavigationManager
     @State private var isBreakTimerCompleted: Bool = false  // Track if break timer completed
     @EnvironmentObject var navmanager: NavigationManager
@@ -148,8 +146,8 @@ struct HomeScreenView: View {
                         
                         AvailableHoursView(homeViewModel: homeVM)
                         
-//                        HOSEventsChartScreen(currentStatus: confirmedStatus)
-//                            .environmentObject(hoseChartViewModel)
+                        HOSEventsChartScreen(events: homeVM.graphEvents)
+                            
                         
                         //MARK: - Violation Boxes (Part of Main Scroll) - Removed, now using alerts
                         
@@ -162,7 +160,7 @@ struct HomeScreenView: View {
         .onAppear {
             //  loadViolationsFromDatabase()
           //  initializeViolationFlags()
-            homeVM.resetDailyViolationFlags() // Reset daily flags on app start
+          //  homeVM.resetDailyViolationFlags() // Reset daily flags on app start
         }
                 .scrollIndicators(.hidden)
             }
@@ -938,14 +936,14 @@ struct HomeScreenView: View {
             Text("This will permanently delete all logs Record.")
         }
         
-        //MARK: - Violation/Warning Alert
-        .alert(homeVM.alertTitle, isPresented: $homeVM.showViolationAlert) {
-            Button("OK", role: .cancel) {
-                homeVM.showViolationAlert = false
-            }
-        } message: {
-            Text(homeVM.alertMessage)
-        }
+//        //MARK: - Violation/Warning Alert
+//        .alert(homeVM.alertTitle, isPresented: $homeVM.showViolationAlert) {
+//            Button("OK", role: .cancel) {
+//                homeVM.showViolationAlert = false
+//            }
+//        } message: {
+//            Text(homeVM.alertMessage)
+//        }
         
         .navigationBarBackButtonHidden()
         .navigationDestination(for: AppRoute.DatabaseFlow.self, destination: { type in
@@ -1030,23 +1028,22 @@ struct HomeScreenView: View {
     }
     
     
-    private func loadTodayHOSEvents() {
-        let todayLogs = DatabaseManager.shared.fetchDutyEventsForToday()
-        print(" Logs fetched from DB: \(todayLogs.count)")
-        for log in todayLogs {
-            print("→ \(log.status) from \(log.startTime) to \(log.endTime)")
-        }
-        let converted = todayLogs.enumerated().compactMap { index, log -> HOSEvent? in
-            HOSEvent(
-                id: index,
-                x: log.startTime,
-                event_end_time: log.endTime,
-                label: log.status,
-                dutyType: log.status
-            )
-        }
-        hoseEvents = converted
-    }
+//    private func loadTodayHOSEvents() {
+//        let todayLogs = DatabaseManager.shared.fetchDutyEventsForToday()
+//        print(" Logs fetched from DB: \(todayLogs.count)")
+//        for log in todayLogs {
+//            print("→ \(log.status) from \(log.startTime) to \(log.endTime)")
+//        }
+//        let converted = todayLogs.enumerated().compactMap { index, log -> HOSEvent? in
+//            HOSEvent(
+//                id: index,
+//                x: log.startTime,
+//                event_end_time: log.endTime,
+//                dutyType: log.status
+//            )
+//        }
+//        hoseEvents = converted
+//    }
 
     
     // MARK: - Check for 10-hour reset (Off-Duty + Sleep)
@@ -1400,7 +1397,7 @@ struct HomeScreenView: View {
             print(" Violation saved to database successfully")
         }
         
-        
+        /*
         //MARK: -  Load Voilation from data base
         func loadViolationsFromDatabase() {
             let logs = DatabaseManager.shared.fetchLogs()
@@ -1442,7 +1439,7 @@ struct HomeScreenView: View {
             }
         }
         
-    
+    */
         
         // MARK: - Start OnDuty and Cycle Timers for Yard Move
 //        func startYardMoveTimers() {
