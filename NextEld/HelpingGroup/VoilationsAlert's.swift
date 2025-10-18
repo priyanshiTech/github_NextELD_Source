@@ -28,7 +28,7 @@ struct CommonTimerAlertView: View {
                 Text(violationData.getTitle())
                     .font(.title2)
                     .bold()
-                    .foregroundColor(violationData.violation ? .black : .red)
+                    .foregroundColor(.black)
 
                 Text(violationData.getWarningText())
                     .multilineTextAlignment(.center)

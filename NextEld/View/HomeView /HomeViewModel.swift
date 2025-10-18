@@ -316,7 +316,6 @@ class HomeViewModel: ObservableObject {
         cycleTimer = CountdownTimer(startTime: TimeInterval(DriverInfo.cycleTime ?? 0))
         
         setupTimerCallbacks()
-    
     }
     
     // MARK: - Setup Timer Callbacks
@@ -353,37 +352,6 @@ class HomeViewModel: ObservableObject {
         currentDriverStatus = .offDuty
         print(" All app data deleted successfully")
     }
-//MARK: -  For voilation
-    func addViolationBox(text: String, type: ViolationBoxType) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM dd"
-        let dateString = formatter.string(from: Date())
-        
-        formatter.dateFormat = "HH:mm:ss"
-        let timeString = formatter.string(from: Date())
-        
-        let violationData = ViolationBoxData(
-            text: text,
-            date: dateString,
-            time: timeString,
-            timestamp: Date(),
-            type: type
-        )
-        
-        // Add to array
-        violationBoxes.append(violationData)
-        showViolationBoxes = true
-        
-        // Auto-hide this violation after 60 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 60) { [weak self] in
-            self?.violationBoxes.removeAll { $0.timestamp == violationData.timestamp }
-            if self?.violationBoxes.isEmpty == true {
-                self?.showViolationBoxes = false
-            }
-        }
-    }
-
-    
     
     func setDriverStatus(status: DriverStutusType, restoreBreakTimerRunning: Bool = false) {
         let previousStatus = currentDriverStatus
@@ -587,24 +555,10 @@ class HomeViewModel: ObservableObject {
         if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != todayString {
             violationData.fifteenMinWarning = true // 15 min warning
             UserDefaults.standard.setValue(todayString, forKey: violationKey + "_15min")
-//            let warningKey = "\(type.getFifteenMinWarningText())_15min_\(todayString)"
-//            if !UserDefaults.standard.bool(forKey: warningKey) {
-//                showViolationAlert(text: "15 min left for completing your \(getStatusTextForType(type)) cycle", type: .warning)
-//                print(" Debug - Status Text: '\(getStatusTextForType(type))', Type: \(type)")
-//                UserDefaults.standard.set(true, forKey: warningKey)
-//                print(" 15min Warning Alert Shown: \(type.getFifteenMinWarningText())")
-//            }
         }
         if remainingTime <= warning1 && remainingTime > warning2 && lastViolationDate30Min != todayString {
             violationData.thirtyMinWarning = true // 30 min warning
             UserDefaults.standard.setValue(todayString, forKey: violationKey + "_30min")
-//            let warningKey = "\(type.getThirtyMinWarningText())_30min_\(todayString)"
-//            if !UserDefaults.standard.bool(forKey: warningKey) {
-//                showViolationAlert(text: "30 min left for completing your \(getStatusTextForType(type)) cycle", type: .warning)
-//                print(" Debug - Status Text: '\(getStatusTextForType(type))', Type: \(type)")
-//                UserDefaults.standard.set(true, forKey: warningKey)
-//                print(" 30min Warning Alert Shown: \(type.getThirtyMinWarningText())")
-//            }
         }
         
         // Only add if there's actually a warning or violation
@@ -628,32 +582,4 @@ class HomeViewModel: ObservableObject {
             return ""
         }
     }
-    
-    //MARK: - Show Violation Alert
-    func showViolationAlert(text: String, type: ViolationBoxType) {
-        DispatchQueue.main.async { [weak self] in
-            self?.alertTitle = type == .warning ? "Warning" : "Voilation"
-            self?.alertMessage = text
-            self?.alertType = type
-            self?.showViolationAlert = true
-            print(" Alert Triggered - Title: \(self?.alertTitle ?? ""), Message: \(text)")
-            print(" Final Alert Message: '\(text)'")
-        }
-    }
-    
-    
-    //MARK: - Reset Daily Flags
-    func resetDailyViolationFlags() {
-        let today = Calendar.current.startOfDay(for: Date())
-        let todayString = DateFormatter().string(from: today)
-        
-        // Get all UserDefaults keys and remove today's violation flags
-        let allKeys = UserDefaults.standard.dictionaryRepresentation().keys
-        for key in allKeys {
-            if key.contains(todayString) && (key.contains("_violation_") || key.contains("_15min_") || key.contains("_30min_")) {
-                UserDefaults.standard.removeObject(forKey: key)
-            }
-        }
-    }
-
 }
