@@ -1130,37 +1130,37 @@ struct HomeScreenView: View {
         //MARK: -  Restore & save time
  
         // Add these new functions to track shown violations
-        func checkAndShowViolationsForCurrentDayShift(day: Int, shift: Int) {
-            
-            let allLogs = DatabaseManager.shared.fetchLogs()
-            
-            // Filter violations for current day and shift
-            let currentDayShiftViolations = allLogs.filter { log in
-                log.isVoilations == 1 &&
-                log.status == "Violation" &&
-                log.day == day &&
-                log.shift == shift
-            }
-            
-            // Check if we've already shown violations for this day/shift
-            let shownViolationsKey = "shownViolations_\(day)_\(shift)"
-            let hasShownViolations = UserDefaults.standard.bool(forKey: shownViolationsKey)
-
-            if !currentDayShiftViolations.isEmpty && !hasShownViolations {
-                print(" Found \(currentDayShiftViolations.count) violations for day \(day), shift \(shift)")
-                
-                // Show the most recent violation
-                if let latestViolation = currentDayShiftViolations.last {
-                    showViolationAlert(violation: latestViolation)
-                    
-                    // Mark as shown for this day/shift
-                    UserDefaults.standard.set(true, forKey: shownViolationsKey)
-                    print(" Marked violations as shown for day \(day), shift \(shift)")
-                }
-            } else if hasShownViolations {
-                print(" Violations already shown for day \(day), shift \(shift) - skipping")
-            }
-        }
+//        func checkAndShowViolationsForCurrentDayShift(day: Int, shift: Int) {
+//            
+//            let allLogs = DatabaseManager.shared.fetchLogs()
+//            
+//            // Filter violations for current day and shift
+//            let currentDayShiftViolations = allLogs.filter { log in
+//                log.isVoilations == 1 &&
+//                log.status == "Violation" &&
+//                log.day == day &&
+//                log.shift == shift
+//            }
+//            
+//            // Check if we've already shown violations for this day/shift
+//            let shownViolationsKey = "shownViolations_\(day)_\(shift)"
+//            let hasShownViolations = UserDefaults.standard.bool(forKey: shownViolationsKey)
+//
+//            if !currentDayShiftViolations.isEmpty && !hasShownViolations {
+//                print(" Found \(currentDayShiftViolations.count) violations for day \(day), shift \(shift)")
+//                
+//                // Show the most recent violation
+//                if let latestViolation = currentDayShiftViolations.last {
+//                    showViolationAlert(violation: latestViolation)
+//                    
+//                    // Mark as shown for this day/shift
+//                    UserDefaults.standard.set(true, forKey: shownViolationsKey)
+//                    print(" Marked violations as shown for day \(day), shift \(shift)")
+//                }
+//            } else if hasShownViolations {
+//                print(" Violations already shown for day \(day), shift \(shift) - skipping")
+//            }
+//        }
         
 //        func showViolationAlert(violation: DriverLogModel) {
 //            activeTimerAlert = TimerAlert(
