@@ -13,9 +13,6 @@ struct HomeScreenView: View {
     @StateObject private var homeVM : HomeViewModel = .init()
     
     @State private var labelValue = ""
-    @State private var OnDutyvalue: Int = 0
-    @State private var selectedStatus: String? = nil
-    @State private var confirmedStatus: String? = nil
     @State private var showCertifyLogAlert = false
     @State private var showStatusalert: Bool = false
     @State private var showLogoutPopup: Bool = false
@@ -28,25 +25,9 @@ struct HomeScreenView: View {
     @State private var hasShownSleepResetPopup = false  //For reset SLEpp Timer
     @State private var hoseEvents: [HOSEvent] = []
     @StateObject private var hoseChartViewModel = HOSEventsChartViewModel()
-    
-    
-    @State private var didShowContinusDrivingVoilation =  false
-    @AppStorage("didSyncOnLaunch") private var didSyncOnLaunch: Bool = false
-    @State var isOnAppearCalled = false
-    @State var isVoilation = false
-    @State private var isRestoringTimers = false  // Flag to prevent auto-save during restoration
-    
+  
     //MARK: - Daily violation tracking
-    @AppStorage("lastViolationDate") private var lastViolationDate: String = ""
-    @AppStorage("didShowOnDuty30MinToday") private var didShowOnDuty30MinToday: Bool = false
-    @AppStorage("didShowOnDuty15MinToday") private var didShowOnDuty15MinToday: Bool = false
-    @AppStorage("didShowOnDutyViolationToday") private var didShowOnDutyViolationToday: Bool = false
-    @AppStorage("didShowDrive30MinToday") private var didShowDrive30MinToday: Bool = false
-    @AppStorage("didShowDrive15MinToday") private var didShowDrive15MinToday: Bool = false
-    @AppStorage("didShowDriveViolationToday") private var didShowDriveViolationToday: Bool = false
-    @AppStorage("didShowCycleViolationToday") private var didShowCycleViolationToday: Bool = false
-    @AppStorage("didShowContinueDriveViolationToday") private var didShowContinueDriveViolationToday: Bool = false
-    
+    /*
     var emptyDvirRecord: DvirRecord {
         DvirRecord(
             id: nil,
@@ -70,90 +51,15 @@ struct HomeScreenView: View {
             Trailer: ""
         )
     }
-    
+    */
     
     @StateObject var dutyManager: DutyStatusManager = DutyStatusManager()
     @EnvironmentObject var navManager: NavigationManager
-    
-    
-    @StateObject private var ONDuty: CountdownTimer
-    
-    @StateObject private var driveTimer: CountdownTimer
-    
-    @StateObject private var cycleTimerOn: CountdownTimer
-    
-    @StateObject private var sleepTimer: CountdownTimer
-    
-    @StateObject private var continueDriveTime: CountdownTimer
-    
-    @StateObject var breakTime: CountdownTimer
-    
     @State private var isBreakTimerCompleted: Bool = false  // Track if break timer completed
-    
-    @State private var  TimeZone : String = ""
-    @State private var  TimeZoneOffSet : String = ""
-    @State private var hasAppearedBefore = false
-    @State private var savedOnDutyRemaining: TimeInterval = 0
-    @State private var savedDriveRemaining: TimeInterval = 0
-    @State private var savedCycleRemaining: TimeInterval = 0
-    @State private var savedSleepingRemaning: TimeInterval = 0
-    @State private var savedBreakRemaining: TimeInterval = 0
-    
-    @State private var didShow30MinWarning = false
-    @State private var didShow15MinWarning = false
-    @State private var didShowViolation = false
-    
-    // Add separate flags for each timer type
-    @State private var didShowOnDutyViolation = false
-    @State private var didShowOnDuty30MinWarning = false
-    @State private var didShowOnDuty15MinWarning = false
-    
-    @State private var didShowOnDriveViolation = false
-    @State private var didShowOnDrive30MinWarning = false
-    @State private var didShowOnDrive15MinWarning = false
-    
-    @State private var didShowCycleViolation = false
-    @State private var didShowCycle30MinWarning = false
-    @State private var didShowCycle15MinWarning = false
     @EnvironmentObject var navmanager: NavigationManager
-    
-    
-    // Add this method in your HomeScreenView struct
-    func initializeViolationFlags() {
-        let todayFlags = DatabaseManager.shared.hasAnyViolationOrWarningForToday()
-        
-        // Set flags based on what already exists in database for today
-        didShowViolation = todayFlags.hasViolation
-        didShow30MinWarning = todayFlags.has30MinWarning
-        didShow15MinWarning = todayFlags.has15MinWarning
-        
-        // Set specific timer flags
-        didShowOnDutyViolation = todayFlags.hasViolation
-        didShowOnDuty30MinWarning = todayFlags.has30MinWarning
-        didShowOnDuty15MinWarning = todayFlags.has15MinWarning
-        
-        print("Initialized violation flags - Violation: \(didShowViolation), 30Min: \(didShow30MinWarning), 15Min: \(didShow15MinWarning)")
-    }
-    
-    //MARK: -  for Voilation box
-    @State private var violationBoxes: [ViolationBoxData] = []
-    @State private var showViolationBoxes = false
-    
-    
-    
-    init() {
-        let breakTimer =  CountdownTimer.timeStringToSeconds("00:30:00")
-        _ONDuty = StateObject(wrappedValue: CountdownTimer(startTime: DriverInfo.onDutyTime ?? 140000))
-        _driveTimer = StateObject(wrappedValue: CountdownTimer(startTime: DriverInfo.onDriveTime ?? 110000))
-        _cycleTimerOn = StateObject(wrappedValue: CountdownTimer(startTime: TimeInterval(DriverInfo.cycleTime ?? 700000)))
-        _sleepTimer = StateObject(wrappedValue: CountdownTimer(startTime: DriverInfo.onSleepTime ?? 10000))
-        _continueDriveTime = StateObject(wrappedValue: CountdownTimer(startTime: DriverInfo.continueDriveTime ??  080000))
-        _breakTime = StateObject(wrappedValue: CountdownTimer(startTime: breakTimer))
-    }
-    
-    
+   
     // let session: SessionManager
-    @State private var activeTimerAlert: TimerAlert?
+   // @State private var activeTimerAlert: TimerAlert?
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
     @StateObject private var viewModel = RefreshViewModel()
     @StateObject private var syncVM = SyncViewModel()
@@ -242,8 +148,8 @@ struct HomeScreenView: View {
                         
                         AvailableHoursView(homeViewModel: homeVM)
                         
-                        HOSEventsChartScreen(currentStatus: confirmedStatus)
-                            .environmentObject(hoseChartViewModel)
+//                        HOSEventsChartScreen(currentStatus: confirmedStatus)
+//                            .environmentObject(hoseChartViewModel)
                         
                         //MARK: - Violation Boxes (Part of Main Scroll) - Removed, now using alerts
                         
@@ -255,7 +161,7 @@ struct HomeScreenView: View {
                 .scrollIndicators(.hidden)
         .onAppear {
             //  loadViolationsFromDatabase()
-            initializeViolationFlags()
+          //  initializeViolationFlags()
             homeVM.resetDailyViolationFlags() // Reset daily flags on app start
         }
                 .scrollIndicators(.hidden)
@@ -1256,19 +1162,19 @@ struct HomeScreenView: View {
             }
         }
         
-        func showViolationAlert(violation: DriverLogModel) {
-            activeTimerAlert = TimerAlert(
-                title: "Violation Detected",
-                message: violation.dutyType,
-                backgroundColor: .red.opacity(0.9),
-                isViolation: true
-            )
-            
-            // Add to violation boxes
-           //  addViolationBox(text: violation.dutyType)
-            
-            print(" Showing violation alert: \(violation.dutyType)")
-        }
+//        func showViolationAlert(violation: DriverLogModel) {
+//            activeTimerAlert = TimerAlert(
+//                title: "Violation Detected",
+//                message: violation.dutyType,
+//                backgroundColor: .red.opacity(0.9),
+//                isViolation: true
+//            )
+//            
+//            // Add to violation boxes
+//           //  addViolationBox(text: violation.dutyType)
+//            
+//            print(" Showing violation alert: \(violation.dutyType)")
+//        }
         
         // Add this function to reset violation tracking for new day/shift
         func resetViolationTrackingForNewDayShift() {
@@ -1413,91 +1319,10 @@ struct HomeScreenView: View {
             //  print(" Saved \(duration / 3600, specifier: "%.2f") hrs for \(formattedDate(today))")
         }
         
-        
-        //    func checkAndStartCycleTimer() {
-        //        print(" Checking Cycle Timer: Drive=\(isDriveActive), Duty=\(isOnDutyActive)")
-        //
-        //        if isOnDutyActive {
-        //            startCycleTimer()
-        //        }else if   isDriveActive {
-        //            startCycleTimer()
-        //        }
-        //        else {
-        //            stopCycleTimer()
-        //        }
-        //    }
-        
-        //    func startCycleTimer() {
-        //        guard !isCycleTimerActive else { return }
-        //        print(" Starting Cycle Timer")
-        //        isCycleTimerActive = true
-        //            cycleTimerOn.start()          //MARK: - this is the CountdownTimer you passed to AvailableHoursView
-        //
-        //        let formatter = DateFormatter()
-        //        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        //        let now = formatter.string(from: Date())
-        //
-        //        DatabaseManager.shared.saveTimerLog(
-        //            status: "Cycle",
-        //            startTime: now, dutyType: "Cycle",
-        //            remainingWeeklyTime: cycleTimerOn.internalTimeString,
-        //            remainingDriveTime: driveTimer.internalTimeString,
-        //            remainingDutyTime: ONDuty.internalTimeString,
-        //            remainingSleepTime: sleepTimer.internalTimeString,
-        //            lastSleepTime: "", RemaningRestBreak: breakTime.internalTimeString, isruning: false,
-        //        )
-        //
-        //            print(" Saved Cycle timer to DB at \(now)")
-        //    }
-        
-        //    func stopCycleTimer() {
-        //        guard isCycleTimerActive else { return }
-        //        isCycleTimerActive = false
-        //        cycleTimerOn.stop() //  stop your cycle countdown
-        //        print(" Cycle Timer Stopped")
-        //    }
-        
+/*
         //MARK: - Reset Timers for Next Day
-        func resetTimersForNextDay() {
-            print(" Resetting timers for NEXTDAY...")
-            
-            // Update day and shift
-            let safeDay = daysCount ?? 1
-            let safeShift = ShiftCurrentDay ?? 1
-            daysCount = safeDay + 1
-            ShiftCurrentDay = safeShift
-            
-            // Save updated values in UserDefaults
-            UserDefaults.standard.set(daysCount, forKey: "days")
-            UserDefaults.standard.set(ShiftCurrentDay, forKey: "shift")
-            print("NEXTDAY - Updated Day: \(daysCount ?? 0), Shift: \(ShiftCurrentDay ?? 0)")
-            
-            // Update database
-            DatabaseManager.shared.updateDayShiftInDB(
-                day: daysCount ?? 1,
-                shift: ShiftCurrentDay ?? 1,
-                userId: UserDefaults.standard.integer(forKey: "userId")
-            )
-            
-            // Reset timers with API values
-            let sleepTime = DriverInfo.onSleepTime ?? 36000.0
-            let onDutyTime = DriverInfo.onDutyTime ?? 50400.0
-            let onDriveTime = DriverInfo.onDriveTime ?? 39600.0
-            
-            sleepTimer.resetsSleep(to: sleepTime)
-            ONDuty.resetsSleep(to: onDutyTime)
-            driveTimer.resetsSleep(to: onDriveTime)
-            
-            // Reset status to Off-Duty after timer reset
-            confirmedStatus = DriverStatusConstants.offDuty
-            selectedStatus = DriverStatusConstants.offDuty
-            
-            // Save NEXTDAY log
-            saveNextDayLog()
-            
-            print(" Timers reset completed for NEXTDAY")
-        }
-        
+        func resetTimersForNextDay() selectedStatus
+  */
         //MARK: - Calculate OffDuty and Sleep Time from Database
         func calculateOffDutyAndSleepTime() -> (offDuty: TimeInterval, sleep: TimeInterval) {
             let allLogs = DatabaseManager.shared.fetchLogs()
@@ -1617,95 +1442,42 @@ struct HomeScreenView: View {
             }
         }
         
-        // MARK: - Check if new day and reset violation flags
-        func checkAndResetDailyViolations() {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            let today = formatter.string(from: Date())
-            
-            if lastViolationDate != today {
-                print(" New day detected - resetting violation flags")
-                lastViolationDate = today
-                
-                // Reset all daily violation flags
-                didShowOnDuty30MinToday = false
-                didShowOnDuty15MinToday = false
-                didShowOnDutyViolationToday = false
-                didShowDrive30MinToday = false
-                didShowDrive15MinToday = false
-                didShowDriveViolationToday = false
-                didShowCycleViolationToday = false
-                didShowContinueDriveViolationToday = false
-                
-                print(" All violation flags reset for new day")
-            }
-        }
-        
-        // MARK: - Stop All Timers
-        func stopAllTimers() {
-            print(" Stopping all timers for Personal Use")
-            
-            // Stop all active timers
-            if isOnDutyActive {
-                ONDuty.stop()
-                isOnDutyActive = false
-            }
-            
-            if isDriveActive {
-                driveTimer.stop()
-                isDriveActive = false
-            }
-            
-            if isCycleTimerActive {
-                cycleTimerOn.stop()
-                isCycleTimerActive = false
-            }
-            
-            if isSleepTimerActive {
-                sleepTimer.stop()
-                isSleepTimerActive = false
-            }
-            
-            // Stop break timer
-            breakTime.stop()
-            
-            print(" All timers stopped for Personal Use")
-        }
+    
         
         // MARK: - Start OnDuty and Cycle Timers for Yard Move
-        func startYardMoveTimers() {
-            print(" Starting OnDuty and Cycle timers for Yard Move")
-            
-            // Start OnDuty timer
-            if !isOnDutyActive {
-                ONDuty.start()
-                isOnDutyActive = true
-                print(" OnDuty timer started for Yard Move")
-            }
-            
-            // Start Cycle timer
-            if !isCycleTimerActive {
-                cycleTimerOn.start()
-                isCycleTimerActive = true
-                print(" Cycle timer started for Yard Move")
-            }
-            
-            // Stop other timers that shouldn't run during Yard Move
-            if isDriveActive {
-                driveTimer.stop()
-                isDriveActive = false
-                print(" Drive timer stopped for Yard Move")
-            }
-            
-            if isSleepTimerActive {
-                sleepTimer.stop()
-                isSleepTimerActive = false
-                print(" Sleep timer stopped for Yard Move")
-            }
-            
-            print(" Yard Move timers configured")
-        }
-        
+//        func startYardMoveTimers() {
+//            print(" Starting OnDuty and Cycle timers for Yard Move")
+//            
+//            // Start OnDuty timer
+//            if !isOnDutyActive {
+//                ONDuty.start()
+//                isOnDutyActive = true
+//                print(" OnDuty timer started for Yard Move")
+//            }
+//            
+//            // Start Cycle timer
+//            if !isCycleTimerActive {
+//                cycleTimerOn.start()
+//                isCycleTimerActive = true
+//                print(" Cycle timer started for Yard Move")
+//            }
+//            
+//            // Stop other timers that shouldn't run during Yard Move
+//            if isDriveActive {
+//                driveTimer.stop()
+//                isDriveActive = false
+//                print(" Drive timer stopped for Yard Move")
+//            }
+//            
+//            if isSleepTimerActive {
+//                sleepTimer.stop()
+//                isSleepTimerActive = false
+//                print(" Sleep timer stopped for Yard Move")
+//            }
+//            
+//            print(" Yard Move timers configured")
+//        }
+//        
         // MARK: - Save Violation to Database
         func saveViolationToDatabase(status: String, violationType: String, dutyType:String) {
             let formatter = DateFormatter()
