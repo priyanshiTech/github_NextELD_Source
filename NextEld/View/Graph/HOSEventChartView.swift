@@ -194,7 +194,6 @@ struct DutyLinePathView: View {
 
     func minutesSinceMidnight(_ date: Date) -> Int? {
         let calendar = DateTimeHelper.calendar
-        
         let components = calendar.dateComponents([.hour, .minute], from: date)
         guard let hour = components.hour, let minute = components.minute else { return nil }
         return (hour * 60) + minute

@@ -589,20 +589,4 @@ class HomeViewModel: ObservableObject {
         }
         return totalTime >= TimeInterval(DriverInfo.onSleepTime ?? 0)
     }
-    
-    // Helper function to get proper status text for each timer type
-    private func getStatusTextForType(_ type: ViolationType) -> String {
-        switch type {
-        case .onDutyViolation:
-            return "On Duty"
-        case .onDriveViolation:
-            return "On Drive"
-        case .onContinueDriveViolation:
-            return "Continue Drive"
-        case .cycleTimerViolation:
-            return "Cycle"
-        case .none:
-            return ""
-        }
-    }
 }
