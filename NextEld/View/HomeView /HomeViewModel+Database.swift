@@ -70,4 +70,21 @@ extension HomeViewModel {
         print(" ContinueDrive DB end time updated at \(DateTimeHelper.getCurrentDateTimeString())")
     }
     
+    
+    func saveViolation(for violationData: ViolationData) {
+        DatabaseManager.shared.saveTimerLog(
+        status: violationData.getTitle(),
+        startTime: DateTimeHelper.getCurrentDateTimeString(),
+        dutyType: violationData.getWarningText(),
+        remainingWeeklyTime: Int(cycleTimer?.remainingTime ?? 0),
+        remainingDriveTime: Int(onDriveTimer?.remainingTime ?? 0),
+        remainingDutyTime: Int(onDutyTimer?.remainingTime ?? 0),
+        remainingSleepTime: Int(sleepTimer?.remainingTime ?? 0),
+        breakTimeRemaning: Int(breakTimer?.remainingTime ?? 0),
+        lastSleepTime: Int(breakTimer?.remainingTime ?? 0),
+        RemaningRestBreak: "true",
+        isruning: false,
+        isVoilations: violationData.violation
+        )
+    }
 }

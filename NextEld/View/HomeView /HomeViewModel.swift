@@ -494,21 +494,21 @@ class HomeViewModel: ObservableObject {
     func onChangeRemaingTime(type: TimerType, remainigTime: TimeInterval) {
         //for print value
         let seconds:Double =  3600
-        print(" Timer Changed - Type: \(type), Remaining: \(remainigTime/seconds) hours")
+     //   print(" Timer Changed - Type: \(type), Remaining: \(remainigTime/seconds) hours")
         
         switch type {
         case .onDuty:
             let warning1 = TimeInterval(Int(DriverInfo.onDutyTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime1 ?? 0))
             let warning2 = TimeInterval(Int(DriverInfo.onDutyTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime2 ?? 0))
-            print(" OnDuty - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
             if remainigTime <= warning1 {
+                print(" OnDuty - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDutyViolation, violationKey: AppConstants.onDutyViolationKey)
             }
         case .onDrive:
             let warning1 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime1 ?? 0))
             let warning2 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime2 ?? 0))
-            print(" OnDrive - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
             if remainigTime <= warning1 {
+                print(" OnDrive - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDriveViolation, violationKey: AppConstants.onDriveViolationKey)
             }
             
@@ -516,16 +516,16 @@ class HomeViewModel: ObservableObject {
             // For continue drive, we can use the same warning times as onDrive or create separate ones
             let warning1 = TimeInterval(Int(DriverInfo.continueDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime1 ?? 0))
             let warning2 = TimeInterval(Int(DriverInfo.continueDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime2 ?? 0))
-            print(" ContinueDrive - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
             if remainigTime <= warning1 {
+                print(" ContinueDrive - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onContinueDriveViolation, violationKey: AppConstants.continueDriveViolationKey)
             }
         case .cycleTimer:
             // For cycle timer, we can use similar warning logic
             let warning1 = TimeInterval(Int(DriverInfo.cycleTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime1 ?? 0))
             let warning2 = TimeInterval(Int(DriverInfo.cycleTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime2 ?? 0))
-            print(" CycleTimer - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
             if remainigTime <= warning1 {
+                print(" CycleTimer - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
             }
         case .breakTimer:
@@ -565,6 +565,7 @@ class HomeViewModel: ObservableObject {
         // Only add if there's actually a warning or violation
         if violationData.violation || violationData.fifteenMinWarning || violationData.thirtyMinWarning {
             violationDataArray.append(violationData)
+            saveViolation(for: violationData) // save violation to Local DB
         }
     }
     
@@ -588,5 +589,55 @@ class HomeViewModel: ObservableObject {
             totalTime += elapsed
         }
         return totalTime >= TimeInterval(DriverInfo.onSleepTime ?? 0)
+    }
+    
+    func calculateOffDutyAndSleepTime() -> (offDuty: TimeInterval, sleep: TimeInterval) {
+        let allLogs = DatabaseManager.shared.fetchLogs()
+        
+        guard !allLogs.isEmpty else {
+            print(" No logs found in database")
+            return (0, 0)
+        }
+        
+        // Sort logs by timestamp
+        let sortedLogs = allLogs.sorted { $0.timestamp < $1.timestamp }
+        
+        var totalOffDuty: TimeInterval = 0
+        var totalSleep: TimeInterval = 0
+        let currentTime = DateTimeHelper.currentDateTime()
+        
+        print(" Processing \(sortedLogs.count) logs for time calculation")
+        
+        for (index, log) in sortedLogs.enumerated() {
+            let startTime = log.startTime.asDate() ?? currentTime
+            let endTime: Date
+            
+            // If this is the last log, use current time
+            if index == sortedLogs.count - 1 {
+                endTime = currentTime
+            } else {
+                // Use the start time of the next log as end time
+                endTime = sortedLogs[index + 1].startTime.asDate() ?? currentTime
+            }
+            
+            let duration = endTime.timeIntervalSince(startTime)
+            
+            switch log.status {
+                
+            case "OffDuty":
+                totalOffDuty += duration
+                print(" OffDuty: \(log.startTime) for \(duration/3600) hours")
+                
+            case "OnSleep":
+                totalSleep += duration
+                print(" OnSleep: \(log.startTime) for \(duration/3600) hours")
+                
+            default:
+                break
+            }
+        }
+        
+        print("Total calculated - OffDuty: \(totalOffDuty/3600)h, Sleep: \(totalSleep/3600)h")
+        return (totalOffDuty, totalSleep)
     }
 }

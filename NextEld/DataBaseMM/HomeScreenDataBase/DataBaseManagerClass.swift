@@ -300,9 +300,8 @@ class DatabaseManager {
     func fetchDutyEventsForToday() -> [DutyLog] {
         var logs: [DutyLog] = []
 
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: Date())
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        let startOfDay = DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
+        let endOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay)!
 
         do {
             guard let db = self.db else { return [] }
@@ -314,16 +313,11 @@ class DatabaseManager {
                 let startString = row[startTime]
             
                 let endString = row[startTime]
-                print(endString)
+              
 
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                dateFormatter.timeZone = TimeZone(secondsFromGMT: 19800) // IST = GMT+5:30
-
-
-                if let startDate = dateFormatter.date(from: startString) {
+                if let startDate = startString.asDate() {
                     // Use timestamp or calculate +2 hours if no end field
-                    let endDate = startDate.addingTimeInterval(00 * 60 * 60) // assume 2 hr default
+                    let endDate = startDate.addingTimeInterval(02 * 60 * 60) // assume 2 hr default
 
                     // Only use logs from today
                     if startDate >= startOfDay && startDate < endOfDay {
