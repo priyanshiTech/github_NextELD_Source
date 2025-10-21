@@ -201,7 +201,9 @@ class HomeViewModel: ObservableObject {
 
     // Showing the alert on Home when change the driver Status
     @Published var showDriverStatusAlert: (showAlert: Bool, status: DriverStatusType) = (false, .offDuty)
-    
+    @Published  var showCertifyLogAlert = false
+    @Published  var showDvirPopup = false
+    @Published  var showAddDvirPopup = false
     // Events
     @Published var graphEvents: [HOSEvent] = []
     

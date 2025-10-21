@@ -13,7 +13,8 @@ struct HomeScreenView: View {
     @StateObject private var homeVM : HomeViewModel = .init()
     
     @State private var labelValue = ""
-    @State private var showCertifyLogAlert = false
+
+
     @State private var showStatusalert: Bool = false
     @State private var showLogoutPopup: Bool = false
     @State private var ShowrefreshPopup: Bool = false
@@ -108,7 +109,7 @@ struct HomeScreenView: View {
     
     @State private var hasRestoredTimers = false
     let times = DateTimeHelperVoilation.getLocalAndGMT()
-    @State private var showDvirPopup = false
+  
     @StateObject var deviceLocationManager = DeviceLocationManager()
     
     var body: some View {
@@ -138,16 +139,24 @@ struct HomeScreenView: View {
                         VehicleInfoView(GadiNo: UserDefaults.standard.string(forKey: "truckNo") ?? "Not Found",
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                         
-                            StatusView(homeViewModel: homeVM) { status in
-                            // passing a new status to assign this new status to current status after the alert submit button clicked
-                            homeVM.showDriverStatusAlert = (true, status)
+                        StatusView(homeViewModel: homeVM) { status in
+                            // Check if OnDrive is selected and show certify popup
+                            if status == .onDrive {
+                                homeVM.showCertifyLogAlert = true
+                                //showDvirPopup = true
+                                // homeVM.showDriverStatusAlert = (true, status)
+                               // homeVM.showAddDvirPopup = true
+                            } else {
+                                // passing a new status to assign this new status to current status after the alert submit button clicked
+                                homeVM.showDriverStatusAlert = (true, status)
+                            }
                         }
-
+                        
                         
                         AvailableHoursView(homeViewModel: homeVM)
                         
                         HOSEventsChartScreen(events: homeVM.graphEvents)
-                            
+                        
                         
                         //MARK: - Violation Boxes (Part of Main Scroll) - Removed, now using alerts
                         
@@ -157,12 +166,12 @@ struct HomeScreenView: View {
                     }
                 }
                 .scrollIndicators(.hidden)
-        .onAppear {
-            //  loadViolationsFromDatabase()
-          //  initializeViolationFlags()
-          //  homeVM.resetDailyViolationFlags() // Reset daily flags on app start
-        }
-                .scrollIndicators(.hidden)
+                .onAppear {
+                    //  loadViolationsFromDatabase()
+                    //  initializeViolationFlags()
+                    //  homeVM.resetDailyViolationFlags() // Reset daily flags on app start
+                }
+                
             }
             .disabled(presentSideMenu || showLogoutPopup || ShowrefreshPopup )
             
@@ -210,62 +219,59 @@ struct HomeScreenView: View {
             }
             //nitin
             
-            //MARK: -  Show Certify popup
+          
             
-            if showDvirPopup {
+            if homeVM.showDvirPopup {
                 CustomPopupAlert(
                     title: "Add DVIR Log",
                     message: "Please add DVIR before going to On-Drive",
                     onOK: {
-                        
-                        //                        navmanager.navigate(to: .vehicleFlow(.AddDvirScreenView(
-                        //                                                                   selectedVehicle: "",
-                        //                                                                   selectedRecord: emptyDvirRecord,
-                        //                                                                   isFromHome: true
-                        //                                                               )))
-                        //                        navmanager.navigate(to: })
-                        
-                        
-                        showDvirPopup = false
+                             
+                        navmanager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Logs"))
+                        homeVM.showDvirPopup = false
                     },
-                    onCancel: { showDvirPopup = false }
+                    onCancel: { homeVM.showDvirPopup = false }
                 )
-                .zIndex(3)
+               
+                frame(maxWidth: 350)
+                .padding(.horizontal, 20)
+                .cornerRadius(16)
+                .shadow(radius: 10)
+                .transition(.opacity)
+                .animation(.easeInOut, value: homeVM.showDvirPopup)
             }
+            //MARK: -  Show Certify popup
             
-            if showCertifyLogAlert {
+            if homeVM.showCertifyLogAlert {
                 ZStack {
-                    // Dimmed background
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                        .zIndex(9)
-                    
-                    // Centered Popup
                     CustomPopupAlert(
                         title: "Certify Log",
-                        message: "Please certify your previous day log before going to On-Duty",
+                        message: "Please certify your previous day log before going to On-Drive",
                         onOK: {
-                            showCertifyLogAlert = false
-                            //  navmanager.navigate(to: .logsFlow(.DailyLogs(title: "Today's Logs")))
+                            homeVM.showCertifyLogAlert = false
+                            navmanager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Log"))
+                            //homeVM.showDriverStatusAlert = (true, .onDrive)
                         },
                         onCancel: {
-                            showCertifyLogAlert = false
+                            homeVM.showCertifyLogAlert = false
+                            // homeVM.showDriverStatusAlert = (true, .onDrive)
                         }
                     )
-                    .frame(maxWidth: 350) // optional, to keep consistent width
+                    .frame(maxWidth: 350)
                     .padding(.horizontal, 20)
-                    .background(Color.white)
                     .cornerRadius(16)
                     .shadow(radius: 10)
-                    .zIndex(10)
                     .transition(.opacity)
-                    .animation(.easeInOut, value: showCertifyLogAlert)
+                    .animation(.easeInOut, value: homeVM.showCertifyLogAlert)
                 }
-                //  Force it to fill the entire screen and center content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .ignoresSafeArea()
-                .zIndex(10)
+           
             }
+               
+            if homeVM.showAddDvirPopup {
+                AddDvirPopup(isPresented: $homeVM.showAddDvirPopup)
+                       .transition(.scale.combined(with: .opacity))
+                       .zIndex(999)
+               }
             
             if showLogoutPopup {
                 Color.black.opacity(0.5)
@@ -282,12 +288,7 @@ struct HomeScreenView: View {
                             }
                             showLogoutPopup = false
                             presentSideMenu = false
-//                            UserDefaults.standard.set(false, forKey: "isLoggedIn")
-//                            UserDefaults.standard.removeObject(forKey: "userEmail")
-//                            UserDefaults.standard.removeObject(forKey: "authToken")
-//                            UserDefaults.standard.removeObject(forKey: "driverName")
-//                            UserDefaults.standard.removeObject(forKey: AppStorageKeys.timezone)
-//                            UserDefaults.standard.removeObject(forKey: "timezoneOffSet")
+
                             UserDefaults.standard.set(false, forKey: "isLoggedIn")
                             ["userEmail","authToken","driverName",AppStorageKeys.timezone,"timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
 
@@ -1316,6 +1317,7 @@ struct HomeScreenView: View {
         func resetTimersForNextDay() selectedStatus
   */
         //MARK: - Calculate OffDuty and Sleep Time from Database
+    
 //        func calculateOffDutyAndSleepTime() -> (offDuty: TimeInterval, sleep: TimeInterval) {
 //            let allLogs = DatabaseManager.shared.fetchLogs()
 //            
@@ -1365,6 +1367,7 @@ struct HomeScreenView: View {
 //            print("Total calculated - OffDuty: \(totalOffDuty/3600)h, Sleep: \(totalSleep/3600)h")
 //            return (totalOffDuty, totalSleep)
 //        }
+
         
         
         //MARK: - saving voilation in database
@@ -1403,7 +1406,7 @@ struct HomeScreenView: View {
                 // Check if it's a violation (not warning)
                 let isViolation = log.isVoilations == 1 && log.status == "Violation"
                 // Check if it's from today
-                let logDate = Calendar.current.startOfDay(for: log.startTime.asDate() ?? Date())
+                let logDate = Calendar.current.startOfDay(for: log.startTime)
                 let isToday = Calendar.current.isDate(logDate, inSameDayAs: today)
                 return isViolation && isToday
             }
@@ -1413,16 +1416,16 @@ struct HomeScreenView: View {
             for log in violationLogs {
                 let formatter = DateFormatter()
                 formatter.dateFormat = "MMM dd"
-                let dateString = formatter.string(from: log.startTime.asDate() ?? Date())
+                let dateString = formatter.string(from: log.startTime)
                 
                 formatter.dateFormat = "HH:mm:ss"
-                let timeString = formatter.string(from: log.startTime.asDate() ?? Date())
+                let timeString = formatter.string(from: log.startTime)
                 
                 let violationData = ViolationBoxData(
                     text: log.dutyType,
                     date: dateString,
                     time: timeString,
-                    timestamp: log.startTime.asDate() ?? Date(),
+                    timestamp: log.startTime,
                     type: .violation // Database violations are always violations, not warnings
                 )
                 

@@ -5,7 +5,7 @@
 import Foundation
 import CoreBluetooth
 import UIKit
-import SwiftUICore
+import SwiftUI
 
 class BluetoothViewModel: NSObject, ObservableObject {
     

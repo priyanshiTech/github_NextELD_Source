@@ -143,12 +143,7 @@ struct EmailDvir: View {
             
             
             VStack(spacing: 0) {
-                //                ZStack(alignment: .topLeading) {
-                //                    Color(UIColor.wine)
-                //                        .edgesIgnoringSafeArea(.top)
-                //                        .frame(height: 40)
-                //                }
-                
+    
                 // MARK: - Header
                 HStack {
                     Button(action: {

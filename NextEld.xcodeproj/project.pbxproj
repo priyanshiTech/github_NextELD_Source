@@ -109,6 +109,7 @@
 		AFA691072E54B04F0035D092 /* RecordUpdateInterface .swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA691062E54B04F0035D092 /* RecordUpdateInterface .swift */; };
 		AFA869412E4DC0AD0061A115 /* CertifyDriverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA869402E4DC0AD0061A115 /* CertifyDriverViewModel.swift */; };
 		AFA869432E4DFA820061A115 /* UserDefaultValueSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */; };
+		AFA9524F2EAA6B4600A39C69 /* DvirPopupAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA9524E2EAA6B4600A39C69 /* DvirPopupAdd.swift */; };
 		AFA98C882E0152E400E87802 /* PacificTrack.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */; };
 		AFA98C892E0152E400E87802 /* PacificTrack.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AFA98C8C2E015FD200E87802 /* PT30BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C8B2E015FD200E87802 /* PT30BluetoothManager.swift */; };
@@ -350,6 +351,7 @@
 		AFA691062E54B04F0035D092 /* RecordUpdateInterface .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecordUpdateInterface .swift"; sourceTree = "<group>"; };
 		AFA869402E4DC0AD0061A115 /* CertifyDriverViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifyDriverViewModel.swift; sourceTree = "<group>"; };
 		AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultValueSaved.swift; sourceTree = "<group>"; };
+		AFA9524E2EAA6B4600A39C69 /* DvirPopupAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirPopupAdd.swift; sourceTree = "<group>"; };
 		AFA98C832E0146C200E87802 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = PacificTrack.xcframework; sourceTree = "<group>"; };
 		AFA98C8B2E015FD200E87802 /* PT30BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PT30BluetoothManager.swift; sourceTree = "<group>"; };
@@ -597,6 +599,7 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFA9524D2EAA6B1E00A39C69 /* DVIRPopup */,
 				AFD340D72E9CF1F0007D88DF /* BluetothView */,
 				AF9024932E93DD920005F0D7 /* HomeBoxViews */,
 				AFBD12D02E7302E0003EA40F /* AddVechicleForDvir */,
@@ -947,6 +950,14 @@
 				AFA691002E5465ED0035D092 /* DefectAPicalling.swift */,
 			);
 			path = DefectAPI;
+			sourceTree = "<group>";
+		};
+		AFA9524D2EAA6B1E00A39C69 /* DVIRPopup */ = {
+			isa = PBXGroup;
+			children = (
+				AFA9524E2EAA6B4600A39C69 /* DvirPopupAdd.swift */,
+			);
+			path = DVIRPopup;
 			sourceTree = "<group>";
 		};
 		AFA98C862E014F4F00E87802 /* Framework 2 */ = {
@@ -1675,6 +1686,7 @@
 				AFCC878C2E56F48D00A09745 /* DisConnetedViewModel.swift in Sources */,
 				AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */,
 				AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */,
+				AFA9524F2EAA6B4600A39C69 /* DvirPopupAdd.swift in Sources */,
 				106586132DCCE182003CE502 /* Extension + colour.swift in Sources */,
 				108FF8022DC895E10051671B /* NextEldApp.swift in Sources */,
 				AFB943332E029CD300AD19D7 /* DeviceListViewController.swift in Sources */,
