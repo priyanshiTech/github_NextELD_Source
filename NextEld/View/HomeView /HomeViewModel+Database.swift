@@ -7,7 +7,7 @@ extension HomeViewModel {
 
         DatabaseManager.shared.saveTimerLog(
             status: status,
-            startTime: DateTimeHelper.getCurrentDateTimeString(),
+            startTime: DateTimeHelper.currentDateTime(),
             dutyType: status,
             remainingWeeklyTime: Int(cycleTimer?.remainingTime ?? 0),
             remainingDriveTime: Int(onDriveTimer?.remainingTime ?? 0),
@@ -74,7 +74,7 @@ extension HomeViewModel {
     func saveViolation(for violationData: ViolationData) {
         DatabaseManager.shared.saveTimerLog(
         status: violationData.getTitle(),
-        startTime: DateTimeHelper.getCurrentDateTimeString(),
+        startTime: DateTimeHelper.currentDateTime(),
         dutyType: violationData.getWarningText(),
         remainingWeeklyTime: Int(cycleTimer?.remainingTime ?? 0),
         remainingDriveTime: Int(onDriveTimer?.remainingTime ?? 0),

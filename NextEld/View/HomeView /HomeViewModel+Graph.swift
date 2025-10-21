@@ -6,20 +6,6 @@ extension HomeViewModel {
         var logs = DatabaseManager.shared.fetchDutyEventsForToday()
         logs.sort { $0.startTime < $1.startTime }
 
-        //  Add dummy OFF_DUTY if needed
-        
-        if logs.isEmpty {
-            if let startOfDay = "\(DateTimeHelper.currentDate()) 00:00:00".asDate()
-            {
-                logs.append(DutyLog(
-                    id: -999,
-                    status: DriverStatusType.offDuty.getName(),
-                    startTime: startOfDay,
-                    endTime: DateTimeHelper.currentDateTime()
-                ))
-            }
-        }
-
         self.graphEvents = logs.enumerated().map { index, log in
             let status = DriverStatusType(fromName: log.status) ?? .offDuty
             var endDate = DateTimeHelper.currentDateTime()

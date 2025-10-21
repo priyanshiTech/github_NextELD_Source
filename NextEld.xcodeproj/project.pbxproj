@@ -146,7 +146,7 @@
 		AFB943462E02C9D300AD19D7 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943452E02C9D300AD19D7 /* LoginModel.swift */; };
 		AFB9434A2E02CCF900AD19D7 /* Rules.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943492E02CCF900AD19D7 /* Rules.swift */; };
 		AFB9434C2E02CD0800AD19D7 /* SplitLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9434B2E02CD0800AD19D7 /* SplitLog.swift */; };
-		AFB9434E2E02CD2D00AD19D7 /* DriverLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9434D2E02CD2D00AD19D7 /* DriverLog.swift */; };
+		AFB9434E2E02CD2D00AD19D7 /* ServerDriverLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9434D2E02CD2D00AD19D7 /* ServerDriverLog.swift */; };
 		AFB943502E02CD7B00AD19D7 /* TokenModelLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9434F2E02CD7B00AD19D7 /* TokenModelLog.swift */; };
 		AFB943542E02D43600AD19D7 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943532E02D43500AD19D7 /* APIClient.swift */; };
 		AFB943562E02D62E00AD19D7 /* APIEndPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943552E02D62E00AD19D7 /* APIEndPoints.swift */; };
@@ -387,7 +387,7 @@
 		AFB943452E02C9D300AD19D7 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		AFB943492E02CCF900AD19D7 /* Rules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rules.swift; sourceTree = "<group>"; };
 		AFB9434B2E02CD0800AD19D7 /* SplitLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitLog.swift; sourceTree = "<group>"; };
-		AFB9434D2E02CD2D00AD19D7 /* DriverLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLog.swift; sourceTree = "<group>"; };
+		AFB9434D2E02CD2D00AD19D7 /* ServerDriverLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerDriverLog.swift; sourceTree = "<group>"; };
 		AFB9434F2E02CD7B00AD19D7 /* TokenModelLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModelLog.swift; sourceTree = "<group>"; };
 		AFB943532E02D43500AD19D7 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		AFB943552E02D62E00AD19D7 /* APIEndPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndPoints.swift; sourceTree = "<group>"; };
@@ -1309,7 +1309,7 @@
 		AFDBB17A2E03FAE500D4A2CA /* LoginModel */ = {
 			isa = PBXGroup;
 			children = (
-				AFB9434D2E02CD2D00AD19D7 /* DriverLog.swift */,
+				AFB9434D2E02CD2D00AD19D7 /* ServerDriverLog.swift */,
 				AFB943452E02C9D300AD19D7 /* LoginModel.swift */,
 				AFB9434B2E02CD0800AD19D7 /* SplitLog.swift */,
 				AFB9434F2E02CD7B00AD19D7 /* TokenModelLog.swift */,
@@ -1581,7 +1581,7 @@
 				AF72E44A2DFD59E100626DC0 /* DateInfo 2.swift in Sources */,
 				AF8717FA2DFFF97400544383 /* blueModel.swift in Sources */,
 				AF66F79E2E4CA0AC009A13A0 /* CertifyViewDB.swift in Sources */,
-				AFB9434E2E02CD2D00AD19D7 /* DriverLog.swift in Sources */,
+				AFB9434E2E02CD2D00AD19D7 /* ServerDriverLog.swift in Sources */,
 				AFCB43692E2F9E2400363BB6 /* DeleteViewModel.swift in Sources */,
 				AF72E44C2DFD60EF00626DC0 /* NT11ConnectionView.swift in Sources */,
 				AFB9434A2E02CCF900AD19D7 /* Rules.swift in Sources */,

@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 struct TimeBox: View {
+    @ObservedObject var timer: CountdownTimer  = .init(startTime: 0)
     let type: TimerType
     let title: String
-    let time: String
 //    @ObservedObject var timer: CountdownTimer
     
     var body: some View {
@@ -41,7 +41,7 @@ struct TimeBox: View {
                 HStack {
                     Spacer()
                     //Text(formatTime(timer.remainingTime))
-                    Text(time)
+                    Text(timer.remainingTime.timeString ?? "")
                         .foregroundColor(.white)
                         .bold()
                 }

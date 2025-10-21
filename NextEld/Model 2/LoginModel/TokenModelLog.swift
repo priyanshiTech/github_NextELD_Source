@@ -49,7 +49,7 @@ struct TokenResult: Decodable {
     let unlimitedTrailers : String?
     let unlimitedShippingDocs : String?
   // let driveringStatusData: [DriveringStatusData]
-    let driverLog: [DriverLog]?
+    let driverLog: [ServerDriverLog]?
     let driverCertifiedLog: [DriverCertifiedLog]
     let loginLogoutLog: [LoginLogoutLog]?
     let splitLog: [SplitLog]?

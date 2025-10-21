@@ -9,7 +9,8 @@ import Foundation
 import Combine
 
 class CountdownTimer: ObservableObject {
-    @Published var remainingTime: TimeInterval = 0
+   
+    @Published var remainingTime: Double = 0
     
     private var timer: Timer?
   //  private var endDate: Date?

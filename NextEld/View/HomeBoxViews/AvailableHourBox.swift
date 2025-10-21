@@ -47,14 +47,47 @@ struct AvailableHoursView: View {
                 .padding()
                 
                 //MARK: -  Time boxes
-                
+               
                 LazyVGrid(columns: columns, spacing: 2) {
                     ForEach(timerTypes, id: \.self) { type in
-                        TimeBox(
-                            type: type,
-                            title: type.getName(),
-                            time: returnRemaingTime(for: type)
-                        )
+                        if type == .onDrive {
+                            TimeBox(timer: homeViewModel.onDriveTimer!, type: type, title: type.getName())
+                            
+                        } else if type == .onDuty {
+                            TimeBox(timer: homeViewModel.onDutyTimer!, type: type, title: type.getName())
+                           
+                        } else if type == .cycleTimer
+                        {
+                            TimeBox(timer: homeViewModel.cycleTimer!, type: type, title: type.getName())
+                           
+                        } else if type == .sleepTimer {
+                            TimeBox(timer: homeViewModel.sleepTimer!, type: type, title: type.getName())
+                        }
+//                        switch type {
+//                        case .onDuty:
+//                            
+//                        case .cycleTimer:
+//                            TimeBox(
+//                                type: type,
+//                                title: type.getName(),
+//                                time: homeViewModel.onDutyTimer
+//                            )
+//                        case .sleepTimer:
+//                            TimeBox(
+//                                type: type,
+//                                title: type.getName(),
+//                                time: homeViewModel.onDutyTimer
+//                            )
+//                        case .onDrive:
+//                            TimeBox(
+//                                type: type,
+//                                title: type.getName(),
+//                                time: homeViewModel.onDutyTimer
+//                            )
+//                        default:
+//                            break
+//                        }
+                        
                     }
                    
                 }
@@ -78,21 +111,10 @@ struct AvailableHoursView: View {
     }
     
     
-    private func returnRemaingTime(for type: TimerType) -> String {
-        var timer = ""
-        switch type {
-        case .onDuty:
-                timer = homeViewModel.onDutyTimer?.remainingTime.timeString ?? ""
-        case .cycleTimer:
-                timer = homeViewModel.cycleTimer?.remainingTime.timeString ?? ""
-        case .sleepTimer:
-                timer = homeViewModel.sleepTimer?.remainingTime.timeString ?? ""
-        case .onDrive:
-                timer = homeViewModel.onDriveTimer?.remainingTime.timeString ?? ""
-        default:
-            break
-        }
-        return timer
-    }
+//    private func returnRemaingTime(for type: TimerType) -> String {
+//        var timer = ""
+//       
+//        return timer
+//    }
     
 }

@@ -33,7 +33,7 @@ class SyncViewModel: ObservableObject {
                 clientId: DriverInfo.clientId ?? 1,
                 currentLocation: log.location,
                 customLocation: log.location,
-                dateTime: log.startTime,
+                dateTime: log.startTime.toLocalString(),
                 days: log.day,
                 driverId: DriverInfo.driverId ?? 0,
                 engineHour: log.engineHours,

@@ -11,7 +11,7 @@ import SwiftUI
 
 struct StatusBox: View {
     let title: String
-    let time: String
+    @ObservedObject var countDownTimer: CountdownTimer
     
     var body: some View {
         VStack(spacing: 5) {
@@ -23,7 +23,7 @@ struct StatusBox: View {
                 .truncationMode(.tail)
                 .frame(maxWidth: .infinity, alignment: .center)
             
-            Label(time, systemImage: "")
+            Label(countDownTimer.remainingTime.timeString, systemImage: "")
                 .foregroundColor(Color(uiColor: .wine))
                 .bold()
         }

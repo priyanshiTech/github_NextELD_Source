@@ -14,7 +14,7 @@ class RefreshViewModel: ObservableObject {
 
     
     
-    var latestDriverLog: DriverLog? {
+    var latestDriverLog: ServerDriverLog? {
         loginResponse?.result?.driverLog?.last
       }
 

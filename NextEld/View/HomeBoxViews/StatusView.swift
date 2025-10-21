@@ -45,16 +45,14 @@ struct StatusView: View {
                 
                 //MARK: - Status boxes
                 HStack(spacing: 10) {
-                    
                     StatusBox(
                         title: TimerType.continueDrive.getName(),
-                              time: homeViewModel.continueDriveTimer?.remainingTime.timeString ?? ""
+                              countDownTimer: homeViewModel.continueDriveTimer!
                     )
                     StatusBox(
                         title: TimerType.breakTimer.getName(),
-                        time: homeViewModel.breakTimer?.remainingTime.timeString ?? ""
+                        countDownTimer: homeViewModel.breakTimer!
                     )
-
                 }
                 .padding()
                 //MARK: -  Status checkboxes
@@ -66,19 +64,7 @@ struct StatusView: View {
                             isClick: type == selectedDriverStatus,
                             labelText: type.getName(),
                             onTap: {
-                                onDriveStatusSelection(type)
-//                                if confirmedStatus != DriverStatusConstants.onDuty {
-//                                    let hasPreviousLogs = CertifyDatabaseManager.shared.hasPreviousDayLogsUncertified()
-//                                    if hasPreviousLogs {
-//                                        //  Trigger popup overlay
-//                                        showCertifyLogAlert = true
-//                                    } else {
-//                                        // Continue normal flow
-//                                        selectedStatus = DriverStatusConstants.onDuty
-//                                        showAlert = true
-//                                    }
-//                                }
-                            }
+                                onDriveStatusSelection(type)                           }
                         )
                         
                     }

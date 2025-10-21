@@ -6,13 +6,13 @@
 
 
 import Foundation
-struct DriverLog: Decodable {
+struct ServerDriverLog: Decodable {
     let _id: String?
     let vehicleId: Int?
     let driverId: Int?
     let driverName: String?
     let status: String?
-    let dateTime: String?
+    let dateTime: Date?
     let utcDateTime: Int64?
     let lastUtcDateTime: Int64?
     let employeeStatus: String?

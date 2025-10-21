@@ -230,6 +230,12 @@ class HomeViewModel: ObservableObject {
                 self?.loadEventsFromDatabase()
             }
             .store(in: &cancellable)
+//        onDutyTimer?.$remainingTime
+//            .receive(on: RunLoop.main)
+//            .sink { value in
+//                print(value)
+//            }
+//            .store(in: &cancellable)
     }
     
     deinit {
@@ -464,7 +470,9 @@ class HomeViewModel: ObservableObject {
 
         // Resume
         setDriverStatus(status: status, restoreBreakTimerRunning: isBreak)
-        refreshView = UUID()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.loadEventsFromDatabase()
+        }
     }
 
     func adjusted(_ value: Int?, elapsed: TimeInterval, active: Bool) -> TimeInterval {
@@ -475,15 +483,11 @@ class HomeViewModel: ObservableObject {
     
     private func getElapsedTime(lastLog: DriverLogModel) -> TimeInterval {
         
-        guard let savedDate = DateTimeHelper.getDateFromString(lastLog.startTime) else {
-            return 0
-        }
-
         // Get current time in the same timezone as saved time
         let currentTime = DateTimeHelper.currentDateTime()
         
         // Time elapsed since last save (both in same timezone)
-        let elapsed = currentTime.timeIntervalSince(savedDate)
+        let elapsed = currentTime.timeIntervalSince(lastLog.startTime)
         
         print("Difference in current time and last saved time : \(elapsed)")
         
@@ -609,7 +613,7 @@ class HomeViewModel: ObservableObject {
         print(" Processing \(sortedLogs.count) logs for time calculation")
         
         for (index, log) in sortedLogs.enumerated() {
-            let startTime = log.startTime.asDate() ?? currentTime
+            let startTime = log.startTime
             let endTime: Date
             
             // If this is the last log, use current time
@@ -617,7 +621,7 @@ class HomeViewModel: ObservableObject {
                 endTime = currentTime
             } else {
                 // Use the start time of the next log as end time
-                endTime = sortedLogs[index + 1].startTime.asDate() ?? currentTime
+                endTime = sortedLogs[index + 1].startTime
             }
             
             let duration = endTime.timeIntervalSince(startTime)

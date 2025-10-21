@@ -40,7 +40,7 @@ struct DailyLogView: View {
         
         // Filter logs for last 7 days and extract unique dates
         let logsInRange = logs.compactMap { log -> String? in
-            guard let logDate = log.startTime.toDate() else { return nil }
+           let logDate = log.startTime 
             
             // Check if log date is within last 7 days
             if logDate >= sevenDaysAgo && logDate <= today {

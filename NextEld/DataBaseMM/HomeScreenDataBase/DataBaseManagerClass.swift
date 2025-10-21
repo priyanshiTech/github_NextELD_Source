@@ -10,6 +10,85 @@ import SQLite3
 import SQLite
 import Foundation
 
+protocol DatabaseHandler {
+    var db: Connection? { get }
+}
+extension DatabaseHandler {
+    func fetchRecords<T>(
+        from table: Table,
+        where condition: SQLite.Expression<Bool>? = nil,
+        orderBy order: [Expressible] = [],
+        limit: Int? = nil,
+        map: (Row) -> T
+    ) -> [T]  {
+        guard let db = db else { return [] }
+        var query = table
+
+        if let condition = condition {
+            query = query.filter(Expression<Bool>(condition))
+        }
+
+        if !order.isEmpty {
+            query = query.order(order)
+        }
+
+        if let limit = limit {
+            query = query.limit(limit)
+        }
+
+        do {
+            return try db.prepare(query).map(map)
+        } catch {
+            print("❌ Query failed: \(error)")
+            return []
+        }
+    }
+}
+
+enum SQLiteQuery {
+    case fetchYesterdayRecord
+    func getQuery() -> String {
+        return ""
+    }
+}
+
+
+struct DriverLogModel: Identifiable {
+    var id: Int64?
+    let status: String
+    let startTime: Date
+    let userId: Int
+    let day: Int
+    let isVoilations: Int
+   // let isVoilations: String
+    let dutyType: String
+    let shift: Int
+    let vehicle: String
+    let isRunning: Bool
+    let odometer: Double
+    let engineHours: String
+    let location: String
+    let lat: Double
+    let long: Double
+    let origin: String
+    let isSynced: Bool
+    let vehicleId: Int
+    let trailers: String
+    let notes: String
+    let serverId: String?
+    let timestamp: Int64
+    let identifier: Int
+    let remainingWeeklyTime: Int?
+    let remainingDriveTime: Int?
+    let remainingDutyTime: Int?
+    let remainingSleepTime: Int?
+    let breaktimerRemaning:Int?
+    let lastSleepTime: Int
+    let isSplit: Int
+    let engineStatus: String
+    let isCertifiedLog: String
+}
+
 struct DutyLog {
     let id: Int
     let status: String
@@ -17,10 +96,10 @@ struct DutyLog {
     let endTime: Date
 }
 
-class DatabaseManager {
+class DatabaseManager: DatabaseHandler {
     static let shared = DatabaseManager()
 
-    private var db: Connection?
+    var db: Connection?
     // Store last row values
     var lastDay: Int = 1
     var lastShift: Int = 1
@@ -29,7 +108,7 @@ class DatabaseManager {
     let driverLogs = Table("driverLogs")
     let id = Expression<Int64>("id")
     let status = Expression<String>("status")
-    let startTime = Expression<String>("startTime")
+    let startTime = Expression<Date>("startTime")
     let userId = Expression<Int>("userId")
     let day = Expression<Int>("day")
     let isVoilationColumn = Expression<Int>("isVoilation")
@@ -72,7 +151,7 @@ class DatabaseManager {
             print("******DB Init Error: \(error)")
         }
     }
-
+    
    func createTable() {
         do {
             try db?.run(driverLogs.create(ifNotExists: true) { t in
@@ -111,18 +190,58 @@ class DatabaseManager {
             print("****** Table Create Error: \(error)")
         }
     }
+    
+    // GET Record By SQL Statements
+    func fetchAllRecord(for query: SQLiteQuery) -> [DriverLogModel] {
+            guard let db = db else { return [] }
+            var logs: [DriverLogModel] = []
+           do {
+               for row in try db.prepare(driverLogs) {
+                   logs.append(DriverLogModel(
+                       id: row[id],
+                       status: row[status],
+                       startTime: row[startTime],
+                       userId: row[userId],
+                       day: row[day],
+                       isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
+                       dutyType: row[dutyType],
+                       shift: row[shift],
+                       vehicle: row[vehicleName] ,
+                       isRunning: true,
+                       odometer: row[odometer],
+                       engineHours: row[engineHours],
+                       location: row[location],
+                       lat: row[lat],
+                       long: row[long],
+                       origin: row[origin],
+                       isSynced: row[isSynced],
+                       vehicleId: row[vehicleId],
+                       trailers: row[trailers],
+                       notes: row[notes],
+                       serverId: row[serverId],
+                       timestamp: row[timestamp],
+                       identifier: row[identifier],
+                       remainingWeeklyTime: row[remainingWeeklyTime],
+                       remainingDriveTime: row[remainingDriveTime],
+                       remainingDutyTime: row[remainingDutyTime],
+                       remainingSleepTime: row[remainingSleepTime],
+                       breaktimerRemaning: row[breaktimerRemaning],
+                       lastSleepTime: row[lastSleepTime],
+                       isSplit: row[isSplit],
+                       engineStatus: row[engineStatus], isCertifiedLog: ""
+                   ))
+               }
+           } catch {
+               print("Raw SQL query failed: \(error)")
+           }
 
-
-
+           return logs
+    }
+    
     func fetchLogs() -> [DriverLogModel] {
         var logs: [DriverLogModel] = []
         do {
             for row in try db!.prepare(driverLogs) {
-                
-               // let violationValue = "\((try? row.get(isVoilationColumn)) ?? 0)"
-                            
-                            //  Print before appending
-               // print(" [DB LOG] Status: \(row[status]), isViolation: \(violationValue)")
                 logs.append(DriverLogModel(
 
                     id: row[id],
@@ -166,7 +285,7 @@ class DatabaseManager {
     }
 
     
-    func saveDriverLogsToSQLite(from logs: [DriverLog]) {
+    func saveDriverLogsToSQLite(from logs: [ServerDriverLog]) {
         print("Correct!!!!!!!!!!!!!!!! Saving \(logs.count) logs into SQLite")
 
         for (index, log) in logs.enumerated() {
@@ -177,7 +296,7 @@ class DatabaseManager {
             let model = DriverLogModel(
                 id: nil,
                 status: log.status ?? "Unknown",
-                startTime: log.dateTime ?? "N/A",
+                startTime: log.dateTime ?? Date(),
                 userId: log.driverId ?? 0,
                 day: log.days ?? 0,
                 isVoilations: log.isVoilation ?? 0,
@@ -196,7 +315,7 @@ class DatabaseManager {
                 trailers: (log.trailers ?? []).joined(separator: ", "),
                 notes: log.note ?? "",
                 serverId: log._id,
-                timestamp: Int64(log.dateTime ?? "0") ?? 0,
+                timestamp: Int64(log.dateTime?.timeIntervalSince1970 ?? 0),
                 identifier: log.identifier ?? 0,
                 remainingWeeklyTime: log.remainingWeeklyTime ?? 0,
                 remainingDriveTime: log.remainingDriveTime ?? 0,
@@ -295,43 +414,68 @@ class DatabaseManager {
             print("Error deleting logs: \(error)")
         }
     }
+    
+    func getLastRecordOfDriverLogs(for startDate: Date, endDate: Date) -> DutyLog? {
+        var logs: [DutyLog] = []
+        do {
+            guard let db = self.db else { return nil}
+            let query = driverLogs
+                            .filter(startTime > startDate && startTime < endDate)
+                            .order(startTime.desc)
+                            .limit(1)
+            let resultSet = try db.prepare(query)
+            for row in resultSet {
+                let idValue = Int(row[id])
+                let statusValue = row[status]
+                let startString = row[startTime]
+                logs.append( DutyLog(id: idValue, status: statusValue, startTime: startString, endTime: startString))
+            }
+            
+            return logs.first
+        } catch {
+            return nil
+        }
+    }
 
     
     func fetchDutyEventsForToday() -> [DutyLog] {
         var logs: [DutyLog] = []
-
-        let startOfDay = DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
-        let endOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
+        
+        let currentStartOfDay = DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
+        let currentEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: currentStartOfDay)!
+        let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) ?? Date()
+        let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
+        let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
+        
         do {
             guard let db = self.db else { return [] }
 
             // No filter here because startTime is stored as string; filter manually after parsing
-            for row in try db.prepare(driverLogs) {
+            let query = driverLogs
+                            .filter(startTime > currentStartOfDay && startTime < currentEndOfDay)
+                            .order(startTime.desc)
+            for row in try db.prepare(query) {
+                
                 let idValue = Int(row[id])
                 let statusValue = row[status]
                 let startString = row[startTime]
-            
-                let endString = row[startTime]
-              
-
-                if let startDate = startString.asDate() {
-                    // Use timestamp or calculate +2 hours if no end field
-                    let endDate = startDate.addingTimeInterval(02 * 60 * 60) // assume 2 hr default
-
-                    // Only use logs from today
-                    if startDate >= startOfDay && startDate < endOfDay {
-                        let log = DutyLog(id: idValue, status: statusValue, startTime: startDate, endTime: endDate)
-                       
-                        print("Graph LOG: \(statusValue) Start Date : \(startDate)")
-                        print("Graph LOG: \(statusValue) End Date : \(startDate)")
-                        logs.append(log)
-                    }
-                }
+                let log = DutyLog(id: idValue, status: statusValue, startTime: startString, endTime: startString)
+                print("Graph LOG: \(statusValue) Start Date : \(startString)")
+                print("Graph LOG: \(statusValue) End Date : \(startString)")
+                logs.append(log)
             }
         } catch {
             print("Failed to fetch duty logs: \(error)")
         }
+        
+        if let yesterDayLastRecord = getLastRecordOfDriverLogs(for: yesterDayStartOfDay, endDate: yesterDayEndOfDay) {
+            logs.insert(DutyLog(id: yesterDayLastRecord.id, status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime()), at: 0)
+        } else {
+            let logFromToday12AMtoCurrentTime = DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime())
+            logs.insert(logFromToday12AMtoCurrentTime, at: 0)
+        }
+
+        
 
         return logs
     }
@@ -379,10 +523,9 @@ extension DatabaseManager {
  
 
 extension DatabaseManager {
-    
     func saveTimerLog(
         status: String,
-        startTime: String,
+        startTime: Date,
         dutyType: String,
         remainingWeeklyTime: Int,
         remainingDriveTime: Int,
@@ -439,46 +582,7 @@ extension DatabaseManager {
     
 }
     //MARK: -  DriverLogModel for DataBase struct DriverLogModel: Identifiable {
-    struct DriverLogModel: Identifiable {
-        
-        var id: Int64?
-        let status: String
-        let startTime: String
-        let userId: Int
-        let day: Int
-        let isVoilations: Int
-       // let isVoilations: String
-        let dutyType: String
-        let shift: Int
-        let vehicle: String
-        let isRunning: Bool
-        let odometer: Double
-        let engineHours: String
-        let location: String
-        let lat: Double
-        let long: Double
-        let origin: String
-        let isSynced: Bool
-        let vehicleId: Int
-        let trailers: String
-        let notes: String
-        let serverId: String?
-        let timestamp: Int64
-        let identifier: Int
-        let remainingWeeklyTime: Int?
-        let remainingDriveTime: Int?
-        let remainingDutyTime: Int?
-        let remainingSleepTime: Int?
-        let breaktimerRemaning:Int?
-        let lastSleepTime: Int
-        let isSplit: Int
-        let engineStatus: String
-        let isCertifiedLog: String
-        
-        //Show latest
-
-    }
-
+    
 
     //MARK: -  Upload sync Data
     
@@ -547,8 +651,8 @@ extension DatabaseManager {
 
             // Filter logs for this day
             let logsForDay = allLogs.compactMap { log -> (Date, String)? in
-                guard let startDate = df.date(from: log.startTime) else { return nil }
-                return (startDate, log.status)
+               // guard let startDate = df.date(from: log.startTime) else { return nil }
+                return (log.startTime, log.status)
             }
             .filter { $0.0 >= startOfDay && $0.0 < startOfNextDay }
             .sorted { $0.0 < $1.0 }
@@ -595,8 +699,7 @@ extension DatabaseManager {
             let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
 
             let logsForDay = allLogs.compactMap { log -> (Date, String)? in
-                guard let startDate = df.date(from: log.startTime) else { return nil }
-                return (startDate, log.status)
+                return (log.startTime, log.status)
             }
             .filter { $0.0 >= startOfDay && $0.0 < startOfNextDay }
             .sorted { $0.0 < $1.0 }
@@ -658,8 +761,7 @@ extension DatabaseManager {
         
         // Convert and filter logs
         let logsForRange = logs.compactMap { log -> (Date, String)? in
-            guard let startDateLog = df.date(from: log.startTime) else { return nil }
-            return (startDateLog, log.status)
+            return (log.startTime, log.status)
         }
         .filter { $0.0 >= startDate } // only last N days
         .sorted { $0.0 < $1.0 }
@@ -709,8 +811,9 @@ extension DatabaseManager {
                let query = driverLogs.filter(
                    isVoilationColumn == 1 &&
                    status == "Violation" &&
-                   dutyType.like("%\(violationType)%") &&
-                   startTime.like("\(todayString)%")
+                   dutyType.like("%\(violationType)%")
+                 //  &&
+               //    startTime..like("\(todayString)%")
                )
 
                let count = try db.scalar(query.count)
@@ -764,8 +867,9 @@ extension DatabaseManager {
             let query = driverLogs.filter(
                 isVoilationColumn == 0 &&
                 status == "Warning" &&
-                dutyType.like("%\(warningType)%") &&
-                startTime.like("\(todayString)%")
+                dutyType.like("%\(warningType)%")
+                &&
+                startTime < DateTimeHelper.currentDateTime() //.like("\(todayString)%")
             )
             
             let count = try db.scalar(query.count)
@@ -779,50 +883,51 @@ extension DatabaseManager {
     }
 
     func hasAnyViolationOrWarningForToday() -> (hasViolation: Bool, has30MinWarning: Bool, has15MinWarning: Bool) {
-        guard let db = db else { return (false, false, false) }
-        
-        do {
-            // Get today's date string
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            let todayString = formatter.string(from: Date())
-            
-            // Check for violations
-            let violationQuery = driverLogs.filter(
-                isVoilationColumn == 1 &&
-                status == "Violation" &&
-                startTime.like("\(todayString)%")
-            )
-            let violationCount = try db.scalar(violationQuery.count)
-            
-            // Check for 30min warnings
-            let warning30Query = driverLogs.filter(
-                isVoilationColumn == 0 &&
-                status == "Warning" &&
-                dutyType.like("%30 minutes%") &&
-                startTime.like("\(todayString)%")
-            )
-            let warning30Count = try db.scalar(warning30Query.count)
-            
-            // Check for 15min warnings
-            let warning15Query = driverLogs.filter(
-                isVoilationColumn == 0 &&
-                status == "Warning" &&
-                dutyType.like("%15 minutes%") &&
-                startTime.like("\(todayString)%")
-            )
-            let warning15Count = try db.scalar(warning15Query.count)
-            
-            return (
-                hasViolation: violationCount > 0,
-                has30MinWarning: warning30Count > 0,
-                has15MinWarning: warning15Count > 0
-            )
-            
-        } catch {
-            print("Error checking violations/warnings for today: \(error)")
-            return (false, false, false)
-        }
+//        guard let db = db else { return (false, false, false) }
+//        
+//        do {
+//            // Get today's date string
+//            let formatter = DateFormatter()
+//            formatter.dateFormat = "yyyy-MM-dd"
+//            let todayString = formatter.string(from: Date())
+//            
+//            // Check for violations
+//            let violationQuery = driverLogs.filter(
+//                isVoilationColumn == 1 &&
+//                status == "Violation" &&
+//                startTime.like("\(todayString)%")
+//            )
+//            let violationCount = try db.scalar(violationQuery.count)
+//            
+//            // Check for 30min warnings
+//            let warning30Query = driverLogs.filter(
+//                isVoilationColumn == 0 &&
+//                status == "Warning" &&
+//                dutyType.like("%30 minutes%") &&
+//                startTime.like("\(todayString)%")
+//            )
+//            let warning30Count = try db.scalar(warning30Query.count)
+//            
+//            // Check for 15min warnings
+//            let warning15Query = driverLogs.filter(
+//                isVoilationColumn == 0 &&
+//                status == "Warning" &&
+//                dutyType.like("%15 minutes%") &&
+//                startTime.like("\(todayString)%")
+//            )
+//            let warning15Count = try db.scalar(warning15Query.count)
+//            
+//            return (
+//                hasViolation: violationCount > 0,
+//                has30MinWarning: warning30Count > 0,
+//                has15MinWarning: warning15Count > 0
+//            )
+//            
+//        } catch {
+//            print("Error checking violations/warnings for today: \(error)")
+//            return (false, false, false)
+//        }
+        return (false, false, false)
     }
 
 }
@@ -852,8 +957,8 @@ extension DatabaseManager {
             
             // Check if there are any logs from previous day
             let query = driverLogs.filter(
-                startTime >= startOfYesterdayString &&
-                startTime < endOfYesterdayString
+                startTime >= startOfYesterday &&
+                startTime < endOfYesterday
             )
             
             
@@ -869,8 +974,8 @@ extension DatabaseManager {
             
             // Check for Off Duty duration (10+ hours)
             let offDutyQuery = driverLogs.filter(
-                startTime >= startOfYesterdayString &&
-                startTime < endOfYesterdayString &&
+                startTime >= startOfYesterday &&
+                startTime < endOfYesterday &&
                 status == "OffDuty"
             )
             
@@ -883,9 +988,9 @@ extension DatabaseManager {
                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 formatter.timeZone = TimeZone.current
                 
-                if let startDate = formatter.date(from: startTimeString) {
+              //  if let startDate = formatter.date(from: startTimeString) {
                     // Calculate duration from start time to now (or next log)
-                    let duration = Date().timeIntervalSince(startDate)
+                    let duration = Date().timeIntervalSince(startTimeString)
                     let hours = duration / 3600
                     
                     print("Off Duty log started at: \(startTimeString), Duration: \(hours) hours")
@@ -894,7 +999,7 @@ extension DatabaseManager {
                         hasLongOffDuty = true
                         print("Found Off Duty longer than 10 hours!")
                         break
-                    }
+              //      }
                 }
             }
             
@@ -903,8 +1008,8 @@ extension DatabaseManager {
             
             // Option 1: Check if all previous day logs have notes (assuming certified logs have notes)
             let certifiedQuery = driverLogs.filter(
-                startTime >= startOfYesterdayString &&
-                startTime < endOfYesterdayString &&
+                startTime >= startOfYesterday &&
+                startTime < endOfYesterday &&
                 notes != ""  // Non-empty notes might indicate certification
             )
             let certifiedCount = try db.scalar(certifiedQuery.count)
@@ -912,8 +1017,8 @@ extension DatabaseManager {
             
             // Option 2: Check sync status (certified logs should be synced)
             let syncedQuery = driverLogs.filter(
-                startTime >= startOfYesterdayString &&
-                startTime < endOfYesterdayString &&
+                startTime >= startOfYesterday &&
+                startTime < endOfYesterday &&
                 isSynced == true  // Synced might indicate certification
             )
             let syncedCount = try db.scalar(syncedQuery.count)

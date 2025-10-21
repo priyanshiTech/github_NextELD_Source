@@ -1339,7 +1339,7 @@ struct HomeScreenView: View {
             print(" Processing \(sortedLogs.count) logs for time calculation")
             
             for (index, log) in sortedLogs.enumerated() {
-                let startTime = log.startTime.asDate() ?? currentTime
+                let startTime = log.startTime ?? Date()
                 let endTime: Date
                 
                 // If this is the last log, use current time
@@ -1347,7 +1347,7 @@ struct HomeScreenView: View {
                     endTime = currentTime
                 } else {
                     // Use the start time of the next log as end time
-                    endTime = sortedLogs[index + 1].startTime.asDate() ?? currentTime
+                    endTime = sortedLogs[index + 1].startTime ?? Date()
                 }
                 
                 let duration = endTime.timeIntervalSince(startTime)
@@ -1356,11 +1356,11 @@ struct HomeScreenView: View {
                     
                 case "OffDuty":
                     totalOffDuty += duration
-                    print(" OffDuty: \(log.startTime) for \(duration/3600) hours")
+                    print(" OffDuty: \(String(describing: log.startTime)) for \(duration/3600) hours")
                     
                 case "OnSleep":
                     totalSleep += duration
-                    print(" OnSleep: \(log.startTime) for \(duration/3600) hours")
+                    print(" OnSleep: \(String(describing: log.startTime)) for \(duration/3600) hours")
                     
                 default:
                     break
