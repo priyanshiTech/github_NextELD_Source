@@ -13,6 +13,14 @@ import Foundation
 protocol DatabaseHandler {
     var db: Connection? { get }
 }
+
+enum FilterType {
+    case getTodayRecord
+    case getYesterdayRecord
+    case day
+    case user
+}
+
 extension DatabaseHandler {
     func fetchRecords<T>(
         from table: Table,
@@ -238,10 +246,43 @@ class DatabaseManager: DatabaseHandler {
            return logs
     }
     
-    func fetchLogs() -> [DriverLogModel] {
+    private func getFilter(for type: FilterType) -> SQLite.Expression<Bool> {
+        let currentStartOfDay = DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
+        let currentEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: currentStartOfDay)!
+        let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) ?? Date()
+        let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
+        let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
+        switch type {
+        case .getTodayRecord:
+            return startTime >= currentStartOfDay && startTime < currentEndOfDay
+        case .getYesterdayRecord:
+            return startTime >= yesterDayStartOfDay && startTime < yesterDayEndOfDay
+        case .day:
+            return day == DriverInfo.Days
+        case .user:
+            return userId == DriverInfo.driverId ?? 0
+        }
+    }
+    
+    
+    
+    func fetchLogs(filterTypes: [FilterType] = [], order: [Expressible]? = [], limit: Int? = nil) -> [DriverLogModel] {
+        
         var logs: [DriverLogModel] = []
+        var filterExpression: SQLite.Expression<Bool> = getFilter(for: .user) // default filter
+        for type in filterTypes {
+            let filter = getFilter(for: type)
+            filterExpression = filterExpression && filter
+        }
+        var query = driverLogs.filter(filterExpression).order(startTime.desc)
+        if let order = order {
+            query = query.order(order)
+        }
+        if let limit = limit {
+            query = query.limit(limit)
+        }
         do {
-            for row in try db!.prepare(driverLogs) {
+            for row in try db!.prepare(query) {
                 logs.append(DriverLogModel(
 
                     id: row[id],
@@ -415,20 +456,55 @@ class DatabaseManager: DatabaseHandler {
         }
     }
     
-    func getLastRecordOfDriverLogs(for startDate: Date, endDate: Date) -> DutyLog? {
-        var logs: [DutyLog] = []
+    func getLastRecordOfDriverLogs(for startDate: Date? = nil, endDate: Date? = nil) -> DriverLogModel? {
+        var logs: [DriverLogModel] = []
         do {
             guard let db = self.db else { return nil}
+            var filter = Expression<Bool>(value: false)
+            if let startDate, let endDate {
+                filter = startTime > startDate && startTime < endDate
+            }
             let query = driverLogs
-                            .filter(startTime > startDate && startTime < endDate)
+                            .filter(filter)
                             .order(startTime.desc)
                             .limit(1)
             let resultSet = try db.prepare(query)
             for row in resultSet {
-                let idValue = Int(row[id])
-                let statusValue = row[status]
-                let startString = row[startTime]
-                logs.append( DutyLog(id: idValue, status: statusValue, startTime: startString, endTime: startString))
+                logs.append(DriverLogModel(
+
+                    id: row[id],
+                    status: row[status],
+                    startTime: row[startTime],
+                    userId: row[userId],
+                    day: row[day],
+                    isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
+                   // isVoilations: "\(try row.get(isVoilationColumn))",
+                    dutyType: row[dutyType],
+                    shift: row[shift],
+                    vehicle: row[vehicleName] ,
+                    isRunning: true,
+                    odometer: row[odometer],
+                    engineHours: row[engineHours],
+                    location: row[location],
+                    lat: row[lat],
+                    long: row[long],
+                    origin: row[origin],
+                    isSynced: row[isSynced],
+                    vehicleId: row[vehicleId],
+                    trailers: row[trailers],
+                    notes: row[notes],
+                    serverId: row[serverId],
+                    timestamp: row[timestamp],
+                    identifier: row[identifier],
+                    remainingWeeklyTime: row[remainingWeeklyTime],
+                    remainingDriveTime: row[remainingDriveTime],
+                    remainingDutyTime: row[remainingDutyTime],
+                    remainingSleepTime: row[remainingSleepTime],
+                    breaktimerRemaning: row[breaktimerRemaning],
+                    lastSleepTime: row[lastSleepTime],
+                    isSplit: row[isSplit],
+                    engineStatus: row[engineStatus], isCertifiedLog: ""
+                ))
             }
             
             return logs.first
@@ -446,13 +522,14 @@ class DatabaseManager: DatabaseHandler {
         let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) ?? Date()
         let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
         let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
+        let currentDay =  DriverInfo.Days
         
         do {
             guard let db = self.db else { return [] }
 
             // No filter here because startTime is stored as string; filter manually after parsing
             let query = driverLogs
-                            .filter(startTime > currentStartOfDay && startTime < currentEndOfDay)
+                            .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == currentDay)
                             .order(startTime.desc)
             for row in try db.prepare(query) {
                 
@@ -469,14 +546,12 @@ class DatabaseManager: DatabaseHandler {
         }
         
         if let yesterDayLastRecord = getLastRecordOfDriverLogs(for: yesterDayStartOfDay, endDate: yesterDayEndOfDay) {
-            logs.insert(DutyLog(id: yesterDayLastRecord.id, status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime()), at: 0)
+            // Previous day status continue today
+            logs.insert(DutyLog(id: Int(yesterDayLastRecord.id ?? 0), status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime()), at: 0)
         } else {
             let logFromToday12AMtoCurrentTime = DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime())
             logs.insert(logFromToday12AMtoCurrentTime, at: 0)
         }
-
-        
-
         return logs
     }
 }
@@ -543,7 +618,7 @@ extension DatabaseManager {
             id: nil,
             status: status,
             startTime: startTime,
-            userId: UserDefaults.standard.integer(forKey: "userId"),
+            userId: DriverInfo.driverId ?? 0,
             day: UserDefaults.standard.integer(forKey: "day"),
             isVoilations: isVoilations ? 1 : 0,   //  Actual Bool → Int
             dutyType: dutyType,

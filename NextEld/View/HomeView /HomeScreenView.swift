@@ -868,18 +868,7 @@ struct HomeScreenView: View {
          }
          
          //MARK: - NEXTDAY Popup Alert (Auto-dismiss after 3 seconds)
-         .alert(isPresented: $showNextDayPopup) {
-         let safeDay = daysCount ?? 1
-         let safeShift = ShiftCurrentDay ?? 1
          
-         return Alert(
-         
-         title: Text("NEXTDAY"),
-         message: Text("10 hours of rest time completed!\nTimers have been reset.\nDay \(safeDay)\nShift \(safeShift)")
-         
-         
-         )
-         }
          
          
          
@@ -888,6 +877,12 @@ struct HomeScreenView: View {
          
          */
         //MARK: -  #P for refresh All logs popup
+        .alert(isPresented: $homeVM.showNextDayShiftAlert) {
+            return Alert(
+                title: Text("NEXTDAY"),
+                message: Text("10 hours of rest time completed!\nTimers have been reset.\nDay \(DriverInfo.Days)\nShift \(DriverInfo.shift)")
+                )
+        }
       
         .alert("Are you sure you want to refresh all logs?", isPresented: $homeVM.showSyncconfirmation) {
         Button("Cancel", role: .cancel) {}
@@ -1321,55 +1316,55 @@ struct HomeScreenView: View {
         func resetTimersForNextDay() selectedStatus
   */
         //MARK: - Calculate OffDuty and Sleep Time from Database
-        func calculateOffDutyAndSleepTime() -> (offDuty: TimeInterval, sleep: TimeInterval) {
-            let allLogs = DatabaseManager.shared.fetchLogs()
-            
-            guard !allLogs.isEmpty else {
-                print(" No logs found in database")
-                return (0, 0)
-            }
-            
-            // Sort logs by timestamp
-            let sortedLogs = allLogs.sorted { $0.timestamp < $1.timestamp }
-            
-            var totalOffDuty: TimeInterval = 0
-            var totalSleep: TimeInterval = 0
-            let currentTime = Date()
-            
-            print(" Processing \(sortedLogs.count) logs for time calculation")
-            
-            for (index, log) in sortedLogs.enumerated() {
-                let startTime = log.startTime ?? Date()
-                let endTime: Date
-                
-                // If this is the last log, use current time
-                if index == sortedLogs.count - 1 {
-                    endTime = currentTime
-                } else {
-                    // Use the start time of the next log as end time
-                    endTime = sortedLogs[index + 1].startTime ?? Date()
-                }
-                
-                let duration = endTime.timeIntervalSince(startTime)
-                
-                switch log.status {
-                    
-                case "OffDuty":
-                    totalOffDuty += duration
-                    print(" OffDuty: \(String(describing: log.startTime)) for \(duration/3600) hours")
-                    
-                case "OnSleep":
-                    totalSleep += duration
-                    print(" OnSleep: \(String(describing: log.startTime)) for \(duration/3600) hours")
-                    
-                default:
-                    break
-                }
-            }
-            
-            print("Total calculated - OffDuty: \(totalOffDuty/3600)h, Sleep: \(totalSleep/3600)h")
-            return (totalOffDuty, totalSleep)
-        }
+//        func calculateOffDutyAndSleepTime() -> (offDuty: TimeInterval, sleep: TimeInterval) {
+//            let allLogs = DatabaseManager.shared.fetchLogs()
+//            
+//            guard !allLogs.isEmpty else {
+//                print(" No logs found in database")
+//                return (0, 0)
+//            }
+//            
+//            // Sort logs by timestamp
+//            let sortedLogs = allLogs.sorted { $0.timestamp < $1.timestamp }
+//            
+//            var totalOffDuty: TimeInterval = 0
+//            var totalSleep: TimeInterval = 0
+//            let currentTime = Date()
+//            
+//            print(" Processing \(sortedLogs.count) logs for time calculation")
+//            
+//            for (index, log) in sortedLogs.enumerated() {
+//                let startTime = log.startTime ?? Date()
+//                let endTime: Date
+//                
+//                // If this is the last log, use current time
+//                if index == sortedLogs.count - 1 {
+//                    endTime = currentTime
+//                } else {
+//                    // Use the start time of the next log as end time
+//                    endTime = sortedLogs[index + 1].startTime ?? Date()
+//                }
+//                
+//                let duration = endTime.timeIntervalSince(startTime)
+//                
+//                switch log.status {
+//                    
+//                case "OffDuty":
+//                    totalOffDuty += duration
+//                    print(" OffDuty: \(String(describing: log.startTime)) for \(duration/3600) hours")
+//                    
+//                case "OnSleep":
+//                    totalSleep += duration
+//                    print(" OnSleep: \(String(describing: log.startTime)) for \(duration/3600) hours")
+//                    
+//                default:
+//                    break
+//                }
+//            }
+//            
+//            print("Total calculated - OffDuty: \(totalOffDuty/3600)h, Sleep: \(totalSleep/3600)h")
+//            return (totalOffDuty, totalSleep)
+//        }
         
         
         //MARK: - saving voilation in database

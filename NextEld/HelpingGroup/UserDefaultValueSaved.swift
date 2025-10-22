@@ -43,6 +43,26 @@ struct AppStorageKeys {
     //MARK: -  Current Day's
 }
 
+
+struct AppStorageHandler {
+    static let shared = AppStorageHandler()
+    @AppStorage("userId") var userId: Int? // default Value
+    @AppStorage("userName") var userName: String?
+    
+    
+    
+    
+    func deleteAll() {
+        if let bundleID = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundleID)
+            print("All @AppStorage values for bundle ID '\(bundleID)' have been reset.")
+        }
+    }
+}
+
+
+
+
 struct DriverInfo {
     
     static var driverId: Int? {

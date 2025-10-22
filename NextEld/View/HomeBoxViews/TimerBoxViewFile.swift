@@ -25,7 +25,7 @@ struct TimeBox: View {
                                 .foregroundColor(.white)
                                 .bold()
                             +
-                            Text(" / 7 Days")
+                            Text(" / \(DriverInfo.cycleDays ?? 0 - DriverInfo.Days) Days")
                                 .foregroundColor(.white)
                                 .font(.footnote)
                         )
@@ -41,7 +41,7 @@ struct TimeBox: View {
                 HStack {
                     Spacer()
                     //Text(formatTime(timer.remainingTime))
-                    Text(timer.remainingTime.timeString ?? "")
+                    Text(timer.remainingTime.timeString)
                         .foregroundColor(.white)
                         .bold()
                 }

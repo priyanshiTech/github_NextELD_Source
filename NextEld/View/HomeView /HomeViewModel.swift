@@ -216,6 +216,7 @@ class HomeViewModel: ObservableObject {
     @Published var continueDriveTimer: CountdownTimer? = nil
     @Published var breakTime: CountdownTimer? = nil
     @Published var refreshView: UUID = UUID()
+    @Published var showNextDayShiftAlert: Bool = false
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []
@@ -224,18 +225,14 @@ class HomeViewModel: ObservableObject {
     init() {
         restoreAllTimersFromLastStatus()
         self.loadEventsFromDatabase()
+        showNextShiftAlert()
         timer
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.loadEventsFromDatabase()
+                self?.showNextShiftAlert()
             }
             .store(in: &cancellable)
-//        onDutyTimer?.$remainingTime
-//            .receive(on: RunLoop.main)
-//            .sink { value in
-//                print(value)
-//            }
-//            .store(in: &cancellable)
     }
     
     deinit {
@@ -320,7 +317,8 @@ class HomeViewModel: ObservableObject {
         onDriveTimer = CountdownTimer(startTime: DriverInfo.onDriveTime ?? 0)
         continueDriveTimer = CountdownTimer(startTime: DriverInfo.continueDriveTime ?? 0)
         cycleTimer = CountdownTimer(startTime: TimeInterval(DriverInfo.cycleTime ?? 0))
-        
+        currentDriverStatus = .offDuty
+        self.loadEventsFromDatabase()
         setupTimerCallbacks()
     }
     
@@ -345,6 +343,10 @@ class HomeViewModel: ObservableObject {
         continueDriveTimer?.onTimeChanged = { [weak self] remainingTime in
             self?.onChangeRemaingTime(type: .continueDrive, remainigTime: remainingTime)
         }
+        
+//        sleepTimer?.onTimeChanged = { [weak self] remainingTime in
+//            self?.onChangeRemaingTime(type: .sleepTimer, remainigTime: remainingTime)
+//        }
     }
     
     // MARK: - Delete All App Data
@@ -368,7 +370,7 @@ class HomeViewModel: ObservableObject {
         switch status {
 
         case .onDuty:
-            
+            checkedOffDutyTimeIsLessThan2Hour()
             timerTypes = [.onDuty, .cycleTimer]
             if restoreBreakTimerRunning {
                 timerTypes.append(.breakTimer) // include break timer to start
@@ -380,6 +382,7 @@ class HomeViewModel: ObservableObject {
             }
 
         case .onDrive:
+            checkedOffDutyTimeIsLessThan2Hour()
             if isTimerRunning(.breakTimer) {
                 breakTimer?.reset(startTime: breakTimer?.startDuration ?? 0)
                 breakTimer?.stop()
@@ -424,17 +427,28 @@ class HomeViewModel: ObservableObject {
             breakTimer.start()
             print("Break timer auto-started on app launch")
         }
-        loadEventsFromDatabase()
+        
     }
 
-    
+    func checkedOffDutyTimeIsLessThan2Hour()  {
+        // off duty time is less than two hours and next status != sleep then time should dedut from OnDuty
+        guard let lastRecord = DatabaseManager.shared.getLastRecordOfDriverLogs(),
+        let status = DriverStatusType(fromName: lastRecord.status) else {
+            return
+        }
+        let elapsed = getElapsedTime(lastLog: lastRecord)
+        let twoHrs = TimeInterval(60*60*2)
+        
+        if status == .offDuty && (currentDriverStatus == .onDuty || currentDriverStatus == .onDrive) && elapsed < twoHrs  {
+            self.onDutyTimer?.remainingTime -= elapsed
+        }
+    }
 
     
     // # changes by priyanshi - compact + safe version
     
     func restoreAllTimersFromLastStatus() {
         guard let latestLog = DatabaseManager.shared.fetchLogs().last else {
-            currentDriverStatus = .offDuty
             resetToInitialState()
             return
         }
@@ -470,9 +484,6 @@ class HomeViewModel: ObservableObject {
 
         // Resume
         setDriverStatus(status: status, restoreBreakTimerRunning: isBreak)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.loadEventsFromDatabase()
-        }
     }
 
     func adjusted(_ value: Int?, elapsed: TimeInterval, active: Bool) -> TimeInterval {
@@ -533,8 +544,16 @@ class HomeViewModel: ObservableObject {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
             }
         case .breakTimer:
+            let warning1 = TimeInterval(Int(DriverInfo.breakTime ?? 0) - Int(DriverInfo.warningBreakTime1 ?? 0))
+            let warning2 = TimeInterval(Int(DriverInfo.breakTime ?? 0) - Int(DriverInfo.warningBreakTime2 ?? 0))
+            
+//            if remainigTime <= warning1 {
+//                print(" CycleTimer - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
+//                checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
+//            }
             break
         case .sleepTimer:
+            
             break
         case .none:
             break
@@ -573,45 +592,22 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    func isSleepAndOffDutyDurationCompleted() -> Bool {
-        var totalTime: TimeInterval = 0
-        // Get the last record
-        guard let latestLog = DatabaseManager.shared.fetchLogs().last else {
-            return false
-        }
-        // Get the status of last record(i.e: OnDuty, OnDrive)
-        let status = DriverStatusType(fromName: latestLog.status) ?? .none
+    // calucate sleep time to 10 hours to change day to next
+    func calculateOffDutyAndSleepTime() -> TimeInterval {
+        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.getTodayRecord, .day])
         
-        // Get the sleep time
-        if let sleepReaminingTime = sleepTimer?.remainingTime {
-            totalTime += TimeInterval(DriverInfo.onSleepTime ?? 0) - sleepReaminingTime
+        guard !allLogs.isEmpty,
+                let status = allLogs.last?.status,
+                let driverStatus = DriverStatusType(fromName: status),
+              (driverStatus == .sleep || driverStatus == .offDuty) else {
+            debugPrint("calculateOffDutyAndSleepTime: No logs found in database")
+            return 0
         }
-        
-        // Get the elapsed time if last status is offDuty
-        if status == .offDuty || currentDriverStatus == .offDuty {
-            let elapsed = getElapsedTime(lastLog: latestLog)
-            totalTime += elapsed
-        }
-        return totalTime >= TimeInterval(DriverInfo.onSleepTime ?? 0)
-    }
-    
-    func calculateOffDutyAndSleepTime() -> (offDuty: TimeInterval, sleep: TimeInterval) {
-        let allLogs = DatabaseManager.shared.fetchLogs()
-        
-        guard !allLogs.isEmpty else {
-            print(" No logs found in database")
-            return (0, 0)
-        }
-        
         // Sort logs by timestamp
-        let sortedLogs = allLogs.sorted { $0.timestamp < $1.timestamp }
+        let sortedLogs = allLogs.sorted { $0.timestamp > $1.timestamp } // required reverse order
         
-        var totalOffDuty: TimeInterval = 0
         var totalSleep: TimeInterval = 0
         let currentTime = DateTimeHelper.currentDateTime()
-        
-        print(" Processing \(sortedLogs.count) logs for time calculation")
-        
         for (index, log) in sortedLogs.enumerated() {
             let startTime = log.startTime
             let endTime: Date
@@ -625,23 +621,39 @@ class HomeViewModel: ObservableObject {
             }
             
             let duration = endTime.timeIntervalSince(startTime)
+            let status = DriverStatusType(fromName: log.status) ?? .none
             
-            switch log.status {
-                
-            case "OffDuty":
-                totalOffDuty += duration
-                print(" OffDuty: \(log.startTime) for \(duration/3600) hours")
-                
-            case "OnSleep":
+            if status == .sleep || status == .offDuty {
                 totalSleep += duration
-                print(" OnSleep: \(log.startTime) for \(duration/3600) hours")
-                
-            default:
-                break
+            } else {
+                break // for other status will break the loop
             }
-        }
+          }
+        debugPrint("Total sleep: \(totalSleep.getHours())")
+        return totalSleep
+    }
+    
+    // Show the next day dialog once sleep exceed to 10 hours
+    func showNextShiftAlert() {
+        let totalSleepAllowed = DriverInfo.onSleepTime ?? 0
+        let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
         
-        print("Total calculated - OffDuty: \(totalOffDuty/3600)h, Sleep: \(totalSleep/3600)h")
-        return (totalOffDuty, totalSleep)
+        if calculatedSleepTaken >= totalSleepAllowed {
+            // next day popup show
+            self.showNextDayShiftAlert = true
+            UserDefaults.standard.set(DriverInfo.Days+1, forKey: AppStorageKeys.Days)
+            resetToInitialState()
+            debugPrint("Next Day Shift Stared")
+        }
+    
+    }
+    
+    // Reset Break Time if Break time is less than 30 min
+    func checkWheterBreakTimeIsOver(previousStatus: DriverStatusType) {
+        let remainingBreakTime = self.breakTimer?.remainingTime ?? 0
+        if previousStatus == .onDrive, currentDriverStatus != .offDuty, remainingBreakTime >= 0 {
+            breakTimer?.stop()
+            breakTimer = CountdownTimer(startTime: TimeInterval(DriverInfo.breakTime ?? 0))
+        }
     }
 }

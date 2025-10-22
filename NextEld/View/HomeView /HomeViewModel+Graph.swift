@@ -22,42 +22,4 @@ extension HomeViewModel {
             )
         }
     }
-
-
-    // MARK: - Timer that updates the last event's end_time every second
-//    func startLiveUpdateTimer() {
-//        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-//            // Reload from database to get latest status changes
-//            self.loadEventsFromDatabase()
-//        }
-//    }
-
-//    private func normalizeStatus(_ status: String) -> String {
-//        switch status {
-//        case "OnDuty": return "ON_DUTY"
-//        case "OffDuty": return "OFF_DUTY"
-//        case "OnSleep": return "SLEEP"
-//        case "OnDrive": return "DRIVE"
-//        case "PersonalUse": return "PERSONAL_USE"
-//        case "YardMove": return "YARD_MOVE"
-//        case "ON-DUTY": return "ON_DUTY"
-//        case "OFF-DUTY": return "OFF_DUTY"
-//        case "SLEEP": return "SLEEP"
-//        case "DRIVE": return "DRIVE"
-//        case "PERSONAL_USE": return "PERSONAL_USE"
-//        case "YARD_MOVE": return "YARD_MOVE"
-//        default: return "OFF_DUTY"
-//        }
-//    }
-    
-    // MARK: - Force refresh method for immediate chart update
-//    func forceRefresh() {
-//        loadEventsFromDatabase()
-//    }
-    
-    // MARK: - Update current status and refresh chart
-//    func updateStatus(_ newStatus: String) {
-//        currentStatus = newStatus
-//        loadEventsFromDatabase()
-//    }
 }
