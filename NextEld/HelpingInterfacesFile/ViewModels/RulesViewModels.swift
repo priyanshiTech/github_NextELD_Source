@@ -77,9 +77,9 @@ class EmployViewStatusViewModel: ObservableObject {
 
         // Request body (adjust according to API requirements)
         let requestBody = EmployeeRulesRequest(
-            employeeId: DriverInfo.driverId ?? employeeId,
-            clientId: DriverInfo.clientId ?? clientId,
-            tokenNo: DriverInfo.authToken
+            employeeId: AppStorageHandler.shared.driverId ?? employeeId,
+            clientId: AppStorageHandler.shared.clientId ?? clientId,
+            tokenNo: AppStorageHandler.shared.authToken ?? ""
         )
 
         do {

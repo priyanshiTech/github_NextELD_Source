@@ -25,7 +25,7 @@ struct TimeBox: View {
                                 .foregroundColor(.white)
                                 .bold()
                             +
-                            Text(" / \(DriverInfo.cycleDays ?? 0 - DriverInfo.Days) Days")
+                            Text(" / \(AppStorageHandler.shared.cycleDays ?? 0 - (AppStorageHandler.shared.days ?? 1)) Days")
                                 .foregroundColor(.white)
                                 .font(.footnote)
                         )

@@ -94,13 +94,13 @@ enum ViolationType: Hashable {
     func getFifteenMinWarningText() -> String {
         switch self {
         case .onDutyViolation:
-            return "\(Double(DriverInfo.setWarningOnDutyTime2 ?? 0).getMin()) min left for completing your on duty cycle"
+            return "\(Double(AppStorageHandler.shared.warningOnDutyTime2  ?? 0).getMin()) min left for completing your on duty cycle"
         case .onContinueDriveViolation:
-            return "\(Double(DriverInfo.setWarningOnDriveTime2 ?? 0).getMin()) min left for completing your continue drive cycle"
+            return "\(Double(AppStorageHandler.shared.warningOnDriveTime2 ?? 0).getMin()) min left for completing your continue drive cycle"
         case .onDriveViolation:
-            return "\(Double(DriverInfo.setWarningOnDriveTime2 ?? 0).getMin()) min left for completing your drive cycle"
+            return "\(Double(AppStorageHandler.shared.warningOnDriveTime2 ?? 0).getMin()) min left for completing your drive cycle"
         case .cycleTimerViolation:
-            return "\(Double(DriverInfo.setWarningOnDutyTime2 ?? 0).getMin()) min left for completing your day cycle"
+            return "\(Double(AppStorageHandler.shared.warningOnDutyTime2 ?? 0).getMin()) min left for completing your day cycle"
         case .none:
             return ""
         }
@@ -109,13 +109,13 @@ enum ViolationType: Hashable {
     func getThirtyMinWarningText() -> String {
         switch self {
         case .onDutyViolation:
-            return "\(Double(DriverInfo.setWarningOnDutyTime2 ?? 0).getMin()) min left for completing your on duty cycle"
+            return "\(Double(AppStorageHandler.shared.warningOnDutyTime2 ?? 0).getMin()) min left for completing your on duty cycle"
         case .onContinueDriveViolation:
-            return "\(Double(DriverInfo.setWarningOnDriveTime2 ?? 0).getMin()) min left for completing your continue drive cycle"
+            return "\(Double(AppStorageHandler.shared.warningOnDriveTime2 ?? 0).getMin()) min left for completing your continue drive cycle"
         case .onDriveViolation:
-            return "\(Double(DriverInfo.setWarningOnDriveTime2 ?? 0).getMin()) min left for completing your drive cycle"
+            return "\(Double(AppStorageHandler.shared.warningOnDriveTime2 ?? 0).getMin()) min left for completing your drive cycle"
         case .cycleTimerViolation:
-            return "\(Double(DriverInfo.setWarningOnDutyTime2 ?? 0).getMin()) min left for completing your day cycle"
+            return "\(Double(AppStorageHandler.shared.warningOnDutyTime2 ?? 0).getMin()) min left for completing your day cycle"
         case .none:
             return ""
         }
@@ -124,13 +124,13 @@ enum ViolationType: Hashable {
     func getViolationText() -> String {
         switch self {
         case .onDutyViolation:
-            return "Your duty time has been exceeded to \(Int(DriverInfo.onDutyTime?.getHours() ?? 0)) hours"
+            return "Your duty time has been exceeded to \(Double(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0)) hours"
         case .onContinueDriveViolation:
-            return "Your continue drive time has been exceeded to \(Int(DriverInfo.continueDriveTime?.getHours() ?? 0)) hours"
+            return "Your continue drive time has been exceeded to \(Double(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0)) hours"
         case .onDriveViolation:
-            return "Your drive time has been exceeded to \(Int(DriverInfo.onDriveTime?.getHours() ?? 0)) hours"
+            return "Your drive time has been exceeded to \(Double(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0)) hours"
         case .cycleTimerViolation:
-            return "Your cycle time has been exceeded to \(Double(DriverInfo.cycleTime ?? 0).getHours()) hours"
+            return "Your cycle time has been exceeded to \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
         case .none:
             return ""
         }
@@ -311,12 +311,12 @@ class HomeViewModel: ObservableObject {
     }
     
     func resetToInitialState() {
-        onDutyTimer = CountdownTimer(startTime: DriverInfo.onDutyTime ?? 0)
-        breakTimer = CountdownTimer(startTime: TimeInterval(DriverInfo.breakTime ?? 0))
-        sleepTimer = CountdownTimer(startTime: DriverInfo.onSleepTime ?? 0)
-        onDriveTimer = CountdownTimer(startTime: DriverInfo.onDriveTime ?? 0)
-        continueDriveTimer = CountdownTimer(startTime: DriverInfo.continueDriveTime ?? 0)
-        cycleTimer = CountdownTimer(startTime: TimeInterval(DriverInfo.cycleTime ?? 0))
+        onDutyTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0))
+        breakTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.breakTime ?? 0))
+        sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
+        onDriveTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onDriveTime ?? 0))
+        continueDriveTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.continueDriveTime ?? 0))
+        cycleTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.cycleTime ?? 0))
         currentDriverStatus = .offDuty
         self.loadEventsFromDatabase()
         setupTimerCallbacks()
@@ -467,8 +467,8 @@ class HomeViewModel: ObservableObject {
         let onDriveRemainingTime = adjusted(latestLog.remainingDriveTime, elapsed: elapsed, active: isDrive)
         let cycleRemainingTime = adjusted(latestLog.remainingWeeklyTime, elapsed: elapsed, active: isCycle)
         let sleepRemainingTime = adjusted(latestLog.remainingSleepTime, elapsed: elapsed, active: isSleep)
-        let continueDriveRemainingTime = adjusted(Int(DriverInfo.continueDriveTime ?? 0), elapsed: elapsed, active: isContDrv)
-        let breakRemainingTime = adjusted(Int(DriverInfo.breakTime ?? 0), elapsed: elapsed, active: isBreak)
+        let continueDriveRemainingTime = adjusted(Int(AppStorageHandler.shared.continueDriveTime ?? 0), elapsed: elapsed, active: isContDrv)
+        let breakRemainingTime = adjusted(Int(AppStorageHandler.shared.breakTime ?? 0), elapsed: elapsed, active: isBreak)
         
         
         // Timers
@@ -513,15 +513,15 @@ class HomeViewModel: ObservableObject {
         
         switch type {
         case .onDuty:
-            let warning1 = TimeInterval(Int(DriverInfo.onDutyTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime1 ?? 0))
-            let warning2 = TimeInterval(Int(DriverInfo.onDutyTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime2 ?? 0))
+            let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDutyTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime1 ?? 0))
+            let warning2 = TimeInterval(Int(AppStorageHandler.shared.onDutyTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime2 ?? 0))
             if remainigTime <= warning1 {
                 print(" OnDuty - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDutyViolation, violationKey: AppConstants.onDutyViolationKey)
             }
         case .onDrive:
-            let warning1 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime1 ?? 0))
-            let warning2 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime2 ?? 0))
+            let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime1 ?? 0))
+            let warning2 = TimeInterval(Int( AppStorageHandler.shared.onDriveTime  ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime2  ?? 0))
             if remainigTime <= warning1 {
                 print(" OnDrive - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDriveViolation, violationKey: AppConstants.onDriveViolationKey)
@@ -529,23 +529,23 @@ class HomeViewModel: ObservableObject {
             
         case .continueDrive:
             // For continue drive, we can use the same warning times as onDrive or create separate ones
-            let warning1 = TimeInterval(Int(DriverInfo.continueDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime1 ?? 0))
-            let warning2 = TimeInterval(Int(DriverInfo.continueDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime2 ?? 0))
+let warning1 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime1 ?? 0))
+let warning2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime2 ?? 0))
             if remainigTime <= warning1 {
                 print(" ContinueDrive - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onContinueDriveViolation, violationKey: AppConstants.continueDriveViolationKey)
             }
         case .cycleTimer:
             // For cycle timer, we can use similar warning logic
-            let warning1 = TimeInterval(Int(DriverInfo.cycleTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime1 ?? 0))
-            let warning2 = TimeInterval(Int(DriverInfo.cycleTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime2 ?? 0))
+            let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime1 ?? 0))
+            let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime2 ?? 0))
             if remainigTime <= warning1 {
                 print(" CycleTimer - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
             }
         case .breakTimer:
-            let warning1 = TimeInterval(Int(DriverInfo.breakTime ?? 0) - Int(DriverInfo.warningBreakTime1 ?? 0))
-            let warning2 = TimeInterval(Int(DriverInfo.breakTime ?? 0) - Int(DriverInfo.warningBreakTime2 ?? 0))
+            let warning1 = TimeInterval(Int(AppStorageHandler.shared.breakTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime1 ?? 0))
+            let warning2 = TimeInterval(Int(AppStorageHandler.shared.breakTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0))
             
 //            if remainigTime <= warning1 {
 //                print(" CycleTimer - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
@@ -635,13 +635,14 @@ class HomeViewModel: ObservableObject {
     
     // Show the next day dialog once sleep exceed to 10 hours
     func showNextShiftAlert() {
-        let totalSleepAllowed = DriverInfo.onSleepTime ?? 0
+        let totalSleepAllowed = AppStorageHandler.shared.onSleepTime ?? 0
         let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
         
-        if calculatedSleepTaken >= totalSleepAllowed {
+        // Fix: compare same units (seconds). Cast allowed Int seconds to TimeInterval.
+        if calculatedSleepTaken >= TimeInterval(totalSleepAllowed) {
             // next day popup show
             self.showNextDayShiftAlert = true
-            UserDefaults.standard.set(DriverInfo.Days+1, forKey: AppStorageKeys.Days)
+            //UserDefaults.standard.set((AppStorageHandler.shared.days ?? 0)+1, forKey: AppStorageHandler.shared.days)
             resetToInitialState()
             debugPrint("Next Day Shift Stared")
         }
@@ -653,7 +654,7 @@ class HomeViewModel: ObservableObject {
         let remainingBreakTime = self.breakTimer?.remainingTime ?? 0
         if previousStatus == .onDrive, currentDriverStatus != .offDuty, remainingBreakTime >= 0 {
             breakTimer?.stop()
-            breakTimer = CountdownTimer(startTime: TimeInterval(DriverInfo.breakTime ?? 0))
+            breakTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.breakTime ?? 0))
         }
     }
 }

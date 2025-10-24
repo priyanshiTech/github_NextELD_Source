@@ -82,8 +82,8 @@ struct HomeScreenView: View {
     @State private var showSleepResetPopup = false
     @State private var showNextDayPopup = false
     @AppStorage("hasShownNextDayPopup") private var hasShownNextDayPopup = false
-    @State private var daysCount =  DriverInfo.Days
-    @State private var ShiftCurrentDay  =  DriverInfo.shift
+    @State private var daysCount =  AppStorageHandler.shared.days
+    @State private var ShiftCurrentDay  =  AppStorageHandler.shared.shift
     
     //MARK: -  Network
     @EnvironmentObject var networkMonitor: NetworkMonitor
@@ -226,6 +226,7 @@ struct HomeScreenView: View {
                         //                        navmanager.navigate(to: })
                         
                         
+                        
                         showDvirPopup = false
                     },
                     onCancel: { showDvirPopup = false }
@@ -246,7 +247,7 @@ struct HomeScreenView: View {
                         message: "Please certify your previous day log before going to On-Duty",
                         onOK: {
                             showCertifyLogAlert = false
-                            //  navmanager.navigate(to: .logsFlow(.DailyLogs(title: "Today's Logs")))
+                            navmanager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Logs"))
                         },
                         onCancel: {
                             showCertifyLogAlert = false
@@ -285,7 +286,7 @@ struct HomeScreenView: View {
 //                            UserDefaults.standard.removeObject(forKey: AppStorageKeys.timezone)
 //                            UserDefaults.standard.removeObject(forKey: "timezoneOffSet")
                             UserDefaults.standard.set(false, forKey: "isLoggedIn")
-                            ["userEmail","authToken","driverName",AppStorageKeys.timezone,"timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
+                            ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timezone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
 
                             // session.logOut() // Nitin
                             SessionManagerClass.shared.clearToken()
@@ -876,7 +877,7 @@ struct HomeScreenView: View {
         .alert(isPresented: $homeVM.showNextDayShiftAlert) {
             return Alert(
                 title: Text("NEXTDAY"),
-                message: Text("10 hours of rest time completed!\nTimers have been reset.\nDay \(DriverInfo.Days)\nShift \(DriverInfo.shift)")
+                message: Text("10 hours of rest time completed!\nTimers have been reset.\nDay \(AppStorageHandler.shared.days)\nShift \(AppStorageHandler.shared.shift)")
                 )
         }
       
@@ -906,7 +907,7 @@ struct HomeScreenView: View {
         .alert("Are you sure you want to delete all data?", isPresented: $showDeleteConfirm) {
             Button("Delete", role: .destructive) {
                 Task {
-                    if let driverId = DriverInfo.driverId {  //  Get from common storage
+                    if let driverId =  AppStorageHandler.shared.driverId  {  //  Get from common storage
                         await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
                         showSuccessAlert = true // Show success after API
                         homeVM.deleteAllAppData()

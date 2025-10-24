@@ -26,7 +26,7 @@ struct EmailLogs: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     
-    let driverId = DriverInfo.driverId
+    let driverId = AppStorageHandler.shared.driverId
     
     var body: some View {
         

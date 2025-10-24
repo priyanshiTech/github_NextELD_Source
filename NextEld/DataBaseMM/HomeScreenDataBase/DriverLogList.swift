@@ -176,7 +176,7 @@ struct DriverLogRow: View {
             TableCell(text: log.engineHours, width: 100)
             TableCell(text: log.origin, width: 100)
             TableCell(text: log.isSynced ? "Yes" : "No", width: 100)
-            TableCell(text: "\(DriverInfo.vehicleId ?? 3)", width: 100)
+            TableCell(text: "\(AppStorageHandler.shared.vehicleId ?? 0)", width: 100)
             TableCell(text: log.trailers, width: 100)
             TableCell(text: log.notes, width: 100)
             TableCell(text: log.serverId.map { String($0) } ?? "-", width: 300)

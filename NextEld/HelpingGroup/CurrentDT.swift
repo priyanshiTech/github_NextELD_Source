@@ -25,7 +25,7 @@ struct DateTimeHelper {
     
     static func currentDateTime() -> Date {
         let currentTime = Date()
-        let timezoneOffset = DriverInfo.timeZoneOffset
+        let timezoneOffset = AppStorageHandler.shared.timeZoneOffset ?? ""
         
         // Convert current time to user's timezone
         if let userTime = convertToUserTimezone(currentTime, offset: timezoneOffset) {
@@ -60,7 +60,7 @@ struct DateTimeHelper {
         let currentDate = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatterConstants.timeFormat.rawValue
-        formatter.timeZone = TimeZone(identifier: DriverInfo.timezone)
+        formatter.timeZone = TimeZone(identifier: AppStorageHandler.shared.timezone ?? "")
         return formatter.string(from: currentDate)
     }
 
@@ -68,7 +68,7 @@ struct DateTimeHelper {
         let currentDate = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatterConstants.dateForaat.rawValue
-        formatter.timeZone = TimeZone(identifier: DriverInfo.timezone)
+        formatter.timeZone = TimeZone(identifier: AppStorageHandler.shared.timezone ?? "")
         return formatter.string(from: currentDate)
     }
     
@@ -81,7 +81,7 @@ struct DateTimeHelper {
     }
     
     static func getStringFromDate(_ date: Date,
-                                  timeZone: TimeZone? = TimeZone(identifier: DriverInfo.timezone),
+                                  timeZone: TimeZone? = TimeZone(identifier: AppStorageHandler.shared.timezone ?? ""),
                                   format: DateFormatterConstants = .defaultDateTime) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format.rawValue

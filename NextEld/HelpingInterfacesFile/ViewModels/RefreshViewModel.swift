@@ -23,7 +23,7 @@ class RefreshViewModel: ObservableObject {
 
         let requestBody = EmployeeToken(
             employeeId: AppStorageHandler.shared.driverId ?? 0,
-            tokenNo: DriverInfo.authToken
+            tokenNo: AppStorageHandler.shared.authToken ?? "",
         )
 
         print("Request Body: \(requestBody)")

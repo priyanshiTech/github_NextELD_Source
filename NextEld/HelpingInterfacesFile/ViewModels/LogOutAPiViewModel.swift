@@ -21,8 +21,8 @@ class APILogoutViewModel: ObservableObject {
         //  Prepare request
         let request = LogoutRequestModel(
             employeeId: AppStorageHandler.shared.driverId ?? 0,
-            loginDateTime: DriverInfo.loginDateTime ?? (CurrentTimeHelperStamp.currentTimestamp),
-            tokenNo: DriverInfo.authToken,
+            loginDateTime: AppStorageHandler.shared.loginDateTime ?? (CurrentTimeHelperStamp.currentTimestamp),
+            tokenNo: AppStorageHandler.shared.authToken ?? "" ,
             logoutDateTime: CurrentTimeHelperStamp.currentTimestamp
         )
         print("Request For *****LogoutAPI*****: \(request)")

@@ -20,7 +20,7 @@ class APILoginLogViewModel: ObservableObject {
         
         let request = LoginLogRequestModel(
             driverId: AppStorageHandler.shared.driverId ?? 0,
-            loginDateTime: DriverInfo.loginDateTime ?? 0 ,
+            loginDateTime: AppStorageHandler.shared.loginDateTime ?? 0,
             timestamps: CurrentTimeHelperStamp.currentTimestamp
         )
         print("Request For *****LoginLogAPI*****:\(request)")

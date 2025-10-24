@@ -9,9 +9,9 @@ import Foundation
 
 struct LogoutRequestModel: Codable {
     let employeeId: Int
-    let loginDateTime: Int64
+    let loginDateTime: Int
     let tokenNo: String
-    let logoutDateTime: Int64
+    let logoutDateTime: Int
 }
 
 

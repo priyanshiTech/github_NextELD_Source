@@ -15,7 +15,7 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
     let fields: [String: Any] = [
         "driverId": (AppStorageHandler.shared.driverId ?? 17),
         "vehicleId": record.vehicleId,          //  vehicleId not vehicleid
-        "clientId": (DriverInfo.clientId ?? 0),
+        "clientId": (AppStorageHandler.shared.clientId ?? 0),
         "timestamp": "\(currentTimestampMillis())",
         "dateTime":  "\(record.dateTime)",
         "location": record.locationDvir,
@@ -26,7 +26,7 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
         "companyName": record.companyName,
         "odometer": "\(Double(record.odometer) ?? 0.0)",   //  send as numeric string
         "engineHour": "\(record.engineHour)",              //  engineHour not enginehour
-        "tokenNo": DriverInfo.authToken,
+        "tokenNo": AppStorageHandler.shared.authToken ?? "",
         "trailer": record.trailer
     ]
 

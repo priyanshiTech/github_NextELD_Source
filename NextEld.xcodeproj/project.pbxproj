@@ -189,6 +189,7 @@
 		AFD072662DE5A49000C939B0 /* NewDriverLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */; };
 		AFD2F9042E589F2C00131C17 /* DataTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD2F9032E589F2C00131C17 /* DataTransferView.swift */; };
 		AFD340D92E9CF20C007D88DF /* BluetothPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD340D82E9CF20C007D88DF /* BluetothPopupView.swift */; };
+		AFD4284A2EAB98FA00E56B3F /* AddDvirPopupHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD428492EAB98FA00E56B3F /* AddDvirPopupHome.swift */; };
 		AFD7BAA72E53014A001AF76C /* loginLogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD7BAA62E53014A001AF76C /* loginLogModel.swift */; };
 		AFD7BAA92E53054B001AF76C /* loginlogAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD7BAA82E53054B001AF76C /* loginlogAPIViewModel.swift */; };
 		AFD90C8D2E50907800C56528 /* GlobalVariableclass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */; };
@@ -428,6 +429,7 @@
 		AFD072652DE5A49000C939B0 /* NewDriverLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDriverLogin.swift; sourceTree = "<group>"; };
 		AFD2F9032E589F2C00131C17 /* DataTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferView.swift; sourceTree = "<group>"; };
 		AFD340D82E9CF20C007D88DF /* BluetothPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetothPopupView.swift; sourceTree = "<group>"; };
+		AFD428492EAB98FA00E56B3F /* AddDvirPopupHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDvirPopupHome.swift; sourceTree = "<group>"; };
 		AFD7BAA62E53014A001AF76C /* loginLogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loginLogModel.swift; sourceTree = "<group>"; };
 		AFD7BAA82E53054B001AF76C /* loginlogAPIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loginlogAPIViewModel.swift; sourceTree = "<group>"; };
 		AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariableclass.swift; sourceTree = "<group>"; };
@@ -597,6 +599,7 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFD428482EAB98D300E56B3F /* AddDvirPopup */,
 				AFD340D72E9CF1F0007D88DF /* BluetothView */,
 				AF9024932E93DD920005F0D7 /* HomeBoxViews */,
 				AFBD12D02E7302E0003EA40F /* AddVechicleForDvir */,
@@ -1289,6 +1292,14 @@
 			path = BluetothView;
 			sourceTree = "<group>";
 		};
+		AFD428482EAB98D300E56B3F /* AddDvirPopup */ = {
+			isa = PBXGroup;
+			children = (
+				AFD428492EAB98FA00E56B3F /* AddDvirPopupHome.swift */,
+			);
+			path = AddDvirPopup;
+			sourceTree = "<group>";
+		};
 		AFD6E2BA2DDF5B4600F439CE /* Dot inspection */ = {
 			isa = PBXGroup;
 			children = (
@@ -1628,6 +1639,7 @@
 				AFC1B55A2E155BFA00C57620 /* ForgetNmeModelView.swift in Sources */,
 				AF24F36C2E966796000E4909 /* RootView.swift in Sources */,
 				AFDBF8942E5735A5002DB62D /* SharedManager.swift in Sources */,
+				AFD4284A2EAB98FA00E56B3F /* AddDvirPopupHome.swift in Sources */,
 				10CA6EC02DCC9103003B265C /* ScrollViewUniversal.swift in Sources */,
 				AFA98C8F2E01748000E87802 /* VariablesView.swift in Sources */,
 				AFCC4CA02E49E8CF00629DE3 /* MultipartAPI.swift in Sources */,

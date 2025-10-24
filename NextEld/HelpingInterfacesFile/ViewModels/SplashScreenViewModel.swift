@@ -21,7 +21,7 @@ class APITokenUpdateViewModel: ObservableObject {
     func callSplashUpdateAPI() async -> Bool {
         let request = DriverRequest(
             driverId: AppStorageHandler.shared.driverId ?? 0,
-            tokenNo: DriverInfo.authToken
+            tokenNo: AppStorageHandler.shared.authToken ?? ""
         )
 
         print("Request For *****TokenUpdateAPI*****: \(request)")

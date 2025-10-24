@@ -234,11 +234,12 @@ struct EyeViewData: View {
 
 
         }
+    
     private func fetchDriverData() async {
         await viewModel.fetch(
             driverId: String(AppStorageHandler.shared.driverId ?? 0),
             date: selectedDate,
-            token: DriverInfo.authToken
+            token: AppStorageHandler.shared.authToken ?? ""
         
         )
     }

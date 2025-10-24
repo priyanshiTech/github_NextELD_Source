@@ -21,11 +21,6 @@ class LoginViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
     
-//    let session: SessionManager
-//    
-//    init(session: SessionManager) {
-//        self.session = session
-//    }
     
     //  NOW RETURNS Bool
     func login(email: String, password: String) async -> Bool {
@@ -58,6 +53,7 @@ class LoginViewModel: ObservableObject {
                 UserDefaults.standard.set(token, forKey: "authToken")
                 UserDefaults.standard.set(email, forKey: "userEmail")
                 //MARK: -  Save employeeid
+                
                 if let driverId =
                     response.result?.driverLog?.first?.driverId ??
                     response.result?.loginLogoutLog?.first?.driverId ??
@@ -71,11 +67,13 @@ class LoginViewModel: ObservableObject {
                 
                 if let empId = response.result?.employeeId {
                     UserDefaults.standard.set(empId, forKey: "employeeId")
+                    
                 }
                 
                 //MARK: - ClientId
                 if let clintId = response.result?.clientId {
-                    UserDefaults.standard.set(clintId, forKey: "clientId")
+                    AppStorageHandler.shared.clientId = clintId
+                    //UserDefaults.standard.set(clintId, forKey: "clientId")
                 }
                 
                 //MARK: -  value get from Rule module in Login Times
@@ -90,11 +88,13 @@ class LoginViewModel: ObservableObject {
                 }
                 
                 if let cycleRestartTime = response.result?.rules?.first?.cycleDays{
-                    UserDefaults.standard.set(cycleRestartTime, forKey: "cycleRestartTime")
-                }
+                    //UserDefaults.standard.set(cycleRestartTime, forKey: "cycleRestartTime")
+                    AppStorageHandler.shared.cycleRestartTime = "\(cycleRestartTime)" }
                 
                 if let onDutyTime = response.result?.rules?.first?.onDutyTime{
-                    UserDefaults.standard.set(onDutyTime, forKey: "onDutyTime")
+                      
+                    AppStorageHandler.shared.onDutyTime = Double(onDutyTime)
+                   // UserDefaults.standard.set(onDutyTime, forKey: "onDutyTime")
                     print(" Saved to onDutyTime: \(onDutyTime)")
                 }
                 
@@ -136,17 +136,14 @@ class LoginViewModel: ObservableObject {
                 
                 // Save Timezone
                 if let timeZone = response.result?.timezone {
-                    UserDefaults.standard.set(timeZone, forKey: AppStorageKeys.timezone)
+                    UserDefaults.standard.set(timeZone, forKey: "timezone")
                 }
                 
                 if let timeZoneOffSet = response.result?.timezoneOffSet {
                     UserDefaults.standard.set(timeZoneOffSet, forKey: "timezoneOffSet")
                 }
                 
-//                if let timeZoneOffSet = response.result?.timezoneOffSet {
-//                    UserDefaults.standard.set(timeZoneOffSet, forKey: "timestamp")
-//                }
-                
+       
                 //Save Timers
                 if let onDutyTime = response.result?.rules?.first?.onDutyTime {
                     UserDefaults.standard.set(onDutyTime, forKey: "onDutyTime")
@@ -157,7 +154,7 @@ class LoginViewModel: ObservableObject {
                 }
 
                 if let onSleepTime = response.result?.rules?.first?.onSleepTime{
-                    DriverInfo.setonSleepTime(Double(onSleepTime))
+                    UserDefaults.standard.set(onSleepTime, forKey: "onSleepTime")
                 }
                 
                 //Save Shift
@@ -201,7 +198,8 @@ class LoginViewModel: ObservableObject {
                     }
                 
                    if let VechicleID = response.result?.vehicleId{
-                    UserDefaults.standard.integer(forKey: "vehicleId") // works for Int
+                    //UserDefaults.standard.integer(forKey: "vehicleId")
+                    UserDefaults.standard.set(VechicleID , forKey: "vehicleId")// works for Int
                     print(" Saved VechicleID: \(VechicleID)")
                     }
                 
