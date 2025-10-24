@@ -12,8 +12,6 @@ import CoreMedia
 struct AppStorageHandler {
     
     static let shared = AppStorageHandler()
-    
-    @AppStorage("userId") var userId: Int? // default Value
     @AppStorage("driverName") var driverName: String?
     @AppStorage("username") var UserName: String?
     @AppStorage("driverId") var driverId: Int?

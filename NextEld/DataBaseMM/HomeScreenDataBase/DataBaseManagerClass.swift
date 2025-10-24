@@ -260,11 +260,9 @@ class DatabaseManager: DatabaseHandler {
         case .day:
             return day == AppStorageHandler.shared.days
         case .user:
-            return userId == AppStorageHandler.shared.userId ?? 0
+            return userId == AppStorageHandler.shared.driverId ?? 0
         }
     }
-    
-    
     
     func fetchLogs(filterTypes: [FilterType] = [], order: [Expressible]? = [], limit: Int? = nil) -> [DriverLogModel] {
         

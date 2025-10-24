@@ -458,10 +458,20 @@ class HomeViewModel: ObservableObject {
     // # changes by priyanshi - compact + safe version
     
     func restoreAllTimersFromLastStatus() {
-        guard let latestLog = DatabaseManager.shared.getLastRecordOfDriverLogs()  else {
+        let databaseLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day])
+        var lastLog: DriverLogModel?
+        for log in databaseLogs.reversed() {
+            if log.status == AppConstants.warning || log.status == AppConstants.violation {
+                continue
+            }
+            lastLog = log
+            break
+        }
+        guard let latestLog = lastLog else {
             resetToInitialState()
             return
         }
+        
         let elapsed = getElapsedTime(lastLog: latestLog)
         let status = DriverStatusType(fromName: latestLog.status) ?? .none
 
@@ -580,27 +590,36 @@ class HomeViewModel: ObservableObject {
             // Violation
             violationData.violation = true
             UserDefaults.standard.setValue(todayString, forKey: violationKey)
-            
+            self.violationDataArray.append(violationData)
             // This two condition will work when remaining time directly goes to <= 0
             if lastViolationDate15min != todayString {
+                var violationData = ViolationData()
+                violationData.violationType = type
+                violationData.fifteenMinWarning = true
+                self.violationDataArray.append(violationData)
                 UserDefaults.standard.setValue(todayString, forKey: violationKey + "_15min")
             }
             if lastViolationDate30Min != todayString {
+                var violationData = ViolationData()
+                violationData.violationType = type
+                violationData.thirtyMinWarning = true
+                self.violationDataArray.append(violationData)
                 UserDefaults.standard.setValue(todayString, forKey: violationKey + "_30min")
             }
         }
         if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != todayString {
             violationData.fifteenMinWarning = true // 15 min warning
+            violationDataArray.append(violationData)
             UserDefaults.standard.setValue(todayString, forKey: violationKey + "_15min")
         }
         if remainingTime <= warning1 && remainingTime > warning2 && lastViolationDate30Min != todayString {
             violationData.thirtyMinWarning = true // 30 min warning
+            violationDataArray.append(violationData)
             UserDefaults.standard.setValue(todayString, forKey: violationKey + "_30min")
         }
         
         // Only add if there's actually a warning or violation
-        if violationData.violation || violationData.fifteenMinWarning || violationData.thirtyMinWarning {
-            violationDataArray.append(violationData)
+        for violation in violationDataArray {
             saveViolation(for: violationData) // save violation to Local DB
         }
     }

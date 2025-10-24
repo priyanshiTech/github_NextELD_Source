@@ -333,6 +333,13 @@ struct HomeScreenView: View {
                 CommonTimerAlertView(violationData: violationData) {
                     homeVM.violationDataArray.removeLast()
                 }
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
+                        if !homeVM.violationDataArray.isEmpty {
+                            homeVM.violationDataArray.removeLast()
+                        }
+                    })
+                }
                 .zIndex(Double(100+index))
             }
             
