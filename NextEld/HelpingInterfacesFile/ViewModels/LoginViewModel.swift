@@ -99,7 +99,8 @@ class LoginViewModel: ObservableObject {
                 }
                 
                 if let onDriveTime = response.result?.rules?.first?.onDriveTime{
-                    UserDefaults.standard.set(onDriveTime, forKey: "onDriveTime")
+                    //UserDefaults.standard.set(onDriveTime, forKey: "onDriveTime")
+                    AppStorageHandler.shared.onDriveTime = Double(onDriveTime)
                     print(" Saved to conDriveTimee: \(onDriveTime)")
                 }
                 
