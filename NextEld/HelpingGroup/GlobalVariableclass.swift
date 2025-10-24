@@ -21,8 +21,8 @@ struct DriverStatusConstants {
 }
 
 struct CurrentTimeHelperStamp {
-    static var currentTimestamp: Int64 {
-        return Int64(Date().timeIntervalSince1970 * 1000)
+    static var currentTimestamp: Int {
+        return Int(Date().timeIntervalSince1970 * 1000)
     }
 }
 func currentTimestampMillis() -> String {

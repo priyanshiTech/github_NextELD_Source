@@ -116,7 +116,7 @@ struct CertifySelectedView: View {
                 // MARK: - Form Tab Content"
                 if selectedTab == "Form" {
                     VStack(spacing: 10) {
-                        FormField(label: "Driver", value: .constant("\(DriverInfo.UserName )- \(DriverInfo.driverId ?? 0)"), editable: false)
+                        FormField(label: "Driver", value: .constant("\(AppStorageHandler.shared.driverName ?? "not found" )- \(AppStorageHandler.shared.driverId ?? 0)"), editable: false)
                         FormField(
                             label: "Vehicle",
                             value: $vehiclesc , // Direct binding
@@ -193,11 +193,12 @@ struct CertifySelectedView: View {
                         Button(action: {
                 
                             let record = CertifyRecord(
-                                userID: String(DriverInfo.driverId ?? 0),
-                                userName: DriverInfo.UserName,
+                                userID: "\(AppStorageHandler.shared.driverId ?? 0)",
+                              //  userName: DriverInfo.UserName,
+                                userName: AppStorageHandler.shared.driverName ?? "not found",
                                 startTime: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
                                 date: certifiedDate,
-                                shift: DriverInfo.shift ?? 1,
+                                shift: AppStorageHandler.shared.shift ?? 1,
                                 selectedVehicle: vehiclesc,
                                 selectedTrailer: trailerVM.trailers.isEmpty
                                     ? "None"
@@ -229,8 +230,9 @@ struct CertifySelectedView: View {
                     }
      
                     .onAppear {
+                        
                         certifiedDate = title.extractDate()
-                        DriverInfo.setvehicleId(VechicleID)
+                        AppStorageHandler.shared.vehicleId = VechicleID
                         
                         
                         let records = CertifyDatabaseManager.shared.fetchAllRecords()

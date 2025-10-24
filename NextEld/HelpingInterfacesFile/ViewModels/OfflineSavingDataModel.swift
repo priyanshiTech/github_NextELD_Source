@@ -24,18 +24,18 @@ class SyncViewModel: ObservableObject {
             return
         }
         
-        print("📤 Preparing \(unsyncedLogs.count) logs for syncing...")
+        print(" Preparing \(unsyncedLogs.count) logs for syncing...")
         
         let driveringStatusData = unsyncedLogs.map { log in
             
             return DriveringStatusData(
                 appVersion: AppInfo.version,
-                clientId: DriverInfo.clientId ?? 1,
+                clientId: AppStorageHandler.shared.clientId ?? 1,
                 currentLocation: log.location,
                 customLocation: log.location,
                 dateTime: log.startTime.toLocalString(),
                 days: log.day,
-                driverId: DriverInfo.driverId ?? 0,
+                driverId: AppStorageHandler.shared.driverId ?? 0,
                 engineHour: log.engineHours,
                 engineStatus: log.engineStatus,
                 identifier: 0,
@@ -48,7 +48,7 @@ class SyncViewModel: ObservableObject {
                 longitude: log.long,
                 note: log.notes,
                 odometer: Int(log.odometer),
-                origin: DriverInfo.origins,
+                origin: AppStorageHandler.shared.origin ?? "",
                 osVersion: "iOS - \(UIDevice.current.systemVersion)",
                 remainingDriveTime: log.remainingDriveTime ?? 0,
                 remainingDutyTime: log.remainingDutyTime ?? 0,
@@ -57,7 +57,7 @@ class SyncViewModel: ObservableObject {
                 shift: log.shift,
                 status: log.status,
                 utcDateTime: log.timestamp,
-                vehicleId: DriverInfo.vehicleId ?? 3
+                vehicleId: AppStorageHandler.shared.vehicleId ?? 3
             )
             
         }

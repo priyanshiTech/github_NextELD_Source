@@ -27,8 +27,8 @@ class DeviceStatusViewModel: ObservableObject {
         responseMessage = nil
 
         let requestBody = DeviceStatusRequest(
-            driverId: DriverInfo.driverId ?? 0,
-            tokenNo: DriverInfo.authToken,
+            driverId: AppStorageHandler.shared.driverId ?? 0,
+            tokenNo: AppStorageHandler.shared.authToken ?? "" ,
             status: status
         )
 

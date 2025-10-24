@@ -36,8 +36,8 @@ class AddMacAddressViewModel: ObservableObject {
 
         let requestBody = AddMacAddressRequest(
             macAddress: macAddress,
-            driverId: DriverInfo.driverId ?? 0,
-            tokenNo: DriverInfo.authToken,
+            driverId: AppStorageHandler.shared.driverId ?? 0,
+            tokenNo: AppStorageHandler.shared.authToken ?? "",
             vehicleId: vehicleId  ,
             modelNo: modelNo,
             version: version,

@@ -9,8 +9,8 @@ import Foundation
 //Request Model 
 struct LoginLogRequestModel: Codable {
     let driverId: Int
-    let loginDateTime: Int64
-    let timestamps: Int64
+    let loginDateTime: Int
+    let timestamps: Int
 }
 
 

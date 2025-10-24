@@ -132,7 +132,7 @@ struct SignatureCertifyView: View {
                         return
                     }
                     
-                    let tokenNo = DriverInfo.authToken
+                    let tokenNo = AppStorageHandler.shared.authToken
                     let tempDirectory = FileManager.default.temporaryDirectory
                     let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
                     
@@ -165,13 +165,13 @@ struct SignatureCertifyView: View {
                     let vm = CertifyDriverViewModel()
                     vm.uploadCertifiedLog(
                         driverId: driverId,
-                        vehicleId: DriverInfo.vehicleId ?? 0,
-                        coDriverId: DriverInfo.coDriverId ?? 0,
+                        vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
+                        coDriverId: AppStorageHandler.shared.coDriverId ?? 0,
                         trailers: trailerVM.trailers.last ?? "None",
                         shippingDocs: shippingVM.ShippingDoc.last ?? "None",
                         certifiedDate: certifiedDate,
                         fileURL: fileURL,
-                        tokenNo: tokenNo,
+                        tokenNo: tokenNo ?? "not Found",
                         certifiedDateTime: "1755129599000",
                         certifiedAt: "1755150649"
                     ) { result in
@@ -214,7 +214,7 @@ struct SignatureCertifyView: View {
                         UserName: DriverInfo.UserName,                // Driver Name
                         startTime: "\(DateTimeHelper.currentDate()) \(DateTimeHelper.currentTime())",
                         DAY: DateTimeHelper.currentDate(),
-                        Shift: "\(DriverInfo.shift ?? 1)",               // Default shift
+                        Shift: "\(AppStorageHandler.shared.shift ?? 1)",               // Default shift
                         DvirTime: DateTimeHelper.currentTime(),
                         odometer: 0.0,
                         location: "",

@@ -76,7 +76,7 @@ struct SplashView: View {
                     navManager.navigate(to: AppRoute.HomeFlow.Home)
                 }
                 else {
-                    let vehicleNo = DriverInfo.vehicleNo
+                    let vehicleNo = AppStorageHandler.shared.vehicleNo ?? ""
                     if vehicleNo.isEmpty || vehicleNo.lowercased() == "none" {
                         // Navigate to Add Vehicle screen
                         print(" Vehicle No is missing → navigating to AddVehicle screen")

@@ -51,8 +51,8 @@ struct CompanyInformationView: View {
             }
             .task {
                 await viewModel.fetchEmployeeData(
-                    employeeId: DriverInfo.driverId ?? 0,
-                    tokenNo: DriverInfo.authToken,
+                    employeeId: AppStorageHandler.shared.driverId ?? 0,
+                    tokenNo: AppStorageHandler.shared.authToken ?? "",
                         //"60ea2fbd-4585-4c27-a47b-8ee8101ffb41"
                 )
             }

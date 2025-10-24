@@ -39,6 +39,7 @@ struct RootView: View {
             .onAppear {
                 checkAutoLogin()  //Auto login check when view appears
             }
+            
            // SplashView()
            /*
             .navigationDestination(for: AppRoute.self) { route in

@@ -24,10 +24,10 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
         "enginehour": "0",
         "vehicleid": record.vechicleID,
         "vehicleName": record.vehicleName,
-        "shift": "\(DriverInfo.shift ?? 1)",
+        "shift": "\(AppStorageHandler.shared.shift ?? 1)",
         "timestamp": record.timestamp,
-        "tokenNo": DriverInfo.authToken,
-        "clientid": "\(DriverInfo.clientId ?? 0)",
+        "tokenNo": AppStorageHandler.shared.authToken ?? "",
+        "clientid": "\(AppStorageHandler.shared.clientId ?? 0)",
         "sync": "\(record.Sync)",
         "server_id": record.Server_ID
     ]

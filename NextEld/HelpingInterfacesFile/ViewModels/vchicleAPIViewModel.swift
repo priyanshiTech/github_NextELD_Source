@@ -26,10 +26,10 @@ class VehicleInfoViewModel: ObservableObject {
         errorMessage = nil
 
         let requestBody = VehicleInfoRequest(
-            vehicleId: DriverInfo.vehicleId ?? 0,
-            clientId: DriverInfo.clientId ?? 0,
-            driverId: DriverInfo.driverId ?? 1,
-            tokenNo: DriverInfo.authToken
+            vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
+            clientId: AppStorageHandler.shared.clientId ?? 0,
+            driverId: AppStorageHandler.shared.driverId ?? 1,
+            tokenNo: AppStorageHandler.shared.authToken ?? "",
         )
 
         do {

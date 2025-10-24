@@ -32,7 +32,7 @@ class DVIRAPIViewModel: ObservableObject {
             fromDate: fromDate,
             toDate: toDate,
             email: email,
-            tokenNo: DriverInfo.authToken
+            tokenNo: AppStorageHandler.shared.authToken ?? ""
         )
 
         do {

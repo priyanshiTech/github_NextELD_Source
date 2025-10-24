@@ -258,9 +258,9 @@ class DatabaseManager: DatabaseHandler {
         case .getYesterdayRecord:
             return startTime >= yesterDayStartOfDay && startTime < yesterDayEndOfDay
         case .day:
-            return day == DriverInfo.Days
+            return day == AppStorageHandler.shared.days ?? 1
         case .user:
-            return userId == DriverInfo.driverId ?? 0
+            return userId == AppStorageHandler.shared.driverId ?? 0
         }
     }
     
@@ -522,15 +522,19 @@ class DatabaseManager: DatabaseHandler {
         let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) ?? Date()
         let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
         let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
-        let currentDay =  DriverInfo.Days
+        let currentDay =  AppStorageHandler.shared.days
         
         do {
             guard let db = self.db else { return [] }
 
             // No filter here because startTime is stored as string; filter manually after parsing
+//            let query = driverLogs
+//                            .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == currentDay)
+//                            .order(startTime.desc)
+            // Option 1: Use nil coalescing with a default value
             let query = driverLogs
-                            .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == currentDay)
-                            .order(startTime.desc)
+                .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == (currentDay ?? 0))
+                .order(startTime.desc)
             for row in try db.prepare(query) {
                 
                 let idValue = Int(row[id])
@@ -618,12 +622,12 @@ extension DatabaseManager {
             id: nil,
             status: status,
             startTime: startTime,
-            userId: DriverInfo.driverId ?? 0,
+            userId: AppStorageHandler.shared.driverId ?? 0,
             day: UserDefaults.standard.integer(forKey: "day"),
             isVoilations: isVoilations ? 1 : 0,   //  Actual Bool → Int
             dutyType: dutyType,
             shift: UserDefaults.standard.integer(forKey: "shift"),
-            vehicle: DriverInfo.vehicleNo,
+            vehicle: AppStorageHandler.shared.vehicleNo ?? "",
                 //UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
             isRunning: isruning,
             odometer: 0.0,
@@ -631,14 +635,14 @@ extension DatabaseManager {
             location: UserDefaults.standard.string(forKey: "customLocation") ?? "",
             lat: Double(UserDefaults.standard.string(forKey: "lattitude") ?? "") ?? 0,
             long: Double(UserDefaults.standard.string(forKey: "longitude") ?? "") ?? 0,
-            origin: DriverInfo.origins,
+            origin: AppStorageHandler.shared.origin ?? "",
             isSynced: false,
-            vehicleId: DriverInfo.vehicleId ?? 0,
+            vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
                 //UserDefaults.standard.integer(forKey: "vehicleId"),
             trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
             notes: "",
             serverId: nil,
-            timestamp:TimeUtils.currentTimestamp(with: DriverInfo.timeZoneOffset),
+            timestamp:TimeUtils.currentTimestamp(with: AppStorageHandler.shared.timeZoneOffset ?? ""),
               //CurrentTimeHelperStamp.currentTimestamp,
             // Int64(Date().timeIntervalSince1970),
             identifier: 0,
