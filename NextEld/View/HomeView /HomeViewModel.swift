@@ -379,15 +379,10 @@ class HomeViewModel: ObservableObject {
         case .onDuty:
             checkedOffDutyTimeIsLessThan2Hour()
             timerTypes = [.onDuty, .cycleTimer]
-            if restoreBreakTimerRunning {
-                timerTypes.append(.breakTimer) // include break timer to start
-            }
-            if previousStatus == .onDrive{
-                timerTypes.append(.continueDrive)
-                saveContinueDriveDB(status: AppConstants.onDuty)
+            if previousStatus == .onDrive {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer]
+                saveContinueDriveDB(status: AppConstants.onDuty)
             }
-
         case .onDrive:
             checkedOffDutyTimeIsLessThan2Hour()
             if isTimerRunning(.breakTimer) {
@@ -406,13 +401,8 @@ class HomeViewModel: ObservableObject {
 //            timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive, ]
 
         case .sleep:
-            timerTypes = [.sleepTimer]
-            if restoreBreakTimerRunning {
-                timerTypes.append(.breakTimer)
-            }
             timerTypes = [.breakTimer, .sleepTimer]
             saveContinueDriveDB(status: AppConstants.sleep)
-
         case .offDuty:
             timerTypes = [.breakTimer]
 
@@ -429,11 +419,13 @@ class HomeViewModel: ObservableObject {
         startTimers(for: timerTypes)
         
 
-        // Explicitly start break timer if restoring after app relaunch
-        if restoreBreakTimerRunning, let breakTimer = breakTimer, !breakTimer.isRunning {
-            breakTimer.start()
-            print("Break timer auto-started on app launch")
-        }
+//        // Explicitly start break timer if restoring after app relaunch
+//        if restoreBreakTimerRunning, let breakTimer = breakTimer, !breakTimer.isRunning {
+//            breakTimer.start()
+//            print("Break timer auto-started on app launch")
+//        }
+        
+        loadEventsFromDatabase()
         
     }
 
@@ -568,7 +560,7 @@ class HomeViewModel: ObservableObject {
         violationData.violationType = type
         
         // Check if we've already shown this warning/violation today
-        let lastViolationDate = UserDefaults.standard.string(forKey: violationKey) // Key is blank in case of break timer
+        let lastViolationDate = UserDefaults.standard.string(forKey: violationKey)
         let lastViolationDate15min = UserDefaults.standard.string(forKey: violationKey + "_15min")
         let lastViolationDate30Min = UserDefaults.standard.string(forKey: violationKey + "_30min")
         let todayString = DateTimeHelper.currentDate()
@@ -577,6 +569,14 @@ class HomeViewModel: ObservableObject {
             // Violation
             violationData.violation = true
             UserDefaults.standard.setValue(todayString, forKey: violationKey)
+            
+            // This two condition will work when remaining time directly goes to <= 0
+            if lastViolationDate15min != todayString {
+                UserDefaults.standard.setValue(todayString, forKey: violationKey + "_15min")
+            }
+            if lastViolationDate30Min != todayString {
+                UserDefaults.standard.setValue(todayString, forKey: violationKey + "_30min")
+            }
         }
         if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != todayString {
             violationData.fifteenMinWarning = true // 15 min warning
