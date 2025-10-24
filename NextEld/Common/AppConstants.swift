@@ -18,6 +18,7 @@ struct AppConstants {
     static let onDriveViolationKey = "on_drive_violation"
     static let continueDriveViolationKey = "continue_drive_violation"
     static let cycleTimeViolationKey = "cycle_drive_violation"
+    static let breakTimeViolationKey = "break_time_violation"
     static let warning = "Warning"
     static let violation = "Violation"
     

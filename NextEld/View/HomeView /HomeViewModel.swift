@@ -89,6 +89,7 @@ enum ViolationType: Hashable {
     case onContinueDriveViolation
     case onDriveViolation
     case cycleTimerViolation
+    case breakTimerViolation
     case none
     
     func getFifteenMinWarningText() -> String {
@@ -103,21 +104,25 @@ enum ViolationType: Hashable {
             return "\(Double(DriverInfo.setWarningOnDutyTime2 ?? 0).getMin()) min left for completing your day cycle"
         case .none:
             return ""
+        case .breakTimerViolation:
+            return "\(Double(DriverInfo.warningBreakTime2 ?? 0).getMin()) min left for completing your day cycle"
         }
     }
     
     func getThirtyMinWarningText() -> String {
         switch self {
         case .onDutyViolation:
-            return "\(Double(DriverInfo.setWarningOnDutyTime2 ?? 0).getMin()) min left for completing your on duty cycle"
+            return "\(Double(DriverInfo.setWarningOnDutyTime1 ?? 0).getMin()) min left for completing your on duty cycle"
         case .onContinueDriveViolation:
-            return "\(Double(DriverInfo.setWarningOnDriveTime2 ?? 0).getMin()) min left for completing your continue drive cycle"
+            return "\(Double(DriverInfo.setWarningOnDriveTime1 ?? 0).getMin()) min left for completing your continue drive cycle"
         case .onDriveViolation:
-            return "\(Double(DriverInfo.setWarningOnDriveTime2 ?? 0).getMin()) min left for completing your drive cycle"
+            return "\(Double(DriverInfo.setWarningOnDriveTime1 ?? 0).getMin()) min left for completing your drive cycle"
         case .cycleTimerViolation:
-            return "\(Double(DriverInfo.setWarningOnDutyTime2 ?? 0).getMin()) min left for completing your day cycle"
+            return "\(Double(DriverInfo.setWarningOnDutyTime1 ?? 0).getMin()) min left for completing your day cycle"
         case .none:
             return ""
+        case .breakTimerViolation:
+            return "\(Double(DriverInfo.warningBreakTime1 ?? 0).getMin()) min left for completing your day cycle"
         }
     }
     
@@ -132,6 +137,8 @@ enum ViolationType: Hashable {
         case .cycleTimerViolation:
             return "Your cycle time has been exceeded to \(Double(DriverInfo.cycleTime ?? 0).getHours()) hours"
         case .none:
+            return ""
+        case .breakTimerViolation:
             return ""
         }
     }
@@ -344,9 +351,9 @@ class HomeViewModel: ObservableObject {
             self?.onChangeRemaingTime(type: .continueDrive, remainigTime: remainingTime)
         }
         
-//        sleepTimer?.onTimeChanged = { [weak self] remainingTime in
-//            self?.onChangeRemaingTime(type: .sleepTimer, remainigTime: remainingTime)
-//        }
+        breakTimer?.onTimeChanged = { [weak self] remainingTime in
+            self?.onChangeRemaingTime(type: .breakTimer, remainigTime: remainingTime)
+        }
     }
     
     // MARK: - Delete All App Data
@@ -547,10 +554,10 @@ class HomeViewModel: ObservableObject {
             let warning1 = TimeInterval(Int(DriverInfo.breakTime ?? 0) - Int(DriverInfo.warningBreakTime1 ?? 0))
             let warning2 = TimeInterval(Int(DriverInfo.breakTime ?? 0) - Int(DriverInfo.warningBreakTime2 ?? 0))
             
-//            if remainigTime <= warning1 {
-//                print(" CycleTimer - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
-//                checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
-//            }
+            if remainigTime <= warning1 {
+                print(" CycleTimer - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
+                checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.breakTimeViolationKey)
+            }
             break
         case .sleepTimer:
             
@@ -566,12 +573,12 @@ class HomeViewModel: ObservableObject {
         violationData.violationType = type
         
         // Check if we've already shown this warning/violation today
-        let lastViolationDate = UserDefaults.standard.string(forKey: violationKey)
+        let lastViolationDate = UserDefaults.standard.string(forKey: violationKey) // Key is blank in case of break timer
         let lastViolationDate15min = UserDefaults.standard.string(forKey: violationKey + "_15min")
         let lastViolationDate30Min = UserDefaults.standard.string(forKey: violationKey + "_30min")
         let todayString = DateTimeHelper.currentDate()
         
-        if remainingTime <= 0, todayString != lastViolationDate {
+        if remainingTime <= 0, todayString != lastViolationDate, type != .breakTimerViolation {
             // Violation
             violationData.violation = true
             UserDefaults.standard.setValue(todayString, forKey: violationKey)
