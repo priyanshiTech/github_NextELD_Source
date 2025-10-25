@@ -477,9 +477,8 @@ class HomeViewModel: ObservableObject {
 
         // Active flags
         let isYardMove = (status == .yardMode)
-        let isPersonaluse = (status == .personalUse)
         let isDrive   = (status == .onDrive)
-        let isOnDuty  = (status == .onDuty) || isDrive
+        let isOnDuty  = (status == .onDuty) || isDrive || isYardMove
         let isSleep   = (status == .sleep)
         let isCycle   = !(status == .offDuty || status == .sleep)
         let isContDrv = (status == .onDrive)
