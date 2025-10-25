@@ -476,6 +476,8 @@ class HomeViewModel: ObservableObject {
         let status = DriverStatusType(fromName: latestLog.status) ?? .none
 
         // Active flags
+        let isYardMove = (status == .yardMode)
+        let isPersonaluse = (status == .personalUse)
         let isDrive   = (status == .onDrive)
         let isOnDuty  = (status == .onDuty) || isDrive
         let isSleep   = (status == .sleep)
