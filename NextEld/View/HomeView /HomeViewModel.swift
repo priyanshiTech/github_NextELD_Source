@@ -455,7 +455,7 @@ class HomeViewModel: ObservableObject {
     // # changes by priyanshi - compact + safe version
     
     func restoreAllTimersFromLastStatus() {
-        guard let latestLog = DatabaseManager.shared.fetchLogs().last else {
+        guard let latestLog = DatabaseManager.shared.getLastRecordOfDriverLogs() else {
             resetToInitialState()
             return
         }
@@ -463,8 +463,8 @@ class HomeViewModel: ObservableObject {
         let status = DriverStatusType(fromName: latestLog.status) ?? .none
 
         // Active flags
-        let isOnDuty  = (status == .onDuty)
         let isDrive   = (status == .onDrive)
+        let isOnDuty  = (status == .onDuty) || isDrive
         let isSleep   = (status == .sleep)
         let isCycle   = !(status == .offDuty || status == .sleep)
         let isContDrv = (status == .onDrive)
@@ -523,23 +523,20 @@ class HomeViewModel: ObservableObject {
             let warning1 = TimeInterval(Int(DriverInfo.onDutyTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime1 ?? 0))
             let warning2 = TimeInterval(Int(DriverInfo.onDutyTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime2 ?? 0))
             if remainigTime <= warning1 {
-                print(" OnDuty - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDutyViolation, violationKey: AppConstants.onDutyViolationKey)
             }
         case .onDrive:
             let warning1 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime1 ?? 0))
             let warning2 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime2 ?? 0))
             if remainigTime <= warning1 {
-                print(" OnDrive - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDriveViolation, violationKey: AppConstants.onDriveViolationKey)
             }
             
         case .continueDrive:
             // For continue drive, we can use the same warning times as onDrive or create separate ones
-            let warning1 = TimeInterval(Int(DriverInfo.continueDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime1 ?? 0))
-            let warning2 = TimeInterval(Int(DriverInfo.continueDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime2 ?? 0))
+            let warning1 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime1 ?? 0))
+            let warning2 = TimeInterval(Int(DriverInfo.onDriveTime ?? 0) - Int(DriverInfo.setWarningOnDriveTime2 ?? 0))
             if remainigTime <= warning1 {
-                print(" ContinueDrive - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onContinueDriveViolation, violationKey: AppConstants.continueDriveViolationKey)
             }
         case .cycleTimer:
@@ -547,7 +544,6 @@ class HomeViewModel: ObservableObject {
             let warning1 = TimeInterval(Int(DriverInfo.cycleTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime1 ?? 0))
             let warning2 = TimeInterval(Int(DriverInfo.cycleTime ?? 0) - Int(DriverInfo.setWarningOnDutyTime2 ?? 0))
             if remainigTime <= warning1 {
-                print(" CycleTimer - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
             }
         case .breakTimer:
@@ -555,7 +551,6 @@ class HomeViewModel: ObservableObject {
             let warning2 = TimeInterval(Int(DriverInfo.breakTime ?? 0) - Int(DriverInfo.warningBreakTime2 ?? 0))
             
             if remainigTime <= warning1 {
-                print(" CycleTimer - Warning1: \(warning1/seconds)h, Warning2: \(warning2/seconds)h, Remaining: \(remainigTime/seconds)h")
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.breakTimeViolationKey)
             }
             break
