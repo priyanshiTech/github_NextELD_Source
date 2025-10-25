@@ -82,7 +82,6 @@ struct HomeScreenView: View {
     @State private var showSleepResetPopup = false
     @State private var showNextDayPopup = false
     @AppStorage("hasShownNextDayPopup") private var hasShownNextDayPopup = false
-    @State private var daysCount =  AppStorageHandler.shared.days
     @State private var ShiftCurrentDay  =  AppStorageHandler.shared.shift
     
     //MARK: -  Network

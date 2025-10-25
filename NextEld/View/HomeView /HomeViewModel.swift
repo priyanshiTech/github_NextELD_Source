@@ -152,7 +152,6 @@ enum ViolationType: Hashable {
             return ""
         case .breakTimeViolation:
             return ""
-            break
         }
     }
 }
@@ -428,7 +427,10 @@ class HomeViewModel: ObservableObject {
         }
 
         startTimers(for: timerTypes)
-        loadEventsFromDatabase()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {[weak self] in
+            self?.loadEventsFromDatabase()
+        }
+        
 
         // Explicitly start break timer if restoring after app relaunch
 //        if restoreBreakTimerRunning, let breakTimer = breakTimer, !breakTimer.isRunning {
@@ -652,8 +654,8 @@ class HomeViewModel: ObservableObject {
         // Fix: compare same units (seconds). Cast allowed Int seconds to TimeInterval.
         if calculatedSleepTaken >= TimeInterval(totalSleepAllowed) {
             // next day popup show
-            self.showNextDayShiftAlert = true
-            //UserDefaults.standard.set((AppStorageHandler.shared.days ?? 0)+1, forKey: AppStorageHandler.shared.days)
+            self.showNextDayShiftAlert = true            
+            AppStorageHandler.shared.days += 1
             resetToInitialState()
             debugPrint("Next Day Shift Stared")
         }

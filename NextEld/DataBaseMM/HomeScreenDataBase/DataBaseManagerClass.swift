@@ -258,9 +258,9 @@ class DatabaseManager: DatabaseHandler {
         case .getYesterdayRecord:
             return startTime >= yesterDayStartOfDay && startTime < yesterDayEndOfDay
         case .day:
-            return day == AppStorageHandler.shared.days ?? 1
+            return day == AppStorageHandler.shared.days
         case .user:
-            return userId == AppStorageHandler.shared.driverId ?? 0
+            return userId == AppStorageHandler.shared.userId ?? 0
         }
     }
     
@@ -533,7 +533,7 @@ class DatabaseManager: DatabaseHandler {
 //                            .order(startTime.desc)
             // Option 1: Use nil coalescing with a default value
             let query = driverLogs
-                .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == (currentDay ?? 0))
+                .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == currentDay)
                 .order(startTime.desc)
             for row in try db.prepare(query) {
                 
