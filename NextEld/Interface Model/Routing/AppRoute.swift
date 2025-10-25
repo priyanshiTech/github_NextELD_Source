@@ -46,6 +46,7 @@ enum AppRoute: Hashable {
     }
     
     enum DvirFlow: Hashable{
+        
         case AddDvirScreenView
         case emailLogs(tittle: String)
         case DvirHostory(tittle: String)
@@ -62,6 +63,7 @@ enum AppRoute: Hashable {
         case DriverLogListView
         case DvirDataListView
         case ContinueDriveTableView
+        case AddDvirScreenView
     }
 
 

@@ -12,7 +12,7 @@ import SwiftUI
 struct TrailerView: View {
     
     @EnvironmentObject var navmanager: NavigationManager
-    @EnvironmentObject var trailerVM: TrailerViewModel
+    @StateObject var trailerVM = TrailerViewModel()
     
     var tittle: String
     @State private var inputText: String = ""

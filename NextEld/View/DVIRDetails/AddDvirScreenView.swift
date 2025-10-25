@@ -61,6 +61,8 @@ struct AddDvirScreenView: View  {
   
     
     var body: some View {
+        
+       
        
         ZStack {
             VStack(spacing: 0) {

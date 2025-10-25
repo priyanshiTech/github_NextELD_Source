@@ -139,7 +139,14 @@ struct HomeScreenView: View {
                         
                         StatusView(homeViewModel: homeVM) { status in
                         // passing a new status to assign this new status to current status after the alert submit button clicked
-                            homeVM.showDriverStatusAlert = (true, status)
+                            
+                           if  status == .onDrive {
+                               showDvirPopup = true
+                            }
+                            else{
+                                homeVM.showDriverStatusAlert = (true, status)
+                            }
+                            
                         }                        
                         AvailableHoursView(homeViewModel: homeVM)
                         
@@ -222,7 +229,7 @@ struct HomeScreenView: View {
                         //                                                               )))
                         //                        navmanager.navigate(to: })
                         
-                        
+                        navmanager.navigate(to: AppRoute.DatabaseFlow.AddDvirScreenView)
                         
                         showDvirPopup = false
                     },
@@ -960,6 +967,9 @@ struct HomeScreenView: View {
                 
             case  .DriverLogListView:
                 DriverLogListView()
+                
+            case .AddDvirScreenView:
+                AddDvirScreenView( selectedRecord:.constant(nil) )
                 
             }
             
