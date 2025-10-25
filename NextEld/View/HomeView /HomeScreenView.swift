@@ -82,6 +82,7 @@ struct HomeScreenView: View {
     @State private var showSleepResetPopup = false
     @State private var showNextDayPopup = false
     @AppStorage("hasShownNextDayPopup") private var hasShownNextDayPopup = false
+    @State private var daysCount =  AppStorageHandler.shared.days
     @State private var ShiftCurrentDay  =  AppStorageHandler.shared.shift
     
     //MARK: -  Network
@@ -137,17 +138,16 @@ struct HomeScreenView: View {
                         VehicleInfoView(GadiNo: UserDefaults.standard.string(forKey: "truckNo") ?? "Not Found",
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                         
-                        StatusView(homeViewModel: homeVM) { status in
-                        // passing a new status to assign this new status to current status after the alert submit button clicked
-                            
-                           if  status == .onDrive {
-                               showDvirPopup = true
-                            }
-                            else{
-                                homeVM.showDriverStatusAlert = (true, status)
-                            }
-                            
-                        }                        
+                            StatusView(homeViewModel: homeVM) { status in
+                                
+                                //showDvirPopup = true
+                               // showCertifyLogAlert = true
+                                homeVM.showAddDvirPopup = true
+                              //  homeVM.showDriverStatusAlert = (true, status)
+                                
+                        }
+
+                        
                         AvailableHoursView(homeViewModel: homeVM)
                         
                         HOSEventsChartScreen(events: homeVM.graphEvents)
@@ -214,6 +214,16 @@ struct HomeScreenView: View {
             }
             //nitin
             
+            if homeVM.showAddDvirPopup {
+                
+                AddDvirPopup(isPresented: $homeVM.showAddDvirPopup)
+                
+                        .frame(maxWidth: 350) // optional, to keep consistent width
+                        .padding(.horizontal, 20)
+                        .cornerRadius(16)
+                        .zIndex(10)
+                        .animation(.easeInOut, value: showCertifyLogAlert)// ensures it's above everything
+                }
             //MARK: -  Show Certify popup
             
             if showDvirPopup {
@@ -221,21 +231,19 @@ struct HomeScreenView: View {
                     title: "Add DVIR Log",
                     message: "Please add DVIR before going to On-Drive",
                     onOK: {
-                        
-                        //                        navmanager.navigate(to: .vehicleFlow(.AddDvirScreenView(
-                        //                                                                   selectedVehicle: "",
-                        //                                                                   selectedRecord: emptyDvirRecord,
-                        //                                                                   isFromHome: true
-                        //                                                               )))
-                        //                        navmanager.navigate(to: })
-                        
-                        navmanager.navigate(to: AppRoute.DatabaseFlow.AddDvirScreenView)
-                        
+                        navmanager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Log"))
                         showDvirPopup = false
                     },
                     onCancel: { showDvirPopup = false }
                 )
                 .zIndex(3)
+                .frame(maxWidth: 350) // optional, to keep consistent width
+                .padding(.horizontal, 20)
+                .cornerRadius(16)
+                .shadow(radius: 10)
+                .zIndex(10)
+                .transition(.opacity)
+                .animation(.easeInOut, value: showDvirPopup)
             }
             
             if showCertifyLogAlert {
@@ -259,17 +267,13 @@ struct HomeScreenView: View {
                     )
                     .frame(maxWidth: 350) // optional, to keep consistent width
                     .padding(.horizontal, 20)
-                    .background(Color.white)
                     .cornerRadius(16)
                     .shadow(radius: 10)
                     .zIndex(10)
                     .transition(.opacity)
                     .animation(.easeInOut, value: showCertifyLogAlert)
                 }
-                //  Force it to fill the entire screen and center content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .ignoresSafeArea()
-                .zIndex(10)
+             
             }
             
             if showLogoutPopup {
@@ -287,6 +291,7 @@ struct HomeScreenView: View {
                             }
                             showLogoutPopup = false
                             presentSideMenu = false
+
                             UserDefaults.standard.set(false, forKey: "isLoggedIn")
                             ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
 
@@ -333,13 +338,6 @@ struct HomeScreenView: View {
             ForEach(Array(homeVM.violationDataArray.enumerated()), id: \.offset) { index, violationData in
                 CommonTimerAlertView(violationData: violationData) {
                     homeVM.violationDataArray.removeLast()
-                }
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
-                        if !homeVM.violationDataArray.isEmpty {
-                            homeVM.violationDataArray.removeLast()
-                        }
-                    })
                 }
                 .zIndex(Double(100+index))
             }
@@ -398,14 +396,14 @@ struct HomeScreenView: View {
         }
         //MARK: -  call sync API In every 10 sec
         .onAppear {
-            //            timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
-            //                Task {
-            //                    await syncVM.syncOfflineData()
-            //                }
-            //            }
-            //            Task {
-            //                await syncVM.syncOfflineData()
-            //            }
+                        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+                            Task {
+                                await syncVM.syncOfflineData()
+                            }
+                        }
+                        Task {
+                            await syncVM.syncOfflineData()
+                        }
         }
         .onDisappear {
             timer?.invalidate()
@@ -512,7 +510,7 @@ struct HomeScreenView: View {
          
          
          .onReceive(ONDuty.remainingTime) { remainingTime in
-         let totalDriveTime = AppStorageHandler.shared.onDutyTime ?? 0
+         let totalDriveTime = DriverInfo.onDutyTime ?? 0
          let workingTime = Double(totalDriveTime) - remainingTime
          let violationThreshold = Double(totalDriveTime)
          print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
@@ -534,7 +532,7 @@ struct HomeScreenView: View {
          saveViolationToDatabase(status: "Violation", DutyType: "Your On-Duty time has been exceeded to 14 hours \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
          } else {
          // 30-min warning
-         if let warning1 = AppStorageHandler.shared.setWarningOnDutyTime1,
+         if let warning1 = DriverInfo.setWarningOnDutyTime1,
          Int(workingTime) >= Int(warning1),
          !didShowOnDuty30MinToday {
          
@@ -555,7 +553,7 @@ struct HomeScreenView: View {
          saveViolationToDatabase(status: "Warning", DutyType: "30 minutes left before On-Duty time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
          }
          // 15-min warning
-         else if let warning2 = AppStorageHandler.shared.setWarningOnDutyTime2,
+         else if let warning2 = DriverInfo.setWarningOnDutyTime2,
          Int(workingTime) >= Int(warning2),
          !didShowOnDuty15MinToday {
          
@@ -580,7 +578,7 @@ struct HomeScreenView: View {
          // MARK: - OnDrive Timer Violation with Working Time **************************************************************************************************
          
          .onReceive(driveTimer.$remainingTime) { remainingTime in
-         let totalDriveTime = AppStorageHandler.shared.onDriveTime ?? 0
+         let totalDriveTime = DriverInfo.onDriveTime ?? 0
          let workingTime = Double(totalDriveTime) - remainingTime
          let violationThreshold = Double(totalDriveTime)
          
@@ -601,7 +599,7 @@ struct HomeScreenView: View {
          
          } else {
          // 30-min warning - NO violation box
-         if let warning1 =  AppStorageHandler.shared.setWarningOnDriveTime1,
+         if let warning1 =  DriverInfo.setWarningOnDriveTime1,
          Int(workingTime) >= Int(warning1),
          !didShowDrive30MinToday {
          
@@ -623,7 +621,7 @@ struct HomeScreenView: View {
          }
          
          // 15-min warning - NO violation box
-         else if let warning2 =   AppStorageHandler.shared.setWarningOnDriveTime2,
+         else if let warning2 =   DriverInfo.setWarningOnDriveTime2,
          Int(workingTime) >= Int(warning2),
          !didShowDrive15MinToday {
          
@@ -651,7 +649,7 @@ struct HomeScreenView: View {
          // MARK: - Continue Drive Timer Violation Logic with Working Time*****************************************************************************************
          
          .onReceive(continueDriveTime.$remainingTime) { remainingTime in
-         let totalDriveTime = AppStorageHandler.shared.continueDriveTime ?? 0
+         let totalDriveTime = DriverInfo.continueDriveTime ?? 0
          let workingTime = Double(totalDriveTime) - remainingTime
          let violationThreshold = Double(totalDriveTime)
          
@@ -674,7 +672,7 @@ struct HomeScreenView: View {
          
          } else {
          //  30-min warning at 7:30 (27000s) - use daily tracking
-         let warning30Min = AppStorageHandler.shared.warningBreakTime1
+         let warning30Min = DriverInfo.warningBreakTime1
          if Int(workingTime) >= warning30Min ?? 0 && !didShowDrive30MinToday {
          activeTimerAlert = TimerAlert(
          title: "Continue Drive Reminder",
@@ -691,7 +689,7 @@ struct HomeScreenView: View {
          }
          
          //  15-min warning at 7:45 (27900s) - use daily tracking
-         let warning15Min = AppStorageHandler.shared.warningBreakTime1
+         let warning15Min = DriverInfo.warningBreakTime1
          if Int(workingTime) >= warning15Min ?? 0 && !didShowDrive15MinToday {
          activeTimerAlert = TimerAlert(
          title: "Continue Drive Alert",
@@ -713,7 +711,7 @@ struct HomeScreenView: View {
            .onReceive(cycleTimerOn.$remainingTime) { remainingTime in
            
            //   let totalCycleTime = CountdownTimer.timeStringToSeconds("70:00:00") // 70 hours in seconds
-           let totalCycleTime = AppStorageHandler.shared.cycleTime ?? 252000
+           let totalCycleTime = DriverInfo.cycleTime ?? 252000
            let workingTime = Double(totalCycleTime) - remainingTime
            let violationThreshold = totalCycleTime
            
@@ -735,8 +733,8 @@ struct HomeScreenView: View {
            }
            else {
            // 30-min warning (safe unwrap) - use daily tracking
-           if let warning1 = AppStorageHandler.shared.cycleRestartTime,
-           //AppStorageHandler.shared.setWarningOnDriveTime1,
+           if let warning1 = DriverInfo.cycleRestartTime,
+           //DriverInfo.setWarningOnDriveTime1,
            Int(workingTime) >= warning1,
            !didShowDrive30MinToday {
            activeTimerAlert = TimerAlert(
@@ -754,7 +752,7 @@ struct HomeScreenView: View {
            }
            
            // 15-min warning (safe unwrap) - use daily tracking
-           else if let warning2 = AppStorageHandler.shared.cycleRestartTime                                                                                                                                                           ,
+           else if let warning2 = DriverInfo.cycleRestartTime                                                                                                                                                           ,
            
            Int(workingTime) >= warning2,
            !didShowDrive15MinToday {
@@ -855,9 +853,9 @@ struct HomeScreenView: View {
          
          
          // Reset timers with API values
-         let sleepTime = AppStorageHandler.shared.onSleepTime ?? 36000.0
-         let onDutyTime = AppStorageHandler.shared.onDutyTime ?? 50400.0
-         let onDriveTime = AppStorageHandler.shared.onDriveTime ?? 39600.0
+         let sleepTime = DriverInfo.onSleepTime ?? 36000.0
+         let onDutyTime = DriverInfo.onDutyTime ?? 50400.0
+         let onDriveTime = DriverInfo.onDriveTime ?? 39600.0
          
          sleepTimer.resetsSleep(to: sleepTime)
          ONDuty.resetsSleep(to: onDutyTime)
@@ -962,9 +960,6 @@ struct HomeScreenView: View {
             case  .DriverLogListView:
                 DriverLogListView()
                 
-            case .AddDvirScreenView:
-                AddDvirScreenView( selectedRecord:.constant(nil) )
-                
             }
             
         })
@@ -1013,7 +1008,7 @@ struct HomeScreenView: View {
          trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
          notes: "New day",
          serverId: nil,
-         timestamp: TimeUtils.currentTimestamp(with: AppStorageHandler.shared.timeZoneOffset),
+         timestamp: TimeUtils.currentTimestamp(with: DriverInfo.timeZoneOffset),
          identifier: 0,
          remainingWeeklyTime: cycleTimerOn.internalTimeString,
          remainingDriveTime:  driveTimer.internalTimeString,

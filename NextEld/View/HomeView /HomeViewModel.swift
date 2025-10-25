@@ -228,7 +228,8 @@ class HomeViewModel: ObservableObject {
     
     // Events
     @Published var graphEvents: [HOSEvent] = []
-    
+    @Published  var showAddDvirPopup = false
+
     @Published var showSyncconfirmation: Bool = false
  
     // Timer Publisher to show timer on view
