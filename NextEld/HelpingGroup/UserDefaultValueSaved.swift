@@ -23,6 +23,7 @@ struct AppStorageHandler {
     @AppStorage("origin") var origin: String?
     @AppStorage("loginDateTime") var loginDateTime: Int?
     @AppStorage("timezoneOffSet") var timeZoneOffset: String?
+    @AppStorage("timezone") var timeZone: String?
     @AppStorage("timestamp") var timeStamp: String?
     @AppStorage("coDriverId") var coDriverId: Int?
     @AppStorage("days") var days: Int = 1
@@ -30,12 +31,19 @@ struct AppStorageHandler {
     @AppStorage("clientId") var clientId: Int?
     @AppStorage("cycleTime") var cycleTime: Int?
     @AppStorage("cycleDays") var cycleDays: Int?
-    @AppStorage("cycleRestartTime") var cycleRestartTime: String?
+    @AppStorage("cycleRestartTime") var cycleRestartTime: Int?
     @AppStorage("onDutyTime") var onDutyTime: Double?
     @AppStorage("onDriveTime") var onDriveTime: Double?
     @AppStorage("onSleepTime") var onSleepTime: Double?
     @AppStorage("continueDriveTime") var continueDriveTime: Double?
-    @AppStorage("timezone") var timezone: String?
+    @AppStorage("customLocation") var Location: String?
+    @AppStorage("lattitude") var lattitude: Double?
+    @AppStorage("longitude") var longitude: Double?
+    @AppStorage("logType") var logType: String?
+    @AppStorage("employeeId") var employeeId: Int?
+    
+    
+    
     
     // MARK: - Warning Timer
     @AppStorage("breakTime") var breakTime: Int?

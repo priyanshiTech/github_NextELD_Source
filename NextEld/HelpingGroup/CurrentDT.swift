@@ -60,7 +60,7 @@ struct DateTimeHelper {
         let currentDate = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatterConstants.timeFormat.rawValue
-        formatter.timeZone = TimeZone(identifier: AppStorageHandler.shared.timezone ?? "")
+        formatter.timeZone = TimeZone(identifier: AppStorageHandler.shared.timeZone ?? "")
         return formatter.string(from: currentDate)
     }
 
@@ -68,7 +68,7 @@ struct DateTimeHelper {
         let currentDate = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatterConstants.dateForaat.rawValue
-        formatter.timeZone = TimeZone(identifier: AppStorageHandler.shared.timezone ?? "")
+        formatter.timeZone = TimeZone(identifier: AppStorageHandler.shared.timeZone ?? "")
         return formatter.string(from: currentDate)
     }
     
@@ -81,7 +81,7 @@ struct DateTimeHelper {
     }
     
     static func getStringFromDate(_ date: Date,
-                                  timeZone: TimeZone? = TimeZone(identifier: AppStorageHandler.shared.timezone ?? ""),
+                                  timeZone: TimeZone? = TimeZone(identifier: AppStorageHandler.shared.timeZone ?? ""),
                                   format: DateFormatterConstants = .defaultDateTime) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format.rawValue

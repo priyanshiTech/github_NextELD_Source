@@ -134,7 +134,7 @@ struct CertifySelectedView: View {
                                     if trailerVM.trailers.isEmpty {
                                         return "None"
                                     } else {
-                                        return trailerVM.trailers.prefix(10).joined(separator: ", ")
+                                        return trailerVM.trailers.prefix(10).joined(separator: ", ")  // crashed
                                     }
                                 },
                                 set: { newValue in
