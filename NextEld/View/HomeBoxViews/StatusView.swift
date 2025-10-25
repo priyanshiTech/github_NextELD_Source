@@ -21,8 +21,8 @@ struct StatusView: View {
     @State private var selectedDriverStatus: DriverStatusType = .offDuty
     private var driverStatusTypes: Array<DriverStatusType> = [.onDuty, .onDrive, .offDuty, .sleep]
     let columns = [
-        GridItem(.fixed(100), spacing: 80),
-            GridItem(.fixed(100), spacing: 80)
+        GridItem(.flexible(minimum: 100, maximum: 120), spacing: 80),
+        GridItem(.flexible(minimum: 100, maximum: 120), spacing: 80)
         ]
     @ObservedObject var homeViewModel: HomeViewModel
     var onDriveStatusSelection: ((DriverStatusType) -> Void)

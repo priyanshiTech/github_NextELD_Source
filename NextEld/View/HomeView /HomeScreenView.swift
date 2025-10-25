@@ -138,12 +138,10 @@ struct HomeScreenView: View {
                         VehicleInfoView(GadiNo: UserDefaults.standard.string(forKey: "truckNo") ?? "Not Found",
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                         
-                            StatusView(homeViewModel: homeVM) { status in
-                            // passing a new status to assign this new status to current status after the alert submit button clicked
+                        StatusView(homeViewModel: homeVM) { status in
+                        // passing a new status to assign this new status to current status after the alert submit button clicked
                             homeVM.showDriverStatusAlert = (true, status)
-                        }
-
-                        
+                        }                        
                         AvailableHoursView(homeViewModel: homeVM)
                         
                         HOSEventsChartScreen(events: homeVM.graphEvents)
