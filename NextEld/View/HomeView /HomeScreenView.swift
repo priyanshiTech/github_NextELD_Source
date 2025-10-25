@@ -286,7 +286,7 @@ struct HomeScreenView: View {
 //                            UserDefaults.standard.removeObject(forKey: AppStorageKeys.timezone)
 //                            UserDefaults.standard.removeObject(forKey: "timezoneOffSet")
                             UserDefaults.standard.set(false, forKey: "isLoggedIn")
-                            ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timezone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
+                            ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
 
                             // session.logOut() // Nitin
                             SessionManagerClass.shared.clearToken()

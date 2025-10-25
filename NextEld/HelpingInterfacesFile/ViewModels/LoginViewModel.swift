@@ -58,15 +58,17 @@ class LoginViewModel: ObservableObject {
                     response.result?.driverLog?.first?.driverId ??
                     response.result?.loginLogoutLog?.first?.driverId ??
                     response.result?.employeeId {
-                    
-                    UserDefaults.standard.set(driverId, forKey: "driverId")
+                    AppStorageHandler.shared.driverId = driverId
+                    //UserDefaults.standard.set(driverId, forKey: "driverId")
                     print(" Saved driverId: \(driverId)")
                 } else {
                     print(" No driverId found in any field")
                 }
                 
                 if let empId = response.result?.employeeId {
-                    UserDefaults.standard.set(empId, forKey: "employeeId")
+                    //UserDefaults.standard.set(empId, forKey: "employeeId")
+                    AppStorageHandler.shared.employeeId = empId
+                    
                     
                 }
                 
@@ -79,17 +81,19 @@ class LoginViewModel: ObservableObject {
                 //MARK: -  value get from Rule module in Login Times
                 
                 if let cycleTime =  response.result?.rules?.first?.cycleTime{
-                    UserDefaults.standard.set(cycleTime, forKey: "cycleTime")
+                   // UserDefaults.standard.set(cycleTime, forKey: "cycleTime")
+                    AppStorageHandler.shared.cycleTime = cycleTime
                     print(" Saved to cycle Time: \(cycleTime)")
                 }
                 
                 if let cycleDays = response.result?.rules?.first?.cycleDays{
-                    UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
+                   // UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
+                    AppStorageHandler.shared.cycleDays = cycleDays
                 }
                 
                 if let cycleRestartTime = response.result?.rules?.first?.cycleDays{
                     //UserDefaults.standard.set(cycleRestartTime, forKey: "cycleRestartTime")
-                    AppStorageHandler.shared.cycleRestartTime = "\(cycleRestartTime)" }
+                    AppStorageHandler.shared.cycleRestartTime = cycleRestartTime }
                 
                 if let onDutyTime = response.result?.rules?.first?.onDutyTime{
                       
@@ -105,122 +109,126 @@ class LoginViewModel: ObservableObject {
                 }
                 
                 if let onSleepTime = response.result?.rules?.first?.onSleepTime{
-                    UserDefaults.standard.set(onSleepTime, forKey: "onSleepTime")
+                    AppStorageHandler.shared.onSleepTime = Double(onSleepTime)
+                    //UserDefaults.standard.set(onSleepTime, forKey: "onSleepTime")
                 }
                 
                 if let continueDriveTime =  response.result?.rules?.first?.continueDriveTime{
-                    UserDefaults.standard.set(continueDriveTime, forKey: "continueDriveTime")
+                    //UserDefaults.standard.set(continueDriveTime, forKey: "continueDriveTime")
+                    AppStorageHandler.shared.continueDriveTime = Double(continueDriveTime)
                 }
                 
                 
                 //MARK: -
                 // Save Driver Name
                 if let driverName = response.result?.driverLog?.first?.driverName {
-                    print(" API Returned driverName: \(driverName)")
-                    UserDefaults.standard.set(driverName, forKey: "driverName")
-                    UserDefaults.standard.synchronize()
+                 //UserDefaults.standard.set(driverName, forKey: "driverName")
+                    AppStorageHandler.shared.driverName = driverName
+                   // UserDefaults.standard.synchronize()
                     print(" Saved to UserDefaults: \(driverName)")
                 }
                 
                 else if let firstName = response.result?.firstName,
                         let lastName = response.result?.lastName {
-                    let fullName = "\(firstName) \(lastName)"
-                    UserDefaults.standard.set(fullName, forKey: "driverName")
-                    print(" Saved from TokenResult: \(fullName)")
+                    AppStorageHandler.shared.driverName  = "\(firstName) \(lastName)"
+                   // UserDefaults.standard.set(fullName, forKey: "driverName")
+                   
                 } else {
                     print("No driverName found anywhere, not saving")
                 }
                 
                 if let loginDateTime = response.result?.loginDateTime {
-                    UserDefaults.standard.set(loginDateTime, forKey: "LoginDateTime")
+                   // UserDefaults.standard.set(loginDateTime, forKey: "LoginDateTime")
+                    AppStorageHandler.shared.loginDateTime = loginDateTime
                 }
                 
                 // Save Timezone
                 if let timeZone = response.result?.timezone {
-                    UserDefaults.standard.set(timeZone, forKey: "timezone")
+                  //  UserDefaults.standard.set(timeZone, forKey: "timezone")
+                    AppStorageHandler.shared.timeZone = timeZone
                 }
                 
                 if let timeZoneOffSet = response.result?.timezoneOffSet {
-                    UserDefaults.standard.set(timeZoneOffSet, forKey: "timezoneOffSet")
-                }
-                
-       
-                //Save Timers
-                if let onDutyTime = response.result?.rules?.first?.onDutyTime {
-                    UserDefaults.standard.set(onDutyTime, forKey: "onDutyTime")
-                }
-                
-                if let onDriveTime = response.result?.rules?.first?.onDriveTime {
-                    UserDefaults.standard.set(onDriveTime, forKey: "onDriveTime")
+                   // UserDefaults.standard.set(timeZoneOffSet, forKey: "timezoneOffSet")
+                    AppStorageHandler.shared.timeZoneOffset = timeZoneOffSet
                 }
 
-                if let onSleepTime = response.result?.rules?.first?.onSleepTime{
-                    UserDefaults.standard.set(onSleepTime, forKey: "onSleepTime")
-                }
                 
                 //Save Shift
                 if let shiftValue = response.result?.driverLog?.first?.shift {
-                    UserDefaults.standard.set(shiftValue, forKey: "shift")
+                   // UserDefaults.standard.set(shiftValue, forKey: "shift")
+                    AppStorageHandler.shared.shift = shiftValue
                     print(" Saved shift: \(shiftValue)")
                 }
                 
                 if let dateIs =  response.result?.driverLog?.first?.days{
-                    UserDefaults.standard.set(dateIs, forKey: "days")
+                    //UserDefaults.standard.set(dateIs, forKey: "days")
+                    AppStorageHandler.shared.days = dateIs
                     print(" Saved current day: \(dateIs)")
                 }
                 
                 if let firstLog = response.result?.driverCertifiedLog.first {
-                    let coDriverId = firstLog.coDriverId
-                    UserDefaults.standard.set(coDriverId, forKey: "coDriverId")
-                    print("Saved coDriverId:", coDriverId)
+                    AppStorageHandler.shared.coDriverId = firstLog.coDriverId
+                    //UserDefaults.standard.set(coDriverId, forKey: "coDriverId")
+                    
                 }
                 
                 //Save Location (if available)
                     if let location = response.result?.driverLog?.first?.customLocation {
-                    UserDefaults.standard.set(location, forKey: "customLocation")
+                    //UserDefaults.standard.set(location, forKey: "customLocation")
+                        AppStorageHandler.shared.Location = location
                     print(" Saved location: \(location)")
                     }
                 
                 //Save Latitude
                     if let latitude = response.result?.driverLog?.first?.lattitude {
-                    UserDefaults.standard.set(latitude, forKey: "lattitude")
+                    //UserDefaults.standard.set(latitude, forKey: "lattitude")
+                        AppStorageHandler.shared.lattitude = latitude
                     print(" Saved latitude: \(latitude)")
                     }
                 
                 //Save Longitude
                     if let longitude = response.result?.driverLog?.first?.longitude {
-                    UserDefaults.standard.set(longitude, forKey: "longitude")
+                   // UserDefaults.standard.set(longitude, forKey: "longitude")
+                        AppStorageHandler.shared.longitude = longitude
                     print(" Saved longitude: \(longitude)")
                     }
                 
                     if let DutyType =  response.result?.driverLog?.first?.logType{
-                    UserDefaults.standard.set(DutyType , forKey: "logType")
+                    //UserDefaults.standard.set(DutyType , forKey: "logType")
+                        AppStorageHandler.shared.logType = DutyType
+                
                     print(" Saved Logtype: \(DutyType)")
                     }
                 
                    if let VechicleID = response.result?.vehicleId{
                     //UserDefaults.standard.integer(forKey: "vehicleId")
-                    UserDefaults.standard.set(VechicleID , forKey: "vehicleId")// works for Int
+                    //UserDefaults.standard.set(VechicleID , forKey: "vehicleId")// works for Int
+                       AppStorageHandler.shared.vehicleId = VechicleID
                     print(" Saved VechicleID: \(VechicleID)")
                     }
                 
                     if let originAddres = response.result?.driverLog?.first?.origin{
-                    UserDefaults.standard.set(originAddres, forKey: "origin")
+                  //  UserDefaults.standard.set(originAddres, forKey: "origin")
+                        AppStorageHandler.shared.origin = originAddres
                     print(" Saved Origin: \(originAddres)")
                     }
                 
                     if let vechicle =  response.result?.driverLog?.first?.truckNo{
-                    UserDefaults.standard.set(vechicle, forKey: "truckNo")
+                  //  UserDefaults.standard.set(vechicle, forKey: "truckNo")
+                        AppStorageHandler.shared.vehicleNo = vechicle
                      print(" Saved vechicle: \(vechicle)")
                     }
                 
                     if let vechicleNo =  response.result?.vehicleNo{
-                     UserDefaults.standard.set(vechicleNo, forKey: "vehicleNo")
+                     //UserDefaults.standard.set(vechicleNo, forKey: "vehicleNo")
+                        AppStorageHandler.shared.vehicleNo = vechicleNo
                      print(" Saved vechicle: \(vechicleNo)")
                     }
                 
                     if let voilation = response.result?.driverLog?.first?.isVoilation{
-                    UserDefaults.standard.set(voilation , forKey: "isVoilation")
+                   UserDefaults.standard.set(voilation , forKey: "isVoilation")
+                    
                     print(" Saved voilation: \(voilation)")
                     }
                 
@@ -229,30 +237,38 @@ class LoginViewModel: ObservableObject {
                     }
 
                     if let breakTime =  response.result?.rules?.first?.breakTime{
-                     UserDefaults.standard.set(breakTime, forKey: "breakTime")
+                     //UserDefaults.standard.set(breakTime, forKey: "breakTime")
+                        AppStorageHandler.shared.breakTime = breakTime
                     }
                 
                    if let cycleRestartTime =  response.result?.rules?.first?.cycleRestartTime{
-                     UserDefaults.standard.set(cycleRestartTime, forKey: "cycleRestartTime")
+                    // UserDefaults.standard.set(cycleRestartTime, forKey: "cycleRestartTime")
+                       AppStorageHandler.shared.cycleRestartTime = cycleRestartTime
                     }
                     if let warningOnDutyTime1 =  response.result?.rules?.first?.warningOnDutyTime1{
-                        UserDefaults.standard.set(warningOnDutyTime1, forKey: "warningOnDutyTime1")
+                       // UserDefaults.standard.set(warningOnDutyTime1, forKey: "warningOnDutyTime1")
+                        AppStorageHandler.shared.warningOnDutyTime1 = warningOnDutyTime1
                     }
                 
                     if let warningOnDutyTime2 =  response.result?.rules?.first?.warningOnDutyTime2{
-                        UserDefaults.standard.set(warningOnDutyTime2, forKey: "warningOnDutyTime2")
+                       // UserDefaults.standard.set(warningOnDutyTime2, forKey: "warningOnDutyTime2")
+                        AppStorageHandler.shared.warningOnDutyTime2 = warningOnDutyTime2
                     }
                     if let warningOnDriveTime1 =  response.result?.rules?.first?.warningOnDriveTime1{
-                        UserDefaults.standard.set(warningOnDriveTime1, forKey: "warningOnDriveTime1")
+                       // UserDefaults.standard.set(warningOnDriveTime1, forKey: "warningOnDriveTime1")
+                        AppStorageHandler.shared.warningOnDriveTime1 = warningOnDriveTime1
                     }
                     if let warningOnDriveTime2 =  response.result?.rules?.first?.warningOnDriveTime2{
-                        UserDefaults.standard.set(warningOnDriveTime2, forKey: "warningOnDriveTime2")
+                        //UserDefaults.standard.set(warningOnDriveTime2, forKey: "warningOnDriveTime2")
+                        AppStorageHandler.shared.warningOnDriveTime2 = warningOnDriveTime2
                     }
                     if let warningBreakTime1 =  response.result?.rules?.first?.warningBreakTime1{
-                        UserDefaults.standard.set(warningBreakTime1, forKey: "warningBreakTime1")
+                       // UserDefaults.standard.set(warningBreakTime1, forKey: "warningBreakTime1")
+                        AppStorageHandler.shared.warningBreakTime1 = warningBreakTime1
                     }
                     if let warningBreakTime2 =  response.result?.rules?.first?.warningBreakTime2{
-                        UserDefaults.standard.set(warningBreakTime2, forKey: "warningBreakTime2")
+                       // UserDefaults.standard.set(warningBreakTime2, forKey: "warningBreakTime2")
+                        AppStorageHandler.shared.warningBreakTime2 = warningBreakTime2
                     }
                    // session.logIn(token: token)
                 }
