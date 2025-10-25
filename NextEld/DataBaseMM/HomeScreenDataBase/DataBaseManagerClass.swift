@@ -460,7 +460,7 @@ class DatabaseManager: DatabaseHandler {
         var logs: [DriverLogModel] = []
         do {
             guard let db = self.db else { return nil}
-            var filter = Expression<Bool>(value: false)
+            var filter = getFilter(for: .getTodayRecord)
             if let startDate, let endDate {
                 filter = startTime > startDate && startTime < endDate
             }
