@@ -43,7 +43,7 @@ struct AddDvirPopup: View {
                 // Information fields
                 Group {
                     
-                    InfoRow(label: "Driver", value: "John Thomas")
+                    InfoRow(label: "Driver", value: AppStorageHandler.shared.driverName ?? "")
                     InfoRow(label: "Time", value: DateTimeHelper.currentTime())
                     InfoRow(label: "Date", value: DateTimeHelper.currentDate())
                     InfoRow(label: "Odometer", value: "0")
