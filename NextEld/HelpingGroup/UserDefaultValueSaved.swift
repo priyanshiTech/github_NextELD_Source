@@ -25,7 +25,7 @@ struct AppStorageHandler {
     @AppStorage("timestamp") var timeStamp: String?
     @AppStorage("coDriverId") var coDriverId: Int?
     @AppStorage("days") var days: Int = 1
-    @AppStorage("shift") var shift: Int?
+    @AppStorage("shift") var shift: Int = 1
     @AppStorage("clientId") var clientId: Int?
     @AppStorage("cycleTime") var cycleTime: Int?
     @AppStorage("cycleDays") var cycleDays: Int?
