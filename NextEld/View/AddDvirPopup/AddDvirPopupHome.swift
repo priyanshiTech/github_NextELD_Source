@@ -14,12 +14,14 @@ struct AddDvirPopup: View {
     
     var body: some View {
         ZStack {
-            // Dimmed background
-            Color.black.opacity(0.4)
+            
+            Color.clear
                 .ignoresSafeArea()
+                .contentShape(Rectangle()) // keeps tap detection area
                 .onTapGesture {
                     isPresented = false
                 }
+
             
             // Main popup card
             VStack(alignment: .leading, spacing: 12) {
@@ -38,7 +40,6 @@ struct AddDvirPopup: View {
                 }
                 
                 Divider()
-                
                 // Information fields
                 Group {
                     

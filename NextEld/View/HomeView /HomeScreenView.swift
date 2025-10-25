@@ -139,8 +139,12 @@ struct HomeScreenView: View {
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                         
                             StatusView(homeViewModel: homeVM) { status in
-                            // passing a new status to assign this new status to current status after the alert submit button clicked
-                            homeVM.showDriverStatusAlert = (true, status)
+                                
+                                //showDvirPopup = true
+                               // showCertifyLogAlert = true
+                                homeVM.showAddDvirPopup = true
+                              //  homeVM.showDriverStatusAlert = (true, status)
+                                
                         }
 
                         
@@ -210,6 +214,16 @@ struct HomeScreenView: View {
             }
             //nitin
             
+            if homeVM.showAddDvirPopup {
+                
+                AddDvirPopup(isPresented: $homeVM.showAddDvirPopup)
+                
+                        .frame(maxWidth: 350) // optional, to keep consistent width
+                        .padding(.horizontal, 20)
+                        .cornerRadius(16)
+                        .zIndex(10)
+                        .animation(.easeInOut, value: showCertifyLogAlert)// ensures it's above everything
+                }
             //MARK: -  Show Certify popup
             
             if showDvirPopup {
@@ -217,21 +231,19 @@ struct HomeScreenView: View {
                     title: "Add DVIR Log",
                     message: "Please add DVIR before going to On-Drive",
                     onOK: {
-                        
-                        //                        navmanager.navigate(to: .vehicleFlow(.AddDvirScreenView(
-                        //                                                                   selectedVehicle: "",
-                        //                                                                   selectedRecord: emptyDvirRecord,
-                        //                                                                   isFromHome: true
-                        //                                                               )))
-                        //                        navmanager.navigate(to: })
-                        
-                        
-                        
+                        navmanager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Log"))
                         showDvirPopup = false
                     },
                     onCancel: { showDvirPopup = false }
                 )
                 .zIndex(3)
+                .frame(maxWidth: 350) // optional, to keep consistent width
+                .padding(.horizontal, 20)
+                .cornerRadius(16)
+                .shadow(radius: 10)
+                .zIndex(10)
+                .transition(.opacity)
+                .animation(.easeInOut, value: showDvirPopup)
             }
             
             if showCertifyLogAlert {
@@ -279,12 +291,7 @@ struct HomeScreenView: View {
                             }
                             showLogoutPopup = false
                             presentSideMenu = false
-//                            UserDefaults.standard.set(false, forKey: "isLoggedIn")
-//                            UserDefaults.standard.removeObject(forKey: "userEmail")
-//                            UserDefaults.standard.removeObject(forKey: "authToken")
-//                            UserDefaults.standard.removeObject(forKey: "driverName")
-//                            UserDefaults.standard.removeObject(forKey: AppStorageKeys.timezone)
-//                            UserDefaults.standard.removeObject(forKey: "timezoneOffSet")
+
                             UserDefaults.standard.set(false, forKey: "isLoggedIn")
                             ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
 
@@ -389,14 +396,14 @@ struct HomeScreenView: View {
         }
         //MARK: -  call sync API In every 10 sec
         .onAppear {
-            //            timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
-            //                Task {
-            //                    await syncVM.syncOfflineData()
-            //                }
-            //            }
-            //            Task {
-            //                await syncVM.syncOfflineData()
-            //            }
+                        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+                            Task {
+                                await syncVM.syncOfflineData()
+                            }
+                        }
+                        Task {
+                            await syncVM.syncOfflineData()
+                        }
         }
         .onDisappear {
             timer?.invalidate()
