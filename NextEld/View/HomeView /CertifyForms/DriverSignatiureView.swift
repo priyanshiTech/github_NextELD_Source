@@ -125,7 +125,7 @@ struct SignatureCertifyView: View {
                     }
                     
                     // 4) Save temp file
-                    guard let driverId = DriverInfo.driverId else {
+                    guard let driverId = AppStorageHandler.shared.driverId else {
                         alertTitle = "Error"
                         alertMessage = "Missing driverId."
                         showAlert = true
@@ -210,8 +210,8 @@ struct SignatureCertifyView: View {
                     // 7) Save locally (DVIR)
                     let record = DvirRecord(
                         id: nil,
-                        UserID: "\(DriverInfo.driverId ?? 0)",        // Driver ID
-                        UserName: DriverInfo.UserName,                // Driver Name
+                        UserID: "\(AppStorageHandler.shared.driverId ?? 0)",        // Driver ID
+                        UserName: AppStorageHandler.shared.UserName ?? "",                // Driver Name
                         startTime: "\(DateTimeHelper.currentDate()) \(DateTimeHelper.currentTime())",
                         DAY: DateTimeHelper.currentDate(),
                         Shift: "\(AppStorageHandler.shared.shift ?? 1)",               // Default shift

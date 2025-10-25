@@ -66,13 +66,13 @@ struct SideMenuView: View {
                 )
                 //.padding()
             VStack(alignment: .leading, spacing: 0) {
-                Text(DriverInfo.UserName)
+                Text(AppStorageHandler.shared.UserName ?? "")
                     .font(.system(size: 14, weight: .semibold))
                     .lineLimit(1)
                     .foregroundColor(.black)
                     
 
-                Text("ELD ID - \(String(DriverInfo.driverId ?? 0))")
+                Text("ELD ID - \(String(AppStorageHandler.shared.driverId ?? 0))")
                     .font(.system(size: 12, weight: .heavy))
                     .foregroundColor(.gray)
                     .lineLimit(1)

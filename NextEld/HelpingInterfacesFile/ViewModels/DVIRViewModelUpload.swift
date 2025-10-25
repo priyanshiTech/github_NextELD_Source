@@ -13,7 +13,7 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
     let url = API.Endpoint.dispatchadd_dvir_data.url
 
     let fields: [String: Any] = [
-        "driverId": (DriverInfo.driverId ?? 17),
+        "driverId": (AppStorageHandler.shared.driverId ?? 17),
         "vehicleId": record.vehicleId,          //  vehicleId not vehicleid
         "clientId": (AppStorageHandler.shared.clientId ?? 0),
         "timestamp": "\(currentTimestampMillis())",
@@ -37,7 +37,7 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
        let image = UIImage(data: signatureData),
        let jpegData = image.jpegData(compressionQuality: 0.8) {
         
-        let filename = "\(DriverInfo.driverId ?? 0)_sign_1.jpg"
+        let filename = "\(AppStorageHandler.shared.driverId ?? 0)_sign_1.jpg"
         files.append(MultipartFile(
             name: "file",
             filename: filename,
@@ -102,7 +102,7 @@ struct DvirRecordRequestModel {
     
     
     let rawFields: [String: Any] = [
-        "driverId": DriverInfo.driverId ?? 0,
+        "driverId": AppStorageHandler.shared.driverId ?? 0,
         "dateTime": "\(record.date) \(record.time)",
         "location": "390, scheme No 53, Indore,Madhya Pradesh 452011, India",
         "truckDefect": record.truckDefect,
@@ -112,10 +112,10 @@ struct DvirRecordRequestModel {
         "companyName": record.company,
         "odometer": Double(record.odometer) ?? 0.0,
         "enginehour": record.engineHour,
-        "vehicleid": DriverInfo.vehicleId ?? 0,
+        "vehicleid": AppStorageHandler.shared.vehicleId ?? 0,
         "timestamp": currentTimestampMillis(),
-        "tokenNo": DriverInfo.authToken,
-        "clientid": DriverInfo.clientId ?? 0,
+        "tokenNo": AppStorageHandler.shared.authToken,
+        "clientid": AppStorageHandler.shared.clientId ?? 0,
         "trailer": record.trailer
     ]
 
@@ -132,7 +132,7 @@ struct DvirRecordRequestModel {
        let image = UIImage(data: signatureData),
        let jpegData = image.jpegData(compressionQuality: 0.8) {
         
-        let filename = "\(DriverInfo.driverId)_sign_1.jpg"
+        let filename = "\(AppStorageHandler.shared.driverId)_sign_1.jpg"
         files.append(MultipartFile(
             name: "file",
             filename: filename,
@@ -186,7 +186,7 @@ struct DvirRecordRequestModel {
 //    let url = API.Endpoint.dispatchadd_dvir_data.url
 //    
 //    // Make sure driverID is not nil
-//    let driverIdString = "\(DriverInfo.driverId ?? 0)"
+//    let driverIdString = "\(AppStorageHandler.shared.driverId ?? 0)"
 //    
 //    let requestField: [String: String] = [
 //        "driverid": driverIdString,
@@ -201,8 +201,8 @@ struct DvirRecordRequestModel {
 //        "engineHour" : "\(record.engineHour)",
 //        "vehicleid" : "\(record.vehicleID)",
 //        "timestamp" : "\(currentTimestampMillis())",
-//        "tokenNo" : DriverInfo.authToken,
-//        "clientid" : "\(DriverInfo.clientId)",
+//        "tokenNo" : AppStorageHandler.shared.authToken,
+//        "clientid" : "\(AppStorageHandler.shared.clientId)",
 //        "trailer" : record.trailer
 //    ]
 //

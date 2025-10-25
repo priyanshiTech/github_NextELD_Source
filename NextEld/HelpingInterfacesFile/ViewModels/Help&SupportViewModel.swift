@@ -23,8 +23,8 @@ class SupportViewModel: ObservableObject {
         errorMessage = nil
         
 //        let requestBody = MessageRequestSupportNew(
-//            // driverId:  "\(String(describing: DriverInfo.driverId))",
-//            driverId: "\(DriverInfo.driverId)",
+//            // driverId:  "\(String(describing: AppStorageHandler.shared.driverId))",
+//            driverId: "\(AppStorageHandler.shared.driverId)",
 //            message: "hello message from Excel end driver testing",
 //            companyDomainName: "exceleld.com")
         

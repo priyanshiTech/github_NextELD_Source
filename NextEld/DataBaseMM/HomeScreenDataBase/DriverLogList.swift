@@ -163,7 +163,7 @@ struct DriverLogRow: View {
             TableCell(text: "\(log.id ?? -1)", width: 50)
             TableCell(text: log.status, width: 180)
             TableCell(text: log.startTime.toLocalString(), width: 260)
-            TableCell(text: "\(DriverInfo.driverId ?? 0)", width: 100)
+            TableCell(text: "\(AppStorageHandler.shared.driverId ?? 0)", width: 100)
             TableCell(text: "\(log.day)", width: 100)
             TableCell(text: "\(log.isVoilations)", width: 100)
             TableCell(text: log.dutyType, width: 350)

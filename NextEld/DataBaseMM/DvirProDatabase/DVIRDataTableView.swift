@@ -132,7 +132,7 @@ struct DvirTableRow: View {
     var body: some View {
         HStack(spacing: 5) {
             TableCellDvirList(text: "\(record.id ?? 0)", width: 50)
-            TableCellDvirList(text: "\(DriverInfo.driverId ?? 0)", width: 100)
+            TableCellDvirList(text: "\(AppStorageHandler.shared.driverId ?? 0)", width: 100)
             TableCellDvirList(text: record.UserName, width: 150)
             TableCellDvirList(text: record.vehicleName, width: 150)
             TableCellDvirList(text: record.vechicleID, width: 100)

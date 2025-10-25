@@ -360,7 +360,7 @@ func isValidPassword(_ password: String) -> Bool {
                         await viewModel.callLoginLogUpdateAPI()
                         
                         // Safely fetch vehicleNo
-                        let vehicleNo = DriverInfo.vehicleNo
+                        let vehicleNo = AppStorageHandler.shared.vehicleNo
                         //UserDefaults.standard.string(forKey: "vehicleNo") ?? ""
                         print("Vehicle No after login: \(vehicleNo)")
                         

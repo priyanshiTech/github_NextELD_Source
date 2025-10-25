@@ -132,8 +132,8 @@ class APITokenUpdateViewModel: ObservableObject {
     
     func callTokenUpdateAPI() async {
         let request = DriverRequest(
-            driverId: DriverInfo.driverId ?? 0,
-            tokenNo: DriverInfo.authToken
+            driverId: AppStorageHandler.shared.driverId ?? 0,
+            tokenNo: AppStorageHandler.shared.authToken
         )
         
         print("Request For *****TokenUpdateAPI*****: \(request)")

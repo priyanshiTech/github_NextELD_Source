@@ -130,7 +130,7 @@ struct ContinueDriveTableRow: View {
         HStack(spacing: 5) {
             
             TableCellForContinueDrive(text: "\(record.id ?? 0)", width: 120)
-            TableCellForContinueDrive(text: "\(DriverInfo.driverId ?? 0)", width: 120)
+            TableCellForContinueDrive(text: "\(AppStorageHandler.shared.driverId ?? 0)", width: 120)
             TableCellForContinueDrive(text: record.status, width: 150)
             TableCellForContinueDrive(text: record.startTime, width: 250)
             TableCellForContinueDrive(text: record.endTime, width: 150)

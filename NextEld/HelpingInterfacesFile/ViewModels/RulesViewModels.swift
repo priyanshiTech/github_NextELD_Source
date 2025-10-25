@@ -29,9 +29,9 @@ class EmployeeRulesViewModel: ObservableObject {
         errorMessage = nil
 
         let requestBody = EmployeeRulesRequest(
-            employeeId: DriverInfo.driverId ?? 17,
-            clientId: DriverInfo.clientId ?? 1,
-            tokenNo: DriverInfo.authToken
+            employeeId: AppStorageHandler.shared.driverId ?? 17,
+            clientId: AppStorageHandler.shared.clientId ?? 1,
+            tokenNo: AppStorageHandler.shared.authToken
         )
 
         do {

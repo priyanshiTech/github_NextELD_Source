@@ -194,7 +194,7 @@ struct CertifySelectedView: View {
                 
                             let record = CertifyRecord(
                                 userID: "\(AppStorageHandler.shared.driverId ?? 0)",
-                              //  userName: DriverInfo.UserName,
+                              //  userName: AppStorageHandler.shared.UserName,
                                 userName: AppStorageHandler.shared.driverName ?? "not found",
                                 startTime: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
                                 date: certifiedDate,
@@ -268,7 +268,7 @@ struct CertifySelectedView: View {
 
 //                    .onAppear {
 //                        certifiedDate = title.extractDate()
-//                        DriverInfo.setvehicleId(VechicleID)
+//                        AppStorageHandler.shared.setvehicleId(VechicleID)
 //
 //                        if let record = CertifyDatabaseManager.shared.fetchAllRecords()
 //                            .first(where: { $0.date == certifiedDate }) {

@@ -121,7 +121,7 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
     let url =  API.Endpoint.update_dvir_data.url
 
     let requestField: [String: String] = [
-        "driverid": "\(DriverInfo.driverId ?? 0)",
+        "driverid": "\(AppStorageHandler.shared.driverId ?? 0)",
         "dateTime": "\(record.date) \(record.time)",
         "location": "390, scheme No 53, Indore,Madhya Pradesh 452011, India",
         "truckDefect": record.truckDefect,
@@ -133,8 +133,8 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
         "enginehour": "\(record.engineHour)",
         "vehicleid":   "\(record.vehicleID)",
         "timestamp": "\(currentTimestampMillis())",
-        "tokenNo":    DriverInfo.authToken,
-        "clientid":  "\(DriverInfo.clientId ?? 0)"   ,
+        "tokenNo":    AppStorageHandler.shared.authToken,
+        "clientid":  "\(AppStorageHandler.shared.clientId ?? 0)"   ,
         "trailer": record.trailer
     ]
 

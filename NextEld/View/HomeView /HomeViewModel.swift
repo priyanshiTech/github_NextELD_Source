@@ -392,7 +392,7 @@ class HomeViewModel: ObservableObject {
             
 //            if let breakTimer = breakTimer, isTimerRunning(.breakTimer) {
 //               // breakTimer.reset(startTime: breakTimer.startDuration)
-//                breakTimer.reset(startTime: Double(DriverInfo.breakTime ?? 0))
+//                breakTimer.reset(startTime: Double(AppStorageHandler.shared.breakTime ?? 0))
 //                breakTimer.stop()
 //                updateContinueDriveDBEndTime()
 //            }

@@ -28,7 +28,7 @@ class DVIRAPIViewModel: ObservableObject {
         successMessage = nil
 
         let requestBody = ReportRequestModel(
-            driverId: DriverInfo.driverId ?? 0,
+            driverId: AppStorageHandler.shared.driverId ?? 0,
             fromDate: fromDate,
             toDate: toDate,
             email: email,

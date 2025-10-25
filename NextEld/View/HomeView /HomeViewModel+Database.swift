@@ -48,7 +48,7 @@ extension HomeViewModel {
            
         } else {
             ContinueDriveDBManager.shared.saveContinueDriveData(
-                userId: Int(DriverInfo.driverId ?? 0),
+                userId: Int(AppStorageHandler.shared.driverId ?? 0),
                 status: status,
                 startTime: DateTimeHelper.getCurrentDateTimeString(),
                 endTime: "", // Will be updated when break timer ends

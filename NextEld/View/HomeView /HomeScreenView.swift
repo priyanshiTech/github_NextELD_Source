@@ -507,7 +507,7 @@ struct HomeScreenView: View {
          
          
          .onReceive(ONDuty.remainingTime) { remainingTime in
-         let totalDriveTime = DriverInfo.onDutyTime ?? 0
+         let totalDriveTime = AppStorageHandler.shared.onDutyTime ?? 0
          let workingTime = Double(totalDriveTime) - remainingTime
          let violationThreshold = Double(totalDriveTime)
          print("Working: \(workingTime/3600) h, Remaining: \(remainingTime/3600) h")
@@ -529,7 +529,7 @@ struct HomeScreenView: View {
          saveViolationToDatabase(status: "Violation", DutyType: "Your On-Duty time has been exceeded to 14 hours \(times.local) ,GMT:\(times.gmt) ", isVoilation: true)
          } else {
          // 30-min warning
-         if let warning1 = DriverInfo.setWarningOnDutyTime1,
+         if let warning1 = AppStorageHandler.shared.setWarningOnDutyTime1,
          Int(workingTime) >= Int(warning1),
          !didShowOnDuty30MinToday {
          
@@ -550,7 +550,7 @@ struct HomeScreenView: View {
          saveViolationToDatabase(status: "Warning", DutyType: "30 minutes left before On-Duty time exceedsLocal: \(times.local) ,GMT:\(times.gmt) ", isVoilation: false)
          }
          // 15-min warning
-         else if let warning2 = DriverInfo.setWarningOnDutyTime2,
+         else if let warning2 = AppStorageHandler.shared.setWarningOnDutyTime2,
          Int(workingTime) >= Int(warning2),
          !didShowOnDuty15MinToday {
          
@@ -575,7 +575,7 @@ struct HomeScreenView: View {
          // MARK: - OnDrive Timer Violation with Working Time **************************************************************************************************
          
          .onReceive(driveTimer.$remainingTime) { remainingTime in
-         let totalDriveTime = DriverInfo.onDriveTime ?? 0
+         let totalDriveTime = AppStorageHandler.shared.onDriveTime ?? 0
          let workingTime = Double(totalDriveTime) - remainingTime
          let violationThreshold = Double(totalDriveTime)
          
@@ -596,7 +596,7 @@ struct HomeScreenView: View {
          
          } else {
          // 30-min warning - NO violation box
-         if let warning1 =  DriverInfo.setWarningOnDriveTime1,
+         if let warning1 =  AppStorageHandler.shared.setWarningOnDriveTime1,
          Int(workingTime) >= Int(warning1),
          !didShowDrive30MinToday {
          
@@ -618,7 +618,7 @@ struct HomeScreenView: View {
          }
          
          // 15-min warning - NO violation box
-         else if let warning2 =   DriverInfo.setWarningOnDriveTime2,
+         else if let warning2 =   AppStorageHandler.shared.setWarningOnDriveTime2,
          Int(workingTime) >= Int(warning2),
          !didShowDrive15MinToday {
          
@@ -646,7 +646,7 @@ struct HomeScreenView: View {
          // MARK: - Continue Drive Timer Violation Logic with Working Time*****************************************************************************************
          
          .onReceive(continueDriveTime.$remainingTime) { remainingTime in
-         let totalDriveTime = DriverInfo.continueDriveTime ?? 0
+         let totalDriveTime = AppStorageHandler.shared.continueDriveTime ?? 0
          let workingTime = Double(totalDriveTime) - remainingTime
          let violationThreshold = Double(totalDriveTime)
          
@@ -669,7 +669,7 @@ struct HomeScreenView: View {
          
          } else {
          //  30-min warning at 7:30 (27000s) - use daily tracking
-         let warning30Min = DriverInfo.warningBreakTime1
+         let warning30Min = AppStorageHandler.shared.warningBreakTime1
          if Int(workingTime) >= warning30Min ?? 0 && !didShowDrive30MinToday {
          activeTimerAlert = TimerAlert(
          title: "Continue Drive Reminder",
@@ -686,7 +686,7 @@ struct HomeScreenView: View {
          }
          
          //  15-min warning at 7:45 (27900s) - use daily tracking
-         let warning15Min = DriverInfo.warningBreakTime1
+         let warning15Min = AppStorageHandler.shared.warningBreakTime1
          if Int(workingTime) >= warning15Min ?? 0 && !didShowDrive15MinToday {
          activeTimerAlert = TimerAlert(
          title: "Continue Drive Alert",
@@ -708,7 +708,7 @@ struct HomeScreenView: View {
            .onReceive(cycleTimerOn.$remainingTime) { remainingTime in
            
            //   let totalCycleTime = CountdownTimer.timeStringToSeconds("70:00:00") // 70 hours in seconds
-           let totalCycleTime = DriverInfo.cycleTime ?? 252000
+           let totalCycleTime = AppStorageHandler.shared.cycleTime ?? 252000
            let workingTime = Double(totalCycleTime) - remainingTime
            let violationThreshold = totalCycleTime
            
@@ -730,8 +730,8 @@ struct HomeScreenView: View {
            }
            else {
            // 30-min warning (safe unwrap) - use daily tracking
-           if let warning1 = DriverInfo.cycleRestartTime,
-           //DriverInfo.setWarningOnDriveTime1,
+           if let warning1 = AppStorageHandler.shared.cycleRestartTime,
+           //AppStorageHandler.shared.setWarningOnDriveTime1,
            Int(workingTime) >= warning1,
            !didShowDrive30MinToday {
            activeTimerAlert = TimerAlert(
@@ -749,7 +749,7 @@ struct HomeScreenView: View {
            }
            
            // 15-min warning (safe unwrap) - use daily tracking
-           else if let warning2 = DriverInfo.cycleRestartTime                                                                                                                                                           ,
+           else if let warning2 = AppStorageHandler.shared.cycleRestartTime                                                                                                                                                           ,
            
            Int(workingTime) >= warning2,
            !didShowDrive15MinToday {
@@ -850,9 +850,9 @@ struct HomeScreenView: View {
          
          
          // Reset timers with API values
-         let sleepTime = DriverInfo.onSleepTime ?? 36000.0
-         let onDutyTime = DriverInfo.onDutyTime ?? 50400.0
-         let onDriveTime = DriverInfo.onDriveTime ?? 39600.0
+         let sleepTime = AppStorageHandler.shared.onSleepTime ?? 36000.0
+         let onDutyTime = AppStorageHandler.shared.onDutyTime ?? 50400.0
+         let onDriveTime = AppStorageHandler.shared.onDriveTime ?? 39600.0
          
          sleepTimer.resetsSleep(to: sleepTime)
          ONDuty.resetsSleep(to: onDutyTime)
@@ -1005,7 +1005,7 @@ struct HomeScreenView: View {
          trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
          notes: "New day",
          serverId: nil,
-         timestamp: TimeUtils.currentTimestamp(with: DriverInfo.timeZoneOffset),
+         timestamp: TimeUtils.currentTimestamp(with: AppStorageHandler.shared.timeZoneOffset),
          identifier: 0,
          remainingWeeklyTime: cycleTimerOn.internalTimeString,
          remainingDriveTime:  driveTimer.internalTimeString,
