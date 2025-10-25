@@ -9,7 +9,7 @@
 import UIKit
 import CoreBluetooth
 import PacificTrack
-import SwiftUICore
+import SwiftUI
 
 protocol DeviceHandlerDelegate {
     func didStopHandling(_ viewController: UIViewController, peripheral: CBPeripheral)
