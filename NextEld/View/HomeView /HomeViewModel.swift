@@ -2,6 +2,31 @@ import Foundation
 import SwiftUI
 import Combine
 
+
+enum AlertType {
+    case nextDay
+    case refresh
+    case deleteLogs
+    case sucessConfimration
+    
+    
+    func getTitle() -> String {
+        return ""
+    }
+    
+    func getMessage() -> String {
+        return ""
+    }
+    
+    func showCancelButton() -> Bool {
+        return false
+    }
+    
+    func okButtonTitle() -> Bool {
+        return false
+    }
+}
+
 enum DriverStatusType: Hashable, CaseIterable {
     case onDuty
     case offDuty
@@ -225,7 +250,7 @@ class HomeViewModel: ObservableObject {
 
     // Showing the alert on Home when change the driver Status
     @Published var showDriverStatusAlert: (showAlert: Bool, status: DriverStatusType) = (false, .offDuty)
-    
+    @Published var showAlertOnHomeScreen: Bool = false
     // Events
     @Published var graphEvents: [HOSEvent] = []
     @Published  var showAddDvirPopup = false
@@ -241,7 +266,9 @@ class HomeViewModel: ObservableObject {
     @Published var continueDriveTimer: CountdownTimer? = nil
     @Published var breakTime: CountdownTimer? = nil
     @Published var refreshView: UUID = UUID()
-    @Published var showNextDayShiftAlert: Bool = false
+    
+    var alertType: AlertType = .sucessConfimration
+   
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []
@@ -675,7 +702,8 @@ class HomeViewModel: ObservableObject {
         // Fix: compare same units (seconds). Cast allowed Int seconds to TimeInterval.
         if calculatedSleepTaken >= TimeInterval(totalSleepAllowed) {
             // next day popup show
-            self.showNextDayShiftAlert = true            
+            self.alertType = .nextDay
+            self.showAlertOnHomeScreen = true
             AppStorageHandler.shared.days += 1
             resetToInitialState()
             debugPrint("Next Day Shift Stared")

@@ -876,16 +876,42 @@ struct HomeScreenView: View {
          
          
          
-
+         
          
          
          */
         //MARK: -  #P for refresh All logs popup
-        .alert(isPresented: $homeVM.showNextDayShiftAlert) {
+        .alert(isPresented: $homeVM.showAlertOnHomeScreen) {
+            
+            
+            
             return Alert(
                 title: Text("NEXTDAY"),
-                message: Text("10 hours of rest time completed!\nTimers have been reset.\nDay \(AppStorageHandler.shared.days)\nShift \(AppStorageHandler.shared.shift)")
+                message: Text("\(AppStorageHandler.shared.onSleepTime?.getHours() ?? 0) hours of rest time completed!\nTimers have been reset.\nDay \(AppStorageHandler.shared.days)\nShift \(AppStorageHandler.shared.shift)")
                 )
+        }
+        
+        .alert(homeVM.alertType.getTitle(), isPresented: $homeVM.showAlertOnHomeScreen) {
+        Button("Cancel", role: .cancel) {
+            homeVM.showAlertOnHomeScreen = false
+        }
+        Button("OK", role: .destructive) {
+            homeVM.showAlertOnHomeScreen = false
+            switch homeVM.alertType {
+            
+            case .nextDay:
+                break
+            case .refresh:
+                break
+            case .deleteLogs:
+                break
+            case .sucessConfimration:
+                break
+            }
+        
+        }
+        } message: {
+            Text(homeVM.alertType.getMessage())
         }
       
         .alert("Are you sure you want to refresh all logs?", isPresented: $homeVM.showSyncconfirmation) {
