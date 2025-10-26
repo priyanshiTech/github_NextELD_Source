@@ -960,6 +960,8 @@ struct HomeScreenView: View {
             case  .DriverLogListView:
                 DriverLogListView()
                 
+            case .AddDvirScreenView:
+                AddDvirScreenView( selectedRecord:.constant(nil))
             }
             
         })
