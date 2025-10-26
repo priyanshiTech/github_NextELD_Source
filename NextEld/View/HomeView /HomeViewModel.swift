@@ -456,7 +456,9 @@ class HomeViewModel: ObservableObject {
         let twoHrs = TimeInterval(60*60*2)
         
         if status == .offDuty && (currentDriverStatus == .onDuty || currentDriverStatus == .onDrive) && elapsed < twoHrs  {
-            self.onDutyTimer?.remainingTime -= elapsed
+            let onDutyRemainingTime = adjusted(lastRecord.remainingDutyTime, elapsed: elapsed, active: true)
+            onDutyTimer = CountdownTimer(startTime: onDutyRemainingTime)
+            onDutyTimer?.start()
         }
     }
 
