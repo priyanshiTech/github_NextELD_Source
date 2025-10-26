@@ -287,12 +287,6 @@ struct HomeScreenView: View {
                             }
                             showLogoutPopup = false
                             presentSideMenu = false
-//                            UserDefaults.standard.set(false, forKey: "isLoggedIn")
-//                            UserDefaults.standard.removeObject(forKey: "userEmail")
-//                            UserDefaults.standard.removeObject(forKey: "authToken")
-//                            UserDefaults.standard.removeObject(forKey: "driverName")
-//                            UserDefaults.standard.removeObject(forKey: AppStorageKeys.timezone)
-//                            UserDefaults.standard.removeObject(forKey: "timezoneOffSet")
                             UserDefaults.standard.set(false, forKey: "isLoggedIn")
                             ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
 

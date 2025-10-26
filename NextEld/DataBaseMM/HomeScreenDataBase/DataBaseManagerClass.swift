@@ -265,7 +265,6 @@ class DatabaseManager: DatabaseHandler {
     }
     
     func fetchLogs(filterTypes: [FilterType] = [], order: [Expressible]? = [], limit: Int? = nil) -> [DriverLogModel] {
-        
         var logs: [DriverLogModel] = []
         var filterExpression: SQLite.Expression<Bool> = getFilter(for: .user) // default filter
         for type in filterTypes {
@@ -524,17 +523,13 @@ class DatabaseManager: DatabaseHandler {
         
         do {
             guard let db = self.db else { return [] }
-
-            // No filter here because startTime is stored as string; filter manually after parsing
-//            let query = driverLogs
-//                            .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == currentDay)
-//                            .order(startTime.desc)
-            // Option 1: Use nil coalescing with a default value
             let query = driverLogs
                 .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == currentDay)
                 .order(startTime.desc)
             for row in try db.prepare(query) {
-                
+                if row[status] == AppConstants.violation || row[status] == AppConstants.warning {
+                    continue
+                }
                 let idValue = Int(row[id])
                 let statusValue = row[status]
                 let startString = row[startTime]

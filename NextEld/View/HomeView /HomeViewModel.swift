@@ -157,10 +157,15 @@ enum ViolationType: Hashable {
 }
 
 struct ViolationData: Equatable {
+    var id = UUID()
     var violationType: ViolationType = .none
     var thirtyMinWarning: Bool = false
     var fifteenMinWarning: Bool = false
     var violation: Bool = false
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.id == rhs.id
+    }
     
     func getWarningText() -> String {
         var warningText: String = ""
@@ -577,7 +582,7 @@ class HomeViewModel: ObservableObject {
     }
     
     func checkViolation(for warning1: TimeInterval, for warning2: TimeInterval, remainingTime: TimeInterval, type: ViolationType, violationKey: String) {
-        
+        var violationArray: [ViolationData] = []
         var violationData = ViolationData()
         violationData.violationType = type
         
@@ -588,40 +593,45 @@ class HomeViewModel: ObservableObject {
         let todayString = DateTimeHelper.currentDate()
         
         if remainingTime <= 0, todayString != lastViolationDate {
-            // Violation
-            violationData.violation = true
-            UserDefaults.standard.setValue(todayString, forKey: violationKey)
-            self.violationDataArray.append(violationData)
+           
             // This two condition will work when remaining time directly goes to <= 0
             if lastViolationDate15min != todayString {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.fifteenMinWarning = true
-                self.violationDataArray.append(violationData)
+                violationArray.append(violationData)
                 UserDefaults.standard.setValue(todayString, forKey: violationKey + "_15min")
             }
             if lastViolationDate30Min != todayString {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
-                self.violationDataArray.append(violationData)
+                violationArray.append(violationData)
                 UserDefaults.standard.setValue(todayString, forKey: violationKey + "_30min")
             }
+            
+            // Violation
+            violationData.violation = true
+            UserDefaults.standard.setValue(todayString, forKey: violationKey)
+            violationArray.append(violationData)
         }
         if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != todayString {
             violationData.fifteenMinWarning = true // 15 min warning
-            violationDataArray.append(violationData)
+            violationArray.append(violationData)
             UserDefaults.standard.setValue(todayString, forKey: violationKey + "_15min")
         }
         if remainingTime <= warning1 && remainingTime > warning2 && lastViolationDate30Min != todayString {
             violationData.thirtyMinWarning = true // 30 min warning
-            violationDataArray.append(violationData)
+            violationArray.append(violationData)
             UserDefaults.standard.setValue(todayString, forKey: violationKey + "_30min")
         }
         
         // Only add if there's actually a warning or violation
-        for violation in violationDataArray {
-            saveViolation(for: violationData) // save violation to Local DB
+        for violation in violationArray {
+            if !self.violationDataArray.contains(violation) {
+                self.violationDataArray.append(violation)
+                saveViolation(for: violation) // save violation to Local DB
+            }
         }
     }
     
@@ -642,20 +652,8 @@ class HomeViewModel: ObservableObject {
         var totalSleep: TimeInterval = 0
         let currentTime = DateTimeHelper.currentDateTime()
         for (index, log) in sortedLogs.enumerated() {
-            let startTime = log.startTime
-            let endTime: Date
-            
-            // If this is the last log, use current time
-            if index == sortedLogs.count - 1 {
-                endTime = currentTime
-            } else {
-                // Use the start time of the next log as end time
-                endTime = sortedLogs[index + 1].startTime
-            }
-            
-            let duration = endTime.timeIntervalSince(startTime)
+            let duration = getElapsedTime(lastLog: log)
             let status = DriverStatusType(fromName: log.status) ?? .none
-            
             if status == .sleep || status == .offDuty {
                 totalSleep += duration
             } else {
