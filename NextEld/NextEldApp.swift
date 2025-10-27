@@ -12,7 +12,6 @@ struct NextEldApp: App {
 
     @StateObject private var rootManager = AppRootManager()
     @StateObject private var networkMonitor = NetworkMonitor()
-//    @StateObject var navManager = NavigationManager()
     
 
     var body: some Scene {
@@ -27,9 +26,7 @@ struct NextEldApp: App {
             }
         }
         .environmentObject(rootManager)
-        .environmentObject(networkMonitor)
-       // .environmentObject(navManager)
-        
+        .environmentObject(networkMonitor)        
     }
 }
 

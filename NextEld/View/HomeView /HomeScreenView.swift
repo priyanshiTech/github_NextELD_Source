@@ -380,6 +380,7 @@ struct HomeScreenView: View {
             if newValue {
                 homeVM.alertType = .refresh
                 homeVM.showAlertOnHomeScreen = true
+                homeVM.showSyncconfirmation = false
             }
         }
         
@@ -388,7 +389,7 @@ struct HomeScreenView: View {
             if newValue {
                 homeVM.alertType = .deleteLogs
                 homeVM.showAlertOnHomeScreen = true
-                
+                showDeleteConfirm = false
             }
         }
         
@@ -534,10 +535,8 @@ struct HomeScreenView: View {
             switch homeVM.alertType {
             
             case .nextDay:
-       
                 print("Resetting all timers for new day...")
                 homeVM.resetToInitialState()
-               
             case .refresh:
                 // Call refresh API
                 Task {
@@ -554,14 +553,15 @@ struct HomeScreenView: View {
                         ContinueDriveDBManager.shared.deleteAllContinueDriveData()
                         
                         // Show success alert
-                        showSuccessAlert = true
+                        homeVM.alertType = .sucessConfimration
+                        homeVM.showAlertOnHomeScreen = true
                     } else {
                         print(" Driver ID not found in UserDefaults")
                     }
                 }
                 break
             case .sucessConfimration:
-                
+                appRootManager.currentRoot = .login
                 break
             }
         
