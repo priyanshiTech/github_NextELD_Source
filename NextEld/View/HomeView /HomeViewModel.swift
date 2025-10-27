@@ -11,23 +11,38 @@ enum AlertType {
     
     
     func getTitle() -> String {
-//        var title = ""
-//        switch self {
-//            
-//        case .nextDay:
-//
-//        case .refresh:
-//            <#code#>
-//        case .deleteLogs:
-//            <#code#>
-//        case .sucessConfimration:
-//            <#code#>
-//        }
-        return ""
+        
+        var title = ""
+        switch self {
+            
+        case .nextDay:
+            title = AppConstants.NextDay
+        case .refresh:
+            title = AppConstants.RefreshLog
+        case .deleteLogs:
+            title = AppConstants.DeleteLog
+        case .sucessConfimration:
+            title = AppConstants.Successalert
+        }
+        return title
     }
     
     func getMessage() -> String {
-        return ""
+        
+        var message = ""
+        
+        switch self {
+            
+        case .nextDay:
+            message = AppConstants.NextDaymessage
+        case .refresh:
+            message =  AppConstants.Refreshmessage
+        case .deleteLogs:
+            message =  AppConstants.Deletemessage
+        case .sucessConfimration:
+            message =  AppConstants.Successalert
+        }
+        return message
     }
     
     func showCancelButton() -> Bool {
@@ -280,7 +295,8 @@ class HomeViewModel: ObservableObject {
     @Published var refreshView: UUID = UUID()
     
     var alertType: AlertType = .sucessConfimration
-   
+    
+  
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []
@@ -411,6 +427,11 @@ class HomeViewModel: ObservableObject {
         breakTimer?.onTimeChanged = { [weak self] remainingTime in
             self?.onChangeRemaingTime(type: .breakTimer, remainigTime: remainingTime)
         }
+        
+        // Sleep Timer Callback
+//        sleepTimer?.onTimeChanged = { [weak self] remainingTime in
+////            self?.checkSleepTimerCompletion(remainingTime: remainingTime)
+//        }
 
     }
     
@@ -667,6 +688,8 @@ class HomeViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Check Sleep Timer Completion
+    
     // calucate sleep time to 10 hours to change day to next
     func calculateOffDutyAndSleepTime() -> TimeInterval {
         let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day])
@@ -697,6 +720,9 @@ class HomeViewModel: ObservableObject {
     
     // Show the next day dialog once sleep exceed to 10 hours
     func showNextShiftAlert() {
+        // Only show if alert hasn't been shown yet
+      //  guard !hasShownNextDayAlert else { return }
+        
         let totalSleepAllowed = AppStorageHandler.shared.onSleepTime ?? 0
         let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
         
@@ -706,7 +732,7 @@ class HomeViewModel: ObservableObject {
             self.alertType = .nextDay
             self.showAlertOnHomeScreen = true
             AppStorageHandler.shared.days += 1
-            resetToInitialState()
+
             debugPrint("Next Day Shift Stared")
         }
     

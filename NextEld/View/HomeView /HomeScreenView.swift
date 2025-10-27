@@ -140,7 +140,8 @@ struct HomeScreenView: View {
                         
                             StatusView(homeViewModel: homeVM) { status in
                                 if  status == .onDrive {
-                                    showDvirPopup = true
+                                    //showDvirPopup = true
+                                    homeVM.showDriverStatusAlert = (true, status)
                                  }
                                  else{
                                      homeVM.showDriverStatusAlert = (true, status)
@@ -374,6 +375,23 @@ struct HomeScreenView: View {
             }
         }
         
+        // Set alert type when sync confirmation is triggered
+        .onChange(of: homeVM.showSyncconfirmation) { newValue in
+            if newValue {
+                homeVM.alertType = .refresh
+                homeVM.showAlertOnHomeScreen = true
+            }
+        }
+        
+        // Set alert type when delete confirmation is triggered
+        .onChange(of: showDeleteConfirm) { newValue in
+            if newValue {
+                homeVM.alertType = .deleteLogs
+                homeVM.showAlertOnHomeScreen = true
+                
+            }
+        }
+        
         .onAppear {
             // homeVM.startTimer(for: [.onDuty])
           //  loadTodayHOSEvents()
@@ -502,107 +520,115 @@ struct HomeScreenView: View {
         // nitin
         
         //***************************+++++++++++++++++++++++++++******************************************************************************************************
-        // MARK: - OnDuty Timer Violation Logic with Working Time
-        
-         
-         //MARK: - NEXTDAY Popup Alert (Auto-dismiss after 3 seconds)
-         
-         
-         
-         
-         
-         
-         
+
         
         //MARK: -  #P for refresh All logs popup
-        .alert(isPresented: $homeVM.showAlertOnHomeScreen) {
-            
-            
-            
-            return Alert(
-                title: Text("NEXTDAY"),
-                message: Text("\(AppStorageHandler.shared.onSleepTime?.getHours() ?? 0) hours of rest time completed!\nTimers have been reset.\nDay \(AppStorageHandler.shared.days)\nShift \(AppStorageHandler.shared.shift)")
-                )
-        }
-        
         .alert(homeVM.alertType.getTitle(), isPresented: $homeVM.showAlertOnHomeScreen) {
         Button("Cancel", role: .cancel) {
             homeVM.showAlertOnHomeScreen = false
+            // Reset flag so alert can show again if needed
+            
         }
         Button("OK", role: .destructive) {
             homeVM.showAlertOnHomeScreen = false
             switch homeVM.alertType {
             
             case .nextDay:
-                break
+       
+                print("Resetting all timers for new day...")
+                homeVM.resetToInitialState()
+               
             case .refresh:
-                break
-            case .deleteLogs:
-                break
-            case .sucessConfimration:
-                break
-            }
-        
-        }
-        } message: {
-            Text(homeVM.alertType.getMessage())
-        }
-      
-        .alert("Are you sure you want to refresh all logs?", isPresented: $homeVM.showSyncconfirmation) {
-        Button("Cancel", role: .cancel) {}
-        Button("OK", role: .destructive) {
-        Task {
-        await viewModel.refresh()   //  Call your refresh API
-        }
-        }
-        } message: {
-        Text("This will refresh all your local logs with the server.")
-        }
-        
-        
-        //MARK: -   Success alert after deletion
-        .alert("Success", isPresented: $showSuccessAlert) {
-            Button("OK", role: .cancel) {
-                //   navmanager.navigate(to: AppRoute.loginFlow(.login)) }
-                appRootManager.currentRoot = .login
-            }
-            
-        } message: {
-            Text("Data deleted successfully.")
-        }
-        //MARK: -  For Deletation Alert
-        .alert("Are you sure you want to delete all data?", isPresented: $showDeleteConfirm) {
-            Button("Delete", role: .destructive) {
+                // Call refresh API
                 Task {
-                    if let driverId =  AppStorageHandler.shared.driverId  {  //  Get from common storage
+                    await viewModel.refresh()
+                }
+            case .deleteLogs:
+                
+                Task {
+                    if let driverId = AppStorageHandler.shared.driverId {
                         await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
-                        showSuccessAlert = true // Show success after API
                         homeVM.deleteAllAppData()
                         
                         // Delete all Continue Drive data
                         ContinueDriveDBManager.shared.deleteAllContinueDriveData()
-                        print(" Continue Drive data deleted successfully")
                         
+                        // Show success alert
+                        showSuccessAlert = true
                     } else {
                         print(" Driver ID not found in UserDefaults")
                     }
                 }
+                break
+            case .sucessConfimration:
                 
+                break
             }
-            
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This will permanently delete all logs Record.")
-        }
         
-//        //MARK: - Violation/Warning Alert
-//        .alert(homeVM.alertTitle, isPresented: $homeVM.showViolationAlert) {
-//            Button("OK", role: .cancel) {
-//                homeVM.showViolationAlert = false
+        }
+        } message: {
+//            if homeVM.alertType == .nextDay {
+//                Text("\(AppStorageHandler.shared.onSleepTime?.getHours() ?? 0) hours of rest time completed!\nTimers have been reset.\nDay \(AppStorageHandler.shared.days)\nShift \(AppStorageHandler.shared.shift)")
+//            } else {
+//                Text(homeVM.alertType.getMessage())
+//            }
+            Text(homeVM.alertType.getMessage())
+        }
+      
+        //MARK: -  Sync/Refresh Confirmation Alert
+//        .alert("Are you sure you want to refresh all logs?", isPresented: $homeVM.showSyncconfirmation) {
+//            Button("Cancel", role: .cancel) {
+//                homeVM.showSyncconfirmation = false
+//            }
+//            Button("OK", role: .destructive) {
+//                homeVM.showSyncconfirmation = false
+//                // Call refresh API directly
+//                Task { @MainActor in
+//                    await viewModel.refresh()
+//                    print(" Refresh API call completed")
+//                }
 //            }
 //        } message: {
-//            Text(homeVM.alertMessage)
+//            Text("This will refresh all your local logs with the server.")
 //        }
+        
+        
+        //MARK: -   Success alert after deletion
+//        .alert("Success", isPresented: $showSuccessAlert) {
+//            Button("OK", role: .cancel) {
+//                appRootManager.currentRoot = .login
+//            }
+//        } message: {
+//            Text("Data deleted successfully.")
+//        }
+//        
+        //MARK: -  For Deletation Alert  
+//        .alert(homeVM.alertType.getTitle(), isPresented: $showDeleteConfirm) {
+//            Button("Delete", role: .destructive) {
+//                showDeleteConfirm = false
+//                Task {
+//                    if let driverId = AppStorageHandler.shared.driverId {
+//                        await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
+//                        homeVM.deleteAllAppData()
+//                        
+//                        // Delete all Continue Drive data
+//                        ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+//                        
+//                        // Show success alert
+//                        showSuccessAlert = true
+//                    } else {
+//                        print(" Driver ID not found in UserDefaults")
+//                    }
+//                }
+//            }
+//            Button("Cancel", role: .cancel) {
+//                showDeleteConfirm = false
+//            }
+//        }
+//        message: {
+//            Text(homeVM.alertType.getMessage())
+//        }
+
         
         .navigationBarBackButtonHidden()
         .navigationDestination(for: AppRoute.DatabaseFlow.self, destination: { type in

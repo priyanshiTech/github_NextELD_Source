@@ -13,6 +13,7 @@ import Foundation
 import SwiftUI
 
 enum ApplicationRoot {
+    
     case splashScreen
     case login
     case scanner

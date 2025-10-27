@@ -73,8 +73,7 @@ struct SplashView: View {
             Task {
                 let success = await tokenVM.callSplashUpdateAPI()
                 if success {
-                    navManager.navigate(to: AppRoute.HomeFlow.Home)
-                }
+                    navManager.navigate(to: AppRoute.HomeFlow.Home)}
                 else {
                     let vehicleNo = AppStorageHandler.shared.vehicleNo ?? ""
                     if vehicleNo.isEmpty || vehicleNo.lowercased() == "none" {
@@ -91,7 +90,6 @@ struct SplashView: View {
             appRootManager.currentRoot = .login
         }
     }
-    
 }
 //#Preview {
 //    RootView()
