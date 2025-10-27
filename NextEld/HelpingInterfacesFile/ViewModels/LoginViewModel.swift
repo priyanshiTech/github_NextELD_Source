@@ -167,7 +167,7 @@ class LoginViewModel: ObservableObject {
                     print(" Saved current day: \(dateIs)")
                 }
                 
-                if let firstLog = response.result?.driverCertifiedLog.first {
+                if let firstLog = response.result?.driverCertifiedLog?.first {
                     AppStorageHandler.shared.coDriverId = firstLog.coDriverId
                     //UserDefaults.standard.set(coDriverId, forKey: "coDriverId")
                     

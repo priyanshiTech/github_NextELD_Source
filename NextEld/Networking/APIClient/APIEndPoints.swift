@@ -183,7 +183,7 @@ final class NetworkManager {
         }
 
         if let string = String(data: data, encoding: .utf8) {
-            print("$$$$$$$$$$$$$$$______Response Body: \(string)")
+            print("📥 Full Response Body: \(string)")
         }
 
         return try JSONDecoder().decode(T.self, from: data)

@@ -334,7 +334,7 @@ class DatabaseManager: DatabaseHandler {
             let model = DriverLogModel(
                 id: nil,
                 status: log.status ?? "Unknown",
-                startTime: log.dateTime ?? Date(),
+                startTime: DateTimeHelper.currentDateTime(),
                 userId: log.driverId ?? 0,
                 day: log.days ?? 0,
                 isVoilations: log.isVoilation ?? 0,
@@ -353,13 +353,13 @@ class DatabaseManager: DatabaseHandler {
                 trailers: (log.trailers ?? []).joined(separator: ", "),
                 notes: log.note ?? "",
                 serverId: log._id,
-                timestamp: Int64(log.dateTime?.timeIntervalSince1970 ?? 0),
+                timestamp: Int64(Date().timeIntervalSince1970 * 1000),
                 identifier: log.identifier ?? 0,
-                remainingWeeklyTime: log.remainingWeeklyTime ?? 0,
-                remainingDriveTime: log.remainingDriveTime ?? 0,
-                remainingDutyTime: log.remainingDutyTime ?? 0,
-                remainingSleepTime: log.remainingSleepTime ?? 0, breaktimerRemaning: log.breaktimerRemaning,
-                lastSleepTime: log.lastOnSleepTime ?? 0,
+                remainingWeeklyTime: Int(log.remainingWeeklyTime ?? "0") ?? 0,
+                remainingDriveTime: Int(log.remainingDriveTime ?? "0") ?? 0,
+                remainingDutyTime: Int(log.remainingDutyTime ?? "0") ?? 0,
+                remainingSleepTime: Int(log.remainingSleepTime ?? "0") ?? 0, breaktimerRemaning: log.breaktimerRemaning,
+                lastSleepTime: Int(log.lastOnSleepTime ?? "0") ?? 0,
                 isSplit: 0,
                 engineStatus: "Off", isCertifiedLog: ""
             )

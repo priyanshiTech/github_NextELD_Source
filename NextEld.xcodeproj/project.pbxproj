@@ -1631,7 +1631,6 @@
 				AF7235092E55FC51009EAA9E /* RulesViewModels.swift in Sources */,
 				AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */,
 				AF900BD62E6329AD003D01A5 /* betteryLevelRealDevice.swift in Sources */,
-				CBEF2F582EAE098F00451B22 /* String+Extension.swift in Sources */,
 				AFBD12CF2E72A899003EA40F /* DvirResponceModel.swift in Sources */,
 				AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */,
 				AFD7BAA72E53014A001AF76C /* loginLogModel.swift in Sources */,

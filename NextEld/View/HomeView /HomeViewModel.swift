@@ -11,6 +11,18 @@ enum AlertType {
     
     
     func getTitle() -> String {
+//        var title = ""
+//        switch self {
+//            
+//        case .nextDay:
+//
+//        case .refresh:
+//            <#code#>
+//        case .deleteLogs:
+//            <#code#>
+//        case .sucessConfimration:
+//            <#code#>
+//        }
         return ""
     }
     

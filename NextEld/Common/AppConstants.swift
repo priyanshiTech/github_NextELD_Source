@@ -28,4 +28,11 @@ struct AppConstants {
     static let dvirHostoryTittle = "Dvir History"
     static let trailersTittle = "Trailers"
     static let shippingTittle = "Shipping Doc"
+    
+    //MARK: - For Alert Tittle
+    
+    static let RefreshLog = "Are you sure you want to refresh all logs?"
+    static let DeleteLog =  "Are you sure you want to delete all data?"
+    static let Successalert = "Success"
+    static let NextDay  = "Next Day"
 }
