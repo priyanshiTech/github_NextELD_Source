@@ -35,4 +35,10 @@ struct AppConstants {
     static let DeleteLog =  "Are you sure you want to delete all data?"
     static let Successalert = "Success"
     static let NextDay  = "Next Day"
+    
+    //MARK: - for Message Alert
+    static let Refreshmessage = "This will refresh all your local logs with the server."
+    static let Deletemessage = "This will permanently delete all logs Record."
+    static let Successmessage =  "Data deleted successfully."
+    static let NextDaymessage  = "Next Day Started"
 }
