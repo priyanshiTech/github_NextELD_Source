@@ -575,9 +575,6 @@ class HomeViewModel: ObservableObject {
     
     
     func onChangeRemaingTime(type: TimerType, remainigTime: TimeInterval) {
-        //for print value
-        let seconds:Double =  3600
-     //   print(" Timer Changed - Type: \(type), Remaining: \(remainigTime/seconds) hours")
         
         switch type {
         case .onDuty:
@@ -595,8 +592,8 @@ class HomeViewModel: ObservableObject {
             
         case .continueDrive:
             // For continue drive, we can use the same warning times as onDrive or create separate ones
-            let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime1 ?? 0))
-            let warning2 = TimeInterval(Int(AppStorageHandler.shared.onDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime2 ?? 0))
+            let warning1 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime1 ?? 0))
+            let warning2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0))
             if remainigTime <= warning1 {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onContinueDriveViolation, violationKey: AppConstants.continueDriveViolationKey)
             }
@@ -608,12 +605,6 @@ class HomeViewModel: ObservableObject {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
             }
         case .breakTimer:
-            let warning1 = TimeInterval(Int(AppStorageHandler.shared.breakTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime1 ?? 0))
-            let warning2 = TimeInterval(Int(AppStorageHandler.shared.breakTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0))
-            
-            if remainigTime <= warning1 {
-                checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .breakTimeViolation, violationKey: AppConstants.breakTimeViolationKey)
-            }
             break
         case .sleepTimer:
             
@@ -635,7 +626,6 @@ class HomeViewModel: ObservableObject {
         let todayString = DateTimeHelper.currentDate()
         
         if remainingTime <= 0, todayString != lastViolationDate {
-           
             // This two condition will work when remaining time directly goes to <= 0
             if lastViolationDate15min != todayString {
                 var violationData = ViolationData()
@@ -679,7 +669,7 @@ class HomeViewModel: ObservableObject {
     
     // calucate sleep time to 10 hours to change day to next
     func calculateOffDutyAndSleepTime() -> TimeInterval {
-        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.getTodayRecord, .day])
+        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day])
         
         guard !allLogs.isEmpty,
                 let status = allLogs.last?.status,
@@ -692,12 +682,11 @@ class HomeViewModel: ObservableObject {
         let sortedLogs = allLogs.sorted { $0.timestamp > $1.timestamp } // required reverse order
         
         var totalSleep: TimeInterval = 0
-        let currentTime = DateTimeHelper.currentDateTime()
-        for (index, log) in sortedLogs.enumerated() {
+        for log in sortedLogs {
             let duration = getElapsedTime(lastLog: log)
             let status = DriverStatusType(fromName: log.status) ?? .none
             if status == .sleep || status == .offDuty {
-                totalSleep += duration
+                totalSleep = duration
             } else {
                 break // for other status will break the loop
             }
