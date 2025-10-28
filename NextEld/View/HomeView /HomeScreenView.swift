@@ -53,37 +53,18 @@ struct HomeScreenView: View {
     */
     
     @EnvironmentObject var navManager: NavigationManager
-    @State private var isBreakTimerCompleted: Bool = false  // Track if break timer completed
-    @EnvironmentObject var navmanager: NavigationManager
    
     // let session: SessionManager
    // @State private var activeTimerAlert: TimerAlert?
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
     @StateObject private var viewModel = RefreshViewModel()
     @StateObject private var syncVM = SyncViewModel()
-    //MARK: -  to show a Cycle state
-    @State private var isOnDutyActive = false
-    @State private var isDriveActive = false
-    @State private var isCycleTimerActive = false
-    @State private var  isSleepTimerActive =  false
-    @State private var cycleTimeElapsed = 0
-    @State private var cycleTimer: Timer?
-    //MARK: -  to manage a cycle timer
+
     // ELD Additions
     @AppStorage("cycleType") var cycleType: String = "8/70" // or "7/60"
-    @State private var cumulativeDriveTime: TimeInterval = 0
-    @State private var isOnBreak: Bool = false
     @State private var pastDutyLog: [Date: TimeInterval] = [:] // key = date, value = seconds
     @State private var offDutyStartTime: Date? = nil
-    @State private var driveStopStartTime: Date? = nil
-    @State private var showDriveStopPrompt: Bool = false
-    @State private var driveStopPromptTimer: Timer? = nil
     //MARK: -  SHOw Slep Timer Popup
-    @State private var showSleepResetPopup = false
-    @State private var showNextDayPopup = false
-    @AppStorage("hasShownNextDayPopup") private var hasShownNextDayPopup = false
-    @State private var daysCount =  AppStorageHandler.shared.days
-    @State private var ShiftCurrentDay  =  AppStorageHandler.shared.shift
     
     //MARK: -  Network
     @EnvironmentObject var networkMonitor: NetworkMonitor
@@ -91,22 +72,14 @@ struct HomeScreenView: View {
     @State private var bannerMessage: String = ""
     @State private var bannerColor: Color = .green
     
-    //MARK: -  Last Status Track
-    @State private var offDutySleepAccumulated: TimeInterval = 0
-    @State private var lastStatusChangeTime: Date? = nil
-    @State private var timer: Timer? = nil
-    
     //MARK: -  For Delete API's
     @State private var showDeleteConfirm = false
     @StateObject private var deleteViewModel = DeleteViewModel()
-    @State private var showSuccessAlert = false
-    @State private var showViolation = true
 
     @StateObject private var logoutVM = APILogoutViewModel()   //logout
     @State private var showsyncRefreshalert = RefreshViewModel()  // Refresh
     @EnvironmentObject var locationManager: LocationManager
     
-    @State private var hasRestoredTimers = false
     let times = DateTimeHelperVoilation.getLocalAndGMT()
     @State private var showDvirPopup = false
     @StateObject var deviceLocationManager = DeviceLocationManager()
@@ -233,7 +206,7 @@ struct HomeScreenView: View {
                     title: "Add DVIR Log",
                     message: "Please add DVIR before going to On-Drive",
                     onOK: {
-                        navmanager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Log"))
+                        navManager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Log"))
                         showDvirPopup = false
                     },
                     onCancel: { showDvirPopup = false }
@@ -261,7 +234,7 @@ struct HomeScreenView: View {
                         message: "Please certify your previous day log before going to On-Duty",
                         onOK: {
                             showCertifyLogAlert = false
-                            navmanager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Logs"))
+                            navManager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Logs"))
                         },
                         onCancel: {
                             showCertifyLogAlert = false
@@ -415,20 +388,6 @@ struct HomeScreenView: View {
             }
         }
         //MARK: -  call sync API In every 10 sec
-        .onAppear {
-                        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
-                            Task {
-                                await syncVM.syncOfflineData()
-                            }
-                        }
-                        Task {
-                            await syncVM.syncOfflineData()
-                        }
-        }
-        .onDisappear {
-            timer?.invalidate()
-            timer = nil
-        }
         //        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
         //            // Save timer states when app goes to background
         //            saveCurrentTimerStatesBeforeSwitch()
@@ -553,8 +512,10 @@ struct HomeScreenView: View {
                         ContinueDriveDBManager.shared.deleteAllContinueDriveData()
                         
                         // Show success alert
-                        homeVM.alertType = .sucessConfimration
-                        homeVM.showAlertOnHomeScreen = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            self.homeVM.alertType = .sucessConfimration
+                            self.homeVM.showAlertOnHomeScreen = true
+                        }
                     } else {
                         print(" Driver ID not found in UserDefaults")
                     }

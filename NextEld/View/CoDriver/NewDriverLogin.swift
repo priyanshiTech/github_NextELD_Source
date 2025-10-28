@@ -111,7 +111,8 @@ struct NewDriverLogin: View {
                            await viewModel.callLoginLogUpdateAPI()
                            isLoggedIn = true
                            //navManager.navigate(to: AppRoute.homeFlow(.Scanner))
-                           navManager.navigate(to: ApplicationRoot.scanner)
+                         //  navManager.navigate(to: ApplicationRoot.scanner)
+                           navManager.navigate(to: AppRoute.scanner)
                        } else {
                            alertVisible = true
                        }
