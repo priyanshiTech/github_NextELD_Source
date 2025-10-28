@@ -351,18 +351,22 @@ struct HomeScreenView: View {
         // Set alert type when sync confirmation is triggered
         .onChange(of: homeVM.showSyncconfirmation) { newValue in
             if newValue {
-                homeVM.alertType = .refresh
-                homeVM.showAlertOnHomeScreen = true
-                homeVM.showSyncconfirmation = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    homeVM.alertType = .refresh
+                    homeVM.showAlertOnHomeScreen = true
+                    homeVM.showSyncconfirmation = false
+                }
             }
         }
         
         // Set alert type when delete confirmation is triggered
         .onChange(of: showDeleteConfirm) { newValue in
             if newValue {
-                homeVM.alertType = .deleteLogs
-                homeVM.showAlertOnHomeScreen = true
-                showDeleteConfirm = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    homeVM.alertType = .deleteLogs
+                    homeVM.showAlertOnHomeScreen = true
+                    showDeleteConfirm = false
+                }
             }
         }
         

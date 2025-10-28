@@ -727,13 +727,14 @@ class HomeViewModel: ObservableObject {
         // Fix: compare same units (seconds). Cast allowed Int seconds to TimeInterval.
         if calculatedSleepTaken >= TimeInterval(totalSleepAllowed) && nextDayAlertValue != uniqueValueForViolation {
             // next day popup show
-            self.alertType = .nextDay
-            self.showAlertOnHomeScreen = true
-            AppStorageHandler.shared.days += 1
-            UserDefaults.standard.setValue(uniqueValueForViolation, forKey: AppConstants.nextDayAlert)
-            debugPrint("Next Day Shift Stared")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.alertType = .nextDay
+                self.showAlertOnHomeScreen = true
+                AppStorageHandler.shared.days += 1
+                UserDefaults.standard.setValue(uniqueValueForViolation, forKey: AppConstants.nextDayAlert)
+                debugPrint("Next Day Shift Stared")
+            }
         }
-    
     }
     
     // Reset Break Time if Break time is less than 30 min
