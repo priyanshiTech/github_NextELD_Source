@@ -157,13 +157,13 @@ class LoginViewModel: ObservableObject {
                 //Save Shift
                 if let shiftValue = response.result?.driverLog?.first?.shift {
                    // UserDefaults.standard.set(shiftValue, forKey: "shift")
-                    AppStorageHandler.shared.shift = shiftValue
+                //    AppStorageHandler.shared.shift = shiftValue
                     print(" Saved shift: \(shiftValue)")
                 }
                 
                 if let dateIs =  response.result?.driverLog?.first?.days{
                     //UserDefaults.standard.set(dateIs, forKey: "days")
-                    AppStorageHandler.shared.days = dateIs
+                //    AppStorageHandler.shared.days = dateIs
                     print(" Saved current day: \(dateIs)")
                 }
                 

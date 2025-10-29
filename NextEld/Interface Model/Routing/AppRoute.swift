@@ -16,7 +16,7 @@ enum ApplicationRoot {
     
     case splashScreen
     case login
-    case scanner
+    case scanner(moveToHome: Bool = false)
 }
 
 enum AppRoute: Hashable {
@@ -36,7 +36,7 @@ enum AppRoute: Hashable {
         case CompanyInformationView
         case InformationPacket
         case RulesView
-        case scanner
+        
         case Settings
         case SupportView
         case FirmWare_Update
@@ -70,7 +70,7 @@ enum AppRoute: Hashable {
 
     
     //MARK: -  Cases of Add dvirPri trip
-
+    case scanner
     case NT11Connection
     case PT30Connection
     // Side Menu Screens

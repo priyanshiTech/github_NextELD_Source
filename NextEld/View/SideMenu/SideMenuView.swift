@@ -95,7 +95,6 @@ func handleSelection(_ row: SideMenuRowType) {
            navmanager.path.append(AppRoute.HomeFlow.CoDriverLogin)
        case .Vehicle:
            navmanager.path.append(AppRoute.HomeFlow.AddVichleMode)
-           
        case .companyInformation:
            navmanager.path.append(AppRoute.HomeFlow.CompanyInformationView)
        case .InformationPocket:
@@ -103,7 +102,7 @@ func handleSelection(_ row: SideMenuRowType) {
        case .Rules:
            navmanager.path.append(AppRoute.HomeFlow.RulesView)
        case .ELDConnection:
-           navmanager.path.append(AppRoute.HomeFlow.scanner)
+           navmanager.path.append(AppRoute.scanner)
        case .settings:
            navmanager.path.append(AppRoute.HomeFlow.Settings)
        case .support:

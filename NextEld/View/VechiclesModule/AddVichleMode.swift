@@ -95,7 +95,7 @@ struct AddVichleMode: View {
                         UserDefaults.standard.set(selectedVehicleId, forKey: "vehicleId")
                         print(" Saved vehicle: \(selectedVehicle), ID: \(selectedVehicleId)")
 
-                        navmanager.navigate(to: ApplicationRoot.scanner)
+                        navmanager.navigate(to: AppRoute.scanner)
                     }
                 }
             }) {
@@ -129,6 +129,7 @@ struct AddVichleMode: View {
             }
             Spacer()
         }
+        
         .navigationBarBackButtonHidden()
     }
 }

@@ -18,6 +18,8 @@ struct DeviceScannerView: View {
     @State var checkboxClick : Bool
     @State var macaddress: String
     
+    var moveToHome: Bool = false
+    
     @StateObject private var deviceStatusVM = DeviceStatusViewModel(
          networkManager: NetworkManager()
      )
@@ -160,6 +162,11 @@ struct DeviceScannerView: View {
                         }
                     }
             }
+            .onAppear {
+                if moveToHome {
+                    navManager.path.append(AppRoute.HomeFlow.Home)
+                }
+            }
             
             //MARK:  to Show a Mac Address
             .fullScreenCover(isPresented: $showScanner) {
@@ -194,8 +201,7 @@ struct DeviceScannerView: View {
                     InformationPacket()
                 case .RulesView:
                     RulesView()
-                case .scanner:
-                    DeviceScannerView(checkboxClick: true, macaddress: "")
+                
                 case .Settings:
                     SettingsLanguageView()
                 case .SupportView:
@@ -208,6 +214,11 @@ struct DeviceScannerView: View {
                     CertifySelectedView( vehiclesc:  .constant(""), VechicleID: .constant(0), title: title)
           
                 }
+            }
+        }
+        .navigationDestination(for: AppRoute.self) { route in
+            if route == .scanner {
+                DeviceScannerView(checkboxClick: false, macaddress: "")
             }
         }
         .navigationBarHidden(true)

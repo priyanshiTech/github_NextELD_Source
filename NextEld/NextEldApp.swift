@@ -21,85 +21,11 @@ struct NextEldApp: App {
                 LoginScreen()
             case .splashScreen:
                 SplashView()
-            case .scanner:
-                DeviceScannerView(checkboxClick: true, macaddress: "")
+            case .scanner(let moveToHome):
+                DeviceScannerView(checkboxClick: true, macaddress: "", moveToHome: moveToHome)
             }
         }
         .environmentObject(rootManager)
-        .environmentObject(networkMonitor)        
+        .environmentObject(networkMonitor)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- @main
- struct NextEldApp: App {
-     // Create all state objects here
-     @StateObject private var navManager = NavigationManager()
-     @StateObject private var session = SessionManager()
-     @StateObject private var loginVM: LoginViewModel
-     @StateObject private var networkMonitor = NetworkMonitor()
-     @StateObject var trailerVM = TrailerViewModel()
-     @StateObject var shippingVM = ShippingDocViewModel()
-     @StateObject var addVechicleVm = VehicleViewModel()
-     @StateObject var vehicleVM = VehicleConditionViewModel()
-     @StateObject var hoseEventsChartViewModel = HOSEventsChartViewModel()
-     @StateObject var dutyStatusManager = DutyStatusManager()
-     @StateObject var locationManager = LocationManager()
-     @StateObject private var DVClocationManager = DeviceLocationManager()
-     //@StateObject private var rootManager = AppRootManager()
-     init() {
-         let session = SessionManager()
-         self._session = StateObject(wrappedValue: session)
-         self._loginVM = StateObject(wrappedValue: LoginViewModel(session: session))
-     }
-
-     var body: some Scene {
-         WindowGroup {
-             RootView()
-                 .environmentObject(navManager)            // must exist
-                 .environmentObject(loginVM)
-                 .environmentObject(session)
-                 .environmentObject(networkMonitor)
-                 .environmentObject(trailerVM)
-                 .environmentObject(addVechicleVm)
-                 .environmentObject(vehicleVM)
-                 .environmentObject(hoseEventsChartViewModel)
-                 .environmentObject(shippingVM)
-                 .environmentObject(dutyStatusManager)
-                 .environmentObject(locationManager)
-                 .environmentObject(DVClocationManager)
-         }
-     }
- }
-
-*/

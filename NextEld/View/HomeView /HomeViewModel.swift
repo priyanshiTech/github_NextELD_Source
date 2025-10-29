@@ -137,6 +137,7 @@ enum TimerType: Hashable, CaseIterable {
 }
 
 enum ViolationType: Hashable {
+    
     case onDutyViolation
     case onContinueDriveViolation
     case onDriveViolation
@@ -155,10 +156,14 @@ enum ViolationType: Hashable {
             return "\(warning2.getMin()) min left for completing your on duty cycle"
             
         case .onContinueDriveViolation:
+
             
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0))
             return "\(warning2.getMin()) min left for completing your Continue drive cycle"
             
+            let warnings2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0))
+            
+            return "\(warning2.getMin()) min left for completing your continue drive cycle"
         case .onDriveViolation:
             
             let warning2 = TimeInterval(Int( AppStorageHandler.shared.onDriveTime  ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime2  ?? 0))
@@ -167,12 +172,13 @@ enum ViolationType: Hashable {
         case .cycleTimerViolation:
             
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime2 ?? 0))
+            
+            let warnings2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime15MinTime) ?? 0))
             return "\(warning2.getMin()) min left for completing your day cycle"
 
             
         case .none:
             return ""
- 
 
         }
     }
@@ -186,13 +192,24 @@ enum ViolationType: Hashable {
         case .onContinueDriveViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime1 ?? 0))
 
+
             return "\(warning1.getMin()) min left for completing your Continue drive cycle"
+
+            return "\(warning1.getMin()) min left for completing your continue drive cycle"
+
         case .onDriveViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime1 ?? 0))
             return "\(warning1.getMin()) min left for completing your Ondrive cycle"
             
         case .cycleTimerViolation:
+
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime2 ?? 0))
+            return "\(warning1.getMin()) min left for completing your day cycle"
+        case .none:
+            return ""
+
+
+             let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime30MinTime) ?? 0))
             return "\(warning1.getMin()) min left for completing your day cycle"
         case .none:
             return ""
@@ -213,7 +230,7 @@ enum ViolationType: Hashable {
             return "Your cycle time has been exceeded to \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
         case .none:
             return ""
-      
+
         }
     }
 }
@@ -525,7 +542,7 @@ class HomeViewModel: ObservableObject {
         let elapsed = getElapsedTime(lastLog: lastRecord)
         let twoHrs = TimeInterval(60*60*2)
         
-        if status == .offDuty && (currentDriverStatus == .onDuty || currentDriverStatus == .onDrive) && elapsed < twoHrs  {
+        if status == .offDuty && elapsed < twoHrs  {
             let onDutyRemainingTime = adjusted(lastRecord.remainingDutyTime, elapsed: elapsed, active: true)
             onDutyTimer = CountdownTimer(startTime: onDutyRemainingTime)
             onDutyTimer?.start()
@@ -633,8 +650,8 @@ class HomeViewModel: ObservableObject {
             
         case .cycleTimer:
             // For cycle timer, we can use similar warning logic
-            let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime1 ?? 0))
-            let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime2 ?? 0))
+            let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime30MinTime) ?? 0)) // 30 min
+            let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime15MinTime) ?? 0)) // 15 min
             if remainigTime <= warning1 {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
             }
@@ -657,40 +674,51 @@ class HomeViewModel: ObservableObject {
         let lastViolationDate = UserDefaults.standard.string(forKey: violationKey)
         let lastViolationDate15min = UserDefaults.standard.string(forKey: violationKey + "_15min")
         let lastViolationDate30Min = UserDefaults.standard.string(forKey: violationKey + "_30min")
+
         let todayString =  "shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
       
+
+        let uniqueValueForViolation = "violation_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
         
-        if remainingTime <= 0, todayString != lastViolationDate {
+        if remainingTime <= 0, uniqueValueForViolation != lastViolationDate {
             // This two condition will work when remaining time directly goes to <= 0
-            if lastViolationDate15min != todayString {
+            if lastViolationDate15min != uniqueValueForViolation {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.fifteenMinWarning = true
                 violationArray.append(violationData)
-                UserDefaults.standard.setValue(todayString, forKey: violationKey + "_15min")
+                UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey + "_15min")
             }
-            if lastViolationDate30Min != todayString {
+            if lastViolationDate30Min != uniqueValueForViolation {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
                 violationArray.append(violationData)
-                UserDefaults.standard.setValue(todayString, forKey: violationKey + "_30min")
+                UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey + "_30min")
             }
             
             // Violation
             violationData.violation = true
-            UserDefaults.standard.setValue(todayString, forKey: violationKey)
+            UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey)
             violationArray.append(violationData)
+            
+            // While cycle complete reset all data and shift count will increase by 1 and day count reset to 1
+            // Once the violation for cycle time comes it means cycle complete the 70 hours
+            if type == .cycleTimerViolation {
+                AppStorageHandler.shared.shift +=  1
+                AppStorageHandler.shared.days = 1
+                resetToInitialState()
+            }
         }
-        if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != todayString {
+        if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != uniqueValueForViolation {
             violationData.fifteenMinWarning = true // 15 min warning
             violationArray.append(violationData)
-            UserDefaults.standard.setValue(todayString, forKey: violationKey + "_15min")
+            UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey + "_15min")
         }
-        if remainingTime <= warning1 && remainingTime > warning2 && lastViolationDate30Min != todayString {
+        if remainingTime <= warning1 && remainingTime > warning2 && lastViolationDate30Min != uniqueValueForViolation {
             violationData.thirtyMinWarning = true // 30 min warning
             violationArray.append(violationData)
-            UserDefaults.standard.setValue(todayString, forKey: violationKey + "_30min")
+            UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey + "_30min")
         }
         
         // Only add if there's actually a warning or violation
@@ -736,20 +764,22 @@ class HomeViewModel: ObservableObject {
     func showNextShiftAlert() {
         // Only show if alert hasn't been shown yet
       //  guard !hasShownNextDayAlert else { return }
-        
+        let uniqueValueForViolation = "nextday_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
+        let nextDayAlertValue = UserDefaults.standard.string(forKey: AppConstants.nextDayAlert)
         let totalSleepAllowed = AppStorageHandler.shared.onSleepTime ?? 0
         let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
         
         // Fix: compare same units (seconds). Cast allowed Int seconds to TimeInterval.
-        if calculatedSleepTaken >= TimeInterval(totalSleepAllowed) {
+        if calculatedSleepTaken >= TimeInterval(totalSleepAllowed) && nextDayAlertValue != uniqueValueForViolation {
             // next day popup show
-            self.alertType = .nextDay
-            self.showAlertOnHomeScreen = true
-            AppStorageHandler.shared.days += 1
-
-            debugPrint("Next Day Shift Stared")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.alertType = .nextDay
+                self.showAlertOnHomeScreen = true
+                AppStorageHandler.shared.days += 1
+                UserDefaults.standard.setValue(uniqueValueForViolation, forKey: AppConstants.nextDayAlert)
+                debugPrint("Next Day Shift Stared")
+            }
         }
-    
     }
     
     // Reset Break Time if Break time is less than 30 min

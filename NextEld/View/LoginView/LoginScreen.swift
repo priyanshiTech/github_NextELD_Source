@@ -120,7 +120,7 @@ struct LoginScreen: View {
                             if success && SessionManagerClass.shared.isLoggedIn() {
         
                                 await viewModel.callLoginLogUpdateAPI()
-                                appRootManager.currentRoot = .scanner
+                                appRootManager.currentRoot = .scanner()
                                // navManager.navigate(to: .SplashScreen)
                                 
                             } else {

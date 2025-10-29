@@ -15,7 +15,6 @@ struct SplashView: View {
     @StateObject private var tokenVM = APITokenUpdateViewModel()
 
     var body: some View {
-        NavigationStack(path: $navManager.path) {
             VStack {
                 Text("Excel Eld")
                     .padding(0.0)
@@ -26,22 +25,13 @@ struct SplashView: View {
                     .frame(width: 200, height: 250)
                     .offset(y: offSetImage)
             }
-            .navigationDestination(for: AppRoute.HomeFlow.self) { type in
-                switch type {
-                case .Home:
-                    HomeScreenView()
-                case .AddVichleMode:
-                    AddVichleMode(selectedVehicle: .constant(""), selectedVehicleId: .constant(0))
-                default:
-                    EmptyView()
-                }
-            }
-        }
-        .environmentObject(navManager)
+            
+        
         .navigationBarBackButtonHidden()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(uiColor: .wine))
         .ignoresSafeArea()
+        .environmentObject(navManager)
         .onAppear {
             // Run animation
             withAnimation(.easeOut(duration: 2.0)) {
@@ -51,13 +41,25 @@ struct SplashView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
                 withAnimation(.easeInOut(duration: 0.5)) {
                     fadeOut = true
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        handleNavigation()
+                    }
+
                 }
             }
             //  Decide navigation after splash delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
-                handleNavigation()
-            }
         }
+//        .navigationDestination(for: AppRoute.HomeFlow.self) { type in
+//            switch type {
+//            case .Home:
+//                HomeScreenView()
+//            case .AddVichleMode:
+//                AddVichleMode(selectedVehicle: .constant(""), selectedVehicleId: .constant(0))
+//            default:
+//                EmptyView()
+//            }
+//        }
         
     }
     
@@ -67,7 +69,7 @@ struct SplashView: View {
             Task {
                 let success = await tokenVM.callSplashUpdateAPI()
                 if success {
-                    navManager.navigate(to: AppRoute.HomeFlow.Home)
+                    appRootManager.currentRoot = .scanner(moveToHome: true)
                 }  else {
                     let vehicleNo = AppStorageHandler.shared.vehicleNo ?? ""
                     if vehicleNo.isEmpty || vehicleNo.lowercased() == "none" {
@@ -76,7 +78,7 @@ struct SplashView: View {
                         navManager.navigate(to: AppRoute.HomeFlow.AddVichleMode)
                     }
                     else {
-                        appRootManager.currentRoot = .scanner
+                        appRootManager.currentRoot = .scanner(moveToHome: false)
                     }
                 }
             }
