@@ -15,6 +15,7 @@ struct EmailDvir: View {
     let updateRecords: [DvirRecord]
     var onSelect: (DvirRecord) -> Void
     @State private var selectedDvirRecord:DvirRecord?  = nil
+    @StateObject var trailerVM: TrailerViewModel = .init()
     
     //MARK: - remove placeholder multiple value  filteredRecords
     var filteredRecords: [DvirRecord] {
@@ -258,16 +259,20 @@ struct EmailDvir: View {
             switch type {
             case .AddDvirScreenView:
                 AddDvirScreenView( selectedRecord:$selectedDvirRecord,isFromHome:false)
+             
                 
             case .DvirHostory(tittle: AppConstants.dvirHostoryTittle):
                   DVIRHistory(title: AppConstants.dvirHostoryTittle)
+                
             case .trailerScreen:
-                TrailerView(tittle: AppConstants.trailersTittle)
+                TrailerView(trailerVM: trailerVM, tittle: AppConstants.trailersTittle, trailers: $trailerVM.trailers)
                 
             case .ShippingDocment:
                 ShippingDocView(tittle: AppConstants.shippingTittle)
                 
             case .AddVehicleForDVIR:
+             
+
                 AddVehicleForDvir(selectedVehicleNumber: .constant(""), VechicleID: .constant(Int(selectedDvirRecord?.vechicleID ?? "0") ?? 0))
                  
             default:

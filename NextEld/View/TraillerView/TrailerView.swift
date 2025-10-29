@@ -12,11 +12,11 @@ import SwiftUI
 struct TrailerView: View {
     
     @EnvironmentObject var navmanager: NavigationManager
-    @StateObject var trailerVM = TrailerViewModel()
+    @ObservedObject var trailerVM: TrailerViewModel
     
     var tittle: String
     @State private var inputText: String = ""
-    @State private var items: [String] = []
+    @Binding var trailers: [String]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -60,8 +60,8 @@ struct TrailerView: View {
                     Button(action: {
                         if !inputText.isEmpty {
                            // items.append(inputText)
-                            trailerVM.trailers.append(inputText)
-                          
+                           // trailerVM.trailers.append(inputText)
+                            trailers.append(inputText)
                             inputText = ""
                         }
                      
@@ -77,13 +77,13 @@ struct TrailerView: View {
                 
                 // MARK: - List (Clear Background)
                 List {
-                    ForEach(trailerVM.trailers, id: \.self) { item in
+                    ForEach(trailers, id: \.self) { item in
                         HStack {
                             Text(item)
                             Spacer()
                             Button("Delete") {
-                                if let index = trailerVM.trailers.firstIndex(of: item) {
-                                    trailerVM.trailers.remove(at: index)
+                                if let index = trailers.firstIndex(of: item) {
+                                    trailers.remove(at: index)
                                 }
                             }
                             .padding(.vertical, 8)
@@ -100,11 +100,13 @@ struct TrailerView: View {
                 .background(Color.clear)
             }
             .padding()
-        }.navigationBarBackButtonHidden()
+        }
+        .navigationBarBackButtonHidden()
     }
 }
 
-#Preview {
-    TrailerView(tittle: "Trailers")
-}
+//#Preview {
+//    TrailerView(trailerVM: TrailerViewModel(), tittle: "Trailers", trailers: <#Binding<[String]>#>)
+//        .environmentObject(NavigationManager())
+//}
 

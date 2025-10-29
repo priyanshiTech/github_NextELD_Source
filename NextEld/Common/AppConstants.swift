@@ -44,4 +44,7 @@ struct AppConstants {
     static let Deletemessage = "This will permanently delete all logs Record."
     static let Successmessage =  "Data deleted successfully."
     static let NextDaymessage  = "Next Day Started"
+    
+    //MARK: -  for vehicle condition
+    static let vehicleCondition =  " Vehicle Condition Satisfactory"
 }
