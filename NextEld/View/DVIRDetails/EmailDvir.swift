@@ -261,6 +261,14 @@ struct EmailDvir: View {
                 
             case .DvirHostory(tittle: AppConstants.dvirHostoryTittle):
                   DVIRHistory(title: AppConstants.dvirHostoryTittle)
+            case .trailerScreen:
+                TrailerView(tittle: AppConstants.trailersTittle)
+                
+            case .ShippingDocment:
+                ShippingDocView(tittle: AppConstants.shippingTittle)
+                
+            case .AddVehicleForDVIR:
+                AddVehicleForDvir(selectedVehicleNumber: .constant(""), VechicleID: .constant(Int(selectedDvirRecord?.vechicleID ?? "0") ?? 0))
                  
             default:
                 EmptyView()

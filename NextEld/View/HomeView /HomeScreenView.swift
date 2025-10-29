@@ -314,6 +314,13 @@ struct HomeScreenView: View {
                 CommonTimerAlertView(violationData: violationData) {
                     homeVM.violationDataArray.removeLast()
                 }
+//                .onAppear(perform: {
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+//                        homeVM.violationDataArray.removeAll { element in
+//                            return element.id == violationData.id
+//                        }
+//                    }
+//                })
                 .zIndex(Double(100+index))
             }
             

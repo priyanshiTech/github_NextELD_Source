@@ -616,10 +616,10 @@ extension DatabaseManager {
             status: status,
             startTime: startTime,
             userId: AppStorageHandler.shared.driverId ?? 0,
-            day: UserDefaults.standard.integer(forKey: "day"),
+            day: AppStorageHandler.shared.days,
             isVoilations: isVoilations ? 1 : 0,   //  Actual Bool → Int
             dutyType: dutyType,
-            shift: UserDefaults.standard.integer(forKey: "shift"),
+            shift: AppStorageHandler.shared.shift,
             vehicle: AppStorageHandler.shared.vehicleNo ?? "",
                 //UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
             isRunning: isruning,
@@ -642,7 +642,8 @@ extension DatabaseManager {
             remainingWeeklyTime: remainingWeeklyTime,
             remainingDriveTime: remainingDriveTime,
             remainingDutyTime: remainingDutyTime,
-            remainingSleepTime: remainingSleepTime, breaktimerRemaning: breakTimeRemaning,
+            remainingSleepTime: remainingSleepTime,
+            breaktimerRemaning: breakTimeRemaning,
             lastSleepTime: lastSleepTime,
             isSplit: 0,
             engineStatus: "Off", isCertifiedLog: ""

@@ -406,22 +406,26 @@ struct AddDvirScreenView: View  {
 
                 }
                 .padding(.horizontal, 5)
+//                .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
+//                    switch type {
+//                    case .trailerScreen:
+//                        TrailerView(tittle: AppConstants.trailersTittle)
+//                        
+//                    case .ShippingDocment:
+//                        ShippingDocView(tittle: AppConstants.shippingTittle)
+//                        
+//                    case .AddVehicleForDVIR:
+//                        AddVehicleForDvir(selectedVehicleNumber: .constant(""), VechicleID: .constant(Int(selectedRecord?.vechicleID ?? "0") ?? 0))
+//
+//                    default:
+//                        EmptyView()
+//                    }
+//                    
+//                })
             }
             .navigationBarBackButtonHidden()
             
-            .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
-                switch type {
-                case .trailerScreen:
-                    TrailerView(tittle: AppConstants.trailersTittle)
-                    
-                case .ShippingDocment:
-                    ShippingDocView(tittle: AppConstants.shippingTittle)
-                     
-                default:
-                    EmptyView()
-                }
-                
-            })
+            
             
             // MARK: - Signature Popup Overlay
 
