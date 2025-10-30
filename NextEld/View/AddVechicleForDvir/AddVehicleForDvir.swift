@@ -13,15 +13,16 @@ struct AddVehicleForDvir: View {
     
     @Binding var selectedVehicleNumber: String
     @Binding var VechicleID: Int
-
+    
     @EnvironmentObject var navmanager: NavigationManager
     @State private var searchText = ""
-    @State private var localSelectedVehicle: String = "" // Local state to track selection
-    @State private var localVehicleID: Int = 0 // Local state to track vehicle ID
-
+    
+    @State private var localSelectedVehicle: String = ""
+    @State private var localVehicleID: Int = 0
+    
     @StateObject private var vehicleVM = VehicleInfoViewModel(networkManager: NetworkManager())
 
-    //  Filter ab API ke vehicles par
+    // MARK: - Filtered List
     var filteredVehicles: [VehicleResult] {
         if searchText.isEmpty {
             return vehicleVM.vehicles
@@ -32,78 +33,36 @@ struct AddVehicleForDvir: View {
         }
     }
 
+    // MARK: - Body
     var body: some View {
         VStack(spacing: 5) {
-            // Header
-            Color(uiColor: .wine)
-                .edgesIgnoringSafeArea(.top)
-                .frame(height: 30)
-
-            HStack {
-                // Back Button (left corner)
-                Button(action: {
-                    navmanager.goBack()
-                }) {
-                    Image(systemName: "arrow.left")
-                        .bold()
-                        .foregroundColor(.white)
-                        .imageScale(.large)
-                }
-                
-                Spacer()
-                // Title (center)
-                Text("Add Vehicle")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(.white)
-                
-                Spacer()
-                // Empty space so title stays center
-                Image(systemName: "arrow.left")
-                    .opacity(0) // invisible, for symmetry
-                    .imageScale(.large)
-            }
-            .frame(height: 56)
-            .padding(.horizontal)
-            .background(Color(uiColor: .wine))
-
-            // Search Bar
-            HStack {
-                Image(systemName: "envelope.fill")
-                    .foregroundColor(Color(uiColor: .wine))
-                TextField("Search vehicle", text: $searchText)
-                    .textFieldStyle(PlainTextFieldStyle())
-            }
-            .padding(12)
-            .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.4)))
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-
-            // List from API
+            
+            header
+            
+            searchBar
+            
+            // Vehicle List
             List {
                 ForEach(filteredVehicles, id: \.vehicleId) { vehicle in
-                    Button(action: {
-                        // Update both local and binding state immediately and synchronously
+                    Button {
+                        // Update local + bindings together
                         let vehicleNo = vehicle.vehicleNo.trimmingCharacters(in: .whitespaces)
-                        let vehicleId = vehicle.vehicleId
-                        
-                        // Update bindings FIRST - synchronously
-                        selectedVehicleNumber = vehicleNo
-                        VechicleID = vehicleId
-                        
-                        // Then update local state
                         localSelectedVehicle = vehicleNo
-                        localVehicleID = vehicleId
+                        localVehicleID = vehicle.vehicleId
                         
-                        print("✅ Vehicle selected: '\(vehicleNo)', ID: \(vehicleId)")
-                        print("   Binding state - vehicle: '\(selectedVehicleNumber)', ID: \(VechicleID)")
-                        print("   Local state - vehicle: '\(localSelectedVehicle)', ID: \(localVehicleID)")
-                    }) {
+                        selectedVehicleNumber = vehicleNo
+                        VechicleID = vehicle.vehicleId
+                        
+                        print("Selected: \(vehicleNo) [ID: \(vehicle.vehicleId)]")
+                        
+                    } label: {
                         HStack {
                             Text(vehicle.vehicleNo)
+                                .font(.system(size: 16))
+                            
                             Spacer()
-                            // Use local state OR binding for comparison
-                            if vehicle.vehicleNo.trimmingCharacters(in: .whitespaces) == localSelectedVehicle || 
-                               vehicle.vehicleNo.trimmingCharacters(in: .whitespaces) == selectedVehicleNumber.trimmingCharacters(in: .whitespaces) {
+                            
+                            if vehicle.vehicleId == localVehicleID {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundColor(Color(uiColor: .wine))
                             } else {
@@ -117,28 +76,16 @@ struct AddVehicleForDvir: View {
                 }
             }
             .listStyle(PlainListStyle())
+            
             // Submit Button
             Button {
-                // CRITICAL: Sync local state to bindings BEFORE navigation
-                guard !localSelectedVehicle.isEmpty else {
-                    print("⚠️ Submit clicked but no vehicle selected")
-                    navmanager.goBack()
-                    return
-                }
-                
-                // Update bindings synchronously FIRST - this must happen before navigation
-                selectedVehicleNumber = localSelectedVehicle
-                VechicleID = localVehicleID
-                
-                print("✅ Submit: Updated bindings synchronously:")
-                print("   selectedVehicleNumber = '\(selectedVehicleNumber)'")
-                print("   VechicleID = \(VechicleID)")
-                
-                // Use Task to ensure binding propagates before navigation
-                Task { @MainActor in
-                    // Give SwiftUI a moment to process the binding update
-                    try? await Task.sleep(nanoseconds: 50_000_000) // 0.05 seconds
-                    print("🚀 Navigating back now...")
+                if localSelectedVehicle.isEmpty {
+                    print("No vehicle selected")
+                } else {
+                    // Sync one more time before navigating back
+                    selectedVehicleNumber = localSelectedVehicle
+                    VechicleID = localVehicleID
+                    print(" Submitted: \(selectedVehicleNumber) [ID: \(VechicleID)]")
                     navmanager.goBack()
                 }
             } label: {
@@ -154,41 +101,66 @@ struct AddVehicleForDvir: View {
         }
         .edgesIgnoringSafeArea(.top)
         .navigationBarBackButtonHidden()
-        
-        
         .onAppear {
-            // Sync local state with binding when view appears
             localSelectedVehicle = selectedVehicleNumber
             localVehicleID = VechicleID
-            print("onAppear - Synced from bindings:")
-            print("  localSelectedVehicle: '\(localSelectedVehicle)' (from selectedVehicleNumber: '\(selectedVehicleNumber)')")
-            print("  localVehicleID: \(localVehicleID) (from VechicleID: \(VechicleID))")
-        }
-        .onDisappear {
-            // Final sync attempt - synchronously update if needed
-            if !localSelectedVehicle.isEmpty && (selectedVehicleNumber != localSelectedVehicle || VechicleID != localVehicleID) {
-                selectedVehicleNumber = localSelectedVehicle
-                VechicleID = localVehicleID
-                print("onDisappear: Final sync attempt")
-                print("  Set selectedVehicleNumber = '\(localSelectedVehicle)'")
-                print("  Set VechicleID = \(localVehicleID)")
-            }
-            print("View disappearing - Final state:")
-            print("  selectedVehicleNumber: '\(selectedVehicleNumber)'")
-            print("  localSelectedVehicle: '\(localSelectedVehicle)'")
-            print("  VechicleID: \(VechicleID)")
-            print("  localVehicleID: \(localVehicleID)")
+            print("onAppear → Restored selection: \(localSelectedVehicle), ID: \(localVehicleID)")
         }
         .task {
             await vehicleVM.fetchVehicleInfo()
-            print("API se aaye vehicles: \(vehicleVM.vehicles.map{$0.vehicleNo})")
-            print("API se aaye vehicles ID Number : \(vehicleVM.vehicles.map{$0.vehicleId})")
+            print("Vehicles from API: \(vehicleVM.vehicles.map { $0.vehicleNo })")
         }
-        
     }
-
 }
 
+// MARK: - Subviews
+private extension AddVehicleForDvir {
+    
+    var header: some View {
+        VStack(spacing: 0) {
+            Color(uiColor: .wine)
+                .frame(height: 30)
+                .edgesIgnoringSafeArea(.top)
+            
+            HStack {
+                Button(action: { navmanager.goBack() }) {
+                    Image(systemName: "arrow.left")
+                        .bold()
+                        .foregroundColor(.white)
+                        .imageScale(.large)
+                }
+                
+                Spacer()
+                
+                Text("Add Vehicle")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.white)
+                
+                Spacer()
+                
+                Image(systemName: "arrow.left")
+                    .opacity(0)
+                    .imageScale(.large)
+            }
+            .frame(height: 56)
+            .padding(.horizontal)
+            .background(Color(uiColor: .wine))
+        }
+    }
+    
+    var searchBar: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(Color(uiColor: .wine))
+            TextField("Search vehicle", text: $searchText)
+                .textFieldStyle(PlainTextFieldStyle())
+        }
+        .padding(12)
+        .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.4)))
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+    }
+}
 
 
 

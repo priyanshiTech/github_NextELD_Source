@@ -258,7 +258,7 @@ struct EmailDvir: View {
         .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
             switch type {
             case .AddDvirScreenView:
-                AddDvirScreenView( selectedRecord:$selectedDvirRecord,isFromHome:false)
+                AddDvirScreenView( selectedRecord:$selectedDvirRecord,trailers: $trailerVM.trailers, isFromHome:false)
              
                 
             case .DvirHostory(tittle: AppConstants.dvirHostoryTittle):

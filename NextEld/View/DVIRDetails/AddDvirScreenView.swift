@@ -17,7 +17,7 @@ struct AddDvirScreenView: View  {
    // @Binding var selectedVehicle: String
    // @Binding var selectedVehicleId: Int   // get vehicle id
     @State private var selectedVehicleNumber: String = ""
-    @State private var selectedVechicleID: Int = 0
+    @State private var vehicleID: Int = 0
     @State private var truckDefectSelection: String? = nil
     @State private var trailerDefectSelection: String? = nil
     @State private var Showpopup: Bool = false
@@ -30,6 +30,7 @@ struct AddDvirScreenView: View  {
     @State private var showValidationAlert = false
 
     @Binding var selectedRecord: DvirRecord?
+    @Binding var trailers: [String]
     var isFromHome: Bool = false    //MARK: -  To handle Home Screen flag
 
     @State  var driverName:String = ""
@@ -113,12 +114,11 @@ struct AddDvirScreenView: View  {
                         CardContainer {
                             VStack(alignment: .leading, spacing: 15) {
                                 DvirField(label: "Driver", value: driverName)
-                                DvirField(label: "Time", value: StartTime)
-                                DvirField(label: "Date", value: Drivetime )
+                                DvirField(label: "Time", value: DateTimeHelper.currentTime())
+                                DvirField(label: "Date", value: DateTimeHelper.currentDate())
                                 DvirField(label: "Odometer", value: "0")
                                 DvirField(label: "Company", value: companyName)
                                // DvirField(label: "Location", value: Location)
-                                
                                 DvirField(label: "Location", value: DVClocationManager.fullAddress ?? "Not found")
                             }
                         }
@@ -139,10 +139,10 @@ struct AddDvirScreenView: View  {
                                             .foregroundColor(.black)
                                         
                                         //MARK: -  to show a selected data
-                                        Text(displayVehicleNumber())
+                                       // Text(displayVehicleNumber())
+                                        Text("\(AppStorageHandler.shared.vehicleNo ?? "")")
                                             .font(.headline)
                                             .foregroundColor(.black)
-                                            .id("\(selectedVehicleNumber)-\(selectedRecord?.vehicleName ?? "")") // Force refresh when values change
                                     }
                                     Spacer()
                                     Image("pencil").foregroundColor(.gray)
@@ -168,7 +168,7 @@ struct AddDvirScreenView: View  {
                                             .foregroundColor(.black)
                                         
                                        //  Show all trailers comma-separated, or "None" if empty
-                                       // Text(trailerVM.trailers.isEmpty ? "None" : trailerVM.trailers.joined(separator: ", "))
+                                
                                         Text(trailerVM.trailers.isEmpty ? "None" : trailerVM.trailers.joined(separator: ", "))
                                             .font(.headline)
                                             .foregroundColor(.black)
@@ -188,24 +188,28 @@ struct AddDvirScreenView: View  {
                         CardContainer {
                             VStack(spacing: 16) {
                                 Text("Truck Defects").font(.headline)
-                                DefectsSection(title: "Truck", selection: $truckDefectSelection) {
+                                DefectsSection(title: "Truck", selection: $truckDefectSelection, onSelectNoDefect: {
+                                    alreadycheckAndSetVehicleCondition()
+                                }) {
                                     truckDefectSelection = "yes"
                                     popupType = "Truck"
                                     showPopup = true
                                 }
 
                                 Text("Trailer Defects").font(.headline)
-                                DefectsSection(title: "Trailer", selection: $trailerDefectSelection) {
+                                DefectsSection(title: "Trailer", selection: $trailerDefectSelection, onSelectNoDefect: {
+                                    alreadycheckAndSetVehicleCondition()
+                                }) {
                                     trailerDefectSelection = "yes"
                                     popupType = "Trailer"
                                     showPopup = true
                                 }
                             }
                             .onChange(of: truckDefectSelection) { newValue in
-                                checkAndSetVehicleCondition()
+                                alreadycheckAndSetVehicleCondition()
                             }
                             .onChange(of: trailerDefectSelection) { newValue in
-                                checkAndSetVehicleCondition()
+                                alreadycheckAndSetVehicleCondition()
                             }
                         }
 
@@ -284,7 +288,7 @@ struct AddDvirScreenView: View  {
                         
                         // Store current vehicle selection before any updates
                         let previousVehicleNumber = selectedVehicleNumber
-                        let previousVehicleID = selectedVechicleID
+                        let previousVehicleID = vehicleID
                         print(" onAppear - Before updates:")
                         print("  previousVehicleNumber: '\(previousVehicleNumber)'")
                         print("  previousVehicleID: \(previousVehicleID)")
@@ -307,7 +311,7 @@ struct AddDvirScreenView: View  {
                                 let vehicleName = selectedRecord.vehicleName
                                 if !vehicleName.isEmpty {                          
                                     selectedVehicleNumber = vehicleName
-                                    selectedVechicleID = Int(selectedRecord.vechicleID) ?? 0
+                                    vehicleID = Int(selectedRecord.vechicleID) ?? 0
                                     print("  Initialized from record: '\(selectedVehicleNumber)'")
                                 }
                             } else {
@@ -321,17 +325,18 @@ struct AddDvirScreenView: View  {
                                 let vehicleName = selectedRecord.vehicleName
                                 if !vehicleName.isEmpty {
                                     selectedVehicleNumber = vehicleName
-                                    selectedVechicleID = Int(selectedRecord.vechicleID) ?? 0
+                                    vehicleID = Int(selectedRecord.vechicleID) ?? 0
                                     print(" New record - Initialized from selectedRecord: '\(selectedVehicleNumber)'")
                                 }
                             }
                         }
-                        
+                          
+
                         // Always update selectedRecord with current values when view appears
                         // This ensures we sync after coming back from vehicle selection
                         updateSelectedRecordFromVehicle()
                     }
-
+                  
 
                     
                     Button(action: {
@@ -455,54 +460,12 @@ struct AddDvirScreenView: View  {
                     case .ShippingDocment:
                         ShippingDocView(tittle: AppConstants.shippingTittle)
                         
-                    case .AddVehicleForDVIR:
+                   // case .AddVehicleForDVIR:
                        // AddVehicleForDvir(selectedVehicleNumber: $selectedVehicleNumber, VechicleID: $vehicleId)
+                    case .AddVehicleForDVIR:
+                        AddVehicleForDvir(selectedVehicleNumber: $selectedVehicleNumber, VechicleID: $vehicleID)
 
-                        AddVehicleForDvir(selectedVehicleNumber: $selectedVehicleNumber, VechicleID: $selectedVechicleID)
-                            .onDisappear {
-                                // Ensure selectedRecord is updated when coming back
-                                print(" AddVehicleForDvir disappearing - syncing...")
-                                print("   selectedVehicleNumber: '\(selectedVehicleNumber)'")
-                                print("   selectedVechicleID: \(selectedVechicleID)")
-                                // Force UI update by triggering a state change
-                                let temp = selectedVehicleNumber
-                                DispatchQueue.main.async {
-                                    self.selectedVehicleNumber = temp
-                                    self.updateSelectedRecordFromVehicle()
-                                }
-                            }
-                            .onChange(of: selectedVehicleNumber) { newValue in
-                                // Update selectedRecord when vehicle changes
-                                print(" onChange selectedVehicleNumber: '\(newValue)'")
-                                guard !newValue.isEmpty else { 
-                                    print(" New value is empty, skipping update")
-                                    return 
-                                }
-                                if selectedRecord != nil {
-                                    var updatedRecord = selectedRecord!
-                                    updatedRecord.vehicleName = newValue
-                                    updatedRecord.vechicleID = "\(selectedVechicleID)"
-                                    selectedRecord = updatedRecord
-                                    print(" Updated selectedRecord - vehicleName: '\(newValue)', vechicleID: \(selectedVechicleID)")
-                                } else {
-                                    print(" selectedRecord is nil")
-                                }
-                            }
-                            .onChange(of: selectedVechicleID) { newValue in
-                                // Update selectedRecord when vehicle ID changes
-                                print(" onChange selectedVechicleID: \(newValue)")
-                                if selectedRecord != nil && newValue > 0 {
-                                    var updatedRecord = selectedRecord!
-                                    updatedRecord.vechicleID = "\(newValue)"
-                                    if !selectedVehicleNumber.isEmpty {
-                                        updatedRecord.vehicleName = selectedVehicleNumber
-                                    }
-                                    selectedRecord = updatedRecord
-                                    print(" Updated selectedRecord - vechicleID: \(newValue), vehicleName: '\(selectedVehicleNumber)'")
-                                } else {
-                                    print("Cannot update - selectedRecord is nil or ID is 0")
-                                }
-                            }
+                
 
                     default:
                         EmptyView()
@@ -603,18 +566,18 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Update selectedRecord with vehicle information
     func updateSelectedRecordFromVehicle() {
-        print("updateSelectedRecordFromVehicle called - selectedVehicleNumber: '\(selectedVehicleNumber)', selectedVechicleID: \(selectedVechicleID)")
+        print("updateSelectedRecordFromVehicle called - selectedVehicleNumber: '\(selectedVehicleNumber)', selectedVechicleID: \(vehicleID)")
         
-        guard !selectedVehicleNumber.isEmpty && selectedVechicleID > 0 else {
+        guard !selectedVehicleNumber.isEmpty && vehicleID > 0 else {
             print("Cannot update - selectedVehicleNumber is empty or ID is 0")
             return
         }
         
         if var record = selectedRecord {
             record.vehicleName = selectedVehicleNumber
-            record.vechicleID = "\(selectedVechicleID)"
+            record.vechicleID = "\(vehicleID)"
             selectedRecord = record
-            print(" Updated selectedRecord - vehicleName: '\(selectedVehicleNumber)', vechicleID: \(selectedVechicleID)")
+            print(" Updated selectedRecord - vehicleName: '\(selectedVehicleNumber)', vechicleID: \(vehicleID)")
         } else {
             print(" selectedRecord is nil, creating new record")
          
@@ -629,6 +592,11 @@ struct AddDvirScreenView: View  {
         else if truckDefectSelection == "yes" || trailerDefectSelection == "yes" {
             vehicleVM.selectedCondition = nil
         }
+    }
+
+    // MARK: - Wrapper to satisfy existing call site naming
+    func alreadycheckAndSetVehicleCondition() {
+        checkAndSetVehicleCondition()
     }
     
     // MARK: - Display Vehicle Number with proper fallback
@@ -655,11 +623,15 @@ struct AddDvirScreenView: View  {
 struct DefectsSection: View {
     let title: String
     @Binding var selection: String?
+    var onSelectNoDefect: (() -> Void)? = nil
     let onSelectDefect: () -> Void
     
     var body: some View {
         VStack(spacing: 10) {
-            Button(action: { selection = "no" }) {
+            Button(action: {
+                selection = "no"
+                onSelectNoDefect?()
+            }) {
                 defectButton(label: "No Defects", isSelected: selection == "no")
             }
             

@@ -155,8 +155,8 @@ struct DeviceScannerView: View {
                 }
                 Spacer()
                     .onAppear {
-                        //  Load vehicle from UserDefaults
-                        if let savedVehicle = UserDefaults.standard.string(forKey: "vehicleNo") {
+                        //  Load vehicle from AppStorage
+                        if let savedVehicle = AppStorageHandler.shared.vehicleNo{
                             tittle = savedVehicle
                             print("Loaded vehicle title: \(savedVehicle)")
                         }

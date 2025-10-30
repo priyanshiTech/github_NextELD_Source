@@ -11,7 +11,8 @@ struct HomeScreenView: View {
     
     @EnvironmentObject var appRootManager: AppRootManager
     @StateObject private var homeVM : HomeViewModel = .init()
-    
+    @StateObject var trailerVM: TrailerViewModel = .init()
+
     @State private var labelValue = ""
     @State private var showCertifyLogAlert = false
     @State private var showStatusalert: Bool = false
@@ -107,8 +108,9 @@ struct HomeScreenView: View {
                         Text("Disconnected")
                             .font(.title2)
                             .foregroundColor(.red)
+                        //UserDefaults.standard.string(forKey: "truckNo"),
                         
-                        VehicleInfoView(GadiNo: UserDefaults.standard.string(forKey: "truckNo") ?? "Not Found",
+                        VehicleInfoView(GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                         
                             StatusView(homeViewModel: homeVM) { status in
@@ -619,7 +621,7 @@ struct HomeScreenView: View {
                 DriverLogListView()
                 
             case .AddDvirScreenView:
-                AddDvirScreenView( selectedRecord:.constant(nil))
+                AddDvirScreenView( selectedRecord:.constant(nil), trailers: $trailerVM.trailers )
             }
             
         })

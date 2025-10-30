@@ -13,7 +13,7 @@ struct TrailerView: View {
     
     @EnvironmentObject var navmanager: NavigationManager
     @ObservedObject var trailerVM: TrailerViewModel
-    
+
     var tittle: String
     @State private var inputText: String = ""
     @Binding var trailers: [String]
@@ -60,8 +60,8 @@ struct TrailerView: View {
                     Button(action: {
                         if !inputText.isEmpty {
                            // items.append(inputText)
-                           // trailerVM.trailers.append(inputText)
-                            trailers.append(inputText)
+                            trailerVM.addTrailer(inputText)
+                            //trailers.append(inputText)
                             inputText = ""
                         }
                      

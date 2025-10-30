@@ -268,7 +268,7 @@ struct CertifySelectedView: View {
 
 //                    .onAppear {
 //                        certifiedDate = title.extractDate()
-//                        AppStorageHandler.shared.setvehicleId(VechicleID)
+//                        AppStorageHandler.shared.vehicleId(VechicleID)
 //
 //                        if let record = CertifyDatabaseManager.shared.fetchAllRecords()
 //                            .first(where: { $0.date == certifiedDate }) {
