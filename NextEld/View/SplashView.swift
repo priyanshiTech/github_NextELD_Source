@@ -65,13 +65,13 @@ struct SplashView: View {
     
     private func handleNavigation() {
         if let savedToken = SessionManagerClass.shared.getToken(), !savedToken.isEmpty  , AppStorageHandler.shared.driverId != nil {
-            //  If token exists → call splash API
+
             Task {
                 let success = await tokenVM.callSplashUpdateAPI()
                 if success {
                     let vehicleNo = AppStorageHandler.shared.vehicleNo ?? ""
                     if vehicleNo.isEmpty || vehicleNo.lowercased() == "none" {
-                        // Navigate to Add Vehicle screen
+
                         print(" Vehicle No is missing → navigating to AddVehicle screen")
                         navManager.navigate(to: AppRoute.HomeFlow.AddVichleMode)
                     } else {

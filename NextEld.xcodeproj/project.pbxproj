@@ -28,10 +28,12 @@
 		AF04B1BB2DE98DA600A5F3D1 /* SelectLanguagepopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */; };
 		AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */; };
 		AF0F71AF2E34FAA2005F950C /* TrailerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AD2E34FAA2005F950C /* TrailerView.swift */; };
+		AF1073582EB52C0200C3CE0E /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1073572EB52C0200C3CE0E /* ImagePickerController.swift */; };
 		AF210E9B2E9A56B900E926DF /* privacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF210E9A2E9A56B900E926DF /* privacyPolicyView.swift */; };
 		AF24F36C2E966796000E4909 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF24F36B2E966796000E4909 /* RootView.swift */; };
 		AF2E0D262E8BBFCE00172174 /* ContinueDriveDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2E0D252E8BBFCE00172174 /* ContinueDriveDB.swift */; };
 		AF2E0D282E8BC5B200172174 /* ContinueDriveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2E0D272E8BC5B200172174 /* ContinueDriveView.swift */; };
+		AF3A59362EB4F48F007A438F /* UploadDefectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A59352EB4F48F007A438F /* UploadDefectView.swift */; };
 		AF58BFD82E69C7CE00F0E765 /* SignatureAddDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */; };
 		AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */; };
 		AF6532A52E66D07000FB2A11 /* SplashScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */; };
@@ -211,7 +213,6 @@
 		CB99EBD32EA3E58A0062AC9A /* HomeViewModel+Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */; };
 		CBE886042E995A2D00B7D581 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE886032E995A2500B7D581 /* HomeViewModel.swift */; };
 		CBE886072E9969F900B7D581 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE886062E9969F300B7D581 /* AppConstants.swift */; };
-		CBEF2F582EAE098F00451B22 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEF2F572EAE098900451B22 /* String+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -271,10 +272,12 @@
 		AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLanguagepopup.swift; sourceTree = "<group>"; };
 		AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerViewModel.swift; sourceTree = "<group>"; };
 		AF0F71AD2E34FAA2005F950C /* TrailerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerView.swift; sourceTree = "<group>"; };
+		AF1073572EB52C0200C3CE0E /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		AF210E9A2E9A56B900E926DF /* privacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = privacyPolicyView.swift; sourceTree = "<group>"; };
 		AF24F36B2E966796000E4909 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		AF2E0D252E8BBFCE00172174 /* ContinueDriveDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueDriveDB.swift; sourceTree = "<group>"; };
 		AF2E0D272E8BC5B200172174 /* ContinueDriveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueDriveView.swift; sourceTree = "<group>"; };
+		AF3A59352EB4F48F007A438F /* UploadDefectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDefectView.swift; sourceTree = "<group>"; };
 		AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureAddDvir.swift; sourceTree = "<group>"; };
 		AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashModel.swift; sourceTree = "<group>"; };
 		AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewModel.swift; sourceTree = "<group>"; };
@@ -601,6 +604,8 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AF1073562EB52BCA00C3CE0E /* ImagePicker */,
+				AF3A59302EB4F3D9007A438F /* Upload Defect */,
 				AFD428482EAB98D300E56B3F /* AddDvirPopup */,
 				AFD340D72E9CF1F0007D88DF /* BluetothView */,
 				AF9024932E93DD920005F0D7 /* HomeBoxViews */,
@@ -701,6 +706,14 @@
 			path = TraillerView;
 			sourceTree = "<group>";
 		};
+		AF1073562EB52BCA00C3CE0E /* ImagePicker */ = {
+			isa = PBXGroup;
+			children = (
+				AF1073572EB52C0200C3CE0E /* ImagePickerController.swift */,
+			);
+			path = ImagePicker;
+			sourceTree = "<group>";
+		};
 		AF210E992E9A568700E926DF /* PrivacyPoilicy */ = {
 			isa = PBXGroup;
 			children = (
@@ -716,6 +729,14 @@
 				AF2E0D272E8BC5B200172174 /* ContinueDriveView.swift */,
 			);
 			path = "ContinueDrive ";
+			sourceTree = "<group>";
+		};
+		AF3A59302EB4F3D9007A438F /* Upload Defect */ = {
+			isa = PBXGroup;
+			children = (
+				AF3A59352EB4F48F007A438F /* UploadDefectView.swift */,
+			);
+			path = "Upload Defect";
 			sourceTree = "<group>";
 		};
 		AF58BFD62E69C7B100F0E765 /* SignatureViewADDDvir */ = {
@@ -1645,6 +1666,7 @@
 				AFD4284A2EAB98FA00E56B3F /* AddDvirPopupHome.swift in Sources */,
 				10CA6EC02DCC9103003B265C /* ScrollViewUniversal.swift in Sources */,
 				AFA98C8F2E01748000E87802 /* VariablesView.swift in Sources */,
+				AF3A59362EB4F48F007A438F /* UploadDefectView.swift in Sources */,
 				AFCC4CA02E49E8CF00629DE3 /* MultipartAPI.swift in Sources */,
 				CBE886072E9969F900B7D581 /* AppConstants.swift in Sources */,
 				AF72E4462DFD557700626DC0 /* LocationManager.swift in Sources */,
@@ -1691,6 +1713,7 @@
 				AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */,
 				AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */,
 				106586132DCCE182003CE502 /* Extension + colour.swift in Sources */,
+				AF1073582EB52C0200C3CE0E /* ImagePickerController.swift in Sources */,
 				108FF8022DC895E10051671B /* NextEldApp.swift in Sources */,
 				AFB943332E029CD300AD19D7 /* DeviceListViewController.swift in Sources */,
 				AFA691032E54682A0035D092 /* DefectViewModel.swift in Sources */,

@@ -27,128 +27,9 @@ struct EmailDvir: View {
     
     
     var body: some View {
-//        NavigationView {
-//            VStack(spacing: 0) {
-//                ZStack(alignment: .topLeading){
-//                    Color(UIColor.wine)
-//                        .edgesIgnoringSafeArea(.top)
-//                        .frame(height:40)
-//                }
-//                // MARK: - Header
-//                HStack {
-//                    Button(action: {
-//                        navmanager.goBack()
-//                    }) {
-//                        Image(systemName: "arrow.left")
-//                            .foregroundColor(.white)
-//                            .imageScale(.large)
-//                    }
-//                    
-//                    Spacer()
-//                    
-//                    Text("Email DVIR")
-//                        .font(.headline)
-//                        .foregroundColor(.white)
-//                        .bold()
-//                    
-//                    Spacer()
-//                    
-//                    HStack(spacing: 16) {
-//                        
-//                        Button(action: {
-//                            selectedVehicle = ""
-//                            navmanager.navigate(to: .AddDvirScreenView(
-//                                selectedVehicle: "",
-//                                selectedRecord: emptyDvirRecord, isFromHome: false   // new record
-//                            ))
-//                        })
-//                        {
-//                            
-//                            
-//                            Image(systemName: "plus")
-//                                .foregroundColor(.white)
-//                                .imageScale(.large)
-//                        }
-//                        
-//                        Button(action: {
-//                            navmanager.navigate(to: .DvirHostory(tittle: "Dvir History"))
-//                        }) {
-//                            Image("email_icon")
-//                                .resizable()
-//                                .frame(width: 20, height: 20)
-//                        }
-//                    }
-//                }
-//                .padding()
-//                .background(Color(UIColor.wine))
-//                .shadow(radius: 2)
-//                
-//                Divider()
-//                
-//                // MARK: - Main Content
-//                if filteredRecords.isEmpty {
-//                    Spacer()
-//                    VStack(spacing: 12) {
-//                        Image(systemName: "doc.text.magnifyingglass")
-//                            .resizable()
-//                            .frame(width: 60, height: 60)
-//                            .foregroundColor(.gray.opacity(0.4))
-//                        
-//                        Text("No DVIR Records Available.")
-//                            .font(.subheadline)
-//                            .foregroundColor(.gray)
-//                    }
-//                    Spacer()
-//                } else {
-//                    List {
-//                        ForEach(filteredRecords, id: \.self) { record in
-//                            Button(action: {
-//                                selectedVehicle = record.vechicleID
-//                                navmanager.navigate(to: .AddDvirScreenView(
-//                                    selectedVehicle: selectedVehicle,
-//                                    selectedRecord: record,
-//                                    isFromHome: false
-//                                ))
-//                            }) {
-//                                HStack(alignment: .top, spacing: 10) {
-//                                    Image(systemName: "checkmark.circle.fill")
-//                                        .foregroundColor(Color(UIColor.wine))
-//                                        .padding(.top, 2)
-//                                    
-//                                    VStack(alignment: .leading, spacing: 4) {
-//                                        Text("\(record.DAY) \(record.DvirTime)")
-//                                            .fontWeight(.semibold)
-//                                        
-//                                        Text(record.vehicleCondition)
-//                                            .foregroundColor(.green)
-//                                            .font(.subheadline)
-//                                    }
-//                                }
-//                                .padding(.vertical, 6)
-//                            }
-//                        }
-//
-//                        .listStyle(PlainListStyle())
-//                    }
-//                    .edgesIgnoringSafeArea(.top)
-//                }
-//                   
-//                    .onAppear {
-//                        records = DvirDatabaseManager.shared.fetchAllRecords()
-//                    }
-//            }
-//            .navigationBarHidden(true)
-//            .navigationBarBackButtonHidden()
-//            .navigationViewStyle(StackNavigationViewStyle()) // iPhone/iPad friendly
-//        }
-            
             
             VStack(spacing: 0) {
-                //                ZStack(alignment: .topLeading) {
-                //                    Color(UIColor.wine)
-                //                        .edgesIgnoringSafeArea(.top)
-                //                        .frame(height: 40)
-                //                }
+           
                 
                 // MARK: - Header
                 HStack {
@@ -212,38 +93,48 @@ struct EmailDvir: View {
                     Spacer()
                 } else {
                     List(filteredRecords, id: \.self) { record in
-                        Button(action: {
-                            selectedDvirRecord = record
-                            navmanager.path.append(AppRoute.DvirFlow.AddDvirScreenView)
-                            //                            navmanager.navigate(to: AppRoute.HomeFlow.AddDvirScreenView(
-                            //                                selectedVehicle: selectedVehicle,
-                            //                                selectedRecord: record,
-                            //                                isFromHome: false
-                            //                            ))
-                            
-                            
-                            //                            navmanager.navigate(to: .vehicleFlow(.AddDvirScreenView(
-                            //                                                                       selectedVehicle: selectedVehicle,
-                            //                                                                       selectedRecord: record,
-                            //                                                                       isFromHome: false
-                            //                                                                   )))
-                        }) {
-                            HStack(alignment: .top, spacing: 10) {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(Color(UIColor.wine))
-                                    .padding(.top, 2)
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("\(record.DAY) \(record.DvirTime)")
-                                        .fontWeight(.semibold)
+                        HStack(alignment: .top, spacing: 10) {
+                            Button(action: {
+                                selectedDvirRecord = record
+                                navmanager.path.append(AppRoute.DvirFlow.AddDvirScreenView)
+                       
+                            }) {
+                                HStack(alignment: .top, spacing: 10) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(Color(UIColor.wine))
+                                        .padding(.top, 2)
                                     
-                                    Text(record.vehicleCondition)
-                                        .foregroundColor(.green)
-                                        .font(.subheadline)
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("\(record.DAY) \(record.DvirTime)")
+                                            .fontWeight(.semibold)
+                                        
+                                        Text(record.vehicleCondition)
+                                            .foregroundColor(.green)
+                                            .font(.subheadline)
+                                    }
                                 }
+                                .padding(.vertical, 6)
                             }
-                            .padding(.vertical, 6)
+                            .buttonStyle(PlainButtonStyle())
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                selectedDvirRecord = record
+                                navmanager.path.append(AppRoute.DvirFlow.UploadDefectView)
+                            }) {
+                                Text("View Defect")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Color(UIColor.wine))
+                                    .cornerRadius(8)
+                            }
+                            .padding(.top, 2)
                         }
+                        .padding(.vertical, 6)
                     }
                     .listStyle(PlainListStyle())
                     .edgesIgnoringSafeArea(.top)
@@ -259,7 +150,9 @@ struct EmailDvir: View {
             switch type {
             case .AddDvirScreenView:
                 AddDvirScreenView( selectedRecord:$selectedDvirRecord,trailers: $trailerVM.trailers, isFromHome:false)
-             
+                
+            case .UploadDefectView:
+                UploadDefectView()
                 
             case .DvirHostory(tittle: AppConstants.dvirHostoryTittle):
                   DVIRHistory(title: AppConstants.dvirHostoryTittle)

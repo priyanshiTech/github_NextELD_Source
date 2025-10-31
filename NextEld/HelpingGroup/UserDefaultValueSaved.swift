@@ -39,6 +39,7 @@ struct AppStorageHandler {
     @AppStorage("longitude") var longitude: Double?
     @AppStorage("logType") var logType: String?
     @AppStorage("employeeId") var employeeId: Int?
+    @AppStorage("clientName")var company: String?
     
     
     

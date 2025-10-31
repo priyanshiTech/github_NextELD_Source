@@ -58,6 +58,7 @@ struct TrailerView: View {
                         .padding(.horizontal)
                     
                     Button(action: {
+                        
                         if !inputText.isEmpty {
                            // items.append(inputText)
                             trailerVM.addTrailer(inputText)

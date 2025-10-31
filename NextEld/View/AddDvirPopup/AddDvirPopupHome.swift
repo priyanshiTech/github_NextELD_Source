@@ -10,19 +10,19 @@ import SwiftUI
 
 
 struct AddDvirPopup: View {
+    
     @Binding var isPresented: Bool
     
     var body: some View {
+
         ZStack {
-            
-            Color.clear
+
+                 Color.clear
                 .ignoresSafeArea()
                 .contentShape(Rectangle()) // keeps tap detection area
                 .onTapGesture {
                     isPresented = false
                 }
-
-            
             // Main popup card
             VStack(alignment: .leading, spacing: 12) {
                 // Header
@@ -72,7 +72,6 @@ struct AddDvirPopup: View {
                         .font(.footnote)
                         .foregroundColor(.gray)
                 }
-                
                 // Add button
                 Button(action: {
                     isPresented = false
@@ -86,7 +85,6 @@ struct AddDvirPopup: View {
                         .cornerRadius(10)
                 }
                 .padding(.top, 8)
-                
             }
             .padding(20)
             .background(Color.white)
@@ -99,9 +97,10 @@ struct AddDvirPopup: View {
 
 // MARK: - Helper Row View
 struct InfoRow: View {
+    
     var label: String
     var value: String
-    
+
     var body: some View {
         HStack(alignment: .top) {
             Text(label)

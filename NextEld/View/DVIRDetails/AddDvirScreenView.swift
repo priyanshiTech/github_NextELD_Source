@@ -28,6 +28,8 @@ struct AddDvirScreenView: View  {
     @StateObject var vehicleVM: VehicleConditionViewModel = .init()
     @StateObject var DVClocationManager: DeviceLocationManager = .init()
     @State private var showValidationAlert = false
+    @State private var showSuccessAlert = false
+    @State private var successMessage = ""
 
     @Binding var selectedRecord: DvirRecord?
     @Binding var trailers: [String]
@@ -340,19 +342,83 @@ struct AddDvirScreenView: View  {
 
                     
                     Button(action: {
-                        guard  let selectedRecord else{
-                            return
+                        
+                        print("Add Dvir Button Clicked!")
+                        // Handle nil selectedRecord by creating a new record with available data
+                        var workingRecord: DvirRecord
+                        if var existingRecord = selectedRecord {
+                            // If vehicleName is empty, update it from state variables
+                            if existingRecord.vehicleName.isEmpty {
+                                let vehicleName = selectedVehicleNumber.isEmpty ? (AppStorageHandler.shared.vehicleNo ?? "") : selectedVehicleNumber
+                                let vehicleId = vehicleID > 0 ? "\(vehicleID)" : (AppStorageHandler.shared.vehicleId.map { "\($0)" } ?? "0")
+                                existingRecord.vehicleName = vehicleName
+                                existingRecord.vechicleID = vehicleId
+                                self.selectedRecord = existingRecord
+                                print("Updated selectedRecord with Vehicle: \(vehicleName)")
+                            }
+                            workingRecord = existingRecord
+                            print("Using existing selectedRecord")
+                        } else {
+                            // Create a new record with available state data
+                            print("selectedRecord is nil, creating new record from state data")
+                            let vehicleName = selectedVehicleNumber.isEmpty ? (AppStorageHandler.shared.vehicleNo ?? "") : selectedVehicleNumber
+                            let vehicleId = vehicleID > 0 ? "\(vehicleID)" : (AppStorageHandler.shared.vehicleId.map { "\($0)" } ?? "0")
+                            
+                            workingRecord = DvirRecord(
+                                id: nil,
+                                UserID: driverID,
+                                UserName: driverName,
+                                startTime: "",
+                                DAY: "",
+                                Shift: "\(AppStorageHandler.shared.shift)",
+                                DvirTime: "",
+                                odometer: odometer,
+                                location: Location,
+                                truckDefect: "No",
+                                trailerDefect: "No",
+                                vehicleCondition: "None",
+                                notes: "",
+                                vehicleName: vehicleName,
+                                vechicleID: vehicleId,
+                                Sync: 1,
+                                timestamp: "",
+                                Server_ID: "",
+                                Trailer: "",
+                                signature: nil
+                            )
+                            // Update the binding
+                            self.selectedRecord = workingRecord
+                            print(" Created new selectedRecord with Vehicle: \(vehicleName)")
                         }
+                        
+                        // Ensure StartTime and Drivetime are set before validation
+                        if StartTime.isEmpty {
+                            StartTime = DateTimeHelper.currentDate()
+                            print("StartTime was empty, setting to: \(StartTime)")
+                        }
+                        if Drivetime.isEmpty {
+                            Drivetime = DateTimeHelper.currentTime()
+                            print("Drivetime was empty, setting to: \(Drivetime)")
+                        }
+                        
                         if let errorMessage = validateForm() {
+                            print(" Validation Failed: \(errorMessage)")
                             validationMessage = errorMessage
                             showValidationAlert = true
                         } else {
+                            print("Validation Passed - Starting Database Save")
+                            
                             let currentDay = DateTimeHelper.currentDate()
                             let currentTime = DateTimeHelper.currentTime()
-                            let signatureImage = signatureToImage(points: signaturePoints,
-                                                                  size: CGSize(width: 300, height: 150))
-                            let signatureData = signatureImage.pngData()
-                       
+                            // Get signature data from signatureImage state variable
+                            let signatureData = signatureImage?.pngData()
+                            
+                            print("Driver Name: \(driverName)")
+                            print("Vehicle: \(workingRecord.vehicleName)")
+                            print(" Trailer: \(trailerVM.trailers.joined(separator: ", "))")
+                            print("Truck Defect: \(truckDefectSelection ?? "No")")
+                            print("Trailer Defect: \(trailerDefectSelection ?? "No")")
+                            print("Signature Data Size: \(signatureData?.count ?? 0) bytes")
 
                             var record = DvirRecord(
                                 id: existingRecord?.id,
@@ -368,12 +434,13 @@ struct AddDvirScreenView: View  {
                                 trailerDefect: trailerDefectSelection ?? "No",
                                 vehicleCondition: vehicleVM.selectedCondition ?? "None",
                                 notes: notesText,
-                                vehicleName: selectedRecord.vehicleName,
-                                vechicleID: "\(selectedRecord.vechicleID)",
+                                vehicleName: workingRecord.vehicleName.isEmpty ? (selectedVehicleNumber.isEmpty ? (AppStorageHandler.shared.vehicleNo ?? "") : selectedVehicleNumber) : workingRecord.vehicleName,
+                                vechicleID: workingRecord.vechicleID.isEmpty ? "\(vehicleID > 0 ? vehicleID : (AppStorageHandler.shared.vehicleId ?? 0))" : workingRecord.vechicleID,
                                 Sync: 1,
                                 timestamp: "\(Int(Date().timeIntervalSince1970 * 1000))",
                                 Server_ID: existingRecord?.Server_ID ?? "",
-                                Trailer: existingRecord?.Trailer ?? ""  //  Convert Data to String
+                                Trailer: trailerVM.trailers.isEmpty ? (existingRecord?.Trailer ?? "") : trailerVM.trailers.joined(separator: ", "),
+                                signature: signatureData  //  Save signature to database
                             )
 
                             
@@ -388,8 +455,8 @@ struct AddDvirScreenView: View  {
                             companyName: companyName,
                             odometer: odometer,
                              engineHour: 0,
-                            vehicleId: selectedRecord.vechicleID,
-                            timestampDvir: "\(currentTimestampMillis())",
+                            vehicleId: record.vechicleID,
+                            timestampDvir: "\(Int(Date().timeIntervalSince1970 * 1000))",
                             tokenNo: AppStorageHandler.shared.authToken ?? "",
                             clientId: AppStorageHandler.shared.clientId ?? 0 ,
                             trailer: trailerVM.trailers.first ?? "helo",
@@ -397,10 +464,23 @@ struct AddDvirScreenView: View  {
                             
                           )
 
-                            if let existingId = selectedRecord.id {
+                            if let existingId = record.id {
                                 // Editing existing record
+                                print(" Updating Existing Record with ID: \(existingId)")
                                 record.id = existingId
                                 DvirDatabaseManager.shared.updateRecord(record)
+                                
+                                // Verify the record was saved
+                                let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+                                let savedRecord = allRecords.first { $0.id == existingId }
+                                if savedRecord != nil {
+                                    print(" Record Verified in Database - Update Successful!")
+                                    successMessage = "DVIR Record Updated Successfully in Database!"
+                                    showSuccessAlert = true
+                                } else {
+                                    print(" Warning: Record not found in database after update")
+                                }
+                                
                                 updateDvirDataUsingCommonService(record: record, dvirLogId: driverID)
                                 print(" Record updated with ID: \(existingId)")
                                 if let signatureData = signatureData {
@@ -410,25 +490,44 @@ struct AddDvirScreenView: View  {
                                 }
 
                             } else {
+                                print("➕ Inserting New Record to Database")
                    
                                 DvirDatabaseManager.shared.insertRecord(record)
+                                
+                                // Verify the record was saved
+                                let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+                                if let savedRecord = allRecords.last {
+                                    print(" New Record Verified in Database!")
+                                    print(" Saved Record ID: \(savedRecord.id ?? -1)")
+                                    print(" Saved Record Driver: \(savedRecord.UserName)")
+                                    print(" Saved Record Vehicle: \(savedRecord.vehicleName)")
+                                    successMessage = "DVIR Record Saved Successfully to Database!\n\nDriver: \(driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
+                                    showSuccessAlert = true
+                                } else {
+                                    print(" Error: Record not found in database after insert")
+                                }
+                                
                                 uploadDvirDataUsingCommonService(record: DvirRecord)
-                                print(" New record inserted")
+                                print(" New record inserted to database")
                                 if let signatureData = signatureData {
-                                    print(" Signature saved successfully! Size: \(signatureData.count) bytes")
+                                    print("Signature saved successfully! Size: \(signatureData.count) bytes")
                                 } else {
                                     print("Signature missing while inserting new record")
                                 }
 
                             }
-                            if isFromHome {
-                               // navmanager.navigate(to: .homeFlow(.home))
-                                navmanager.navigate(to: AppRoute.HomeFlow.Home)
-                                
-                            } else {
-                               // navmanager.navigate(to: .logsFlow(.AddDvirPriTrip))
-                                navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
-                                
+                            
+                            // Delay navigation to show success message
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                if isFromHome {
+                                   // navmanager.navigate(to: .homeFlow(.home))
+                                    navmanager.navigate(to: AppRoute.HomeFlow.Home)
+                                    
+                                } else {
+                                   // navmanager.navigate(to: .logsFlow(.AddDvirPriTrip))
+                                    navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
+                                    
+                                }
                             }
 
                         }
@@ -447,6 +546,15 @@ struct AddDvirScreenView: View  {
                             title: Text("Missing Information"),
                             message: Text(validationMessage),
                             dismissButton: .default(Text("OK"))
+                        )
+                   }
+                    .alert(isPresented: $showSuccessAlert) {
+                        Alert(
+                            title: Text("Success"),
+                            message: Text(successMessage),
+                            dismissButton: .default(Text("OK")) {
+                                print(" User acknowledged success message")
+                            }
                         )
                    }
 
@@ -540,7 +648,8 @@ struct AddDvirScreenView: View  {
     func loadLoginData() {
         driverName = UserDefaults.standard.string(forKey: "driverName") ?? "N/A"
         Location = UserDefaults.standard.string(forKey: "customLocation") ?? "N/A"
-        companyName = UserDefaults.standard.string(forKey: "companyName") ?? "N/A"
+        companyName = AppStorageHandler.shared.company ?? ""
+        //UserDefaults.standard.string(forKey: "companyName") ?? "N/A"
         driverID = UserDefaults.standard.string(forKey: "userId") ?? "n/a"
 
    }
@@ -551,7 +660,20 @@ struct AddDvirScreenView: View  {
         if StartTime.isEmpty { return "Please enter Time" }
         if Drivetime.isEmpty { return "Please enter Day" }
 
-        if ((selectedRecord?.vehicleName.isEmpty) != nil) { return "Please select a Vehicle" }
+        // Check vehicle - use selectedRecord, selectedVehicleNumber, or AppStorageHandler
+        let vehicleName: String
+        if let recordVehicleName = selectedRecord?.vehicleName, !recordVehicleName.isEmpty {
+            vehicleName = recordVehicleName
+        } else if !selectedVehicleNumber.isEmpty {
+            vehicleName = selectedVehicleNumber
+        } else {
+            vehicleName = AppStorageHandler.shared.vehicleNo ?? ""
+        }
+        
+        if vehicleName.isEmpty {
+            return "Please select a Vehicle"
+        }
+        
         if (trailerVM.trailers.first ?? "").isEmpty { return "Please select a Trailer" }
         if truckDefectSelection == nil { return "Please select Truck Defect status" }
         if trailerDefectSelection == nil { return "Please select Trailer Defect status" }
