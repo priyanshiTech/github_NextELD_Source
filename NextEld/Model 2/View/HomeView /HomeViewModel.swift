@@ -295,18 +295,18 @@ class HomeViewModel: ObservableObject {
     
     var alertType: AlertType = .sucessConfimration
     
-  
-    
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
     init() {
+        restoreAllTimersFromLastStatus()
         validateScenarioInEveryMinute()
         timer
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.validateScenarioInEveryMinute()
+                self?.addIntermediateLogs()
             }
             .store(in: &cancellable)
     }
@@ -323,7 +323,7 @@ class HomeViewModel: ObservableObject {
     }
     
     func validateScenarioInEveryMinute() {
-        restoreAllTimersFromLastStatus()
+        
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
@@ -393,7 +393,7 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    func resetToInitialState(isResetCycleTimer: Bool = false) {
+    func resetToInitialState(isResetCycleTimer: Bool = false, cycleTime: Int = 0)  {
         onDutyTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0))
         breakTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.breakTime ?? 0))
         sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
@@ -401,44 +401,13 @@ class HomeViewModel: ObservableObject {
         continueDriveTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.continueDriveTime ?? 0))
         if isResetCycleTimer {
             cycleTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.cycleTime ?? 0))
+        } else if cycleTime != 0 {
+            cycleTimer = CountdownTimer(startTime: TimeInterval(cycleTime))
         }
         currentDriverStatus = .offDuty
         self.loadEventsFromDatabase()
        // setupTimerCallbacks()
     }
-    
-    // MARK: - Setup Timer Callbacks
-//    func setupTimerCallbacks() {
-//        // On Duty Timer Callback
-//        onDutyTimer?.onTimeChanged = { [weak self] remainingTime in
-//            self?.onChangeRemaingTime(type: .onDuty, remainigTime: remainingTime)
-//        }
-//        
-//        // On Drive Timer Callback
-//        onDriveTimer?.onTimeChanged = { [weak self] remainingTime in
-//            self?.onChangeRemaingTime(type: .onDrive, remainigTime: remainingTime)
-//        }
-//        
-//        // Cycle Timer Callback
-//        cycleTimer?.onTimeChanged = { [weak self] remainingTime in
-//            self?.onChangeRemaingTime(type: .cycleTimer, remainigTime: remainingTime)
-//        }
-//        
-//        // Continue Drive Timer Callback
-//        continueDriveTimer?.onTimeChanged = { [weak self] remainingTime in
-//            self?.onChangeRemaingTime(type: .continueDrive, remainigTime: remainingTime)
-//        }
-//        
-////        breakTimer?.onTimeChanged = { [weak self] remainingTime in
-////            self?.onChangeRemaingTime(type: .breakTimer, remainigTime: remainingTime)
-////        }
-//        
-//        // Sleep Timer Callback
-////        sleepTimer?.onTimeChanged = { [weak self] remainingTime in
-//////            self?.checkSleepTimerCompletion(remainingTime: remainingTime)
-////        }
-//
-//    }
     
     // MARK: - Delete All App Data
     func deleteAllAppData() {
@@ -462,7 +431,7 @@ class HomeViewModel: ObservableObject {
         case .onDuty:
             checkedOffDutyTimeIsLessThan2Hour()
             timerTypes = [.onDuty, .cycleTimer]
-            if previousStatus == .onDrive{
+            if previousStatus == .onDrive {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer, .continueDrive]
                 saveContinueDriveDB(status: AppConstants.onDuty)
             }
@@ -535,7 +504,7 @@ class HomeViewModel: ObservableObject {
         guard let latestLog = lastLog else {
             if let lastRecordFromDB = DatabaseManager.shared.getLastRecordOfDriverLogs() {
                 lastLog = lastRecordFromDB
-                resetToInitialState()
+                resetToInitialState(cycleTime: lastLog?.remainingWeeklyTime ?? 0)
             } else {
                 resetToInitialState(isResetCycleTimer: true)
             }
@@ -579,7 +548,7 @@ class HomeViewModel: ObservableObject {
 
     func adjusted(_ value: Int?, elapsed: TimeInterval, active: Bool) -> TimeInterval {
         let time = TimeInterval(value ?? 0)
-        return active ? max(0, time - elapsed) : time
+        return active ? (time - elapsed) : time//active ? max(0, time - elapsed) : time
     }
     
     
@@ -647,28 +616,31 @@ class HomeViewModel: ObservableObject {
         let uniqueValueForViolation30Min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_30min"
         let uniqueValueForViolation15min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_15min"
         
-        debugPrint("-----------------------")
+        debugPrint("remainingTime-----------------------\(remainingTime)")
         debugPrint("Current Value--------->\(uniqueValueForViolation)")
         debugPrint("\(violationKey)-------->\(lastViolationDate ?? "nil")")
         debugPrint("\(violationKey + "_15min")-------->\(lastViolationDate15min ?? "nil")")
         debugPrint("\(violationKey + "_30min")-------->\(lastViolationDate30Min ?? "nil")")
         debugPrint("-----------------------")
         
-        
+        guard let violationDate = remainingTime < 0 ? DateTimeHelper.calendar.date(byAdding: .second, value: Int(remainingTime), to: DateTimeHelper.currentDateTime()) : DateTimeHelper.currentDateTime() else {
+            return
+        }
+
         if remainingTime < warning1 && remainingTime > warning2 && lastViolationDate30Min != uniqueValueForViolation30Min {
             var violationData = ViolationData()
             violationData.violationType = type
             violationData.thirtyMinWarning = true // 30 min warning
             self.violationDataArray.append(violationData)
             UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
-            saveViolation(for: violationData)
+            saveViolation(for: violationData, date: violationDate)
         } else if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != uniqueValueForViolation15min {
             if lastViolationDate30Min != uniqueValueForViolation30Min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
                 self.violationDataArray.append(violationData)
-                saveViolation(for: violationData, date: DateTimeHelper.get15MinBeforeDate())
+                saveViolation(for: violationData, date: DateTimeHelper.get15MinBeforeDate(date: violationDate))
                 UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
             }
             
@@ -676,7 +648,7 @@ class HomeViewModel: ObservableObject {
             violationData.violationType = type
             violationData.fifteenMinWarning = true // 15 min warning
             self.violationDataArray.append(violationData)
-            saveViolation(for: violationData)
+            saveViolation(for: violationData, date: violationDate)
             UserDefaults.standard.setValue(uniqueValueForViolation15min, forKey: violationKey + "_15min")
         } else if remainingTime <= 0, uniqueValueForViolation != lastViolationDate {
             // This two condition will work when remaining time directly goes to <= 0
@@ -685,7 +657,7 @@ class HomeViewModel: ObservableObject {
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
                 self.violationDataArray.append(violationData)
-                saveViolation(for: violationData, date: DateTimeHelper.get30MinBeforeDate())
+                saveViolation(for: violationData, date: DateTimeHelper.get30MinBeforeDate(date: violationDate))
                 UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
             }
             
@@ -694,7 +666,7 @@ class HomeViewModel: ObservableObject {
                 violationData.violationType = type
                 violationData.fifteenMinWarning = true
                 self.violationDataArray.append(violationData)
-                saveViolation(for: violationData, date: DateTimeHelper.get15MinBeforeDate())
+                saveViolation(for: violationData, date: DateTimeHelper.get15MinBeforeDate(date: violationDate))
                 UserDefaults.standard.setValue(uniqueValueForViolation15min, forKey: violationKey + "_15min")
             }
             
@@ -704,18 +676,8 @@ class HomeViewModel: ObservableObject {
             violationData.violation = true
             UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey)
             self.violationDataArray.append(violationData)
-            saveViolation(for: violationData)
-            return
-            /*
-            if type == .cycleTimerViolation {
-                // Once the violation for cycle time comes it means cycle complete the 70 hours
-               // When cycle complete we need to wait for 34 hours to change the shift
-                setDriverStatus(status: .offDuty)
-            }
-             */
+            saveViolation(for: violationData, date: violationDate)
         }
-        
-       
         UserDefaults.standard.synchronize()
     }
     
@@ -814,6 +776,7 @@ class HomeViewModel: ObservableObject {
         resetToInitialState(isResetCycleTimer: true)
         self.saveTimerStateForStatus(status: AppConstants.shiftChangeAlertTitle, note: "New Shift Started")
         AppStorageHandler.shared.shift += 1
+        AppStorageHandler.shared.days = 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.shiftChanged)
     }
     
@@ -827,5 +790,18 @@ class HomeViewModel: ObservableObject {
         let totalSleepAllowed = AppStorageHandler.shared.onSleepTime ?? 0
         let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
         return calculatedSleepTaken >= TimeInterval(totalSleepAllowed)
+    }
+    
+    func addIntermediateLogs() {
+        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day]), lastLog.status == AppConstants.on_Drive else {
+            return
+        }
+        AppStorageHandler.shared.origin = OriginType.intermediate.description
+        let startTime = lastLog.startTime
+        let afterOneHourTime = DateTimeHelper.calendar.date(byAdding: .hour, value: 1, to: startTime) ?? DateTimeHelper.currentDateTime()
+        let currentTime = DateTimeHelper.currentDateTime()
+        if afterOneHourTime <= currentTime && lastLog.odometer != .zero {
+            saveTimerStateForStatus(status: lastLog.status, date: afterOneHourTime)
+        }
     }
 }
