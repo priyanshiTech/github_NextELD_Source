@@ -23,6 +23,14 @@ struct DateTimeHelper {
         return calendar
     }
     
+    static func get15MinBeforeDate() -> Date? {
+        return calendar.date(byAdding: .minute, value: -15, to: currentDateTime())
+    }
+    
+    static func get30MinBeforeDate() -> Date? {
+        return calendar.date(byAdding: .minute, value: -30, to: currentDateTime())
+    }
+    
     static func currentDateTime() -> Date {
         let currentTime = Date()
         let timezoneOffset = AppStorageHandler.shared.timeZoneOffset ?? ""

@@ -19,6 +19,9 @@ enum FilterType {
     case getYesterdayRecord
     case day
     case user
+    case violation
+    case warning
+    case nextDayAlert
 }
 
 extension DatabaseHandler {
@@ -261,12 +264,22 @@ class DatabaseManager: DatabaseHandler {
             return day == AppStorageHandler.shared.days
         case .user:
             return userId == AppStorageHandler.shared.driverId ?? 0
+        case .violation:
+            return status != AppConstants.violation
+        case .warning:
+            return status != AppConstants.warning
+        case .nextDayAlert:
+            return status != AppConstants.nextDayAlertTitle
         }
     }
     
-    func fetchLogs(filterTypes: [FilterType] = [], order: [Expressible]? = [], limit: Int? = nil) -> [DriverLogModel] {
+    func fetchLogs(filterTypes: [FilterType] = [], addWarningAndViolation: Bool = false, order: [Expressible]? = [], limit: Int? = nil) -> [DriverLogModel] {
         var logs: [DriverLogModel] = []
         var filterExpression: SQLite.Expression<Bool> = getFilter(for: .user) // default filter
+        if !addWarningAndViolation {
+            // wether we need to add violation or warning in record mainly we will add this record when showing all record
+            filterExpression = filterExpression && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert)
+        }
         for type in filterTypes {
             let filter = getFilter(for: type)
             filterExpression = filterExpression && filter
@@ -453,22 +466,22 @@ class DatabaseManager: DatabaseHandler {
         }
     }
     
-    func getLastRecordOfDriverLogs(for startDate: Date? = nil, endDate: Date? = nil) -> DriverLogModel? {
+    func getLastRecordOfDriverLogs(filterTypes: [FilterType] = []) -> DriverLogModel? {
         var logs: [DriverLogModel] = []
         do {
             guard let db = self.db else { return nil}
-            var filter = getFilter(for: .getTodayRecord)
-            if let startDate, let endDate {
-                filter = startTime > startDate && startTime < endDate
+            var filterExpression = getFilter(for: .user) && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert)
+            for type in filterTypes {
+                let filter = getFilter(for: type)
+                filterExpression = filterExpression && filter
             }
-            let query = driverLogs
-                            .filter(filter)
+             let query = driverLogs
+                            .filter(filterExpression)
                             .order(startTime.desc)
                             .limit(1)
             let resultSet = try db.prepare(query)
             for row in resultSet {
                 logs.append(DriverLogModel(
-
                     id: row[id],
                     status: row[status],
                     startTime: row[startTime],
@@ -512,37 +525,43 @@ class DatabaseManager: DatabaseHandler {
 
     
     func fetchDutyEventsForToday() -> [DutyLog] {
+        let fetchTodaysLogs = fetchLogs(filterTypes: [.getTodayRecord, .day])
         var logs: [DutyLog] = []
-        
         let currentStartOfDay = DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
-        let currentEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: currentStartOfDay)!
-        let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) ?? Date()
-        let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
-        let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
-        let currentDay =  AppStorageHandler.shared.days
-        
-        do {
-            guard let db = self.db else { return [] }
-            let query = driverLogs
-                .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == currentDay)
-                .order(startTime.desc)
-            for row in try db.prepare(query) {
-                if row[status] == AppConstants.violation || row[status] == AppConstants.warning {
-                    continue
-                }
-                let idValue = Int(row[id])
-                let statusValue = row[status]
-                let startString = row[startTime]
-                let log = DutyLog(id: idValue, status: statusValue, startTime: startString, endTime: startString)
-                print("Graph LOG: \(statusValue) Start Date : \(startString)")
-                print("Graph LOG: \(statusValue) End Date : \(startString)")
-                logs.append(log)
-            }
-        } catch {
-            print("Failed to fetch duty logs: \(error)")
+        for log in fetchTodaysLogs {
+            let log = DutyLog(id: Int(log.id ?? 0), status: log.status, startTime: log.startTime, endTime: log.startTime)
+            logs.append(log)
         }
         
-        if let yesterDayLastRecord = getLastRecordOfDriverLogs(for: yesterDayStartOfDay, endDate: yesterDayEndOfDay) {
+        
+//        let currentEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: currentStartOfDay)!
+//        let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) ?? Date()
+//        let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
+//        let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
+//        let currentDay =  AppStorageHandler.shared.days
+        
+//        do {
+//            guard let db = self.db else { return [] }
+//            let query = driverLogs
+//                .filter(startTime > currentStartOfDay && startTime < currentEndOfDay && day == currentDay)
+//                .order(startTime.desc)
+//            for row in try db.prepare(query) {
+////                if row[status] == AppConstants.violation || row[status] == AppConstants.warning {
+////                    continue
+////                }
+//                let idValue = Int(row[id])
+//                let statusValue = row[status]
+//                let startString = row[startTime]
+//                
+//                print("Graph LOG: \(statusValue) Start Date : \(startString)")
+//                print("Graph LOG: \(statusValue) End Date : \(startString)")
+//
+//            }
+//        } catch {
+//            print("Failed to fetch duty logs: \(error)")
+//        }
+        
+        if let yesterDayLastRecord = getLastRecordOfDriverLogs(filterTypes: [.getYesterdayRecord]) {
             // Previous day status continue today
             logs.insert(DutyLog(id: Int(yesterDayLastRecord.id ?? 0), status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime()), at: 0)
         } else {

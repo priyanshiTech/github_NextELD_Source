@@ -20,10 +20,10 @@ struct LoginScreen: View {
     
     
     @State private var alertVisible = false
-    @State private var UserName = "inurum"
+    @State private var UserName = "johnthomas"
     //  @State private var email = ""
     
-    @State private var password = "1234567890"
+    @State private var password = "123456"
     @State private var isPasswordShowing = false
     @State private var txtFieldHeight: CGFloat = 56
     @State private var txtFieldWidth: CGFloat = 320
