@@ -40,15 +40,26 @@ struct ImagePicker: UIViewControllerRepresentable {
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            print("📷 ImagePicker: didFinishPickingMediaWithInfo")
             if let image = info[.originalImage] as? UIImage {
-                parent.selectedImage = image
-                print("Image selected successfully")
+                DispatchQueue.main.async {
+                    self.parent.selectedImage = image
+                    print("✅ Image selected successfully and assigned to binding")
+                }
+            } else {
+                print("⚠️ Failed to extract image from picker info")
             }
-            parent.dismiss()
+            DispatchQueue.main.async {
+                self.parent.dismiss()
+            }
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.dismiss()
+            print("❌ ImagePicker cancelled")
+            DispatchQueue.main.async {
+                self.parent.selectedImage = nil
+                self.parent.dismiss()
+            }
         }
     }
 }

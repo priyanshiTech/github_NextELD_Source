@@ -35,10 +35,10 @@ struct UploadDefectView: View {
         let trimmed = defectsString.trimmingCharacters(in: .whitespaces)
         
         // Debug logging
-        print("🔍 Parsing defects for \(type): '\(trimmed)'")
+        print(" Parsing defects for \(type): '\(trimmed)'")
         
         if trimmed.isEmpty || trimmed.lowercased() == "no" {
-            print("⚠️ No defects found (empty or 'no')")
+            print(" No defects found (empty or 'no')")
             return []
         }
         
@@ -51,21 +51,21 @@ struct UploadDefectView: View {
         if trimmed.lowercased() == "yes" {
             // Legacy format - "yes" means there's a defect but no specific name
             defectNames = ["Defect Reported"]
-            print("📝 Legacy 'yes' format detected")
+            print(" Legacy 'yes' format detected")
         } else if trimmed.contains(",") {
             // Comma-separated defects
             defectNames = trimmed.split(separator: ",")
                 .map { $0.trimmingCharacters(in: .whitespaces) }
                 .filter { !$0.isEmpty && $0.lowercased() != "yes" && $0.lowercased() != "no" }
-            print("📝 Comma-separated defects: \(defectNames)")
+            print("Comma-separated defects: \(defectNames)")
         } else {
             // Single defect
             defectNames = [trimmed]
-            print("📝 Single defect: \(defectNames)")
+            print(" Single defect: \(defectNames)")
         }
         
         let items = defectNames.map { DefectItem(name: $0, type: type) }
-        print("✅ Created \(items.count) defect items for \(type)")
+        print(" Created \(items.count) defect items for \(type)")
         return items
     }
     
@@ -75,7 +75,7 @@ struct UploadDefectView: View {
         
         // Debug logging
         if let record = selectedRecord {
-            print("📋 Loading defects from record:")
+            print(" Loading defects from record:")
             print("   Truck Defect: '\(record.truckDefect)'")
             print("   Trailer Defect: '\(record.trailerDefect)'")
             
@@ -87,12 +87,12 @@ struct UploadDefectView: View {
             let trailerDefects = parseDefects(record.trailerDefect, type: "Trailer")
             items.append(contentsOf: trailerDefects)
             
-            print("📊 Total defect items created: \(items.count)")
+            print(" Total defect items created: \(items.count)")
             items.forEach { item in
                 print("   - [\(item.type)] \(item.name)")
             }
         } else {
-            print("⚠️ No selected record found!")
+            print(" No selected record found!")
         }
         
         return items
@@ -240,10 +240,15 @@ struct UploadDefectView: View {
                     
                     HStack(spacing: 150) {
                         Button(action: {
-                            print("Camera tapped")
+                            print("📷 Camera tapped")
                             sourceType = .camera
-                            showUploadPopup = false
-                            showImagePicker = true
+                            withAnimation(.easeInOut) {
+                                showUploadPopup = false
+                            }
+                            // Small delay to allow popup to close before opening image picker
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                showImagePicker = true
+                            }
                         }) {
                             VStack {
                                 Image("camera")
@@ -257,10 +262,15 @@ struct UploadDefectView: View {
                         
                         
                         Button(action: {
-                            print("Gallery tapped")
+                            print("🖼️ Gallery tapped")
                             sourceType = .photoLibrary
-                            showUploadPopup = false
-                            showImagePicker = true
+                            withAnimation(.easeInOut) {
+                                showUploadPopup = false
+                            }
+                            // Small delay to allow popup to close before opening image picker
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                showImagePicker = true
+                            }
                         }) {
                             VStack {
                                 Image("apple")
@@ -290,7 +300,9 @@ struct UploadDefectView: View {
                 Color.black.opacity(0.5)
                     .ignoresSafeArea()
                     .onTapGesture {
+                        print("🔄 Image preview tapped outside, closing")
                         showImagePreview = false
+                        // Don't clear selectedImage here - let onChange handle it if needed
                     }
                 
                 VStack(spacing: 0) {
@@ -303,6 +315,7 @@ struct UploadDefectView: View {
                         Spacer()
                         
                         Button(action: {
+                            print("🔄 Image preview close button tapped")
                             showImagePreview = false
                         }) {
                             Image(systemName: "xmark")
@@ -328,11 +341,15 @@ struct UploadDefectView: View {
                         guard let defectItem = selectedDefectItem else { return }
                         setDefectItemUploading(defectItem, isUploading: true)
                         
+                        print(" Starting upload for \(defectItem.name) (\(defectItem.type))")
                         viewModel.uploadDefectImage(image: image, defectType: selectedDefectType) { success in
                             if success {
+                                print(" Upload successful for \(defectItem.name)")
                                 updateDefectItemStatus(defectItem, isUploaded: true)
                                 showImagePreview = false
+                                selectedImage = nil // Clear image after successful upload
                             } else {
+                                print(" Upload failed for \(defectItem.name)")
                                 setDefectItemUploading(defectItem, isUploading: false)
                                 if let error = viewModel.errorMessage {
                                     print("Error: \(error)")
@@ -362,21 +379,42 @@ struct UploadDefectView: View {
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $showImagePicker) {
             ImagePicker(sourceType: sourceType, selectedImage: $selectedImage)
+                .ignoresSafeArea()
         }
-        .onChange(of: selectedImage) { newImage in
-            if newImage != nil {
-                showImagePreview = true
+        .onChange(of: selectedImage) { oldValue, newValue in
+            print(" selectedImage changed: oldValue=\(oldValue != nil), newValue=\(newValue != nil)")
+            if let newImage = newValue, oldValue == nil {
+                print(" New image selected, showing preview")
+                // Small delay to ensure image picker is fully dismissed
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    showImagePreview = true
+                    print(" Image preview shown")
+                }
+            }
+        }
+        .onChange(of: showImagePicker) { oldValue, newValue in
+            print(" showImagePicker changed: \(oldValue) -> \(newValue)")
+            // When image picker closes, check if image was selected
+            if !newValue && selectedImage != nil {
+                print(" Image picker dismissed, checking image...")
+                // Fallback: if onChange didn't trigger preview, show it now
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    if selectedImage != nil && !showImagePreview {
+                        print(" Fallback: Showing image preview")
+                        showImagePreview = true
+                    }
+                }
             }
         }
         .onAppear {
             // Initialize defect items when view appears
-            print("🔄 UploadDefectView appeared")
+            print(" UploadDefectView appeared")
             defectItems = getAllDefectItems()
-            print("✅ defectItems count: \(defectItems.count)")
+            print(" defectItems count: \(defectItems.count)")
         }
         .onChange(of: selectedRecord) { newRecord in
             // Reload defects when selected record changes
-            print("🔄 Selected record changed")
+            print(" Selected record changed")
             if let record = newRecord {
                 print("   New record - Truck: '\(record.truckDefect)', Trailer: '\(record.trailerDefect)'")
             }
