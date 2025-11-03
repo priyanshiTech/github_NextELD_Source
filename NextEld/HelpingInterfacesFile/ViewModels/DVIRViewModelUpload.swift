@@ -8,26 +8,63 @@
 import Foundation
 import SwiftUI
 
+// Helper function to get current timestamp in milliseconds
+func currentTimestampMillis() -> Int64 {
+    return Int64(Date().timeIntervalSince1970 * 1000)
+}
 
 func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
     let url = API.Endpoint.dispatchadd_dvir_data.url
 
+    // Convert truckDefect string to array format expected by API
+    let truckDefectArray: [String]
+    if record.truckDefect.lowercased() == "no" {
+        truckDefectArray = []
+    } else if record.truckDefect.lowercased() == "yes" {
+        // If yes, we need to get actual defect names - for now send empty or placeholder
+        // TODO: Get actual selected defect names from defect selection
+        truckDefectArray = [] // Empty for now, should be populated with actual defect names
+    } else {
+        // If it's already a comma-separated string or single defect name
+        truckDefectArray = record.truckDefect.isEmpty ? [] : [record.truckDefect]
+    }
+    
+    // Convert trailerDefect string to array format
+    let trailerDefectArray: [String]
+    if record.trailerDefect.lowercased() == "no" {
+        trailerDefectArray = []
+    } else if record.trailerDefect.lowercased() == "yes" {
+        // If yes, we need to get actual defect names
+        trailerDefectArray = [] // Empty for now, should be populated with actual defect names
+    } else {
+        trailerDefectArray = record.trailerDefect.isEmpty ? [] : [record.trailerDefect]
+    }
+    
+    // Convert trailer string to array format
+    let trailerArray: [String]
+    if record.trailer.isEmpty {
+        trailerArray = []
+    } else {
+        // Split by comma if multiple trailers, otherwise single item array
+        trailerArray = record.trailer.contains(",") ? record.trailer.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) } : [record.trailer]
+    }
+
     let fields: [String: Any] = [
         "driverId": (AppStorageHandler.shared.driverId ?? 17),
-        "vehicleId": record.vehicleId,          //  vehicleId not vehicleid
+        "vehicleId": record.vehicleId,
         "clientId": (AppStorageHandler.shared.clientId ?? 0),
-        "timestamp": "\(currentTimestampMillis())",
+        "timestamp": "\(currentTimestampMillis())", // Milliseconds timestamp as string
         "dateTime":  "\(record.dateTime)",
         "location": record.locationDvir,
-        "truckDefect": record.truckDefect,
-        "trailerDefect": record.trailerDefect,
+        "truckDefect": truckDefectArray,      // Now sending as array
+        "trailerDefect": trailerDefectArray, // Now sending as array
         "notes": record.notes,
         "vehicleCondition": record.vehicleCondition,
         "companyName": record.companyName,
-        "odometer": "\(Double(record.odometer) ?? 0.0)",   //  send as numeric string
-        "engineHour": "\(record.engineHour)",              //  engineHour not enginehour
+        "odometer": "\(Double(record.odometer) ?? 0.0)",
+        "engineHour": "\(record.engineHour)",
         "tokenNo": AppStorageHandler.shared.authToken ?? "",
-        "trailer": record.trailer
+        "trailer": trailerArray               // Now sending as array
     ]
 
     print("this our Request model \(fields)")

@@ -446,7 +446,7 @@ struct AddDvirScreenView: View  {
                             
                           let DvirRecord = DvirRecordRequestModel(
                             driverId: driverDVIRId,
-                             dateTime:"\(record.startTime) \(record.DAY)" ,
+                             dateTime: record.startTime,  // startTime already has "DATE TIME" format
                             locationDvir: Location,
                              truckDefect: truckDefectSelection ?? "no",
                              trailerDefect: trailerDefectSelection ?? "no",
@@ -459,7 +459,7 @@ struct AddDvirScreenView: View  {
                             timestampDvir: "\(Int(Date().timeIntervalSince1970 * 1000))",
                             tokenNo: AppStorageHandler.shared.authToken ?? "",
                             clientId: AppStorageHandler.shared.clientId ?? 0 ,
-                            trailer: trailerVM.trailers.first ?? "helo",
+                            trailer: trailerVM.trailers.isEmpty ? "" : trailerVM.trailers.joined(separator: ", "),
                             fileDVir: signatureData,
                             
                           )
@@ -485,9 +485,7 @@ struct AddDvirScreenView: View  {
                                 print(" Calling update_dvir_data API...")
                                 updateDvirDataUsingCommonService(record: record, dvirLogId: driverID)
                                 
-                                // Also call dispatchadd_dvir_data API
-                                print(" Calling dispatchadd_dvir_data API...")
-                                uploadDvirDataUsingCommonService(record: DvirRecord)
+                
                                 
                                 print("  Record updated with ID: \(existingId)")
                                 if let signatureData = signatureData {
@@ -504,10 +502,10 @@ struct AddDvirScreenView: View  {
                                 // Verify the record was saved
                                 let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
                                 if let savedRecord = allRecords.last {
-                                    print("  New Record Verified in Database!")
-                                    print("   Saved Record ID: \(savedRecord.id ?? -1)")
-                                    print("   Saved Record Driver: \(savedRecord.UserName)")
-                                    print("   Saved Record Vehicle: \(savedRecord.vehicleName)")
+                                    print(" New Record Verified in Database!")
+                                    print(" Saved Record ID: \(savedRecord.id ?? -1)")
+                                    print(" Saved Record Driver: \(savedRecord.UserName)")
+                                    print(" aved Record Vehicle: \(savedRecord.vehicleName)")
                                     successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
                                     showSuccessAlert = true
                                 } else {
@@ -515,16 +513,20 @@ struct AddDvirScreenView: View  {
                                 }
                                 
                                 // Call dispatchadd_dvir_data API for new record
-                                print("  Calling dispatchadd_dvir_data API (for new record)...")
-                                uploadDvirDataUsingCommonService(record: DvirRecord)
+                                print("   Calling dispatchadd_dvir_data API (for new record)...")
+                                print("   DvirRecord driverId: \(DvirRecord.driverId)")
+                                print("   DvirRecord vehicleId: \(DvirRecord.vehicleId)")
+                                print("   DvirRecord has signature: \(DvirRecord.fileDVir != nil)")
                                 
-                                print("  New record inserted to database")
+                                // Ensure DvirRecord is accessible and call API
+                                uploadDvirDataUsingCommonService(record: DvirRecord)
+                                print(" API call initiated successfully!")
+                                
                                 if let signatureData = signatureData {
-                                    print("  Signature saved successfully! Size: \(signatureData.count) bytes")
+                                    print(" Signature saved successfully! Size: \(signatureData.count) bytes")
                                 } else {
-                                    print("  Signature missing while inserting new record")
+                                    print(" Signature missing while inserting new record")
                                 }
-
                             }
                             
                             // Delay navigation to show success message
@@ -532,14 +534,11 @@ struct AddDvirScreenView: View  {
                                 if isFromHome {
                                    // navmanager.navigate(to: .homeFlow(.home))
                                     navmanager.navigate(to: AppRoute.HomeFlow.Home)
-                                    
                                 } else {
                                    // navmanager.navigate(to: .logsFlow(.AddDvirPriTrip))
                                     navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
-                                    
                                 }
                             }
-
                         }
                     }) {
                         Text("Add Dvir")
@@ -578,8 +577,7 @@ struct AddDvirScreenView: View  {
                     case .ShippingDocment:
                         ShippingDocView(tittle: AppConstants.shippingTittle)
                         
-                   // case .AddVehicleForDVIR:
-                       // AddVehicleForDvir(selectedVehicleNumber: $selectedVehicleNumber, VechicleID: $vehicleId)
+
                     case .AddVehicleForDVIR:
                         AddVehicleForDvir(selectedVehicleNumber: $selectedVehicleNumber, VechicleID: $vehicleID)
 
@@ -661,6 +659,8 @@ struct AddDvirScreenView: View  {
         companyName = AppStorageHandler.shared.company ?? ""
         //UserDefaults.standard.string(forKey: "companyName") ?? "N/A"
         driverID = UserDefaults.standard.string(forKey: "userId") ?? "n/a"
+        // Set driverDVIRId from AppStorageHandler or UserDefaults
+        driverDVIRId = AppStorageHandler.shared.driverId ?? Int(driverID) ?? 0
 
    }
 
