@@ -1,14 +1,19 @@
+import Foundation
 
 
 extension HomeViewModel {
 
-    func saveTimerStateForStatus(status: String, note: String) {
+    func saveTimerStateForStatus(status: String, note: String?) {
         print("Saving timer state for status: \(status)")
+        var messge = note ?? ""
+        if messge.isEmpty {
+            messge = status
+        }
 
         DatabaseManager.shared.saveTimerLog(
             status: status,
             startTime: DateTimeHelper.currentDateTime(),
-            dutyType: status,
+            dutyType: messge,
             remainingWeeklyTime: Int(cycleTimer?.remainingTime ?? 0),
             remainingDriveTime: Int(onDriveTimer?.remainingTime ?? 0),
             remainingDutyTime: Int(onDutyTimer?.remainingTime ?? 0),
@@ -71,10 +76,10 @@ extension HomeViewModel {
     }
     
     
-    func saveViolation(for violationData: ViolationData) {
+    func saveViolation(for violationData: ViolationData, date: Date? = nil) {
         DatabaseManager.shared.saveTimerLog(
         status: violationData.getTitle(),
-        startTime: DateTimeHelper.currentDateTime(),
+        startTime: date ?? DateTimeHelper.currentDateTime(),
         dutyType: violationData.getWarningText(),
         remainingWeeklyTime: Int(cycleTimer?.remainingTime ?? 0),
         remainingDriveTime: Int(onDriveTimer?.remainingTime ?? 0),

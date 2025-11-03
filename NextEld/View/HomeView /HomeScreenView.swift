@@ -114,14 +114,14 @@ struct HomeScreenView: View {
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                         
                             StatusView(homeViewModel: homeVM) { status in
-                                if  status == .onDrive {
-                                    //showDvirPopup = true
+                                if !homeVM.check34HoursSleepOrOffDutyCompleted() && homeVM.cycleTimer!.remainingTime <= 0 && (status != .offDuty ||  status != .sleep ) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        homeVM.alertType = .thirtyFourHours
+                                        homeVM.showAlertOnHomeScreen = true
+                                    }
+                                } else {
                                     homeVM.showDriverStatusAlert = (true, status)
-                                 }
-                                 else{
-                                     homeVM.showDriverStatusAlert = (true, status)
-                                 }
-
+                                }
                         }
 
                         
@@ -314,7 +314,9 @@ struct HomeScreenView: View {
             // Violation dialog
             ForEach(Array(homeVM.violationDataArray.enumerated()), id: \.offset) { index, violationData in
                 CommonTimerAlertView(violationData: violationData) {
-                    homeVM.violationDataArray.removeLast()
+                    if !homeVM.violationDataArray.isEmpty {
+                        homeVM.violationDataArray.removeLast()
+                    }
                 }
 //                .onAppear(perform: {
 //                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
@@ -508,7 +510,7 @@ struct HomeScreenView: View {
             
             case .nextDay:
                 print("Resetting all timers for new day...")
-                homeVM.resetToInitialState()
+               // homeVM.resetToInitialState()
             case .refresh:
                 // Call refresh API
                 Task {
@@ -536,6 +538,10 @@ struct HomeScreenView: View {
                 break
             case .sucessConfimration:
                 appRootManager.currentRoot = .login
+                break
+            case .shiftChange:
+                break
+            case .thirtyFourHours:
                 break
             }
         

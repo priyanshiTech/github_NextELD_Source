@@ -11,7 +11,7 @@ class DriverLogViewModel: ObservableObject {
     @Published var logs: [DriverLogModel] = []
 
     func loadLogs() {
-        logs = DatabaseManager.shared.fetchLogs()
+        logs = DatabaseManager.shared.fetchLogs(addWarningAndViolation: true)
 //        print(" Loaded \(logs.count) logs from SQLite")
 //        print("⏱ Loaded \(logs.count) logs")
 //        logs.forEach {
