@@ -219,80 +219,100 @@ struct UploadDefectView: View {
             
             // MARK: - Bottom Sheet Popup
             if showUploadPopup {
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation(.easeInOut) {
-                            showUploadPopup = false
-                        }
-                    }
-                
-                VStack(spacing: 16) {
-                    Capsule()
-                        .fill(Color.gray.opacity(0.4))
-                        .frame(width: 40, height: 5)
-                        .padding(.top, 10)
-                    
-                    Text("Select Option")
-                        .font(.headline)
-                        .foregroundColor(.black)
-                        .padding(.top, 5)
-                    
-                    HStack(spacing: 150) {
-                        Button(action: {
-                            print("📷 Camera tapped")
-                            sourceType = .camera
+                ZStack {
+                    // Background overlay
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            print("🔘 Background tapped, closing popup")
                             withAnimation(.easeInOut) {
                                 showUploadPopup = false
                             }
-                            // Small delay to allow popup to close before opening image picker
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showImagePicker = true
-                            }
-                        }) {
-                            VStack {
-                                Image("camera")
-                                    .resizable()
-                                    .frame(width: 40, height: 35)
-                                    .foregroundColor(.purple)
-                                Text("Camera")
-                                    .foregroundColor(.gray)
-                            }
                         }
+                    
+                    // Popup content
+                    VStack(spacing: 16) {
+                        Capsule()
+                            .fill(Color.gray.opacity(0.4))
+                            .frame(width: 40, height: 5)
+                            .padding(.top, 10)
                         
+                        Text("Select Option")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding(.top, 5)
                         
-                        Button(action: {
-                            print("🖼️ Gallery tapped")
-                            sourceType = .photoLibrary
-                            withAnimation(.easeInOut) {
-                                showUploadPopup = false
+                        HStack(spacing: 150) {
+                            Button(action: {
+                                print("📷 Camera tapped - Setting sourceType to camera")
+                                sourceType = .camera
+                                print("📷 sourceType set, closing popup...")
+                                withAnimation(.easeInOut) {
+                                    showUploadPopup = false
+                                }
+                                print("📷 Popup closed, waiting 0.3s to open image picker...")
+                                // Small delay to allow popup to close before opening image picker
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    print("📷 Opening camera with showImagePicker = true")
+                                    showImagePicker = true
+                                    print("📷 showImagePicker is now: \(showImagePicker)")
+                                }
+                            }) {
+                                VStack(spacing: 8) {
+                                    Image("camera")
+                                        .resizable()
+                                        .frame(width: 40, height: 35)
+                                        .foregroundColor(.purple)
+                                    Text("Camera")
+                                        .foregroundColor(.gray)
+                                        .font(.subheadline)
+                                }
                             }
-                            // Small delay to allow popup to close before opening image picker
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showImagePicker = true
+                            .buttonStyle(PlainButtonStyle())
+                            .contentShape(Rectangle())
+                            
+                            
+                            Button(action: {
+                                print("🖼️ Gallery tapped - Setting sourceType to photoLibrary")
+                                sourceType = .photoLibrary
+                                print("🖼️ sourceType set, closing popup...")
+                                withAnimation(.easeInOut) {
+                                    showUploadPopup = false
+                                }
+                                print("🖼️ Popup closed, waiting 0.3s to open image picker...")
+                                // Small delay to allow popup to close before opening image picker
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    print("🖼️ Opening gallery with showImagePicker = true")
+                                    showImagePicker = true
+                                    print("🖼️ showImagePicker is now: \(showImagePicker)")
+                                }
+                            }) {
+                                VStack(spacing: 8) {
+                                    Image("apple")
+                                        .resizable()
+                                        .frame(width: 40, height: 35)
+                                        .foregroundColor(.purple)
+                                    Text("Gallery")
+                                        .foregroundColor(.gray)
+                                        .font(.subheadline)
+                                }
                             }
-                        }) {
-                            VStack {
-                                Image("apple")
-                                    .resizable()
-                                    .frame(width: 40, height: 35)
-                                    .foregroundColor(.purple)
-                                Text("Gallery")
-                                    .foregroundColor(.gray)
-                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .contentShape(Rectangle())
                         }
+                        .padding(.bottom, 30)
                     }
-                    .padding(.bottom, 30)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.white)
+                            .ignoresSafeArea(edges: .bottom)
+                    )
+                    .transition(.move(edge: .bottom))
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                    .zIndex(1)
                 }
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.white)
-                        .ignoresSafeArea(edges: .bottom)
-                )
-                .transition(.move(edge: .bottom))
-                .animation(.spring(), value: showUploadPopup)
-                .frame(maxHeight: .infinity, alignment: .bottom)
+                .zIndex(2)
             }
             
             // MARK: - Image Preview Popup
@@ -377,9 +397,17 @@ struct UploadDefectView: View {
             
         }
         .navigationBarHidden(true)
-        .fullScreenCover(isPresented: $showImagePicker) {
+        .fullScreenCover(isPresented: $showImagePicker, onDismiss: {
+            print("📷 fullScreenCover onDismiss called - showImagePicker is now: \(showImagePicker)")
+        }) {
             ImagePicker(sourceType: sourceType, selectedImage: $selectedImage)
                 .ignoresSafeArea()
+                .onAppear {
+                    print("📷 fullScreenCover appeared - ImagePicker is visible")
+                }
+                .onDisappear {
+                    print("📷 fullScreenCover disappeared - ImagePicker closed")
+                }
         }
         .onChange(of: selectedImage) { oldValue, newValue in
             print(" selectedImage changed: oldValue=\(oldValue != nil), newValue=\(newValue != nil)")
@@ -393,16 +421,25 @@ struct UploadDefectView: View {
             }
         }
         .onChange(of: showImagePicker) { oldValue, newValue in
-            print(" showImagePicker changed: \(oldValue) -> \(newValue)")
-            // When image picker closes, check if image was selected
-            if !newValue && selectedImage != nil {
-                print(" Image picker dismissed, checking image...")
-                // Fallback: if onChange didn't trigger preview, show it now
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    if selectedImage != nil && !showImagePreview {
-                        print(" Fallback: Showing image preview")
-                        showImagePreview = true
+            print("🔄 showImagePicker changed: \(oldValue) -> \(newValue)")
+            if newValue {
+                print(" Image picker is opening now")
+            } else {
+                print(" Image picker closed")
+                print("   selectedImage exists: \(selectedImage != nil)")
+                print("   showImagePreview: \(showImagePreview)")
+                // When image picker closes, check if image was selected
+                if selectedImage != nil {
+                    print(" Image picker dismissed, checking image...")
+                    // Fallback: if onChange didn't trigger preview, show it now
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        if selectedImage != nil && !showImagePreview {
+                            print(" Fallback: Showing image preview")
+                            showImagePreview = true
+                        }
                     }
+                } else {
+                    print("No image selected, user cancelled")
                 }
             }
         }
