@@ -34,6 +34,7 @@
 		AF2E0D262E8BBFCE00172174 /* ContinueDriveDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2E0D252E8BBFCE00172174 /* ContinueDriveDB.swift */; };
 		AF2E0D282E8BC5B200172174 /* ContinueDriveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2E0D272E8BC5B200172174 /* ContinueDriveView.swift */; };
 		AF3A59362EB4F48F007A438F /* UploadDefectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A59352EB4F48F007A438F /* UploadDefectView.swift */; };
+		AF45BB712EB61A8600DDDB4D /* addDefectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB702EB61A8600DDDB4D /* addDefectViewModel.swift */; };
 		AF58BFD82E69C7CE00F0E765 /* SignatureAddDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */; };
 		AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */; };
 		AF6532A52E66D07000FB2A11 /* SplashScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */; };
@@ -278,6 +279,7 @@
 		AF2E0D252E8BBFCE00172174 /* ContinueDriveDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueDriveDB.swift; sourceTree = "<group>"; };
 		AF2E0D272E8BC5B200172174 /* ContinueDriveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueDriveView.swift; sourceTree = "<group>"; };
 		AF3A59352EB4F48F007A438F /* UploadDefectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDefectView.swift; sourceTree = "<group>"; };
+		AF45BB702EB61A8600DDDB4D /* addDefectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addDefectViewModel.swift; sourceTree = "<group>"; };
 		AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureAddDvir.swift; sourceTree = "<group>"; };
 		AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashModel.swift; sourceTree = "<group>"; };
 		AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewModel.swift; sourceTree = "<group>"; };
@@ -1138,6 +1140,7 @@
 				AF72350C2E560567009EAA9E /* MacAddressViewModel.swift */,
 				AFCC878B2E56F48D00A09745 /* DisConnetedViewModel.swift */,
 				AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */,
+				AF45BB702EB61A8600DDDB4D /* addDefectViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1669,6 +1672,7 @@
 				AF3A59362EB4F48F007A438F /* UploadDefectView.swift in Sources */,
 				AFCC4CA02E49E8CF00629DE3 /* MultipartAPI.swift in Sources */,
 				CBE886072E9969F900B7D581 /* AppConstants.swift in Sources */,
+				AF45BB712EB61A8600DDDB4D /* addDefectViewModel.swift in Sources */,
 				AF72E4462DFD557700626DC0 /* LocationManager.swift in Sources */,
 				AFD2F9042E589F2C00131C17 /* DataTransferView.swift in Sources */,
 				AFDFD4822E32301700F81B24 /* VoilationBox.swift in Sources */,

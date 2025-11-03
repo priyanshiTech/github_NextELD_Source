@@ -93,48 +93,17 @@ struct EmailDvir: View {
                     Spacer()
                 } else {
                     List(filteredRecords, id: \.self) { record in
-                        HStack(alignment: .top, spacing: 10) {
-                            Button(action: {
+                        DvirListItemView(
+                            record: record,
+                            onTap: {
                                 selectedDvirRecord = record
                                 navmanager.path.append(AppRoute.DvirFlow.AddDvirScreenView)
-                       
-                            }) {
-                                HStack(alignment: .top, spacing: 10) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(Color(UIColor.wine))
-                                        .padding(.top, 2)
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("\(record.DAY) \(record.DvirTime)")
-                                            .fontWeight(.semibold)
-                                        
-                                        Text(record.vehicleCondition)
-                                            .foregroundColor(.green)
-                                            .font(.subheadline)
-                                    }
-                                }
-                                .padding(.vertical, 6)
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            
-                            Spacer()
-                            
-                            Button(action: {
+                            },
+                            onViewDefect: {
                                 selectedDvirRecord = record
                                 navmanager.path.append(AppRoute.DvirFlow.UploadDefectView)
-                            }) {
-                                Text("View Defect")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color(UIColor.wine))
-                                    .cornerRadius(8)
                             }
-                            .padding(.top, 2)
-                        }
-                        .padding(.vertical, 6)
+                        )
                     }
                     .listStyle(PlainListStyle())
                     .edgesIgnoringSafeArea(.top)
@@ -152,7 +121,7 @@ struct EmailDvir: View {
                 AddDvirScreenView( selectedRecord:$selectedDvirRecord,trailers: $trailerVM.trailers, isFromHome:false)
                 
             case .UploadDefectView:
-                UploadDefectView()
+                UploadDefectView(selectedRecord: selectedDvirRecord)
                 
             case .DvirHostory(tittle: AppConstants.dvirHostoryTittle):
                   DVIRHistory(title: AppConstants.dvirHostoryTittle)
@@ -201,5 +170,164 @@ struct EmailDvir: View {
         }
         
         
+    }
+}
+
+// MARK: - DVIR List Item View
+struct DvirListItemView: View {
+    let record: DvirRecord
+    let onTap: () -> Void
+    let onViewDefect: () -> Void
+    
+    // Helper to check if has defects
+    private var hasDefects: Bool {
+        // Check if truck has defects (comma-separated list, "yes", or defect name)
+        let truckDefectValue = record.truckDefect.trimmingCharacters(in: .whitespaces).lowercased()
+        let hasTruckDefects = truckDefectValue != "no" && !truckDefectValue.isEmpty && truckDefectCount > 0
+        
+        // Check if trailer has defects (comma-separated list, "yes", or defect name)
+        let trailerDefectValue = record.trailerDefect.trimmingCharacters(in: .whitespaces).lowercased()
+        let hasTrailerDefects = trailerDefectValue != "no" && !trailerDefectValue.isEmpty && trailerDefectCount > 0
+        
+        // Check if vehicleCondition indicates defects (Unsatisfactory)
+        let isUnsatisfactory = record.vehicleCondition.lowercased().contains("unsatisfactory")
+        
+        return hasTruckDefects || hasTrailerDefects || isUnsatisfactory
+    }
+    
+    // Helper to get truck defect count
+    private var truckDefectCount: Int {
+        let defectValue = record.truckDefect.trimmingCharacters(in: .whitespaces)
+        
+        // If "no" or empty, no defects
+        if defectValue.lowercased() == "no" || defectValue.isEmpty {
+            return 0
+        }
+        
+        // If comma-separated list (e.g., "Defect1, Defect2, Defect3"), count the items
+        if defectValue.contains(",") {
+            let defects = defectValue.split(separator: ",")
+                .map { $0.trimmingCharacters(in: .whitespaces) }
+                .filter { !$0.isEmpty && $0.lowercased() != "yes" && $0.lowercased() != "no" }
+            return defects.count
+        }
+        
+        // If "yes" or "y", return 1 (legacy support)
+        if defectValue.lowercased() == "yes" || defectValue.lowercased() == "y" {
+            return 1
+        }
+        
+        // If it's a single defect name (not "yes" or "no"), count as 1
+        if !defectValue.isEmpty {
+            return 1
+        }
+        
+        return 0
+    }
+    
+    private var trailerDefectCount: Int {
+        let defectValue = record.trailerDefect.trimmingCharacters(in: .whitespaces)
+        
+        // If "no" or empty, no defects
+        if defectValue.lowercased() == "no" || defectValue.isEmpty {
+            return 0
+        }
+        
+        // If comma-separated list (e.g., "Defect1, Defect2, Defect3"), count the items
+        if defectValue.contains(",") {
+            let defects = defectValue.split(separator: ",")
+                .map { $0.trimmingCharacters(in: .whitespaces) }
+                .filter { !$0.isEmpty && $0.lowercased() != "yes" && $0.lowercased() != "no" }
+            return defects.count
+        }
+        
+        // If "yes" or "y", return 1 (legacy support)
+        if defectValue.lowercased() == "yes" || defectValue.lowercased() == "y" {
+            return 1
+        }
+        
+        // If it's a single defect name (not "yes" or "no"), count as 1
+        if !defectValue.isEmpty {
+            return 1
+        }
+        
+        return 0
+    }
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack(alignment: .top, spacing: 10) {
+                // Icon based on defect status
+                Image(systemName: hasDefects ? "exclamationmark.circle.fill" : "checkmark.circle.fill")
+                    .foregroundColor(hasDefects ? .red : .blue)
+                    .font(.title2)
+                    .padding(.top, 2)
+                
+                VStack(alignment: .leading, spacing: 6) {
+                    // Date and Time
+                    Text("\(record.DAY) \(record.DvirTime)")
+                        .fontWeight(.semibold)
+                        .font(.headline)
+                        .foregroundColor(.black)
+                    
+                    // Vehicle Condition Status
+                    Text(record.vehicleCondition.isEmpty ? (hasDefects ? "Defects Need Not Be Corrected" : "Vehicle Condition Satisfactory") : record.vehicleCondition)
+                        .foregroundColor(hasDefects ? .red : .green)
+                        .font(.subheadline)
+                        .fontWeight(hasDefects ? .regular : .regular)
+                    
+                    // Vehicle and Trailer info with defect counts
+                    VStack(alignment: .leading, spacing: 4) {
+                        // Truck/Vehicle info
+                        HStack(spacing: 4) {
+                            Text("Vehicle - \(record.vehicleName.isEmpty ? "N/A" : record.vehicleName)")
+                                .font(.subheadline)
+                                .foregroundColor(.black)
+                            
+                            if truckDefectCount > 0 {
+                                Text("\(truckDefectCount) Defects")
+                                    .font(.subheadline)
+                                    .foregroundColor(.red)
+                                    .fontWeight(.none)
+                            }
+                        }
+                        
+                        // Trailer info
+                        HStack(spacing: 4) {
+                            let trailerNames = record.Trailer.isEmpty ? "None" : record.Trailer
+                            Text("Trailer - \(trailerNames)")
+                                .font(.subheadline)
+                                .foregroundColor(.black)
+                            
+                            if trailerDefectCount > 0 {
+                                Text("\(trailerDefectCount) Defects")
+                                    .font(.subheadline)
+                                    .foregroundColor(.red)
+                                    .fontWeight(.none)
+                            }
+                        }
+                    }
+                    .padding(.top, 2)
+                }
+                
+                Spacer()
+                
+                // View Defect button - only show if has defects
+                if hasDefects {
+                    Button(action: onViewDefect) {
+                        Text("View Defects")
+                            .font(.subheadline)
+                            .foregroundColor(.red)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                           // .background(Color.red)
+                            .cornerRadius(8)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.top, 2)
+                }
+            }
+            .padding(.vertical, 8)
+        }
     }
 }

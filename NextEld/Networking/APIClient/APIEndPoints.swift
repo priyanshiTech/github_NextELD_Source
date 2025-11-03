@@ -38,6 +38,7 @@ enum API {
         case ConnectdDisConnectedAPI
         case FirmWareUPdates
         case SpalshDataAPI
+        case addDefectData
 
         
         var url: URL {
@@ -75,7 +76,6 @@ enum API {
             case .HelpSupportInfo:
                 //return API.baseURL.appendingPathComponent("dispatch/add_eld_support")
                 return API.baseURLTwo.appendingPathComponent("driver/messageToSupport")
-                
             case .CodriverListInfo:
                 return API.baseURL.appendingPathComponent("master/view_employee_by_client")
             case .certifyDriver:
@@ -100,6 +100,8 @@ enum API {
                 return  API.baseURL.appendingPathComponent("dispatch/view_last_eld_ota")
             case .SpalshDataAPI:
                 return API.baseURL.appendingPathComponent("dispatch/view_drivering_status_with_login_details")
+            case .addDefectData:
+                return API.baseURL.appendingPathComponent("dispatch/add_defect_data")
 
             }
         }
@@ -110,9 +112,10 @@ enum API {
                 
             case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI:
                 return "POST"
-            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI:
+            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI , .addDefectData:
                 return "POST"
 
+    
             }
         }
     }
@@ -147,7 +150,7 @@ private func printCurlCommand(for request: URLRequest) {
     // URL
     curlCommand += " '\(url.absoluteString)'"
 
-    print("\n📡 Generated cURL Command:")
+    print("\n Generated cURL Command:")
     print(curlCommand)
 }
 

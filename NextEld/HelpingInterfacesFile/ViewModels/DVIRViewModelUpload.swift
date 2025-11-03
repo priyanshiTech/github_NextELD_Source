@@ -46,14 +46,27 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
         ))
     }
 
+    print("  API Call: dispatchadd_dvir_data")
+    print("  URL: \(url)")
+    print("  Request Fields Count: \(fields.count)")
+    print("  Files Count: \(files.count)")
+    
     MultipartAPIService.shared.upload(url: url, fields: fields, files: files) { result in
         DispatchQueue.main.async {
             switch result {
             case .success(let data):
-                print(" Upload successful")
-                print("Response:", String(data: data, encoding: .utf8) ?? "No response")
+                print("  dispatchadd_dvir_data API - Upload successful!")
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("  Response: \(responseString)")
+                } else {
+                    print(" Response: (Unable to decode)")
+                }
             case .failure(let error):
-                print(" Upload failed:", error.localizedDescription)
+                print("  dispatchadd_dvir_data API - Upload failed: \(error.localizedDescription)")
+                if let nsError = error as NSError? {
+                    print("  Error Code: \(nsError.code)")
+                    print("  Error Domain: \(nsError.domain)")
+                }
             }
         }
     }

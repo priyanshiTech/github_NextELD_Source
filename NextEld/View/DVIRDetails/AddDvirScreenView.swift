@@ -466,7 +466,7 @@ struct AddDvirScreenView: View  {
 
                             if let existingId = record.id {
                                 // Editing existing record
-                                print(" Updating Existing Record with ID: \(existingId)")
+                                print(" 🔄 Updating Existing Record with ID: \(existingId)")
                                 record.id = existingId
                                 DvirDatabaseManager.shared.updateRecord(record)
                                 
@@ -474,45 +474,55 @@ struct AddDvirScreenView: View  {
                                 let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
                                 let savedRecord = allRecords.first { $0.id == existingId }
                                 if savedRecord != nil {
-                                    print(" Record Verified in Database - Update Successful!")
-                                    successMessage = "DVIR Record Updated Successfully in Database!"
+                                    print("  Record Verified in Database - Update Successful!")
+                                    successMessage = "DVIR Record Updated Successfully!\n\nDriver: \(driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
                                     showSuccessAlert = true
                                 } else {
                                     print(" Warning: Record not found in database after update")
                                 }
                                 
+                                // Call update_dvir_data API
+                                print(" Calling update_dvir_data API...")
                                 updateDvirDataUsingCommonService(record: record, dvirLogId: driverID)
-                                print(" Record updated with ID: \(existingId)")
+                                
+                                // Also call dispatchadd_dvir_data API
+                                print(" Calling dispatchadd_dvir_data API...")
+                                uploadDvirDataUsingCommonService(record: DvirRecord)
+                                
+                                print("  Record updated with ID: \(existingId)")
                                 if let signatureData = signatureData {
-                                    print(" Signature updated successfully! Size: \(signatureData.count) bytes")
+                                    print("  Signature updated successfully! Size: \(signatureData.count) bytes")
                                 } else {
-                                    print(" Signature missing while updating record")
+                                    print("  Signature missing while updating record")
                                 }
 
                             } else {
-                                print("➕ Inserting New Record to Database")
+                                print(" Inserting New Record to Database")
                    
                                 DvirDatabaseManager.shared.insertRecord(record)
                                 
                                 // Verify the record was saved
                                 let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
                                 if let savedRecord = allRecords.last {
-                                    print(" New Record Verified in Database!")
-                                    print(" Saved Record ID: \(savedRecord.id ?? -1)")
-                                    print(" Saved Record Driver: \(savedRecord.UserName)")
-                                    print(" Saved Record Vehicle: \(savedRecord.vehicleName)")
-                                    successMessage = "DVIR Record Saved Successfully to Database!\n\nDriver: \(driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
+                                    print("  New Record Verified in Database!")
+                                    print("   Saved Record ID: \(savedRecord.id ?? -1)")
+                                    print("   Saved Record Driver: \(savedRecord.UserName)")
+                                    print("   Saved Record Vehicle: \(savedRecord.vehicleName)")
+                                    successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
                                     showSuccessAlert = true
                                 } else {
-                                    print(" Error: Record not found in database after insert")
+                                    print("  Error: Record not found in database after insert")
                                 }
                                 
+                                // Call dispatchadd_dvir_data API for new record
+                                print("  Calling dispatchadd_dvir_data API (for new record)...")
                                 uploadDvirDataUsingCommonService(record: DvirRecord)
-                                print(" New record inserted to database")
+                                
+                                print("  New record inserted to database")
                                 if let signatureData = signatureData {
-                                    print("Signature saved successfully! Size: \(signatureData.count) bytes")
+                                    print("  Signature saved successfully! Size: \(signatureData.count) bytes")
                                 } else {
-                                    print("Signature missing while inserting new record")
+                                    print("  Signature missing while inserting new record")
                                 }
 
                             }
