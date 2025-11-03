@@ -39,6 +39,7 @@ enum API {
         case FirmWareUPdates
         case SpalshDataAPI
         case addDefectData
+        case vehicleConditionApi
 
         
         var url: URL {
@@ -103,6 +104,8 @@ enum API {
             case .addDefectData:
                 return API.baseURL.appendingPathComponent("dispatch/add_defect_data")
 
+            case .vehicleConditionApi:
+                return API.baseURL.appendingPathComponent("master/view_vehicle_condition")
             }
         }
 
@@ -110,8 +113,9 @@ enum API {
             
             switch self {
                 
-            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI:
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi:
                 return "POST"
+                
             case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI , .addDefectData:
                 return "POST"
 
