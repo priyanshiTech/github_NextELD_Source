@@ -23,12 +23,12 @@ struct DateTimeHelper {
         return calendar
     }
     
-    static func get15MinBeforeDate() -> Date? {
-        return calendar.date(byAdding: .minute, value: -15, to: currentDateTime())
+    static func get15MinBeforeDate(date: Date) -> Date? {
+        return calendar.date(byAdding: .minute, value: -15, to: date)
     }
     
-    static func get30MinBeforeDate() -> Date? {
-        return calendar.date(byAdding: .minute, value: -30, to: currentDateTime())
+    static func get30MinBeforeDate(date: Date) -> Date? {
+        return calendar.date(byAdding: .minute, value: -30, to: date)
     }
     
     static func currentDateTime() -> Date {
