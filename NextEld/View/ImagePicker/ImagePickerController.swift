@@ -19,19 +19,47 @@ struct ImagePicker: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
-        picker.sourceType = sourceType
+        
+        // Check if sourceType is available before setting
+        let availableSourceType: UIImagePickerController.SourceType
+        if sourceType == .camera {
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                availableSourceType = .camera
+            } else {
+                print(" Camera not available, falling back to photoLibrary")
+                availableSourceType = .photoLibrary
+            }
+        } else {
+            availableSourceType = sourceType
+        }
+        
+        picker.sourceType = availableSourceType
         picker.delegate = context.coordinator
         picker.allowsEditing = false
         picker.modalPresentationStyle = .fullScreen
-        print("📷 ImagePicker created with sourceType: \(sourceType == .camera ? "camera" : "photoLibrary")")
+        print(" ImagePicker created with sourceType: \(availableSourceType == .camera ? "camera" : "photoLibrary")")
         return picker
     }
     
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {
-        // Update source type if needed
+        // Update source type if needed - check availability first
         if uiViewController.sourceType != sourceType {
-            print("📷 Updating ImagePicker sourceType from \(uiViewController.sourceType == .camera ? "camera" : "photoLibrary") to \(sourceType == .camera ? "camera" : "photoLibrary")")
-            uiViewController.sourceType = sourceType
+            let availableSourceType: UIImagePickerController.SourceType
+            if sourceType == .camera {
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    availableSourceType = .camera
+                } else {
+                    print(" Camera not available in update, falling back to photoLibrary")
+                    availableSourceType = .photoLibrary
+                }
+            } else {
+                availableSourceType = sourceType
+            }
+            
+            if uiViewController.sourceType != availableSourceType {
+                print("Updating ImagePicker sourceType from \(uiViewController.sourceType == .camera ? "camera" : "photoLibrary") to \(availableSourceType == .camera ? "camera" : "photoLibrary")")
+                uiViewController.sourceType = availableSourceType
+            }
         }
     }
     
@@ -44,20 +72,20 @@ struct ImagePicker: UIViewControllerRepresentable {
         
         init(_ parent: ImagePicker) {
             self.parent = parent
-            print("📷 ImagePicker Coordinator created")
+            print(" ImagePicker Coordinator created")
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            print("📷 ImagePicker: didFinishPickingMediaWithInfo called")
+            print(" ImagePicker: didFinishPickingMediaWithInfo called")
             if let image = info[.originalImage] as? UIImage {
-                print("📷 Image extracted successfully, size: \(image.size)")
+                print(" Image extracted successfully, size: \(image.size)")
                 DispatchQueue.main.async {
                     self.parent.selectedImage = image
-                    print("✅ Image assigned to binding, calling dismiss")
+                    print(" Image assigned to binding, calling dismiss")
                     self.parent.dismiss()
                 }
             } else {
-                print("⚠️ Failed to extract image from picker info")
+                print(" Failed to extract image from picker info")
                 DispatchQueue.main.async {
                     self.parent.dismiss()
                 }
@@ -65,7 +93,7 @@ struct ImagePicker: UIViewControllerRepresentable {
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            print("❌ ImagePicker cancelled by user")
+            print(" ImagePicker cancelled by user")
             DispatchQueue.main.async {
                 self.parent.selectedImage = nil
                 self.parent.dismiss()

@@ -100,7 +100,33 @@ struct EmailDvir: View {
                                 navmanager.path.append(AppRoute.DvirFlow.AddDvirScreenView)
                             },
                             onViewDefect: {
-                                selectedDvirRecord = record
+                                // Fetch latest record from database to get updated defects
+                                let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+                                
+                                // Try to find updated record by ID first
+                                if let recordId = record.id,
+                                   let updatedRecord = allRecords.first(where: { $0.id == recordId }) {
+                                    print("  Using updated record from database - ID: \(recordId)")
+                                    print("   Truck Defect: '\(updatedRecord.truckDefect)'")
+                                    print("   Trailer Defect: '\(updatedRecord.trailerDefect)'")
+                                    selectedDvirRecord = updatedRecord
+                                } else {
+                                    // If no ID or record not found, use latest record (highest ID)
+                                    let sortedRecords = allRecords.sorted { record1, record2 in
+                                        let id1 = record1.id ?? 0
+                                        let id2 = record2.id ?? 0
+                                        return id1 > id2  // Latest first
+                                    }
+                                    if let latestRecord = sortedRecords.first {
+                                        print("  Using LATEST record from database - ID: \(latestRecord.id ?? -1)")
+                                        print("   Truck Defect: '\(latestRecord.truckDefect)'")
+                                        print("   Trailer Defect: '\(latestRecord.trailerDefect)'")
+                                        selectedDvirRecord = latestRecord
+                                    } else {
+                                        // Fallback to original record
+                                        selectedDvirRecord = record
+                                    }
+                                }
                                 navmanager.path.append(AppRoute.DvirFlow.UploadDefectView)
                             }
                         )

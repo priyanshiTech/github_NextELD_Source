@@ -30,6 +30,7 @@ struct UploadDefectView: View {
     @State private var selectedDefectItem: DefectItem?
     @State private var defectItems: [DefectItem] = []
     @State private var currentRecord: DvirRecord? = nil  // Store current record with latest data
+    @State private var showCameraUnavailableAlert = false
     
     // Helper to parse defects from comma-separated string
     private func parseDefects(_ defectsString: String, type: String) -> [DefectItem] {
@@ -103,35 +104,46 @@ struct UploadDefectView: View {
         return items
     }
     
-    // Helper to refresh record from database
+    // Helper to refresh record from database - Always get the latest record
     private func refreshRecordFromDatabase() {
+        let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+        
+        guard !allRecords.isEmpty else {
+            print(" No records found in database")
+            currentRecord = selectedRecord
+            return
+        }
+        
+        // Sort records by ID (descending) to get the most recent one
+        // New records will have higher IDs due to auto-increment
+        let sortedRecords = allRecords.sorted { record1, record2 in
+            let id1 = record1.id ?? 0
+            let id2 = record2.id ?? 0
+            return id1 > id2  // Latest first
+        }
+        
+        // Priority 1: If selectedRecord has ID, try to find it first (might be updated)
         if let recordId = selectedRecord?.id {
-            // Fetch latest record from database by ID
-            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
-            if let latestRecord = allRecords.first(where: { $0.id == recordId }) {
-                print(" Refreshed record from database - ID: \(recordId)")
-                print("   Truck Defect: '\(latestRecord.truckDefect)'")
-                print("   Trailer Defect: '\(latestRecord.trailerDefect)'")
-                currentRecord = latestRecord
+            if let updatedRecord = allRecords.first(where: { $0.id == recordId }) {
+                print("  Using updated record from database - ID: \(recordId)")
+                print("   Truck Defect: '\(updatedRecord.truckDefect)'")
+                print("   Trailer Defect: '\(updatedRecord.trailerDefect)'")
+                currentRecord = updatedRecord
+                return
             }
-        } else if let selectedRecord = selectedRecord {
-            // If no ID, try to get latest record by matching key fields or get last record
-            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
-            // Try to find matching record or get the last one
-            if let latestRecord = allRecords.last {
-                print(" Using latest record from database - ID: \(latestRecord.id ?? -1)")
-                currentRecord = latestRecord
-            } else {
-                // Fallback to selectedRecord
-                currentRecord = selectedRecord
-            }
+        }
+        
+        // Priority 2: Use the latest record (highest ID = most recent)
+        if let latestRecord = sortedRecords.first {
+            print("  Using LATEST record from database - ID: \(latestRecord.id ?? -1)")
+            print("   Date/Time: \(latestRecord.DAY) \(latestRecord.DvirTime)")
+            print("   Truck Defect: '\(latestRecord.truckDefect)'")
+            print("   Trailer Defect: '\(latestRecord.trailerDefect)'")
+            currentRecord = latestRecord
         } else {
-            // No selectedRecord, try to get latest record
-            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
-            if let latestRecord = allRecords.last {
-                print(" No selectedRecord, using latest from database - ID: \(latestRecord.id ?? -1)")
-                currentRecord = latestRecord
-            }
+            // Fallback to selectedRecord if available
+            print(" ⚠️ No records found, using selectedRecord")
+            currentRecord = selectedRecord
         }
     }
     
@@ -281,18 +293,27 @@ struct UploadDefectView: View {
                         
                         HStack(spacing: 150) {
                             Button(action: {
-                                print(" Camera tapped - Setting sourceType to camera")
-                                sourceType = .camera
-                                print("sourceType set, closing popup...")
-                                withAnimation(.easeInOut) {
-                                    showUploadPopup = false
-                                }
-                                print(" Popup closed, waiting 0.3s to open image picker...")
-                                // Small delay to allow popup to close before opening image picker
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                    print(" Opening camera with showImagePicker = true")
-                                    showImagePicker = true
-                                    print("showImagePicker is now: \(showImagePicker)")
+                                print(" Camera tapped - Checking camera availability...")
+                                
+                                // Check if camera is available before setting sourceType
+                                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                                    print(" Camera is available - Setting sourceType to camera")
+                                    sourceType = .camera
+                                    print(" sourceType set, closing popup...")
+                                    withAnimation(.easeInOut) {
+                                        showUploadPopup = false
+                                    }
+                                    print(" Popup closed, waiting 0.3s to open image picker...")
+                                    // Small delay to allow popup to close before opening image picker
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                        print(" Opening camera with showImagePicker = true")
+                                        showImagePicker = true
+                                        print(" showImagePicker is now: \(showImagePicker)")
+                                    }
+                                } else {
+                                    print(" Camera not available - Showing alert")
+                                    // Show SwiftUI alert
+                                    showCameraUnavailableAlert = true
                                 }
                             }) {
                                 VStack(spacing: 8) {
@@ -435,7 +456,7 @@ struct UploadDefectView: View {
         }
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $showImagePicker, onDismiss: {
-            print(" fullScreenCover onDismiss called - showImagePicker is now: \(showImagePicker)")
+            print("📷 fullScreenCover onDismiss called - showImagePicker is now: \(showImagePicker)")
         }) {
             ImagePicker(sourceType: sourceType, selectedImage: $selectedImage)
                 .ignoresSafeArea()
@@ -471,7 +492,6 @@ struct UploadDefectView: View {
                     // Fallback: if onChange didn't trigger preview, show it now
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         if selectedImage != nil && !showImagePreview {
-                            print(" Fallback: Showing image preview")
                             showImagePreview = true
                         }
                     }
@@ -482,31 +502,61 @@ struct UploadDefectView: View {
         }
         .onAppear {
             // Initialize defect items when view appears
-            print(" UploadDefectView appeared")
+            print("  UploadDefectView appeared")
             
-            // Refresh record from database to get latest defects
-            refreshRecordFromDatabase()
-            
-            // Load defects from refreshed record
-            defectItems = getAllDefectItems()
-            print(" defectItems count: \(defectItems.count)")
+            // Small delay to ensure view is fully loaded
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                self.refreshRecordFromDatabase()
+                self.defectItems = self.getAllDefectItems()
+                print("Defects loaded on appear - Total items: \(self.defectItems.count)")
+            }
         }
         .onChange(of: selectedRecord) { newRecord in
             // Reload defects when selected record changes
-            print(" Selected record changed")
+            print("  Selected record changed")
             if let record = newRecord {
-                print("   New record - Truck: '\(record.truckDefect)', Trailer: '\(record.trailerDefect)'")
+                print("   New record ID: \(record.id ?? -1)")
+                print("   Truck Defect: '\(record.truckDefect)'")
+                print("   Trailer Defect: '\(record.trailerDefect)'")
             }
             
             // Refresh from database when selectedRecord changes
-            refreshRecordFromDatabase()
-            defectItems = getAllDefectItems()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                self.refreshRecordFromDatabase()
+                self.defectItems = self.getAllDefectItems()
+                print(" Defects refreshed after selectedRecord change - Total: \(self.defectItems.count)")
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
             // Refresh when DVIR record is updated elsewhere
-            print(" DVIR record updated notification received")
-            refreshRecordFromDatabase()
-            defectItems = getAllDefectItems()
+            print("  DVIR record updated notification received")
+            
+            // Small delay to ensure database write is complete
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                print(" Refreshing record from database after notification...")
+                self.refreshRecordFromDatabase()
+                self.defectItems = self.getAllDefectItems()
+                print(" Defects refreshed - Total items: \(self.defectItems.count)")
+            }
+        }
+        .alert("Camera Not Available", isPresented: $showCameraUnavailableAlert) {
+            Button("Use Photo Library", role: .none) {
+                // Fallback to photo library
+                print("📷 Falling back to photoLibrary")
+                sourceType = .photoLibrary
+                withAnimation(.easeInOut) {
+                    showUploadPopup = false
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    showImagePicker = true
+                }
+            }
+            Button("Cancel", role: .cancel) {
+                // Just close the popup
+                showUploadPopup = false
+            }
+        } message: {
+            Text("Camera is not available on this device. Would you like to use photo library instead?")
         }
     }
 }

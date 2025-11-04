@@ -511,9 +511,9 @@ struct AddDvirScreenView: View  {
                                     
                                     // Post notification to refresh UploadDefectView
                                     NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
-                                    print(" Posted DVIRRecordUpdated notification")
+                                    print("Posted DVIRRecordUpdated notification")
                                 } else {
-                                    print("  Error: Record not found in database after insert")
+                                    print("Error: Record not found in database after insert")
                                 }
                                 
                                 // Call dispatchadd_dvir_data API for new record
@@ -521,16 +521,10 @@ struct AddDvirScreenView: View  {
                                 print("   DvirRecord driverId: \(DvirRecord.driverId)")
                                 print("   DvirRecord vehicleId: \(DvirRecord.vehicleId)")
                                 print("   DvirRecord has signature: \(DvirRecord.fileDVir != nil)")
-                                
                                 // Ensure DvirRecord is accessible and call API
                                 uploadDvirDataUsingCommonService(record: DvirRecord)
                                 print(" API call initiated successfully!")
-                                
-                                if let signatureData = signatureData {
-                                    print(" Signature saved successfully! Size: \(signatureData.count) bytes")
-                                } else {
-                                    print(" Signature missing while inserting new record")
-                                }
+                              
                             }
                             
                             // Delay navigation to show success message
@@ -539,7 +533,6 @@ struct AddDvirScreenView: View  {
                                    // navmanager.navigate(to: .homeFlow(.home))
                                     navmanager.navigate(to: AppRoute.HomeFlow.Home)
                                 } else {
-                                   // navmanager.navigate(to: .logsFlow(.AddDvirPriTrip))
                                     navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
                                 }
                             }
@@ -595,7 +588,25 @@ struct AddDvirScreenView: View  {
                 })
             }
             .navigationBarBackButtonHidden()
-            
+            .onAppear {
+                // Sync trailers binding with trailerVM when view appears
+                // This ensures latest trailers are shown when navigating back from TrailerView
+                if trailers != trailerVM.trailers {
+                    trailers = trailerVM.trailers
+                }
+            }
+            .onChange(of: trailerVM.trailers) { newValue in
+                // When trailerVM.trailers changes, update the binding
+                if trailers != newValue {
+                    trailers = newValue
+                }
+            }
+            .onChange(of: trailers) { newValue in
+                // When binding changes, sync with trailerVM
+                if trailerVM.trailers != newValue {
+                    trailerVM.trailers = newValue
+                }
+            }
             
             
             // MARK: - Signature Popup Overlay

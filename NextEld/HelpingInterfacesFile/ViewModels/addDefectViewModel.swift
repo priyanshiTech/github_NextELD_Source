@@ -29,19 +29,28 @@ class AddDefectViewModel: ObservableObject {
         errorMessage = nil
         
         let url = API.Endpoint.addDefectData.url
+
+        let dvirLogId = AppStorageHandler.shared.dvirLogId ?? ""
         
-        // Convert all values to String as API expects strings
-        let requestField: [String: String] = [
+        var requestField: [String: String] = [
             "driverid": "\(AppStorageHandler.shared.driverId ?? 0)",
             "defectType": defectType,
             "clientid": "\(AppStorageHandler.shared.clientId ?? 0)",
             "tokenNo": AppStorageHandler.shared.authToken ?? "",
-            "timestamp": "\(Int(Date().timeIntervalSince1970 * 1000))",
+            "timestamp": DateTimeHelper.currentTime(),
             "vehicleid": "\(AppStorageHandler.shared.vehicleId ?? 0)",
             "location": UserDefaults.standard.string(forKey: "customLocation") ?? ""
         ]
         
-        print("📤 Defect Upload Fields:")
+        // Add dvirLogId if available (from dispatchadd_dvir_data API response)
+        if !dvirLogId.isEmpty {
+            requestField["dvirLogId"] = dvirLogId
+            print(" Using dvirLogId: \(dvirLogId)")
+        } else {
+            print(" dvirLogId not available, upload may fail")
+        }
+        
+        print(" Defect Upload Fields:")
         requestField.forEach { print("  \($0.key): \($0.value)") }
         
         // Try different file parameter names - API might expect "file" or "defectFile"

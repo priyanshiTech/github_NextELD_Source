@@ -95,6 +95,18 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
                 print("  dispatchadd_dvir_data API - Upload successful!")
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("  Response: \(responseString)")
+                    
+                    // Parse response to extract _id from result._id
+                    if let jsonData = responseString.data(using: .utf8),
+                       let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+                       let resultDict = json["result"] as? [String: Any],
+                       let dvirId = resultDict["_id"] as? String {
+                        // Save the _id to AppStorageHandler
+                        AppStorageHandler.shared.dvirLogId = dvirId
+                        print("  ✅ Saved dvirLogId: \(dvirId)")
+                    } else {
+                        print("  ⚠️ Could not extract _id from response")
+                    }
                 } else {
                     print(" Response: (Unable to decode)")
                 }

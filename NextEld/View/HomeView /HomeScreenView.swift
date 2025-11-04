@@ -543,10 +543,10 @@ struct HomeScreenView: View {
             case .thirtyFourHours:
                 break
             }
-        
         }
-        } message: {
             
+        } message: {
+
             Text(homeVM.alertType.getMessage())
         }
       

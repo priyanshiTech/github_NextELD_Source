@@ -60,10 +60,12 @@ struct TrailerView: View {
                     Button(action: {
                         
                         if !inputText.isEmpty {
-                           // items.append(inputText)
-                            trailerVM.addTrailer(inputText)
-                            //trailers.append(inputText)
-                            inputText = ""
+                            let trimmed = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if !trimmed.isEmpty {
+                                // Add to ViewModel (which updates the binding automatically since binding is $trailerVM.trailers)
+                                trailerVM.addTrailer(trimmed)
+                                inputText = ""
+                            }
                         }
                      
                     }) {
@@ -83,9 +85,8 @@ struct TrailerView: View {
                             Text(item)
                             Spacer()
                             Button("Delete") {
-                                if let index = trailers.firstIndex(of: item) {
-                                    trailers.remove(at: index)
-                                }
+                                // Remove from ViewModel (which updates the binding automatically)
+                                trailerVM.removeTrailer(item)
                             }
                             .padding(.vertical, 8)
                             .padding(.horizontal, 15)
