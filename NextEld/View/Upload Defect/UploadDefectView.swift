@@ -29,6 +29,7 @@ struct UploadDefectView: View {
     @State private var selectedDefectType = ""
     @State private var selectedDefectItem: DefectItem?
     @State private var defectItems: [DefectItem] = []
+    @State private var currentRecord: DvirRecord? = nil  // Store current record with latest data
     
     // Helper to parse defects from comma-separated string
     private func parseDefects(_ defectsString: String, type: String) -> [DefectItem] {
@@ -73,9 +74,13 @@ struct UploadDefectView: View {
     private func getAllDefectItems() -> [DefectItem] {
         var items: [DefectItem] = []
         
+        // Use currentRecord (latest from DB) if available, otherwise use selectedRecord
+        let recordToUse = currentRecord ?? selectedRecord
+        
         // Debug logging
-        if let record = selectedRecord {
+        if let record = recordToUse {
             print(" Loading defects from record:")
+            print("   Record ID: \(record.id ?? -1)")
             print("   Truck Defect: '\(record.truckDefect)'")
             print("   Trailer Defect: '\(record.trailerDefect)'")
             
@@ -96,6 +101,38 @@ struct UploadDefectView: View {
         }
         
         return items
+    }
+    
+    // Helper to refresh record from database
+    private func refreshRecordFromDatabase() {
+        if let recordId = selectedRecord?.id {
+            // Fetch latest record from database by ID
+            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+            if let latestRecord = allRecords.first(where: { $0.id == recordId }) {
+                print(" Refreshed record from database - ID: \(recordId)")
+                print("   Truck Defect: '\(latestRecord.truckDefect)'")
+                print("   Trailer Defect: '\(latestRecord.trailerDefect)'")
+                currentRecord = latestRecord
+            }
+        } else if let selectedRecord = selectedRecord {
+            // If no ID, try to get latest record by matching key fields or get last record
+            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+            // Try to find matching record or get the last one
+            if let latestRecord = allRecords.last {
+                print(" Using latest record from database - ID: \(latestRecord.id ?? -1)")
+                currentRecord = latestRecord
+            } else {
+                // Fallback to selectedRecord
+                currentRecord = selectedRecord
+            }
+        } else {
+            // No selectedRecord, try to get latest record
+            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+            if let latestRecord = allRecords.last {
+                print(" No selectedRecord, using latest from database - ID: \(latestRecord.id ?? -1)")
+                currentRecord = latestRecord
+            }
+        }
     }
     
     // Helper to update defect item upload status
@@ -244,18 +281,18 @@ struct UploadDefectView: View {
                         
                         HStack(spacing: 150) {
                             Button(action: {
-                                print("📷 Camera tapped - Setting sourceType to camera")
+                                print(" Camera tapped - Setting sourceType to camera")
                                 sourceType = .camera
-                                print("📷 sourceType set, closing popup...")
+                                print("sourceType set, closing popup...")
                                 withAnimation(.easeInOut) {
                                     showUploadPopup = false
                                 }
-                                print("📷 Popup closed, waiting 0.3s to open image picker...")
+                                print(" Popup closed, waiting 0.3s to open image picker...")
                                 // Small delay to allow popup to close before opening image picker
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                    print("📷 Opening camera with showImagePicker = true")
+                                    print(" Opening camera with showImagePicker = true")
                                     showImagePicker = true
-                                    print("📷 showImagePicker is now: \(showImagePicker)")
+                                    print("showImagePicker is now: \(showImagePicker)")
                                 }
                             }) {
                                 VStack(spacing: 8) {
@@ -273,18 +310,18 @@ struct UploadDefectView: View {
                             
                             
                             Button(action: {
-                                print("🖼️ Gallery tapped - Setting sourceType to photoLibrary")
+                                print(" Gallery tapped - Setting sourceType to photoLibrary")
                                 sourceType = .photoLibrary
-                                print("🖼️ sourceType set, closing popup...")
+                                print(" sourceType set, closing popup...")
                                 withAnimation(.easeInOut) {
                                     showUploadPopup = false
                                 }
-                                print("🖼️ Popup closed, waiting 0.3s to open image picker...")
+                                print("Popup closed, waiting 0.3s to open image picker...")
                                 // Small delay to allow popup to close before opening image picker
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                    print("🖼️ Opening gallery with showImagePicker = true")
+                                    print(" Opening gallery with showImagePicker = true")
                                     showImagePicker = true
-                                    print("🖼️ showImagePicker is now: \(showImagePicker)")
+                                    print(" showImagePicker is now: \(showImagePicker)")
                                 }
                             }) {
                                 VStack(spacing: 8) {
@@ -320,7 +357,7 @@ struct UploadDefectView: View {
                 Color.black.opacity(0.5)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        print("🔄 Image preview tapped outside, closing")
+                        print(" Image preview tapped outside, closing")
                         showImagePreview = false
                         // Don't clear selectedImage here - let onChange handle it if needed
                     }
@@ -335,7 +372,7 @@ struct UploadDefectView: View {
                         Spacer()
                         
                         Button(action: {
-                            print("🔄 Image preview close button tapped")
+                            print(" Image preview close button tapped")
                             showImagePreview = false
                         }) {
                             Image(systemName: "xmark")
@@ -398,15 +435,15 @@ struct UploadDefectView: View {
         }
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $showImagePicker, onDismiss: {
-            print("📷 fullScreenCover onDismiss called - showImagePicker is now: \(showImagePicker)")
+            print(" fullScreenCover onDismiss called - showImagePicker is now: \(showImagePicker)")
         }) {
             ImagePicker(sourceType: sourceType, selectedImage: $selectedImage)
                 .ignoresSafeArea()
                 .onAppear {
-                    print("📷 fullScreenCover appeared - ImagePicker is visible")
+                    print(" fullScreenCover appeared - ImagePicker is visible")
                 }
                 .onDisappear {
-                    print("📷 fullScreenCover disappeared - ImagePicker closed")
+                    print(" fullScreenCover disappeared - ImagePicker closed")
                 }
         }
         .onChange(of: selectedImage) { oldValue, newValue in
@@ -421,7 +458,7 @@ struct UploadDefectView: View {
             }
         }
         .onChange(of: showImagePicker) { oldValue, newValue in
-            print("🔄 showImagePicker changed: \(oldValue) -> \(newValue)")
+            print(" showImagePicker changed: \(oldValue) -> \(newValue)")
             if newValue {
                 print(" Image picker is opening now")
             } else {
@@ -446,6 +483,11 @@ struct UploadDefectView: View {
         .onAppear {
             // Initialize defect items when view appears
             print(" UploadDefectView appeared")
+            
+            // Refresh record from database to get latest defects
+            refreshRecordFromDatabase()
+            
+            // Load defects from refreshed record
             defectItems = getAllDefectItems()
             print(" defectItems count: \(defectItems.count)")
         }
@@ -455,6 +497,15 @@ struct UploadDefectView: View {
             if let record = newRecord {
                 print("   New record - Truck: '\(record.truckDefect)', Trailer: '\(record.trailerDefect)'")
             }
+            
+            // Refresh from database when selectedRecord changes
+            refreshRecordFromDatabase()
+            defectItems = getAllDefectItems()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
+            // Refresh when DVIR record is updated elsewhere
+            print(" DVIR record updated notification received")
+            refreshRecordFromDatabase()
             defectItems = getAllDefectItems()
         }
     }

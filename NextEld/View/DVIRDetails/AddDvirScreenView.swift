@@ -332,8 +332,6 @@ struct AddDvirScreenView: View  {
                                 }
                             }
                         }
-                          
-
                         // Always update selectedRecord with current values when view appears
                         // This ensures we sync after coming back from vehicle selection
                         updateSelectedRecordFromVehicle()
@@ -466,7 +464,7 @@ struct AddDvirScreenView: View  {
 
                             if let existingId = record.id {
                                 // Editing existing record
-                                print(" 🔄 Updating Existing Record with ID: \(existingId)")
+                                print(" Updating Existing Record with ID: \(existingId)")
                                 record.id = existingId
                                 DvirDatabaseManager.shared.updateRecord(record)
                                 
@@ -485,7 +483,9 @@ struct AddDvirScreenView: View  {
                                 print(" Calling update_dvir_data API...")
                                 updateDvirDataUsingCommonService(record: record, dvirLogId: driverID)
                                 
-                
+                                // Post notification to refresh UploadDefectView
+                                NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
+                                print(" Posted DVIRRecordUpdated notification after update")
                                 
                                 print("  Record updated with ID: \(existingId)")
                                 if let signatureData = signatureData {
@@ -508,6 +508,10 @@ struct AddDvirScreenView: View  {
                                     print(" aved Record Vehicle: \(savedRecord.vehicleName)")
                                     successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
                                     showSuccessAlert = true
+                                    
+                                    // Post notification to refresh UploadDefectView
+                                    NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
+                                    print(" Posted DVIRRecordUpdated notification")
                                 } else {
                                     print("  Error: Record not found in database after insert")
                                 }
@@ -539,6 +543,7 @@ struct AddDvirScreenView: View  {
                                     navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
                                 }
                             }
+                            navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
                         }
                     }) {
                         Text("Add Dvir")

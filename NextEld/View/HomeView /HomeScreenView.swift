@@ -519,22 +519,21 @@ struct HomeScreenView: View {
             case .deleteLogs:
                 
                 Task {
+                    
                     if let driverId = AppStorageHandler.shared.driverId {
                         await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
                         homeVM.deleteAllAppData()
-                        
                         // Delete all Continue Drive data
                         ContinueDriveDBManager.shared.deleteAllContinueDriveData()
-                        
-                        // Show success alert
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             self.homeVM.alertType = .sucessConfimration
                             self.homeVM.showAlertOnHomeScreen = true
                         }
-                    } else {
+                    } else{
                         print(" Driver ID not found in UserDefaults")
                     }
                 }
+                
                 break
             case .sucessConfimration:
                 appRootManager.currentRoot = .login
@@ -547,11 +546,7 @@ struct HomeScreenView: View {
         
         }
         } message: {
-//            if homeVM.alertType == .nextDay {
-//                Text("\(AppStorageHandler.shared.onSleepTime?.getHours() ?? 0) hours of rest time completed!\nTimers have been reset.\nDay \(AppStorageHandler.shared.days)\nShift \(AppStorageHandler.shared.shift)")
-//            } else {
-//                Text(homeVM.alertType.getMessage())
-//            }
+            
             Text(homeVM.alertType.getMessage())
         }
       
