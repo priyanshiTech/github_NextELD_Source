@@ -21,42 +21,25 @@ struct DailyLogView: View {
     @EnvironmentObject var navManager: NavigationManager
     let entry: WorkEntry  //passed from previous screen
     
-    //MARK: -  Database dates for last 7 days
+    //MARK: -  Database dates from driverLogs (unique, latest first)
     private var logDates: [LogDate] {
-        let calendar = Calendar.current
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
         
-        // Get today's date
-        let today = Date()
-        
-        // Calculate date range for last 7 days
-        guard let sevenDaysAgo = calendar.date(byAdding: .day, value: -6, to: today) else {
-            return []
-        }
-        
-        // DB se logs nikalo
+        // Fetch all logs for current user
         let logs = DatabaseManager.shared.fetchLogs()
         
-        // Filter logs for last 7 days and extract unique dates
-        let logsInRange = logs.compactMap { log -> String? in
-           let logDate = log.startTime 
-            
-            // Check if log date is within last 7 days
-            if logDate >= sevenDaysAgo && logDate <= today {
-                return formatter.string(from: logDate)
-            }
-            return nil
-        }
-        
-        // Get unique dates and sort them
-        let uniqueDates = Array(Set(logsInRange)).sorted { date1, date2 in
+        // Map to date strings, unique, sorted latest first
+        let uniqueDates = Array(
+            Set(
+                logs.map { formatter.string(from: $0.startTime) }
+            )
+        ).sorted { date1, date2 in
             guard let d1 = formatter.date(from: date1),
                   let d2 = formatter.date(from: date2) else { return false }
-            return d1 > d2 // latest first
+            return d1 > d2
         }
         
-        // Convert to LogDate objects (all dates from DB are not missing)
         return uniqueDates.map { LogDate(date: $0, isMissing: false) }
     }
     //MARK: - Database records for certification check
@@ -160,13 +143,7 @@ struct DailyLogView: View {
                         .foregroundColor(.white)
                         .fontWeight(.semibold)
                     Spacer()
-                    
-//                    HStack(spacing: 5) {
-//                        CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: AppRoute.logsFlow(.EmailLogs(title: " Daily Logs")))})
-//                            .padding()
-//                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: AppRoute.logsFlow(.RecapHours(title: "Hours Recap")))})
-//                            .foregroundColor(.black)
-//                    }
+
                     HStack(spacing: 5) {
                         CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: AppRoute.DvirFlow.emailLogs(tittle: " Daily Logs"))})
                             .padding()
@@ -189,91 +166,37 @@ struct DailyLogView: View {
                     .foregroundColor(.gray)
             }
             .padding()
+
             
-            //MARK: -  List Section
-            List(logDates) { log in
-                HStack {
-                    Text(dateFormattedString(log.date))
-                        .foregroundColor(.primary)
-                    
-                    Spacer()
-                    
-                    // Condition: Check if date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
-                    let isCertified = isDateFullyCertified(log.date)
-                  //  print(" Final result for \(log.date): isCertified = \(isCertified)")
-                    
-                    if isCertified {
+            // MARK: - List Section
+            List {
+                ForEach(logDates) { log in
+                    HStack {
+                        Text(dateFormattedString(log.date))
+                            .foregroundColor(.primary)
+
+                        Spacer()
+
+                        let isCertified = isDateFullyCertified(log.date)
+
                         Button(action: {
+                            // Navigate to your certify screen
                             navManager.navigate(to: AppRoute.HomeFlow.CertifySelectedView(tittle: dateFormattedString(log.date)))
-                            print("Certified tapped for \(dateFormattedString(log.date))")
+                            print("Tapped for \(dateFormattedString(log.date)) → Certified: \(isCertified)")
                         }) {
-                            Text("Certified")
-                                .foregroundColor(.green)
+                            Text(isCertified ? "Certified" : "Uncertified")
+                                .foregroundColor(isCertified ? .green : .red)
                                 .fontWeight(.semibold)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 8)
-                                .background(Color.green.opacity(0.1))
-                                .cornerRadius(6)
-                        }
-                    } else {
-                        Button(action: {
-                            navManager.navigate(to: AppRoute.HomeFlow.CertifySelectedView(tittle: dateFormattedString(log.date)))
-                            print("Uncertified tapped for \(dateFormattedString(log.date))")
-                        }) {
-                            Text("Uncertified")
-                                .foregroundColor(.red)
-                                .fontWeight(.semibold)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 8)
-                                .background(Color.red.opacity(0.1))
+                                .background((isCertified ? Color.green : Color.red).opacity(0.1))
                                 .cornerRadius(6)
                         }
                     }
+                    .contentShape(Rectangle())
                 }
-                .contentShape(Rectangle())
             }
-            
-//            List(logDates) { log in
-//                HStack {
-//                    Text(dateFormattedString(log.date))
-//                        .foregroundColor(.primary)
-//                    
-//                    Spacer()
-//                    
-//                    // Condition: Check if date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
-//                    let isCertified = isDateFullyCertified(log.date)
-//                  //  print(" Final result for \(log.date): isCertified = \(isCertified)")
-//                    
-//                    if isCertified {
-//                        Button(action: {
-//                            navManager.navigate(to: AppRoute.logsFlow(.CertifySelectedView(title: dateFormattedString(log.date))))
-//                            print("Certified tapped for \(dateFormattedString(log.date))")
-//                        }) {
-//                            Text("Certified")
-//                                .foregroundColor(.green)
-//                                .fontWeight(.semibold)
-//                                .padding(.horizontal, 12)
-//                                .padding(.vertical, 8)
-//                                .background(Color.green.opacity(0.1))
-//                                .cornerRadius(6)
-//                        }
-//                    } else {
-//                        Button(action: {
-//                            navManager.navigate(to: AppRoute.logsFlow(.CertifySelectedView(title: dateFormattedString(log.date))))
-//                            print("Uncertified tapped for \(dateFormattedString(log.date))")
-//                        }) {
-//                            Text("Uncertified")
-//                                .foregroundColor(.red)
-//                                .fontWeight(.semibold)
-//                                .padding(.horizontal, 12)
-//                                .padding(.vertical, 8)
-//                                .background(Color.red.opacity(0.1))
-//                                .cornerRadius(6)
-//                        }
-//                    }
-//                }
-//                .contentShape(Rectangle())
-//            }
+
             .onAppear {
                 // Debug information
                 let allDates = logDates.map { dateFormattedString($0.date) }

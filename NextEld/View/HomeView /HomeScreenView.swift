@@ -11,7 +11,8 @@ struct HomeScreenView: View {
     
     @EnvironmentObject var appRootManager: AppRootManager
     @StateObject private var homeVM : HomeViewModel = .init()
-    
+    @StateObject var trailerVM: TrailerViewModel = .init()
+
     @State private var labelValue = ""
     @State private var showCertifyLogAlert = false
     @State private var showStatusalert: Bool = false
@@ -107,8 +108,9 @@ struct HomeScreenView: View {
                         Text("Disconnected")
                             .font(.title2)
                             .foregroundColor(.red)
+                        //UserDefaults.standard.string(forKey: "truckNo"),
                         
-                        VehicleInfoView(GadiNo: UserDefaults.standard.string(forKey: "truckNo") ?? "Not Found",
+                        VehicleInfoView(GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                         
                             StatusView(homeViewModel: homeVM) { status in
@@ -517,22 +519,21 @@ struct HomeScreenView: View {
             case .deleteLogs:
                 
                 Task {
+                    
                     if let driverId = AppStorageHandler.shared.driverId {
                         await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
                         homeVM.deleteAllAppData()
-                        
                         // Delete all Continue Drive data
                         ContinueDriveDBManager.shared.deleteAllContinueDriveData()
-                        
-                        // Show success alert
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             self.homeVM.alertType = .sucessConfimration
                             self.homeVM.showAlertOnHomeScreen = true
                         }
-                    } else {
+                    } else{
                         print(" Driver ID not found in UserDefaults")
                     }
                 }
+                
                 break
             case .sucessConfimration:
                 appRootManager.currentRoot = .login
@@ -545,11 +546,7 @@ struct HomeScreenView: View {
         
         }
         } message: {
-//            if homeVM.alertType == .nextDay {
-//                Text("\(AppStorageHandler.shared.onSleepTime?.getHours() ?? 0) hours of rest time completed!\nTimers have been reset.\nDay \(AppStorageHandler.shared.days)\nShift \(AppStorageHandler.shared.shift)")
-//            } else {
-//                Text(homeVM.alertType.getMessage())
-//            }
+            
             Text(homeVM.alertType.getMessage())
         }
       
@@ -625,7 +622,7 @@ struct HomeScreenView: View {
                 DriverLogListView()
                 
             case .AddDvirScreenView:
-                AddDvirScreenView( selectedRecord:.constant(nil))
+                AddDvirScreenView( selectedRecord:.constant(nil), trailers: $trailerVM.trailers )
             }
             
         })

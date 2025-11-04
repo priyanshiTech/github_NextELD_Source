@@ -3,7 +3,7 @@
 //  NextEld
 //
 //  Created by Priyanshi on 12/05/25.
-//
+
 import SwiftUI
 
 
@@ -17,17 +17,23 @@ struct SideMenuView: View {
     @Binding var showSyncConfirmation: Bool
 
     var body: some View {
+        
         ZStack(alignment: .leading) {
             Color.white
                 .ignoresSafeArea()
+            VStack(alignment: .leading, spacing: 0) {
+                
+            ProfileImageView()
+                .padding(.vertical, 20)
+                .padding(.horizontal, 16)
             
             UniversalScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    ProfileImageView()
-                        .padding(.vertical, 20)
-                        .padding(.horizontal, 16)
+                
+                
+                  
 
                     ForEach(SideMenuRowType.allCases, id: \.self) { row in
+                        
                         RowView(
                             isSelected: selectedSideMenuTab == row.rawValue,
                             imageName: row.iconName,
@@ -39,7 +45,6 @@ struct SideMenuView: View {
                             }
                         }
                     }
-
                     Spacer()
                 }
                 .frame(width: 270)
@@ -47,14 +52,12 @@ struct SideMenuView: View {
             }
         }
 
-        
-        
         .scrollIndicators(.hidden)
         .background(Color.clear)
     }
 
     func ProfileImageView() -> some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
             Image("person image")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
@@ -62,27 +65,35 @@ struct SideMenuView: View {
                 .clipShape(Circle())
                 .overlay(
                     Circle()
-                        .stroke(Color.black.opacity(0.5), lineWidth: 4)
+                        .stroke(Color.black.opacity(0.5), lineWidth: 3)
                 )
-                //.padding()
-            VStack(alignment: .leading, spacing: 0) {
-                Text(AppStorageHandler.shared.UserName ?? "")
-                    .font(.system(size: 14, weight: .semibold))
-                    .lineLimit(1)
+                .padding(.leading, 16)
+
+            //#p changes
+            VStack(alignment: .leading, spacing: 4) {
+                Text(AppStorageHandler.shared.driverName ?? "")
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(.black)
-                    
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
                 Text("ELD ID - \(String(AppStorageHandler.shared.driverId ?? 0))")
-                    .font(.system(size: 12, weight: .heavy))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundColor(.gray)
                     .lineLimit(1)
             }
-            .padding()
+            .padding(.leading, 2)
+            .padding(.trailing, 16)
+
             Spacer()
         }
+        .padding(.vertical, 8)
     }
 
+
 func handleSelection(_ row: SideMenuRowType) {
+    
        switch row {
            
         case .DailyLogs:

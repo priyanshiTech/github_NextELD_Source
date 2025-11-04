@@ -78,6 +78,11 @@ class LoginViewModel: ObservableObject {
                     //UserDefaults.standard.set(clintId, forKey: "clientId")
                 }
                 
+                if let clientName = response.result?.clientName {
+                    AppStorageHandler.shared.company = clientName
+                    print("company Name  : \(clientName)")
+                }
+                
                 //MARK: -  value get from Rule module in Login Times
                 
                 if let cycleTime =  response.result?.rules?.first?.cycleTime{

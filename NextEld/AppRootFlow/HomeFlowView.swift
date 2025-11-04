@@ -97,6 +97,8 @@ struct HomeFlowView: View {
                 DatabaseCertifyView()
             case .CertifySelectedView(let title):
                 CertifySelectedView(vehiclesc: .constant(""), VechicleID: .constant(0), title: title)
+                    .environmentObject(TrailerViewModel())
+                    .environmentObject(ShippingDocViewModel())
             case .LogsDetails(let title, let entry):
                 LogsDetails(title: title, entry: entry)
             case .EyeViewData(let title, let entry):

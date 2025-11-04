@@ -74,18 +74,34 @@ class MultipartAPIService {
         var body = Data()
 
         for (key, value) in fields {
-            body.append("--\(boundary)\r\n")
-            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
-
-            //  Handle Int, Double, Bool, String
-            if let intValue = value as? Int {
-                body.append("\(intValue)\r\n")
-            } else if let doubleValue = value as? Double {
-                body.append("\(doubleValue)\r\n")
-            } else if let boolValue = value as? Bool {
-                body.append("\(boolValue)\r\n")
+            // Handle Arrays - send each element as a separate field with []
+            if let arrayValue = value as? [String] {
+                for item in arrayValue {
+                    body.append("--\(boundary)\r\n")
+                    body.append("Content-Disposition: form-data; name=\"\(key)[]\"\r\n\r\n")
+                    body.append("\(item)\r\n")
+                }
+            } else if let arrayValue = value as? [Any] {
+                // Handle generic arrays
+                for item in arrayValue {
+                    body.append("--\(boundary)\r\n")
+                    body.append("Content-Disposition: form-data; name=\"\(key)[]\"\r\n\r\n")
+                    body.append("\(item)\r\n")
+                }
             } else {
-                body.append("\(value)\r\n")
+                // Handle Int, Double, Bool, String
+                body.append("--\(boundary)\r\n")
+                body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
+
+                if let intValue = value as? Int {
+                    body.append("\(intValue)\r\n")
+                } else if let doubleValue = value as? Double {
+                    body.append("\(doubleValue)\r\n")
+                } else if let boolValue = value as? Bool {
+                    body.append("\(boolValue)\r\n")
+                } else {
+                    body.append("\(value)\r\n")
+                }
             }
         }
 

@@ -13,12 +13,16 @@ struct AddVehicleForDvir: View {
     
     @Binding var selectedVehicleNumber: String
     @Binding var VechicleID: Int
+    
     @EnvironmentObject var navmanager: NavigationManager
     @State private var searchText = ""
-
+    
+    @State private var localSelectedVehicle: String = ""
+    @State private var localVehicleID: Int = 0
+    
     @StateObject private var vehicleVM = VehicleInfoViewModel(networkManager: NetworkManager())
 
-    //  Filter ab API ke vehicles par
+    // MARK: - Filtered List
     var filteredVehicles: [VehicleResult] {
         if searchText.isEmpty {
             return vehicleVM.vehicles
@@ -29,79 +33,61 @@ struct AddVehicleForDvir: View {
         }
     }
 
+    // MARK: - Body
     var body: some View {
         VStack(spacing: 5) {
-            // Header
-            Color(uiColor: .wine)
-                .edgesIgnoringSafeArea(.top)
-                .frame(height: 30)
-
-            HStack {
-                // Back Button (left corner)
-                Button(action: {
-                    navmanager.goBack()
-                }) {
-                    Image(systemName: "arrow.left")
-                        .bold()
-                        .foregroundColor(.white)
-                        .imageScale(.large)
-                }
-                
-                Spacer()
-                // Title (center)
-                Text("Add Vehicle")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(.white)
-                
-                Spacer()
-                // Empty space so title stays center
-                Image(systemName: "arrow.left")
-                    .opacity(0) // invisible, for symmetry
-                    .imageScale(.large)
-            }
-            .frame(height: 56)
-            .padding(.horizontal)
-            .background(Color(uiColor: .wine))
-
-            // Search Bar
-            HStack {
-                Image(systemName: "envelope.fill")
-                    .foregroundColor(Color(uiColor: .wine))
-                TextField("Search vehicle", text: $searchText)
-                    .textFieldStyle(PlainTextFieldStyle())
-            }
-            .padding(12)
-            .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.4)))
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-
-            // List from API
+            
+            header
+            
+            searchBar
+            
+            // Vehicle List
             List {
-                ForEach(filteredVehicles) { vehicle in
-                    HStack {
-                        Text(vehicle.vehicleNo)   //
-                        Spacer()
-                        if vehicle.vehicleNo == selectedVehicleNumber {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(Color(uiColor: .wine))
-                        } else {
-                            Image(systemName: "checkmark.circle")
-                                .foregroundColor(.gray.opacity(0.5))
-                        }
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        selectedVehicleNumber = vehicle.vehicleNo
+                ForEach(filteredVehicles, id: \.vehicleId) { vehicle in
+                    Button {
+                        // Update local + bindings together
+                        let vehicleNo = vehicle.vehicleNo.trimmingCharacters(in: .whitespaces)
+                        localSelectedVehicle = vehicleNo
+                        localVehicleID = vehicle.vehicleId
+                        
+                        selectedVehicleNumber = vehicleNo
                         VechicleID = vehicle.vehicleId
-                        print("Vehicle selected: \(selectedVehicleNumber)")
-                        print("Vehicle ID: \(VechicleID)")
+                        
+                        print("Selected: \(vehicleNo) [ID: \(vehicle.vehicleId)]")
+                        
+                    } label: {
+                        HStack {
+                            Text(vehicle.vehicleNo)
+                                .font(.system(size: 16))
+                            
+                            Spacer()
+                            
+                            if vehicle.vehicleId == localVehicleID {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(Color(uiColor: .wine))
+                            } else {
+                                Image(systemName: "checkmark.circle")
+                                    .foregroundColor(.gray.opacity(0.5))
+                            }
+                        }
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .listStyle(PlainListStyle())
+            
             // Submit Button
             Button {
-                navmanager.goBack()
+                if localSelectedVehicle.isEmpty {
+                    print("No vehicle selected")
+                } else {
+                    // Sync one more time before navigating back
+                    selectedVehicleNumber = localSelectedVehicle
+                    VechicleID = localVehicleID
+                    print(" Submitted: \(selectedVehicleNumber) [ID: \(VechicleID)]")
+                    navmanager.goBack()
+                }
             } label: {
                 Text("Submit")
                     .frame(maxWidth: .infinity)
@@ -115,17 +101,66 @@ struct AddVehicleForDvir: View {
         }
         .edgesIgnoringSafeArea(.top)
         .navigationBarBackButtonHidden()
-        
-        
+        .onAppear {
+            localSelectedVehicle = selectedVehicleNumber
+            localVehicleID = VechicleID
+            print("onAppear → Restored selection: \(localSelectedVehicle), ID: \(localVehicleID)")
+        }
         .task {
             await vehicleVM.fetchVehicleInfo()
-            print("API se aaye vehicles: \(vehicleVM.vehicles.map{$0.vehicleNo})")
-            print("API se aaye vehicles ID Number : \(vehicleVM.vehicles.map{$0.vehicleId})")
+            print("Vehicles from API: \(vehicleVM.vehicles.map { $0.vehicleNo })")
         }
-        
     }
 }
 
+// MARK: - Subviews
+private extension AddVehicleForDvir {
+    
+    var header: some View {
+        VStack(spacing: 0) {
+            Color(uiColor: .wine)
+                .frame(height: 30)
+                .edgesIgnoringSafeArea(.top)
+            
+            HStack {
+                Button(action: { navmanager.goBack() }) {
+                    Image(systemName: "arrow.left")
+                        .bold()
+                        .foregroundColor(.white)
+                        .imageScale(.large)
+                }
+                
+                Spacer()
+                
+                Text("Add Vehicle")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.white)
+                
+                Spacer()
+                
+                Image(systemName: "arrow.left")
+                    .opacity(0)
+                    .imageScale(.large)
+            }
+            .frame(height: 56)
+            .padding(.horizontal)
+            .background(Color(uiColor: .wine))
+        }
+    }
+    
+    var searchBar: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(Color(uiColor: .wine))
+            TextField("Search vehicle", text: $searchText)
+                .textFieldStyle(PlainTextFieldStyle())
+        }
+        .padding(12)
+        .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.4)))
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+    }
+}
 
 
 

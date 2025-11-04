@@ -54,6 +54,7 @@ enum AppRoute: Hashable {
         case trailerScreen
         case ShippingDocment
         case AddVehicleForDVIR
+        case UploadDefectView
         
     }
    // case scanner
