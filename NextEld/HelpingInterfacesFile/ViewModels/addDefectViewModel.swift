@@ -17,7 +17,7 @@ class AddDefectViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     // MARK: - Upload Defect Image
-    func uploadDefectImage(image: UIImage, defectType: String, completion: @escaping (Bool) -> Void) {
+    func uploadDefectImage(image: UIImage, defectType: String,defectName: String, completion: @escaping (Bool) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             errorMessage = "Failed to convert image to data"
             print("Failed to convert image to data")
@@ -32,22 +32,25 @@ class AddDefectViewModel: ObservableObject {
 
         let dvirLogId = AppStorageHandler.shared.dvirLogId ?? ""
         
+        // Generate 13-digit timestamp (milliseconds since epoch)
+        let currentTimestamp = Int64(Date().timeIntervalSince1970 * 1000)
+        
         var requestField: [String: String] = [
-            "driverid": "\(AppStorageHandler.shared.driverId ?? 0)",
+            "dvirId": dvirLogId.isEmpty ? "" : dvirLogId,  // Use dvirLogId instead of driverId
+            "defectName": defectName,
             "defectType": defectType,
+            "driverId": "\(AppStorageHandler.shared.driverId ?? 0)",
+            "vehicleId": "\(AppStorageHandler.shared.vehicleId ?? 0)",
             "clientid": "\(AppStorageHandler.shared.clientId ?? 0)",
-            "tokenNo": AppStorageHandler.shared.authToken ?? "",
-            "timestamp": DateTimeHelper.currentTime(),
-            "vehicleid": "\(AppStorageHandler.shared.vehicleId ?? 0)",
-            "location": UserDefaults.standard.string(forKey: "customLocation") ?? ""
+            "dateTime": DateTimeHelper.getCurrentDateTimeString(),
+            "timestamp": "\(currentTimestamp)"  // 13-digit timestamp in milliseconds
         ]
         
-        // Add dvirLogId if available (from dispatchadd_dvir_data API response)
+        // Log dvirLogId usage
         if !dvirLogId.isEmpty {
-            requestField["dvirLogId"] = dvirLogId
-            print(" Using dvirLogId: \(dvirLogId)")
+            print(" Using dvirLogId in dvirId field: \(dvirLogId)")
         } else {
-            print(" dvirLogId not available, upload may fail")
+            print(" Warning: dvirLogId not available, dvirId will be empty")
         }
         
         print(" Defect Upload Fields:")
@@ -56,7 +59,7 @@ class AddDefectViewModel: ObservableObject {
         // Try different file parameter names - API might expect "file" or "defectFile"
         let multipartFile = MultipartFile(
             name: "file",
-            filename: "defect_\(defectType.lowercased())_\(Date().timeIntervalSince1970).jpg",
+            filename: "defect_\(defectType.lowercased())_\(currentTimestamp).jpg",
             mimeType: "image/jpeg",
             data: imageData
         )

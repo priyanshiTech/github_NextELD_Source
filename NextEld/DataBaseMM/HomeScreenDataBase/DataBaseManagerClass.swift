@@ -366,7 +366,7 @@ class DatabaseManager: DatabaseHandler {
                 trailers: (log.trailers ?? []).joined(separator: ", "),
                 notes: log.note ?? "",
                 serverId: log._id,
-                timestamp: Int64(Date().timeIntervalSince1970 * 1000),
+                timestamp: currentTimestampMillis(),
                 identifier: log.identifier ?? 0,
                 remainingWeeklyTime: Int(log.remainingWeeklyTime ?? "0") ?? 0,
                 remainingDriveTime: Int(log.remainingDriveTime ?? "0") ?? 0,

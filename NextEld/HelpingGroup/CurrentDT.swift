@@ -43,6 +43,12 @@ struct DateTimeHelper {
         }
             
     }
+    static func getCurrentUTCDateTimeString() -> String {
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter.string(from: Date())
+    }
 
     // Helper function to convert time to user's timezone
     static func convertToUserTimezone(_ date: Date, offset: String) -> Date? {
