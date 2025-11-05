@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import UIKit
+import AVFoundation
 
 
 
@@ -276,12 +277,66 @@ extension UploadDefectView {
     }
     
     private func openCamera() {
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+        // First check if camera is available
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            showCameraUnavailableAlert = true
+            return
+        }
+        
+        // Check and request camera permission
+        let authStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        
+        switch authStatus {
+        case .authorized:
+            // Permission already granted, open camera
             sourceType = .camera
             withAnimation(.easeInOut) { showUploadPopup = false }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { showImagePicker = true }
-        } else {
+            
+        case .notDetermined:
+            // Request permission
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        self.sourceType = .camera
+                        withAnimation(.easeInOut) { self.showUploadPopup = false }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            self.showImagePicker = true
+                        }
+                    } else {
+                        // Permission denied, show alert
+                        self.showCameraPermissionDeniedAlert()
+                    }
+                }
+            }
+            
+        case .denied, .restricted:
+            // Permission denied or restricted, show alert to go to settings
+            showCameraPermissionDeniedAlert()
+            
+        @unknown default:
             showCameraUnavailableAlert = true
+        }
+    }
+    
+    private func showCameraPermissionDeniedAlert() {
+        let alert = UIAlertController(
+            title: "Camera Permission Required",
+            message: "Please enable camera access in Settings to take photos for defect upload.",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
+            if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(settingsURL)
+            }
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootViewController = windowScene.windows.first?.rootViewController {
+            rootViewController.present(alert, animated: true)
         }
     }
     

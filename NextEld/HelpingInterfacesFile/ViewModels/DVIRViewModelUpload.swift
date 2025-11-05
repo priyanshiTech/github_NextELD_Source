@@ -103,9 +103,9 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
                        let dvirId = resultDict["_id"] as? String {
                         // Save the _id to AppStorageHandler
                         AppStorageHandler.shared.dvirLogId = dvirId
-                        print("  ✅ Saved dvirLogId: \(dvirId)")
+                        print("Saved dvirLogId: \(dvirId)")
                     } else {
-                        print("  ⚠️ Could not extract _id from response")
+                        print("Could not extract _id from response")
                     }
                 } else {
                     print(" Response: (Unable to decode)")

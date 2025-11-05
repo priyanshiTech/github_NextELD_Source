@@ -517,26 +517,30 @@ struct AddDvirScreenView: View  {
                                 }
                                 
                                 // Call dispatchadd_dvir_data API for new record
-                                print("   Calling dispatchadd_dvir_data API (for new record)...")
-                                print("   DvirRecord driverId: \(DvirRecord.driverId)")
-                                print("   DvirRecord vehicleId: \(DvirRecord.vehicleId)")
-                                print("   DvirRecord has signature: \(DvirRecord.fileDVir != nil)")
+                                print(" ========== CALLING dispatchadd_dvir_data API ==========")
+                                print(" Calling dispatchadd_dvir_data API (for new record)...")
+                                print(" DvirRecord driverId: \(DvirRecord.driverId)")
+                                print(" DvirRecord vehicleId: \(DvirRecord.vehicleId)")
+                                print(" DvirRecord dateTime: \(DvirRecord.dateTime)")
+                                print("DvirRecord location: \(DvirRecord.locationDvir)")
+                                print(" DvirRecord has signature: \(DvirRecord.fileDVir != nil)")
+                                print(" DvirRecord tokenNo: \(DvirRecord.tokenNo)")
+                                print(" DvirRecord clientId: \(DvirRecord.clientId)")
                                 // Ensure DvirRecord is accessible and call API
                                 uploadDvirDataUsingCommonService(record: DvirRecord)
                                 print(" API call initiated successfully!")
+                                print(" =================================================")
                               
                             }
                             
                             // Delay navigation to show success message
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                 if isFromHome {
-                                   // navmanager.navigate(to: .homeFlow(.home))
                                     navmanager.navigate(to: AppRoute.HomeFlow.Home)
                                 } else {
                                     navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
                                 }
                             }
-                            navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
                         }
                     }) {
                         Text("Add Dvir")

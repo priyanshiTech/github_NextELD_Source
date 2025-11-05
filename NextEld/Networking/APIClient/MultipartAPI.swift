@@ -43,31 +43,49 @@ class MultipartAPIService {
 
         let httpBody = createBody(fields: fields, files: files, boundary: boundary)
 
+        print("📤 MultipartAPI - Starting upload")
+        print("📤 URL: \(url.absoluteString)")
+        print("📤 Request body size: \(httpBody.count) bytes")
+        
         URLSession.shared.uploadTask(with: request, from: httpBody) { data, response, error in
             if let error = error {
-                print(" Error: \(error)")
+                print("❌ MultipartAPI Error: \(error.localizedDescription)")
+                if let nsError = error as NSError? {
+                    print("❌ Error Code: \(nsError.code)")
+                    print("❌ Error Domain: \(nsError.domain)")
+                    print("❌ Error UserInfo: \(nsError.userInfo)")
+                }
                 completion(.failure(error))
                 return
             }
 
             guard let httpResponse = response as? HTTPURLResponse else {
+                print("❌ Invalid HTTP response")
                 completion(.failure(NSError(domain: "Invalid response", code: 0)))
                 return
             }
 
-            print(" Status Code: \(httpResponse.statusCode)")
+            print("📊 Status Code: \(httpResponse.statusCode)")
+            print("📊 Response Headers: \(httpResponse.allHeaderFields)")
 
             if let data = data {
-                print(" Response: \(String(data: data, encoding: .utf8) ?? "Unreadable")")
+                let responseString = String(data: data, encoding: .utf8) ?? "Unreadable"
+                print("📥 Response Body: \(responseString)")
+                
                 if (200...299).contains(httpResponse.statusCode) {
+                    print("✅ Success response (200-299)")
                     completion(.success(data))
                 } else {
-                    completion(.failure(NSError(domain: "Server error", code: httpResponse.statusCode)))
+                    print("❌ Server error - Status: \(httpResponse.statusCode)")
+                    completion(.failure(NSError(domain: "Server error", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Server returned status \(httpResponse.statusCode)"])))
                 }
             } else {
+                print("❌ Empty response data")
                 completion(.failure(NSError(domain: "Empty response", code: 0)))
             }
         }.resume()
+        
+        print("📤 Upload task resumed")
     }
 
     private func createBody(fields: [String: Any], files: [MultipartFile], boundary: String) -> Data {

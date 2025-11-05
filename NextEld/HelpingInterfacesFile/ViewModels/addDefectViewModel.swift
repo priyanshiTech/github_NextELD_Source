@@ -32,11 +32,10 @@ class AddDefectViewModel: ObservableObject {
 
         let dvirLogId = AppStorageHandler.shared.dvirLogId ?? ""
         
-        // Generate 13-digit timestamp (milliseconds since epoch)
-        //let currentTimestamp = Int64(Date().timeIntervalSince1970 * 1000)
+
         
         var requestField: [String: String] = [
-            "dvirId": dvirLogId.isEmpty ? "" : dvirLogId,  // Use dvirLogId instead of driverId
+            "dvirId": AppStorageHandler.shared.dvirLogId ?? "",  // Use dvirLogId instead of driverId
             "defectName": defectName,
             "defectType": defectType,
             "driverId": "\(AppStorageHandler.shared.driverId ?? 0)",
