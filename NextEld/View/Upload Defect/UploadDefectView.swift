@@ -7,8 +7,414 @@
 import SwiftUI
 import UIKit
 
-// Model for individual defect item
+
+
+// MARK: - Defect Model
 struct DefectItem: Identifiable {
+    let id = UUID()
+    let name: String
+    let type: String // "Truck" or "Trailer"
+    var isUploaded: Bool = false
+    var isUploading: Bool = false
+}
+
+// MARK: - UploadDefectView
+struct UploadDefectView: View {
+    
+    var selectedRecord: DvirRecord?
+    @EnvironmentObject var navmanager: NavigationManager
+    @StateObject private var viewModel = AddDefectViewModel()
+    
+    @State private var showUploadPopup = false
+    @State private var showImagePicker = false
+    @State private var sourceType: UIImagePickerController.SourceType = .camera
+    @State private var selectedImage: UIImage?
+    @State private var showImagePreview = false
+    @State private var selectedDefectType = ""
+    @State private var selectedDefectItem: DefectItem?
+    @State private var defectItems: [DefectItem] = []
+    @State private var currentRecord: DvirRecord? = nil
+    @State private var showCameraUnavailableAlert = false
+    
+    // MARK: - Body
+    var body: some View {
+        ZStack {
+            mainContent
+            
+            if showUploadPopup {
+                uploadOptionPopup
+            }
+            
+            if showImagePreview, let image = selectedImage {
+                imagePreviewPopup(image)
+            }
+        }
+        .navigationBarHidden(true)
+        .fullScreenCover(isPresented: $showImagePicker) {
+            ImagePicker(sourceType: sourceType, selectedImage: $selectedImage)
+                .ignoresSafeArea()
+        }
+        .alert("Camera Not Available", isPresented: $showCameraUnavailableAlert) {
+            Button("Use Photo Library") {
+                fallbackToPhotoLibrary()
+            }
+            Button("Cancel", role: .cancel) {
+                showUploadPopup = false
+            }
+        } message: {
+            Text("Camera is not available on this device. Would you like to use the photo library instead?")
+        }
+        .onAppear(perform: initializeData)
+        .onChange(of: selectedImage) { _, newValue in
+            handleImageSelection(newValue)
+        }
+        .onChange(of: selectedRecord) { _ in
+            reloadDefectsFromRecord()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
+            reloadDefectsFromRecord()
+        }
+    }
+}
+
+// MARK: - Main UI
+extension UploadDefectView {
+    private var mainContent: some View {
+        VStack(spacing: 0) {
+            topBar
+            ScrollView {
+                VStack(alignment: .leading, spacing: 25) {
+                    defectSection(title: "Truck Defect", defects: truckDefects)
+                    defectSection(title: "Trailer Defect", defects: trailerDefects)
+                }
+                .padding()
+            }
+        }
+    }
+    
+    private var topBar: some View {
+        HStack {
+            Button(action: { navmanager.goBack() }) {
+                Image(systemName: "arrow.left")
+                    .foregroundColor(.white)
+                    .imageScale(.large)
+            }
+            
+            Text("Upload Defects")
+                .font(.headline)
+                .foregroundColor(.white)
+                .fontWeight(.semibold)
+            
+            Spacer()
+        }
+        .padding(.horizontal)
+        .frame(height: 50)
+        .background(Color(uiColor: .wine))
+        .shadow(radius: 2)
+    }
+    
+    private func defectSection(title: String, defects: [DefectItem]) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.black)
+            
+            if defects.isEmpty {
+                DefectRowView(defectText: "None", isUploaded: false, onUpload: {})
+            } else {
+                ForEach(defects) { defect in
+                    if let index = defectItems.firstIndex(where: { $0.id == defect.id }) {
+                        DefectRowView(
+                            defectText: defect.name,
+                            isUploaded: defectItems[index].isUploaded,
+                            isUploading: defectItems[index].isUploading,
+                            onUpload: {
+                                selectedDefectItem = defectItems[index]
+                                selectedDefectType = defectItems[index].type
+                                withAnimation(.easeInOut) { showUploadPopup = true }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Popups
+extension UploadDefectView {
+    private var uploadOptionPopup: some View {
+        ZStack {
+            Color.black.opacity(0.3)
+                .ignoresSafeArea()
+                .onTapGesture { withAnimation { showUploadPopup = false } }
+            
+            VStack(spacing: 16) {
+                Capsule()
+                    .fill(Color.gray.opacity(0.4))
+                    .frame(width: 40, height: 5)
+                    .padding(.top, 10)
+                
+                Text("Select Option")
+                    .font(.headline)
+                    .foregroundColor(.black)
+                    .padding(.top, 5)
+                
+                HStack(spacing: 150) {
+                    uploadOptionButton(image: "camera", label: "Camera") {
+                        openCamera()
+                    }
+                    uploadOptionButton(image: "apple", label: "Gallery") {
+                        openGallery()
+                    }
+                }
+                .padding(.bottom, 30)
+            }
+            .frame(maxWidth: .infinity)
+            .background(RoundedRectangle(cornerRadius: 20).fill(Color.white))
+            .transition(.move(edge: .bottom))
+            .frame(maxHeight: .infinity, alignment: .bottom)
+        }
+    }
+    
+    private func uploadOptionButton(image: String, label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 8) {
+                Image(image)
+                    .resizable()
+                    .frame(width: 40, height: 35)
+                Text(label)
+                    .foregroundColor(.gray)
+                    .font(.subheadline)
+            }
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    private func imagePreviewPopup(_ image: UIImage) -> some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("Document")
+                    .font(.headline)
+                    .foregroundColor(.black)
+                Spacer()
+                Button(action: { showImagePreview = false }) {
+                    Image(systemName: "xmark")
+                        .foregroundColor(.red)
+                        .font(.title2)
+                        .bold()
+                }
+            }
+            .padding()
+            .background(Color.white)
+            
+            ScrollView {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
+            }
+            .background(Color.gray.opacity(0.1))
+            
+            Button(action: { uploadSelectedImage(image) }) {
+                Text(viewModel.isUploading ? "Uploading..." : "Upload")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                   // .frame(maxWidth: .infinity, height: 50)
+                    .frame(width: .infinity , height: 50)
+                    .background(viewModel.isUploading ? Color.gray : Color(UIColor.wine))
+                    .cornerRadius(8)
+                    .padding()
+            }
+            .disabled(viewModel.isUploading)
+        }
+        .frame(width: UIScreen.main.bounds.width * 0.9,
+               height: UIScreen.main.bounds.height * 0.7)
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(radius: 10)
+    }
+}
+
+// MARK: - Logic
+extension UploadDefectView {
+    private var truckDefects: [DefectItem] {
+        defectItems.filter { $0.type == "Truck" }
+    }
+    private var trailerDefects: [DefectItem] {
+        defectItems.filter { $0.type == "Trailer" }
+    }
+    
+    private func initializeData() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            refreshRecordFromDatabase()
+            defectItems = getAllDefectItems()
+        }
+    }
+    
+    private func reloadDefectsFromRecord() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            refreshRecordFromDatabase()
+            defectItems = getAllDefectItems()
+        }
+    }
+    
+    private func handleImageSelection(_ newValue: UIImage?) {
+        if newValue != nil {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                showImagePreview = true
+            }
+        }
+    }
+    
+    private func fallbackToPhotoLibrary() {
+        sourceType = .photoLibrary
+        withAnimation(.easeInOut) { showUploadPopup = false }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            showImagePicker = true
+        }
+    }
+    
+    private func openCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            sourceType = .camera
+            withAnimation(.easeInOut) { showUploadPopup = false }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { showImagePicker = true }
+        } else {
+            showCameraUnavailableAlert = true
+        }
+    }
+    
+    private func openGallery() {
+        sourceType = .photoLibrary
+        withAnimation(.easeInOut) { showUploadPopup = false }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { showImagePicker = true }
+    }
+    
+    private func uploadSelectedImage(_ image: UIImage) {
+        guard let defectItem = selectedDefectItem else { return }
+        setDefectItemUploading(defectItem, isUploading: true)
+        
+        viewModel.uploadDefectImage(image: image, defectType: selectedDefectType, defectName: defectItem.name) { success in
+            if success {
+                updateDefectItemStatus(defectItem, isUploaded: true)
+                showImagePreview = false
+                selectedImage = nil
+            } else {
+                setDefectItemUploading(defectItem, isUploading: false)
+            }
+        }
+    }
+}
+
+// MARK: - Database Helpers
+extension UploadDefectView {
+    private func parseDefects(_ defectsString: String, type: String) -> [DefectItem] {
+        let trimmed = defectsString.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty, trimmed.lowercased() != "no" else { return [] }
+        
+        var defectNames: [String]
+        if trimmed.lowercased() == "yes" {
+            defectNames = ["Defect Reported"]
+        } else if trimmed.contains(",") {
+            defectNames = trimmed.split(separator: ",")
+                .map { $0.trimmingCharacters(in: .whitespaces) }
+                .filter { !$0.isEmpty && $0.lowercased() != "yes" && $0.lowercased() != "no" }
+        } else {
+            defectNames = [trimmed]
+        }
+        return defectNames.map { DefectItem(name: $0, type: type) }
+    }
+    
+    private func getAllDefectItems() -> [DefectItem] {
+        var items: [DefectItem] = []
+        let recordToUse = currentRecord ?? selectedRecord
+        if let record = recordToUse {
+            items.append(contentsOf: parseDefects(record.truckDefect, type: "Truck"))
+            items.append(contentsOf: parseDefects(record.trailerDefect, type: "Trailer"))
+        }
+        return items
+    }
+    
+    private func refreshRecordFromDatabase() {
+        let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+        guard !allRecords.isEmpty else {
+            currentRecord = selectedRecord
+            return
+        }
+        
+        let sortedRecords = allRecords.sorted { ($0.id ?? 0) > ($1.id ?? 0) }
+        if let recordId = selectedRecord?.id,
+           let updatedRecord = allRecords.first(where: { $0.id == recordId }) {
+            currentRecord = updatedRecord
+        } else {
+            currentRecord = sortedRecords.first ?? selectedRecord
+        }
+    }
+    
+    private func updateDefectItemStatus(_ item: DefectItem, isUploaded: Bool) {
+        if let index = defectItems.firstIndex(where: { $0.id == item.id }) {
+            defectItems[index].isUploaded = isUploaded
+            defectItems[index].isUploading = false
+        }
+    }
+    
+    private func setDefectItemUploading(_ item: DefectItem, isUploading: Bool) {
+        if let index = defectItems.firstIndex(where: { $0.id == item.id }) {
+            defectItems[index].isUploading = isUploading
+        }
+    }
+}
+
+#Preview {
+    UploadDefectView(selectedRecord: nil)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*struct DefectItem: Identifiable {
     let id = UUID()
     let name: String
     let type: String // "Truck" or "Trailer"
@@ -562,52 +968,6 @@ struct UploadDefectView: View {
 }
 
 
-
-
-
-
-
-// MARK: - Defect Row View (matches image design exactly)
-struct DefectRowView: View {
-    let defectText: String
-    var isUploaded: Bool = false
-    var isUploading: Bool = false
-    let onUpload: () -> Void
-    
-    var body: some View {
-        HStack {
-            Text(defectText)
-                .foregroundColor(.gray)
-                .font(.subheadline)
-                .lineLimit(1)
-            Spacer()
-            Button(isUploaded ? "Uploaded" : (isUploading ? "Uploading..." : "Upload")) {
-                if !isUploaded && !isUploading {
-                    onUpload()
-                }
-            }
-            .foregroundColor(isUploaded ? .green : (isUploading ? .gray : .red))
-            .font(.subheadline)
-            .disabled(isUploaded || isUploading)
-        }
-        .padding(.vertical, 4)
-    }
-}
-
-struct RoundedCorner: Shape {
-    var radius: CGFloat = 10.0
-    var corners: UIRectCorner = .allCorners
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        return Path(path.cgPath)
-    }
-}
-
 #Preview {
     UploadDefectView(selectedRecord: nil)
-}
+}*/

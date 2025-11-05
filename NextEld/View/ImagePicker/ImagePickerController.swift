@@ -101,3 +101,47 @@ struct ImagePicker: UIViewControllerRepresentable {
         }
     }
 }
+
+
+
+
+// MARK: - Defect Row View (matches image design exactly)
+struct DefectRowView: View {
+    let defectText: String
+    var isUploaded: Bool = false
+    var isUploading: Bool = false
+    let onUpload: () -> Void
+    
+    var body: some View {
+        HStack {
+            Text(defectText)
+                .foregroundColor(.gray)
+                .font(.subheadline)
+                .lineLimit(1)
+            Spacer()
+            Button(isUploaded ? "Uploaded" : (isUploading ? "Uploading..." : "Upload")) {
+                if !isUploaded && !isUploading {
+                    onUpload()
+                }
+            }
+            .foregroundColor(isUploaded ? .green : (isUploading ? .gray : .red))
+            .font(.subheadline)
+            .disabled(isUploaded || isUploading)
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = 10.0
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        return Path(path.cgPath)
+    }
+}

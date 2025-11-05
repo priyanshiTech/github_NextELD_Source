@@ -33,7 +33,7 @@ class AddDefectViewModel: ObservableObject {
         let dvirLogId = AppStorageHandler.shared.dvirLogId ?? ""
         
         // Generate 13-digit timestamp (milliseconds since epoch)
-        let currentTimestamp = Int64(Date().timeIntervalSince1970 * 1000)
+        //let currentTimestamp = Int64(Date().timeIntervalSince1970 * 1000)
         
         var requestField: [String: String] = [
             "dvirId": dvirLogId.isEmpty ? "" : dvirLogId,  // Use dvirLogId instead of driverId
@@ -41,9 +41,10 @@ class AddDefectViewModel: ObservableObject {
             "defectType": defectType,
             "driverId": "\(AppStorageHandler.shared.driverId ?? 0)",
             "vehicleId": "\(AppStorageHandler.shared.vehicleId ?? 0)",
-            "clientid": "\(AppStorageHandler.shared.clientId ?? 0)",
+            "clientId": "\(AppStorageHandler.shared.clientId ?? 0)",
             "dateTime": DateTimeHelper.getCurrentDateTimeString(),
-            "timestamp": "\(currentTimestamp)"  // 13-digit timestamp in milliseconds
+            "utcDateTime": currentTimestampMillis() , // 13-digit timestamp in milliseconds
+         
         ]
         
         // Log dvirLogId usage
@@ -59,7 +60,7 @@ class AddDefectViewModel: ObservableObject {
         // Try different file parameter names - API might expect "file" or "defectFile"
         let multipartFile = MultipartFile(
             name: "file",
-            filename: "defect_\(defectType.lowercased())_\(currentTimestamp).jpg",
+            filename: "defect_\(defectName.lowercased())_\(defectType.lowercased())_\(CurrentTimeHelperStamp.currentTimestamp).jpg",
             mimeType: "image/jpeg",
             data: imageData
         )
