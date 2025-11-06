@@ -112,7 +112,7 @@ struct HomeScreenView: View {
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
                         
                             StatusView(homeViewModel: homeVM) { status in
-                                if !homeVM.check34HoursSleepOrOffDutyCompleted() && homeVM.cycleTimer!.remainingTime <= 0 && (status != .offDuty ||  status != .sleep ) {
+                                if !homeVM.check34HoursSleepOrOffDutyCompleted() && homeVM.cycleTimer!.remainingTime <= 0 && status != .offDuty && status != .sleep {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                         homeVM.alertType = .thirtyFourHours
                                         homeVM.showAlertOnHomeScreen = true

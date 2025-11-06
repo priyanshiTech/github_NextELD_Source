@@ -616,7 +616,7 @@ class HomeViewModel: ObservableObject {
         case .continueDrive:
             // For continue drive, we can use the same warning times as onDrive or create separate ones
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime1 ?? 0))
-            let warning2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0))
+            let warning2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0)) - 900
             if remainigTime <= warning1 {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onContinueDriveViolation, violationKey: AppConstants.continueDriveViolationKey)
             }
@@ -644,6 +644,8 @@ class HomeViewModel: ObservableObject {
         let lastViolationDate15min = UserDefaults.standard.string(forKey: violationKey + "_15min")
         let lastViolationDate30Min = UserDefaults.standard.string(forKey: violationKey + "_30min")
         let uniqueValueForViolation = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
+        let uniqueValueForViolation30Min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_30min"
+        let uniqueValueForViolation15min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_15min"
         
         debugPrint("-----------------------")
         debugPrint("Current Value--------->\(uniqueValueForViolation)")
@@ -652,24 +654,48 @@ class HomeViewModel: ObservableObject {
         debugPrint("\(violationKey + "_30min")-------->\(lastViolationDate30Min ?? "nil")")
         debugPrint("-----------------------")
         
-        if remainingTime <= 0, uniqueValueForViolation != lastViolationDate {
+        
+        if remainingTime < warning1 && remainingTime > warning2 && lastViolationDate30Min != uniqueValueForViolation30Min {
+            var violationData = ViolationData()
+            violationData.violationType = type
+            violationData.thirtyMinWarning = true // 30 min warning
+            self.violationDataArray.append(violationData)
+            UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
+            saveViolation(for: violationData)
+        } else if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != uniqueValueForViolation15min {
+            if lastViolationDate30Min != uniqueValueForViolation30Min {
+                var violationData = ViolationData()
+                violationData.violationType = type
+                violationData.thirtyMinWarning = true
+                self.violationDataArray.append(violationData)
+                saveViolation(for: violationData, date: DateTimeHelper.get15MinBeforeDate())
+                UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
+            }
+            
+            var violationData = ViolationData()
+            violationData.violationType = type
+            violationData.fifteenMinWarning = true // 15 min warning
+            self.violationDataArray.append(violationData)
+            saveViolation(for: violationData)
+            UserDefaults.standard.setValue(uniqueValueForViolation15min, forKey: violationKey + "_15min")
+        } else if remainingTime <= 0, uniqueValueForViolation != lastViolationDate {
             // This two condition will work when remaining time directly goes to <= 0
-            if lastViolationDate30Min != uniqueValueForViolation {
+            if lastViolationDate30Min != uniqueValueForViolation30Min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
                 self.violationDataArray.append(violationData)
                 saveViolation(for: violationData, date: DateTimeHelper.get30MinBeforeDate())
-                UserDefaults.standard.setValue(uniqueValueForViolation+"_30min", forKey: violationKey + "_30min")
+                UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
             }
             
-            if lastViolationDate15min != uniqueValueForViolation {
+            if lastViolationDate15min != uniqueValueForViolation15min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.fifteenMinWarning = true
                 self.violationDataArray.append(violationData)
                 saveViolation(for: violationData, date: DateTimeHelper.get15MinBeforeDate())
-                UserDefaults.standard.setValue(uniqueValueForViolation+"_15min", forKey: violationKey + "_15min")
+                UserDefaults.standard.setValue(uniqueValueForViolation15min, forKey: violationKey + "_15min")
             }
             
             // Violation
@@ -679,6 +705,7 @@ class HomeViewModel: ObservableObject {
             UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey)
             self.violationDataArray.append(violationData)
             saveViolation(for: violationData)
+            return
             /*
             if type == .cycleTimerViolation {
                 // Once the violation for cycle time comes it means cycle complete the 70 hours
@@ -687,31 +714,8 @@ class HomeViewModel: ObservableObject {
             }
              */
         }
-        if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != uniqueValueForViolation {
-            if lastViolationDate30Min != uniqueValueForViolation {
-                var violationData = ViolationData()
-                violationData.violationType = type
-                violationData.thirtyMinWarning = true
-                self.violationDataArray.append(violationData)
-                saveViolation(for: violationData, date: DateTimeHelper.get15MinBeforeDate())
-                UserDefaults.standard.setValue(uniqueValueForViolation+"_30min", forKey: violationKey + "_30min")
-            }
-            
-            var violationData = ViolationData()
-            violationData.violationType = type
-            violationData.fifteenMinWarning = true // 15 min warning
-            self.violationDataArray.append(violationData)
-            saveViolation(for: violationData)
-            UserDefaults.standard.setValue(uniqueValueForViolation+"_15min", forKey: violationKey + "_15min")
-        }
-        if remainingTime <= warning1 && remainingTime > warning2 && lastViolationDate30Min != uniqueValueForViolation {
-            var violationData = ViolationData()
-            violationData.violationType = type
-            violationData.thirtyMinWarning = true // 30 min warning
-            self.violationDataArray.append(violationData)
-            UserDefaults.standard.setValue(uniqueValueForViolation+"_30min", forKey: violationKey + "_30min")
-            saveViolation(for: violationData)
-        }
+        
+       
         UserDefaults.standard.synchronize()
     }
     
