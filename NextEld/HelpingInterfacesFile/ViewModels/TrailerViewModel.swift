@@ -66,4 +66,7 @@ import SwiftUI
 
 class VehicleConditionViewModel: ObservableObject {
     @Published var selectedCondition: String? = nil
+    @Published var selectedVehicleNumber: String = ""
+    @Published var vehicleID: Int = 0
+    @Published var showPopupVechicle = false
 }

@@ -49,38 +49,142 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
         trailerArray = record.trailer.contains(",") ? record.trailer.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) } : [record.trailer]
     }
 
+    // Convert vehicleId to Int if it's a string
+    let vehicleIdInt: Int
+    if let vehicleIdString = record.vehicleId as? String, !vehicleIdString.isEmpty {
+        vehicleIdInt = Int(vehicleIdString) ?? 0
+    } else if let vehicleIdIntValue = record.vehicleId as? Int {
+        vehicleIdInt = vehicleIdIntValue
+    } else {
+        vehicleIdInt = Int(record.vehicleId) ?? 0
+    }
+    
+    // Ensure all numeric fields are proper types
+    let odometerValue = Double(record.odometer) ?? 0.0
+    let engineHourValue = record.engineHour
+    
     let fields: [String: Any] = [
         "driverId": (AppStorageHandler.shared.driverId ?? 17),
-        "vehicleId": record.vehicleId,
+        "vehicleId": vehicleIdInt,  // Ensure it's Int, not String
         "clientId": (AppStorageHandler.shared.clientId ?? 0),
         "timestamp": "\(currentTimestampMillis())", // Milliseconds timestamp as string
-        "dateTime":  "\(record.dateTime)",
-        "location": record.locationDvir,
-        "truckDefect": truckDefectArray,      // Now sending as array
-        "trailerDefect": trailerDefectArray, // Now sending as array
-        "notes": record.notes,
-        "vehicleCondition": record.vehicleCondition,
-        "companyName": record.companyName,
-        "odometer": "\(Double(record.odometer) ?? 0.0)",
-        "engineHour": "\(record.engineHour)",
+        "dateTime": record.dateTime,  // Keep as string
+        "location": record.locationDvir.isEmpty ? "N/A" : record.locationDvir,
+        "truckDefect": truckDefectArray.isEmpty ? [] : truckDefectArray,      // Array
+        "trailerDefect": trailerDefectArray.isEmpty ? [] : trailerDefectArray, // Array
+        "notes": record.notes.isEmpty ? "" : record.notes,
+        "vehicleCondition": record.vehicleCondition.isEmpty ? "None" : record.vehicleCondition,
+        "companyName": record.companyName.isEmpty ? "" : record.companyName,
+        "odometer": odometerValue,  // Send as Double, not String
+        "engineHour": "\(engineHourValue)",  // Keep as string
         "tokenNo": AppStorageHandler.shared.authToken ?? "",
-        "trailer": trailerArray               // Now sending as array
+        "trailer": trailerArray.isEmpty ? [] : trailerArray  // Array
     ]
 
-    print("this our Request model \(fields)")
+    print(" ========== API REQUEST FIELDS ==========")
+    print(" Request Fields:")
+    for (key, value) in fields {
+        if let arrayValue = value as? [String] {
+            print("   \(key): [\(arrayValue.joined(separator: ", "))]")
+        } else {
+            print("   \(key): \(value) (type: \(type(of: value)))")
+        }
+    }
+    print("======================================")
 
     var files: [MultipartFile] = []
-    if let signatureData = record.fileDVir,
-       let image = UIImage(data: signatureData),
-       let jpegData = image.jpegData(compressionQuality: 0.8) {
+    
+    // Check if signature data exists
+    if let signatureData = record.fileDVir {
+        print(" Signature data found: \(signatureData.count) bytes")
         
-        let filename = "\(AppStorageHandler.shared.driverId ?? 0)_sign_1.jpg"
-        files.append(MultipartFile(
-            name: "file",
-            filename: filename,
-            mimeType: "image/jpeg",
-            data: jpegData
-        ))
+        if let image = UIImage(data: signatureData) {
+            print(" Signature image created successfully")
+            print(" Image size: \(image.size.width)x\(image.size.height)")
+            
+            // Check if image is blank (all white/transparent)
+            // Create a new image with black signature on white background to ensure visibility
+            let renderer = UIGraphicsImageRenderer(size: image.size)
+            let processedImage = renderer.image { context in
+                // Fill with white background
+                UIColor.white.setFill()
+                context.fill(CGRect(origin: .zero, size: image.size))
+                
+                // Draw the original image (signature should be in black/dark color)
+                image.draw(at: .zero)
+            }
+            
+            print(" Processed signature image (white background ensured)")
+            
+            // Convert to JPEG with high quality to preserve signature details
+            if let jpegData = processedImage.jpegData(compressionQuality: 1.0) {
+                print(" Signature JPEG data created: \(jpegData.count) bytes")
+                
+                // Verify the image is not blank by checking if it has non-white pixels
+                if let cgImage = processedImage.cgImage {
+                    let width = cgImage.width
+                    let height = cgImage.height
+                    let colorSpace = CGColorSpaceCreateDeviceRGB()
+                    let bytesPerPixel = 4
+                    let bytesPerRow = bytesPerPixel * width
+                    let bitsPerComponent = 8
+                    var pixelData = [UInt8](repeating: 0, count: width * height * bytesPerPixel)
+                    
+                    let context = CGContext(data: &pixelData,
+                                           width: width,
+                                           height: height,
+                                           bitsPerComponent: bitsPerComponent,
+                                           bytesPerRow: bytesPerRow,
+                                           space: colorSpace,
+                                           bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue)
+                    context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+                    
+                    // Check if there are any non-white pixels (signature exists)
+                    var hasNonWhitePixels = false
+                    for i in stride(from: 0, to: pixelData.count, by: 4) {
+                        let r = pixelData[i]
+                        let g = pixelData[i + 1]
+                        let b = pixelData[i + 2]
+                        // If not white (255, 255, 255), signature exists
+                        if r < 250 || g < 250 || b < 250 {
+                            hasNonWhitePixels = true
+                            break
+                        }
+                    }
+                    
+                    if hasNonWhitePixels {
+                        print(" Signature verified: Contains non-white pixels (signature exists)")
+                    } else {
+                        print(" WARNING: Signature image appears to be blank (all white pixels)")
+                    }
+                }
+                
+                let driverId = AppStorageHandler.shared.driverId ?? 0
+                let filename = "\(driverId)_sign_1.jpg"
+                
+                print(" Creating multipart file:")
+                print("   - name: file")
+                print("   - filename: \(filename)")
+                print("   - mimeType: image/jpeg")
+                print("   - data size: \(jpegData.count) bytes")
+                
+                // Use "file" as field name (same as defect images, server will map it to driverSignFile)
+                files.append(MultipartFile(
+                    name: "file",
+                    filename: filename,
+                    mimeType: "image/jpeg",
+                    data: jpegData
+                ))
+                
+                print(" Signature file added to multipart request")
+            } else {
+                print(" Failed to convert signature image to JPEG data")
+            }
+        } else {
+            print(" Failed to create UIImage from signature data")
+        }
+    } else {
+        print(" No signature data found in record.fileDVir")
     }
 
     print("  API Call: dispatchadd_dvir_data")
@@ -92,24 +196,47 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
         DispatchQueue.main.async {
             switch result {
             case .success(let data):
-                print("  dispatchadd_dvir_data API - Upload successful!")
+                print(" ========== dispatchadd_dvir_data API - Upload successful! ==========")
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print("  Response: \(responseString)")
+                    print(" Full Response Body:")
+                    print(" \(responseString)")
                     
-                    // Parse response to extract _id from result._id
+                    // Parse response to extract _id and verify all data
                     if let jsonData = responseString.data(using: .utf8),
-                       let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
-                       let resultDict = json["result"] as? [String: Any],
-                       let dvirId = resultDict["_id"] as? String {
-                        // Save the _id to AppStorageHandler
-                        AppStorageHandler.shared.dvirLogId = dvirId
-                        print("Saved dvirLogId: \(dvirId)")
+                       let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
+                        
+                        print(" Response Status: \(json["status"] ?? "nil")")
+                        print(" Response Message: \(json["message"] ?? "nil")")
+                        
+                        if let resultDict = json["result"] as? [String: Any] {
+                            print(" Result object found in response")
+                            
+                            // Extract and save _id
+                            if let dvirId = resultDict["_id"] as? String {
+                                AppStorageHandler.shared.dvirLogId = dvirId
+                                print(" Saved dvirLogId: \(dvirId)")
+                            } else {
+                                print(" Could not extract _id from response")
+                            }
+                
+                            // Check if signature file was saved
+                            if let driverSignFile = resultDict["driverSignFile"] as? String, !driverSignFile.isEmpty {
+                                print(" Signature file saved on server: \(driverSignFile)")
+                            } else {
+                                print(" Warning: driverSignFile is empty or nil on server")
+                            }
+                   
+                        } else {
+                            print(" Result object not found in response")
+                            print(" Response structure: \(json)")
+                        }
                     } else {
-                        print("Could not extract _id from response")
+                        print(" Could not parse response JSON")
                     }
                 } else {
                     print(" Response: (Unable to decode)")
                 }
+                print(" =================================================")
             case .failure(let error):
                 print("  dispatchadd_dvir_data API - Upload failed: \(error.localizedDescription)")
                 if let nsError = error as NSError? {

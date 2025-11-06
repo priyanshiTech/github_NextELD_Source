@@ -170,10 +170,10 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "484"
-            endingLineNumber = "484"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "463"
+            endingLineNumber = "463"
+            landmarkName = "loadRecordData()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -186,10 +186,10 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "515"
-            endingLineNumber = "515"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "494"
+            endingLineNumber = "494"
+            landmarkName = "AddDvirScreenView"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -218,10 +218,10 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "532"
-            endingLineNumber = "532"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "511"
+            endingLineNumber = "511"
+            landmarkName = "handleAddDvirButtonTap()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -234,10 +234,10 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "466"
-            endingLineNumber = "466"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "445"
+            endingLineNumber = "445"
+            landmarkName = "loadRecordData()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -250,10 +250,10 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "469"
-            endingLineNumber = "469"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "448"
+            endingLineNumber = "448"
+            landmarkName = "loadRecordData()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -298,10 +298,10 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "539"
-            endingLineNumber = "539"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "518"
+            endingLineNumber = "518"
+            landmarkName = "handleAddDvirButtonTap()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

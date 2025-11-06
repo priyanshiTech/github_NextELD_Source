@@ -107,8 +107,13 @@ struct AddVehicleForDvir: View {
             print("onAppear → Restored selection: \(localSelectedVehicle), ID: \(localVehicleID)")
         }
         .task {
+            print(" AddVehicleForDvir - Starting vehicle list API call...")
             await vehicleVM.fetchVehicleInfo()
-            print("Vehicles from API: \(vehicleVM.vehicles.map { $0.vehicleNo })")
+            print(" AddVehicleForDvir - Vehicles from API: \(vehicleVM.vehicles.map { $0.vehicleNo })")
+            print(" AddVehicleForDvir - Total vehicles: \(vehicleVM.vehicles.count)")
+            if let error = vehicleVM.errorMessage {
+                print(" AddVehicleForDvir - Error: \(error)")
+            }
         }
     }
 }

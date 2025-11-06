@@ -82,23 +82,28 @@ struct SignatureAddDvir: View {
 
 // Helper: Path -> UIImage
 func signatureToImage(points: [CGPoint], size: CGSize) -> UIImage {
-    let path = Path { p in
-        if let first = points.first {
-            p.move(to: first)
-            for pt in points.dropFirst() {
-                p.addLine(to: pt)
-            }
-        }
-    }
-    let controller = UIHostingController(rootView:
-        path.stroke(Color.black, lineWidth: 2)
-            .background(Color.white)
-            .frame(width: size.width, height: size.height)
-    )
-    let view = controller.view
     let renderer = UIGraphicsImageRenderer(size: size)
-    return renderer.image { _ in
-        view?.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
+    return renderer.image { context in
+        // Fill with white background to ensure visibility
+        UIColor.white.setFill()
+        context.fill(CGRect(origin: .zero, size: size))
+        
+        // Draw signature in black with proper line settings
+        UIColor.black.setStroke()
+        let cgContext = context.cgContext
+        cgContext.setLineWidth(3.0)
+        cgContext.setLineCap(.round)
+        cgContext.setLineJoin(.round)
+        cgContext.setStrokeColor(UIColor.black.cgColor)
+        
+        // Draw the signature path - connect all points
+        guard points.count > 1 else { return }
+        
+        cgContext.move(to: points[0])
+        for i in 1..<points.count {
+            cgContext.addLine(to: points[i])
+        }
+        cgContext.strokePath()
     }
 }
 

@@ -89,131 +89,20 @@ struct VehicleConditionPopupView: View {
         .shadow(radius: 10)
         // Fetch API Data when popup appears
         .task {
+            print(" VehicleConditionPopupView - Starting vehicle condition API call...")
+            print(" ClientId: \(AppStorageHandler.shared.clientId ?? 0)")
             await viewModel.vehicleConditionData(
                 clientId: AppStorageHandler.shared.clientId ?? 0,
                 vehicleConditionId: 0
             )
+            print(" VehicleConditionPopupView - Conditions loaded: \(viewModel.conitions.count)")
+            print(" VehicleConditionPopupView - Conditions: \(viewModel.conitions.map { $0.vehicleConditionName ?? "nil" })")
+            if let error = viewModel.errorMessage {
+                print(" VehicleConditionPopupView - Error: \(error)")
+            }
         }
     }
 }
-
-
-
-
-
-
-
-
-/*struct VehicleConditionPopupView: View {
-    @Binding var isPresented: Bool
-    @State private var selected: String? = nil   // single selection
-    @EnvironmentObject var vehicleVM: VehicleConditionViewModel
-    @StateObject private var viewModel = VConditionViewModel(networkManager: NetworkManager())
-
-    let conditions = [
-        "Vehicle Condition Satisfactory",
-        "Vehicle Condition Unsatisfactory"
-    ]
-
-    var body: some View {
-        VStack(spacing: 15) {
-            // Header
-            HStack {
-                Spacer()
-                Text("Select Vehicle Condition")
-                    .font(.headline)
-                    .foregroundColor(Color(uiColor: .wine))
-                Spacer()
-                Button(action: { isPresented = false }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.red)
-                        .font(.title2)
-                }
-            }
-
-            // Options
-            ForEach(conditions, id: \.self) { condition in
-                HStack {
-                    Text(condition)
-                    Spacer()
-                    Image(systemName: selected == condition ? "checkmark.circle.fill" : "circle")
-                        .foregroundColor(Color(uiColor: .wine))
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 8)
-                .contentShape(Rectangle()) // Make whole row tappable
-                .onTapGesture {
-                    selected = condition
-                }
-            }
-
-            // Submit
-            Button(action: {
-                vehicleVM.selectedCondition = selected
-                isPresented = false
-            }) {
-                Text("Add Condition")
-                    .frame(maxWidth: 250)
-                    .padding()
-                    .background(Color(uiColor: .wine))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .disabled(selected == nil) // disable until selection made
-        }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(20)
-        .shadow(radius: 10)
-        .task {
-            await viewModel.vehicleConditionData(clientId: AppStorageHandler.shared.clientId ?? 0, vehicleConditionId: 0)
-               }
-    }
-}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

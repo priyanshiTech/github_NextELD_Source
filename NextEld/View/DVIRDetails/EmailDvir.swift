@@ -52,7 +52,8 @@ struct EmailDvir: View {
                     
                     HStack(spacing: 16) {
                         Button(action: {
-                            
+                            // Clear selected record to ensure new record with current date/time
+                            selectedDvirRecord = nil
                             navmanager.path.append(AppRoute.DvirFlow.AddDvirScreenView)
                         }) {
                             Image(systemName: "plus")
@@ -138,6 +139,11 @@ struct EmailDvir: View {
            
             .onAppear {
                 records = DvirDatabaseManager.shared.fetchAllRecords()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
+                // Refresh records when DVIR is added/updated
+                records = DvirDatabaseManager.shared.fetchAllRecords()
+                print(" EmailDvir: Records refreshed after DVIR update")
             }
         .navigationBarHidden(true)
 
