@@ -623,6 +623,8 @@ struct HomeScreenView: View {
                 
             case .AddDvirScreenView:
                 AddDvirScreenView( selectedRecord:.constant(nil), trailers: $trailerVM.trailers )
+            case .EyeViewData( let tittle, let entry):
+                EyeViewData(title:tittle , entry: entry)
             }
             
         })

@@ -58,8 +58,8 @@ struct LogsDetails: View {
                             
                           //  navManager.navigate(to: .logsFlow(.EyeViewData(title: "Daily Logs", entry: entry)))
                             
-                            navManager.navigate(to: AppRoute.EyeViewData(
-                                tittle: "Daily Logs",
+                            navManager.navigate(to: AppRoute.LogsFlow.EyeViewData(
+                                title: "Daily Logs",
                                 entry: entry))
 
                         })

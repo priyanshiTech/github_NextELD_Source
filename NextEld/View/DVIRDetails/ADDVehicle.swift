@@ -91,6 +91,8 @@ struct ADDVehicle: View {
                     .onTapGesture {
                         selectedVehicleNumber = vehicle.vehicleNo
                         VechicleID = vehicle.vehicleId
+                        AppStorageHandler.shared.vehicleNo = vehicle.vehicleNo
+                        AppStorageHandler.shared.vehicleId = vehicle.vehicleId
                         print("Vehicle selected: \(selectedVehicleNumber)")
                         print("Vehicle ID: \(VechicleID)")
                     }

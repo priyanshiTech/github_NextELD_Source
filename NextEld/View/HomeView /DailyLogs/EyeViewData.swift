@@ -59,7 +59,7 @@ struct EyeViewData: View {
                     
                     HStack(spacing: 5) {
                         CustomIconButton(iconName: "eye_fill_icon", title: "", action: {
-                            navManager.navigate(to: AppRoute.EyeViewData(tittle: "daily Logs", entry: entry))
+                            navManager.navigate(to: AppRoute.LogsFlow.EyeViewData(title: "daily Logs", entry: entry))
                        /*     navManager.navigate(to: .logsFlow(.EyeViewData(title: "Daily Logs", entry: entry)))*/})
                     }
                 }

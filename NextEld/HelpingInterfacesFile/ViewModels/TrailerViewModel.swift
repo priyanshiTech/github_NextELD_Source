@@ -14,6 +14,9 @@ import SwiftUI
 
 
 class TrailerViewModel: ObservableObject {
+    @Published  var selectedTrailer = ""
+    @Published  var truckDefectSelection: String? = nil
+    @Published  var trailerDefectSelection: String? = nil
     @Published var trailers: [String] = [] {
         didSet {
             saveTrailers()

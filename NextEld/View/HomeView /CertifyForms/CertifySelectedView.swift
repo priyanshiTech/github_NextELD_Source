@@ -23,15 +23,16 @@ struct CertifySelectedView: View {
     @State private var signaturePath = Path()
     @State private var showCoDriverPopup = false
     @Binding var vehiclesc: String
-    @Binding var VechicleID: Int
+    @Binding var VechicleID: Int?
     @EnvironmentObject var navManager: NavigationManager
-    @EnvironmentObject var trailerVM: TrailerViewModel
-  //  @StateObject private var trailerVM = TrailerViewModel()
-    @EnvironmentObject var shippingVM: ShippingDocViewModel
+    //@EnvironmentObject var trailerVM: TrailerViewModel
+    @StateObject private var trailerVM = TrailerViewModel()
+    @StateObject var shippingVM = ShippingDocViewModel()
     @State private var selectedCoDriverEmail: String = "" //Hidden Email
     @State private var certifiedDate: String = ""
     @State private var isCertified: Bool = false
     @State private var isCertify: String = "No" //Default "No"
+    @State private var hasLoadedInitialData = false
 
 
     var title: String
@@ -122,7 +123,8 @@ struct CertifySelectedView: View {
                             value: $vehiclesc , // Direct binding
                             editable: true
                         ) {
-                            navManager.navigate(to: AppRoute.HomeFlow.ADDVehicle)
+                            hasLoadedInitialData = false
+                            navManager.path.append(AppRoute.DvirFlow.AddVehicleForDVIR)
                         }
 
 
@@ -152,10 +154,7 @@ struct CertifySelectedView: View {
                             editable: true
                         )
                          {
-                          //navManager.navigate(to: AppRoute.vehicleFlow(.trailerScreen))
-                
                              navManager.path.append(AppRoute.DvirFlow.trailerScreen)
-                             
                         }
                         FormField(
                             label: "Shipping Docs",
@@ -172,8 +171,9 @@ struct CertifySelectedView: View {
                             ),
                             editable: true
                         )
-                       {
-                        // navManager.navigate(to: AppRoute.vehicleFlow(.ShippingDocment)) // shipping screen
+                        {
+                            hasLoadedInitialData = false
+                            navManager.path.append(AppRoute.DvirFlow.ShippingDocment)
                         }
 
                         FormField(
@@ -216,6 +216,13 @@ struct CertifySelectedView: View {
                             )
                             CertifyDatabaseManager.shared.saveRecord(record)
 
+                            // Persist latest selections
+                            AppStorageHandler.shared.vehicleNo = vehiclesc.isEmpty ? nil : vehiclesc
+                            AppStorageHandler.shared.vehicleId = VechicleID ?? AppStorageHandler.shared.vehicleId
+
+                            hasLoadedInitialData = false
+                            loadInitialDataIfNeeded(force: true)
+
                                 
                         }) {
                             Text("Save")
@@ -230,74 +237,8 @@ struct CertifySelectedView: View {
                     }
      
                     .onAppear {
-                        
-                        certifiedDate = title.extractDate()
-                        AppStorageHandler.shared.vehicleId = VechicleID
-                        
-                        
-                        let records = CertifyDatabaseManager.shared.fetchAllRecords()
-                        print(records)
-
-                        //  Fetch saved record for this date
-                        if let record = CertifyDatabaseManager.shared.fetchAllRecords()
-                            .first(where: { $0.date == certifiedDate         }) {
-                      
-                            print(record.date)
-                            print(certifiedDate)
-                            print(record.selectedTrailer)
-                            print(record.selectedCoDriver)
-                            print(record.selectedVehicle)
-                            print(record.selectedShippingDoc)
-                            
-
-                            self.SelectedTraller = record.selectedTrailer // only if you really need both
-                            self.trailer =  record.selectedTrailer
-                            
-                            self.SelectedSheeping  =  record.selectedShippingDoc
-                            self.shippingDocs  = record.selectedShippingDoc
-                            
-                            self.SelectedVechicle = record.selectedVehicle
-                            self.vehiclesc = record.selectedVehicle
-                            
-                            self.selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
-                            self.selectedCoID = record.coDriverID
-                            self.coDriver = record.selectedCoDriver
-                            
-                        }
+                        loadInitialDataIfNeeded()
                     }
-
-//                    .onAppear {
-//                        certifiedDate = title.extractDate()
-//                        AppStorageHandler.shared.vehicleId(VechicleID)
-//
-//                        if let record = CertifyDatabaseManager.shared.fetchAllRecords()
-//                            .first(where: { $0.date == certifiedDate }) {
-//
-//                            // Vehicle
-//                            if !record.selectedVehicle.isEmpty {
-//                                self.vehiclesc = record.selectedVehicle   //  yahi binding update karo
-//                            }
-//
-//                            // Trailer
-//                            if record.selectedTrailer != "None" {
-//                                trailerVM.trailers = record.selectedTrailer.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-//                            } else {
-//                                trailerVM.trailers = []
-//                            }
-//
-//                            // Shipping Docs
-//                            if record.selectedShippingDoc != "None" {
-//                                shippingVM.ShippingDoc = record.selectedShippingDoc.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-//                            } else {
-//                                shippingVM.ShippingDoc = []
-//                            }
-//
-//                            // Co-Driver
-//                            self.selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
-//                            self.selectedCoID = record.coDriverID
-//                        }
-//
-//                    }
 
                     .padding(.top)
                 }
@@ -337,6 +278,32 @@ struct CertifySelectedView: View {
             }
             
             .navigationBarBackButtonHidden()
+            .navigationDestination(for: AppRoute.DvirFlow.self) { route in
+                switch route {
+                case .trailerScreen:
+                    TrailerView(
+                        trailerVM: trailerVM,
+                        tittle: AppConstants.trailersTittle,
+                        trailers: $trailerVM.trailers
+                    )
+                case .ShippingDocment:
+                    ShippingDocView(tittle: AppConstants.shippingTittle)
+                        .environmentObject(shippingVM)
+                case .AddVehicleForDVIR:
+                    AddVehicleForDvir(
+                        selectedVehicleNumber: $vehiclesc,
+                        VechicleID: Binding(
+                            get: { VechicleID ?? 0 },
+                            set: { newValue in
+                                VechicleID = newValue
+                                AppStorageHandler.shared.vehicleId = newValue
+                            }
+                        )
+                    )
+                default:
+                    EmptyView()
+                }
+            }
             .edgesIgnoringSafeArea(.top)
             
             // MARK: - CoDriver Popup Overlay (Centered)
@@ -363,8 +330,57 @@ struct CertifySelectedView: View {
         }
     }
 
-}
+    private func loadInitialDataIfNeeded(force: Bool = false) {
+        if !force && hasLoadedInitialData { return }
+        certifiedDate = title.extractDate()
 
+        if vehiclesc.isEmpty, let storedVehicle = AppStorageHandler.shared.vehicleNo, !storedVehicle.isEmpty {
+            vehiclesc = storedVehicle
+        }
+
+        if let storedVehicleId = AppStorageHandler.shared.vehicleId {
+            if VechicleID == nil || VechicleID == 0 {
+                VechicleID = storedVehicleId
+            }
+        }
+
+        let records = CertifyDatabaseManager.shared.fetchAllRecords()
+        if let record = records.first(where: { $0.date == certifiedDate }) {
+            if !record.selectedVehicle.isEmpty {
+                vehiclesc = record.selectedVehicle
+                SelectedVechicle = record.selectedVehicle
+            }
+
+            if record.selectedTrailer != "None" {
+                trailerVM.trailers = record.selectedTrailer
+                    .split(separator: ",")
+                    .map { $0.trimmingCharacters(in: .whitespaces) }
+                SelectedTraller = record.selectedTrailer
+            } else {
+                trailerVM.trailers = []
+            }
+
+            if record.selectedShippingDoc != "None" {
+                shippingVM.ShippingDoc = record.selectedShippingDoc
+                    .split(separator: ",")
+                    .map { $0.trimmingCharacters(in: .whitespaces) }
+                SelectedSheeping = record.selectedShippingDoc
+            } else {
+                shippingVM.ShippingDoc = []
+            }
+
+            selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
+            coDriver = record.selectedCoDriver
+            selectedCoID = record.coDriverID
+        }
+
+        hasLoadedInitialData = true
+    }
+
+
+
+
+}
 
 // MARK: - FormField View
 struct FormField: View {
@@ -399,6 +415,7 @@ struct FormField: View {
     }
 }
 
+
 //MARK: -  To Transfer a Exact date  in tittle
 extension String {
     func extractDate() -> String {
@@ -410,9 +427,6 @@ extension String {
         return self
     }
 }
-
-
-
 
 
 

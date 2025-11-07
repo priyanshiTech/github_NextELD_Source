@@ -222,7 +222,7 @@ extension UploadDefectView {
                     .font(.headline)
                     .foregroundColor(.white)
                    // .frame(maxWidth: .infinity, height: 50)
-                    .frame(width: .infinity , height: 50)
+                   .frame(width: .infinity , height: 50)
                     .background(viewModel.isUploading ? Color.gray : Color(UIColor.wine))
                     .cornerRadius(8)
                     .padding()

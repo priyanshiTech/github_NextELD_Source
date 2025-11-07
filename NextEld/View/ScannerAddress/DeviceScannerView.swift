@@ -23,6 +23,8 @@ struct DeviceScannerView: View {
     @StateObject private var deviceStatusVM = DeviceStatusViewModel(
          networkManager: NetworkManager()
      )
+    @State private var selectedVehicleNumber: String = AppStorageHandler.shared.vehicleNo ?? ""
+    @State private var selectedVehicleId: Int? = AppStorageHandler.shared.vehicleId
     var body: some View {
         NavigationStack(path: $navManager.path) {
             VStack (spacing: 0) {
@@ -42,7 +44,7 @@ struct DeviceScannerView: View {
                             .foregroundColor(.white)
                             .imageScale(.large)
                     }
-                    Text (tittle.isEmpty ? "(No Vehicle Selected)" : tittle)
+                    Text(currentVehicleDisplay)
                     //(tittle)
                     
                         .font(.headline)
@@ -201,7 +203,6 @@ struct DeviceScannerView: View {
                     InformationPacket()
                 case .RulesView:
                     RulesView()
-                
                 case .Settings:
                     SettingsLanguageView()
                 case .SupportView:
@@ -209,10 +210,46 @@ struct DeviceScannerView: View {
                 case .FirmWare_Update:
                     FirmWare_Update()
                 case .ADDVehicle:
-                    ADDVehicle(selectedVehicleNumber: .constant(""), VechicleID:  .constant(0))
+                    ADDVehicle(
+                        selectedVehicleNumber: $selectedVehicleNumber,
+                        VechicleID: Binding(
+                            get: { selectedVehicleId ?? 0 },
+                            set: { newValue in
+                                selectedVehicleId = newValue
+                                AppStorageHandler.shared.vehicleId = newValue
+                                updateVehicleDisplay()
+                            }
+                        )
+                    )
                 case .CertifySelectedView(let title):
-                    CertifySelectedView( vehiclesc:  .constant(""), VechicleID: .constant(0), title: title)
+                    CertifySelectedView(
+                        vehiclesc: $selectedVehicleNumber,
+                        VechicleID: $selectedVehicleId,
+                        title: title
+                    )
           
+                }
+            }
+            .navigationDestination(for: AppRoute.LogsFlow.self) { route in
+                switch route {
+                case .EmailLogs(let title):
+                    EmailLogs(title: title)
+                case .DataTransferView:
+                    DataTransferInspectionView()
+                case .LogsDetails(let title, let entry):
+                    LogsDetails(title: title, entry: entry)
+                case .AddDvirPriTrip:
+                    EmailDvir(
+                        tittle: "Email DVIR",
+                        updateRecords: DvirDatabaseManager.shared.fetchAllRecords(),
+                        onSelect: { _ in }
+                    )
+                case .DvirHostory(let title):
+                    DVIRHistory(title: title)
+                case .EyeViewData(let title, let entry):
+                    EyeViewData(title: title, entry: entry)
+                default:
+                    EmptyView()
                 }
             }
         }
@@ -223,5 +260,35 @@ struct DeviceScannerView: View {
         }
         .navigationBarHidden(true)
         .environmentObject(navManager)
+        .onAppear {
+            if let storedVehicle = AppStorageHandler.shared.vehicleNo, !storedVehicle.isEmpty {
+                selectedVehicleNumber = storedVehicle
+            }
+            selectedVehicleId = AppStorageHandler.shared.vehicleId
+            updateVehicleDisplay()
+        }
+        .onChange(of: selectedVehicleNumber) { _ in
+            AppStorageHandler.shared.vehicleNo = selectedVehicleNumber.isEmpty ? nil : selectedVehicleNumber
+            updateVehicleDisplay()
+        }
+    }
+}
+
+private extension DeviceScannerView {
+    var currentVehicleDisplay: String {
+        if !tittle.isEmpty { return tittle }
+        if !selectedVehicleNumber.isEmpty { return selectedVehicleNumber }
+        if let stored = AppStorageHandler.shared.vehicleNo, !stored.isEmpty {
+            return stored
+        }
+        return "(No Vehicle Selected)"
+    }
+    
+    func updateVehicleDisplay() {
+        if selectedVehicleNumber.isEmpty {
+            tittle = AppStorageHandler.shared.vehicleNo ?? ""
+        } else {
+            tittle = selectedVehicleNumber
+        }
     }
 }

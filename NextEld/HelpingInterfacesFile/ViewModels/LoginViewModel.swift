@@ -38,10 +38,26 @@ class LoginViewModel: ObservableObject {
         print("Request Body: \(requestBody)")
         
         do {
-            let response: TokenModelLog = try await NetworkManager.shared.post(
-                .login,
-                body: requestBody
-            )
+            // Get raw JSON response first to extract driverDvirLog
+            var request = URLRequest(url: API.Endpoint.login.url)
+            request.httpMethod = API.Endpoint.login.method
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            let encodedBody = try JSONEncoder().encode(requestBody)
+            request.httpBody = encodedBody
+            
+            let (data, _) = try await URLSession.shared.data(for: request)
+            
+            // Parse raw JSON to get driverDvirLog before decoding
+            var driverDvirLogArray: [[String: Any]]? = nil
+            if let jsonDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let resultDict = jsonDict["result"] as? [String: Any],
+               let driverDvirLog = resultDict["driverDvirLog"] as? [[String: Any]] {
+                driverDvirLogArray = driverDvirLog
+                print(" Found \(driverDvirLog.count) server DVIR records in login response")
+            }
+            
+            // Decode response to TokenModelLog
+            let response: TokenModelLog = try JSONDecoder().decode(TokenModelLog.self, from: data)
             print(" API Response: \(response)")
             
             if let token = response.token {
@@ -143,44 +159,36 @@ class LoginViewModel: ObservableObject {
                 }
                 
                 if let loginDateTime = response.result?.loginDateTime {
-                   // UserDefaults.standard.set(loginDateTime, forKey: "LoginDateTime")
                     AppStorageHandler.shared.loginDateTime = loginDateTime
                 }
                 
                 // Save Timezone
                 if let timeZone = response.result?.timezone {
-                  //  UserDefaults.standard.set(timeZone, forKey: "timezone")
                     AppStorageHandler.shared.timeZone = timeZone
                 }
                 
                 if let timeZoneOffSet = response.result?.timezoneOffSet {
-                   // UserDefaults.standard.set(timeZoneOffSet, forKey: "timezoneOffSet")
                     AppStorageHandler.shared.timeZoneOffset = timeZoneOffSet
                 }
 
                 
                 //Save Shift
                 if let shiftValue = response.result?.driverLog?.first?.shift {
-                   // UserDefaults.standard.set(shiftValue, forKey: "shift")
-                //    AppStorageHandler.shared.shift = shiftValue
                     print(" Saved shift: \(shiftValue)")
                 }
                 
                 if let dateIs =  response.result?.driverLog?.first?.days{
-                    //UserDefaults.standard.set(dateIs, forKey: "days")
-                //    AppStorageHandler.shared.days = dateIs
+                    AppStorageHandler.shared.days = dateIs
                     print(" Saved current day: \(dateIs)")
                 }
                 
                 if let firstLog = response.result?.driverCertifiedLog?.first {
                     AppStorageHandler.shared.coDriverId = firstLog.coDriverId
-                    //UserDefaults.standard.set(coDriverId, forKey: "coDriverId")
                     
                 }
                 
                 //Save Location (if available)
                     if let location = response.result?.driverLog?.first?.customLocation {
-                    //UserDefaults.standard.set(location, forKey: "customLocation")
                         AppStorageHandler.shared.Location = location
                     print(" Saved location: \(location)")
                     }
@@ -207,7 +215,6 @@ class LoginViewModel: ObservableObject {
                     }
                 
                    if let VechicleID = response.result?.vehicleId{
-                    //UserDefaults.standard.integer(forKey: "vehicleId")
                     //UserDefaults.standard.set(VechicleID , forKey: "vehicleId")// works for Int
                        AppStorageHandler.shared.vehicleId = VechicleID
                     print(" Saved VechicleID: \(VechicleID)")
@@ -283,8 +290,26 @@ class LoginViewModel: ObservableObject {
                     DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
                 }
                 
-                isLoading = false
+                // MARK: - Save Server DVIR Records from Login Response
+                if let driverDvirLog = driverDvirLogArray, !driverDvirLog.isEmpty {
+                    
+                    print(" ========== SAVING SERVER DVIR RECORDS ==========")
+                    print(" Found \(driverDvirLog.count) server DVIR records in login response")
+                    
+                    // Save to database
+                    DvirDatabaseManager.shared.saveServerDvirRecords(from: driverDvirLog)
+                    let savedRecords = DvirDatabaseManager.shared.fetchAllRecords()
+                    print(" Total records in database after save: \(savedRecords.count)")
+
+                    // Post notification to refresh EmailDvir list
+                    NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
+                    print(" Posted DVIRRecordUpdated notification")
+               
+                } else {
+                    print("  No driverDvirLog found in login response or array is empty")
+                }
                 
+                isLoading = false
                 print(" Login finished successfully")
                 return true
                 

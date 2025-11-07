@@ -18,6 +18,64 @@
             endingLineNumber = "16"
             landmarkName = "TopBarView"
             landmarkType = "14">
+            <Locations>
+               <Location
+                  uuid = "25381A22-2B82-4CEF-B44C-9D7E83AB2CF3 - d8a4786ff5eaa212"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NextEld.TopBarView.showDeviceSelector.getter : Swift.Bool"
+                  moduleName = "NextEld.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/View/HomeBoxViews/TopbarView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "25381A22-2B82-4CEF-B44C-9D7E83AB2CF3 - bc7a111454c7caee"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NextEld.TopBarView.showDeviceSelector.setter : Swift.Bool"
+                  moduleName = "NextEld.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/View/HomeBoxViews/TopbarView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "25381A22-2B82-4CEF-B44C-9D7E83AB2CF3 - 16bc32c24b8ac41f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NextEld.TopBarView.showDeviceSelector.modify : Swift.Bool"
+                  moduleName = "NextEld.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/View/HomeBoxViews/TopbarView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "25381A22-2B82-4CEF-B44C-9D7E83AB2CF3 - e233a114962fd1d6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NextEld.TopBarView.$showDeviceSelector.getter : SwiftUI.Binding&lt;Swift.Bool&gt;"
+                  moduleName = "NextEld.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/View/HomeBoxViews/TopbarView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -158,6 +216,36 @@
             endingLineNumber = "55"
             landmarkName = "updateDvirDataUsingCommonService(record:dvirLogId:)"
             landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "0FA97944-A2F1-49EC-9E77-638AF146E1B7 - 518ac3376fc55bb5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NextEld.updateDvirDataUsingCommonService(record: NextEld.DvirRecord, dvirLogId: Swift.String) -&gt; ()"
+                  moduleName = "NextEld.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/HelpingInterfacesFile/ViewModels/UpdateDvirModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "55"
+                  endingLineNumber = "55">
+               </Location>
+               <Location
+                  uuid = "0FA97944-A2F1-49EC-9E77-638AF146E1B7 - ce2ba172a45af5fc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.Result&lt;Foundation.Data, Swift.Error&gt;) -&gt; () in NextEld.updateDvirDataUsingCommonService(record: NextEld.DvirRecord, dvirLogId: Swift.String) -&gt; ()"
+                  moduleName = "NextEld.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/HelpingInterfacesFile/ViewModels/UpdateDvirModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "56"
+                  endingLineNumber = "56">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -170,8 +258,8 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "463"
-            endingLineNumber = "463"
+            startingLineNumber = "460"
+            endingLineNumber = "460"
             landmarkName = "loadRecordData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -186,8 +274,8 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "494"
-            endingLineNumber = "494"
+            startingLineNumber = "491"
+            endingLineNumber = "491"
             landmarkName = "AddDvirScreenView"
             landmarkType = "14">
          </BreakpointContent>
@@ -218,8 +306,8 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "511"
-            endingLineNumber = "511"
+            startingLineNumber = "508"
+            endingLineNumber = "508"
             landmarkName = "handleAddDvirButtonTap()"
             landmarkType = "7">
          </BreakpointContent>
@@ -234,8 +322,8 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "445"
-            endingLineNumber = "445"
+            startingLineNumber = "442"
+            endingLineNumber = "442"
             landmarkName = "loadRecordData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -250,8 +338,8 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "448"
-            endingLineNumber = "448"
+            startingLineNumber = "445"
+            endingLineNumber = "445"
             landmarkName = "loadRecordData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -298,8 +386,8 @@
             filePath = "NextEld/View/DVIRDetails/AddDvirScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "518"
-            endingLineNumber = "518"
+            startingLineNumber = "515"
+            endingLineNumber = "515"
             landmarkName = "handleAddDvirButtonTap()"
             landmarkType = "7">
          </BreakpointContent>
@@ -366,6 +454,86 @@
             endingLineNumber = "876"
             landmarkName = "unknown"
             landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C143D238-3CCD-4CE6-953E-3EF32C6D5412"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NextEld/View/HomeView /CertifyForms/CertifySelectedView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "77D0F9D7-B75D-4253-B355-A4752F48994C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NextEld/View/HomeView /CertifyForms/CertifySelectedView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9F0A00B7-3E77-47C2-B9DB-92C28647D8DF"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NextEld/View/HomeView /CertifyForms/CertifySelectedView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "53545EDC-DEA2-4B97-918E-D6D6F2D88C95"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NextEld/View/HomeView /DailyLogs/EyeViewData.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A306AE97-56C0-41E3-B501-8F9C02373DB7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NextEld/View/HomeView /DailyLogs/EyeViewData.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

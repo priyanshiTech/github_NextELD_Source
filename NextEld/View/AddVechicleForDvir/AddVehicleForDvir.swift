@@ -38,7 +38,6 @@ struct AddVehicleForDvir: View {
         VStack(spacing: 5) {
             
             header
-            
             searchBar
             
             // Vehicle List
@@ -52,6 +51,9 @@ struct AddVehicleForDvir: View {
                         
                         selectedVehicleNumber = vehicleNo
                         VechicleID = vehicle.vehicleId
+
+                        AppStorageHandler.shared.vehicleNo = vehicleNo
+                        AppStorageHandler.shared.vehicleId = vehicle.vehicleId
                         
                         print("Selected: \(vehicleNo) [ID: \(vehicle.vehicleId)]")
                         

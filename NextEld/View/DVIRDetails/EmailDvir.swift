@@ -19,7 +19,9 @@ struct EmailDvir: View {
     
     //MARK: - remove placeholder multiple value  filteredRecords
     var filteredRecords: [DvirRecord] {
-        updateRecords.filter { record in
+        // Use records from database (which includes server records) instead of updateRecords parameter
+        let allRecords = records.isEmpty ? updateRecords : records
+        return allRecords.filter { record in
             !(record.DAY == "Current Date" || record.DvirTime == "Current Time")
         }
     }
@@ -139,11 +141,17 @@ struct EmailDvir: View {
            
             .onAppear {
                 records = DvirDatabaseManager.shared.fetchAllRecords()
+                print(" EmailDvir: Loaded \(records.count) records from database on appear")
             }
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
                 // Refresh records when DVIR is added/updated
                 records = DvirDatabaseManager.shared.fetchAllRecords()
-                print(" EmailDvir: Records refreshed after DVIR update")
+                print(" EmailDvir: Records refreshed after DVIR update - Total: \(records.count)")
+            }
+            .task {
+                // Also fetch records when view appears (async)
+                records = DvirDatabaseManager.shared.fetchAllRecords()
+                print(" EmailDvir: Task - Loaded \(records.count) records from database")
             }
         .navigationBarHidden(true)
 
