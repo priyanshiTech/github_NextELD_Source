@@ -113,6 +113,7 @@ func handleSelection(_ row: SideMenuRowType) {
        case .Rules:
            navmanager.path.append(AppRoute.HomeFlow.RulesView)
        case .ELDConnection:
+           presentSideMenu = false
            navmanager.path.append(AppRoute.scanner)
        case .settings:
            navmanager.path.append(AppRoute.HomeFlow.Settings)
