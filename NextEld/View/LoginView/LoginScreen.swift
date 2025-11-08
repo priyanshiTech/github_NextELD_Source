@@ -208,14 +208,15 @@ func isValidEmail(_ email: String) -> Bool {
 // MARK: - Username Validation
 func isValidUsername(_ username: String) -> Bool {
     //  letters, numbers 7 underscore allowed, length 3-15
-    let usernameRegex = "^[A-Za-z0-9_]{3,15}$"
+    let usernameRegex = "^[A-Za-z0-9_ ]{3,15}$"
     return NSPredicate(format: "SELF MATCHES %@", usernameRegex).evaluate(with: username)
 }
 
 
 //  Password Validation (Only Numbers, min 4 digits)
 func isValidPassword(_ password: String) -> Bool {
-    let passwordRegex = "^[0-9]{4,}$"
+    let passwordRegex =  "^[A-Za-z0-9@#$%^&+=!]{4,}$"
+    //"^[0-9]{4,}$"
     return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
 }
 

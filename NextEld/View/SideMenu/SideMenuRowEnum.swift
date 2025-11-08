@@ -10,6 +10,7 @@ import SwiftUI
 import UIKit
 
 struct AppInfo {
+    
     static var version: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
     }
@@ -80,13 +81,6 @@ enum SideMenuRowType: Int, CaseIterable{
         case .Sync:
             return "Sync"
         }
-        // (\(AppInfo.buildNumber))"
-         
-         //        case .emailLogs:
-         //                return "Daily Logs"
-         //        case .RecapHour:
-       // return "Recap Hour"
-         //
     }
 
     var iconName: String {

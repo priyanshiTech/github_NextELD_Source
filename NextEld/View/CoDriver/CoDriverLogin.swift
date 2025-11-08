@@ -13,12 +13,13 @@ struct CoDriverLogin: View {
     @State private var showDriver = false
     @EnvironmentObject var navmanager: NavigationManager
     @State private var showAlert = false
-    @EnvironmentObject var dutyManager: DutyStatusManager   //  shared object
+    @State var dutyManager = DutyStatusManager()   //  shared object
     @State private var selectedCoDriverEmail: String = "" // Hidden Email
 
     var tittle: String = "Co-Driver Log-in"
     
     var body: some View {
+        
         ZStack {
             VStack(spacing: 0) {
                 Color(uiColor: .wine)
@@ -77,28 +78,36 @@ struct CoDriverLogin: View {
                 Spacer()
                 // Submit button
                 Button(action: {
-                                   if dutyManager.dutyStatus == DriverStatusConstants.offDuty {
-                                       print(" Going to NewDriverLogin with email:", selectedCoDriverEmail)
-                                    //   navmanager.navigate(to: .loginFlow(.newDriverLogin(title: tittle, email: selectedCoDriverEmail)))
-
-                                       
-                                   } else {
-                                       showAlert = true
-                                   }
-                               }) {
-                                   Text("Submit")
-                                       .font(.headline)
-                                       .foregroundColor(.white)
-                                       .frame(maxWidth: .infinity)
-                                       .padding()
-                                       .background(Color(uiColor: .wine))
-                                       .cornerRadius(10)
-                               }
-                               .padding(.horizontal)
-                               .disabled(((selectionCoDriver?.isEmpty) != nil))
-                               .alert("Switch to Off-Duty before Co-Driver can login.", isPresented: $showAlert) {
-                                   Button("OK", role: .cancel) { }
-                               }
+                    if dutyManager.dutyStatus == DriverStatusConstants.offDuty {
+                        // Validate that a co-driver is selected and email is available
+                        guard let selectedDriver = selectionCoDriver, !selectedDriver.isEmpty,
+                              !selectedCoDriverEmail.isEmpty else {
+                            print(" Co-Driver or email not selected")
+                            return
+                        }
+                        
+                        print(" Going to NewDriverLogin with email: \(selectedCoDriverEmail)")
+                        print(" Selected Co-Driver: \(selectedDriver)")
+                        
+                        // Navigate to NewDriverLogin
+                        navmanager.navigate(to: AppRoute.HomeFlow.NewDriverLogin(title: tittle, email: selectedCoDriverEmail))
+                    } else {
+                        showAlert = true
+                    }
+                }) {
+                    Text("Submit")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(uiColor: .wine))
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal)
+                .disabled(selectionCoDriver == nil || selectionCoDriver?.isEmpty == true || selectedCoDriverEmail.isEmpty)
+                .alert("Switch to Off-Duty before Co-Driver can login.", isPresented: $showAlert) {
+                    Button("OK", role: .cancel) { }
+                }
             }
             .blur(radius: showDriver ? 1 : 0) // blur background when popup is open
 
@@ -121,9 +130,9 @@ struct CoDriverLogin: View {
 }
 
 
-#Preview {
-    CoDriverLogin()
-}
+//#Preview {
+//    CoDriverLogin(, dutyManager: DutyStatusManager)
+//}
 
 
 

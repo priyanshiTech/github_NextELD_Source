@@ -64,9 +64,7 @@ struct SettingsLanguageView: View {
                                     .font(.footnote)
                                     .foregroundColor(.gray)
                             }
-                            
                             Spacer()
-                            
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 14, weight: .bold))
                                 .foregroundColor(.black)
@@ -84,7 +82,7 @@ struct SettingsLanguageView: View {
                 // MARK: - Terms & Privacy Button
                 HStack {
                     Button(action: {
-                        //MARK: -  Add navigation here
+                        navmanager.path.append(AppRoute.HomeFlow.TermsAndCondition)
                         print("Terms & Privacy tapped")
                     }) {
                         HStack(spacing: 4) {

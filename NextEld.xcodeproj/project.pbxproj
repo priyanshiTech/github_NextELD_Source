@@ -156,6 +156,7 @@
 		AFB943502E02CD7B00AD19D7 /* TokenModelLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9434F2E02CD7B00AD19D7 /* TokenModelLog.swift */; };
 		AFB943542E02D43600AD19D7 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943532E02D43500AD19D7 /* APIClient.swift */; };
 		AFB943562E02D62E00AD19D7 /* APIEndPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943552E02D62E00AD19D7 /* APIEndPoints.swift */; };
+		AFBB48F92EBF241400E88DD5 /* Terms&ConditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB48F82EBF241400E88DD5 /* Terms&ConditionView.swift */; };
 		AFBB59F62E4230D80056A660 /* RefreshViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F52E4230D80056A660 /* RefreshViewModel.swift */; };
 		AFBB59F82E4231800056A660 /* UpdateDvirModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F72E4231800056A660 /* UpdateDvirModel.swift */; };
 		AFBB59FA2E4233B10056A660 /* CurrentDT.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F92E4233B10056A660 /* CurrentDT.swift */; };
@@ -404,6 +405,7 @@
 		AFB9434F2E02CD7B00AD19D7 /* TokenModelLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModelLog.swift; sourceTree = "<group>"; };
 		AFB943532E02D43500AD19D7 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		AFB943552E02D62E00AD19D7 /* APIEndPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndPoints.swift; sourceTree = "<group>"; };
+		AFBB48F82EBF241400E88DD5 /* Terms&ConditionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Terms&ConditionView.swift"; sourceTree = "<group>"; };
 		AFBB59F52E4230D80056A660 /* RefreshViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshViewModel.swift; sourceTree = "<group>"; };
 		AFBB59F72E4231800056A660 /* UpdateDvirModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDvirModel.swift; sourceTree = "<group>"; };
 		AFBB59F92E4233B10056A660 /* CurrentDT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentDT.swift; sourceTree = "<group>"; };
@@ -498,7 +500,6 @@
 			isa = PBXGroup;
 			children = (
 				1009E35A2DCB22EB002E3D13 /* CheckBoxView.swift */,
-				1009E35D2DCB3689002E3D13 /* Routing */,
 			);
 			path = "Interface Model";
 			sourceTree = "<group>";
@@ -558,6 +559,7 @@
 				AF93A58A2E67283700B708E2 /* CoreServiceLocation */,
 				1009E35C2DCB358E002E3D13 /* Interface Model */,
 				AFB943512E02D3B000AD19D7 /* Networking */,
+				1009E35D2DCB3689002E3D13 /* Routing */,
 				108FF8012DC895E10051671B /* NextEldApp.swift */,
 				108FF8072DC895E20051671B /* NextEld.entitlements */,
 				AFCAF8242DD85D9200D82F29 /* assets .xcassets */,
@@ -613,6 +615,7 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFBB48F72EBF23F100E88DD5 /* Terms&Condition */,
 				AF45BB792EB8AAC800DDDB4D /* VehicleConditionPopup */,
 				AF1073562EB52BCA00C3CE0E /* ImagePicker */,
 				AF3A59302EB4F3D9007A438F /* Upload Defect */,
@@ -1189,6 +1192,14 @@
 			path = APIClient;
 			sourceTree = "<group>";
 		};
+		AFBB48F72EBF23F100E88DD5 /* Terms&Condition */ = {
+			isa = PBXGroup;
+			children = (
+				AFBB48F82EBF241400E88DD5 /* Terms&ConditionView.swift */,
+			);
+			path = "Terms&Condition";
+			sourceTree = "<group>";
+		};
 		AFBD12CD2E72A871003EA40F /* DVIRMultipartResponceModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -1589,6 +1600,7 @@
 				AF7951182E3BA7B5005FFFBF /* DVIRDataTableView.swift in Sources */,
 				AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */,
 				AF7235072E55E4A4009EAA9E /* vchicleAPIViewModel.swift in Sources */,
+				AFBB48F92EBF241400E88DD5 /* Terms&ConditionView.swift in Sources */,
 				AFBB59FC2E4233FB0056A660 /* AppRoute.swift in Sources */,
 				AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */,
 				AF66F7A12E4CAAEA009A13A0 /* Co-DriverModel.swift in Sources */,

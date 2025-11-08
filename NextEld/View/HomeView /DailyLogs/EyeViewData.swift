@@ -69,8 +69,8 @@ struct EyeViewData: View {
                 DateStepperView(currentDate: $selectedDate)
             }
             .background(Color.white.shadow(radius: 5))
-            
             // ScrollView content - takes remaining space
+            
             Group {
                 if viewModel.isLoading {
                     VStack {
@@ -127,7 +127,6 @@ struct EyeViewData: View {
                                 d.certifiedSignatureName ?? "No"
                             ]
                         )
-
                         // Section 3: ELD Info
                         sectionGrid(
                             headers: ["Eld Registration ID", "ELD Identifier", "Provider"],
@@ -137,7 +136,6 @@ struct EyeViewData: View {
                                 d.eldProvider ?? "NA"
                             ]
                         )
-
                         sectionGrid(
                             headers: ["24 Period Starting Time", "Data Dig. Indicators", "Device Malfn. Indicators"],
                             values: [
@@ -146,7 +144,6 @@ struct EyeViewData: View {
                                 d.malfunctionIndicator ?? "NA"
                             ]
                         )
-
                         sectionGrid(
                             headers: ["Vehicle", "VIN", "Odometer", "Distance"],
                             values: [
@@ -156,7 +153,6 @@ struct EyeViewData: View {
                                 "\(d.distance ?? 0)"
                             ]
                         )
-
                         sectionGrid(
                             headers: ["Trailer", "Shipping Docs", "Carrier", "Main Office"],
                             values: [
@@ -260,12 +256,7 @@ struct EyeViewData: View {
         )
     }
 
-
-
     }
-
-
-
 
         //MARK: -  Reusable Section Grid
         @ViewBuilder

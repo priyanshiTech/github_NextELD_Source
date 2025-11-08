@@ -58,7 +58,7 @@ struct SelectCoDriverPopup: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 selectedCoDriver = fullName
-                                selectedCoDriverEmail = driver.email ?? ""
+                                selectedCoDriverEmail = fullName 
                                 selectedCodriverID = driver.employeeId ?? 0
                                 print("Selected EmpID: \(driver.employeeId ?? 0)")
                                 print("Selected Email: \(driver.email ?? "nil")")

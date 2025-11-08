@@ -25,6 +25,7 @@ struct DeviceScannerView: View {
      )
     @State private var selectedVehicleNumber: String = AppStorageHandler.shared.vehicleNo ?? ""
     @State private var selectedVehicleId: Int? = AppStorageHandler.shared.vehicleId
+    @State private var isNewDriverLoggedIn: Bool = false
     var body: some View {
         NavigationStack(path: $navManager.path) {
             VStack (spacing: 0) {
@@ -228,6 +229,14 @@ struct DeviceScannerView: View {
                         title: title
                     )
           
+                case .TermsAndCondition:
+                    Terms_ConditionView( tittle: "Terms & Condition")
+                case .NewDriverLogin(title: let title, email: let email):
+                    NewDriverLogin(
+                        isLoggedIn: $isNewDriverLoggedIn,
+                        tittle: title,
+                        UserName: email
+                    )
                 }
             }
             .navigationDestination(for: AppRoute.LogsFlow.self) { route in
@@ -255,7 +264,18 @@ struct DeviceScannerView: View {
         }
         .navigationDestination(for: AppRoute.self) { route in
             if route == .scanner {
+                // Scanner is the root view, don't create nested NavigationStack
+                EmptyView()
+            }
+        }
+        .navigationDestination(for: ApplicationRoot.self) { root in
+            switch root {
+            case .scanner(_):
                 DeviceScannerView(checkboxClick: false, macaddress: "")
+            case .splashScreen:
+                EmptyView()
+            case .login:
+                EmptyView()
             }
         }
         .navigationBarHidden(true)

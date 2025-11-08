@@ -114,7 +114,8 @@ func handleSelection(_ row: SideMenuRowType) {
            navmanager.path.append(AppRoute.HomeFlow.RulesView)
        case .ELDConnection:
            presentSideMenu = false
-           navmanager.path.append(AppRoute.scanner)
+           // Reset to root (scanner view) instead of pushing scanner again
+           navmanager.reset()
        case .settings:
            navmanager.path.append(AppRoute.HomeFlow.Settings)
        case .support:
@@ -124,6 +125,7 @@ func handleSelection(_ row: SideMenuRowType) {
        case .logout:
            showLogoutPopup = true
            presentSideMenu = false
+           
        case .version:
            presentSideMenu = false
            showDeleteConfirm = true

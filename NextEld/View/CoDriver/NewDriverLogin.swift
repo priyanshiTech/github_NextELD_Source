@@ -8,15 +8,15 @@ import SwiftUI
 
 struct NewDriverLogin: View {
     @EnvironmentObject var navManager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @EnvironmentObject var session: SessionManager
-    @EnvironmentObject var loginVM: LoginViewModel
+    @StateObject var loginVM = LoginViewModel()
     @StateObject private var viewModel = APILoginLogViewModel()
     @StateObject private var logoutVM = APILogoutViewModel()
 
     @Binding var isLoggedIn: Bool
     
     @State private var UserText: String = ""   // start empty, sync later
-   // @State private var emailText: String = ""   // start empty, sync later
 
     @State private var password = ""
     @State private var isPasswordShowing = false
@@ -52,7 +52,7 @@ struct NewDriverLogin: View {
                 .foregroundColor(.white)
                 .padding(.top, 80)
             
-            //  Email TextField (auto-filled)
+            //  Username TextField with validation
             HStack {
                 Image(systemName: "envelope.fill")
                     .foregroundColor(Color(uiColor: .wine))
@@ -60,13 +60,18 @@ struct NewDriverLogin: View {
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)
             }
-            .padding(.horizontal)
-            .frame(width: txtFieldWidth, height: txtFieldHeight)
-            .background(Color.white)
-            .cornerRadius(10)
-            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray.opacity(0.5)))
+            .inputBoxStyle(width: txtFieldWidth, height: txtFieldHeight, isValid: UserText.isEmpty || isValidUsername(UserText))
             
-            //  Password TextField
+            // Inline validation message for username
+            if !UserText.isEmpty && !isValidUsername(UserText) {
+                Text("Enter a UserName")
+                    .foregroundColor(.red)
+                    .font(.caption)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 5)
+            }
+            
+            //  Password TextField with validation
             HStack {
                 Image(systemName: "lock")
                     .foregroundColor(Color(uiColor: .wine))
@@ -82,11 +87,16 @@ struct NewDriverLogin: View {
                         .foregroundColor(Color(uiColor: .wine))
                 }
             }
-            .padding(.horizontal)
-            .frame(width: txtFieldWidth, height: txtFieldHeight)
-            .background(Color.white)
-            .cornerRadius(10)
-            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray.opacity(0.5)))
+            .inputBoxStyle(width: txtFieldWidth, height: txtFieldHeight, isValid: password.isEmpty || isValidPassword(password))
+            
+            // Inline validation message for password
+            if !password.isEmpty && !isValidPassword(password) {
+                Text("Password must be numeric (min 4 digits)")
+                    .foregroundColor(.red)
+                    .font(.caption)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 5)
+            }
             
             // Info
             HStack {
@@ -99,47 +109,91 @@ struct NewDriverLogin: View {
             
             //  Login button
             Button(action: {
+                // Validate before attempting login
+                if !isValidUsername(UserText) || !isValidPassword(password) {
+                    alertVisible = true
+                    return
+                }
+                
                 Task {
-                       // First check if someone is logged in
-                       if SessionManagerClass.shared.isLoggedIn() {
-                           // Logout current user before logging in new one
-                           await logoutVM.callLogoutAPI()
-                       }
-                       //  Now run login API
-                       let success = await loginVM.login(email: UserText, password: password)
-                       if success && SessionManagerClass.shared.isLoggedIn() {
-                           await viewModel.callLoginLogUpdateAPI()
-                           isLoggedIn = true
-                           //navManager.navigate(to: AppRoute.homeFlow(.Scanner))
-                         //  navManager.navigate(to: ApplicationRoot.scanner)
-                           navManager.navigate(to: AppRoute.scanner)
-                       } else {
-                           alertVisible = true
-                       }
-                   }
+                    // First check if someone is logged in
+                    if SessionManagerClass.shared.isLoggedIn() {
+                        // Logout current user before logging in new one
+                        await logoutVM.callLogoutAPI()
+                    }
+                    //  Now run login API
+                    let success = await loginVM.login(email: UserText, password: password)
+                    if success && SessionManagerClass.shared.isLoggedIn() {
+                        await viewModel.callLoginLogUpdateAPI()
+                        isLoggedIn = true
+                        
+                        // Navigate to Home screen after successful login
+                        DispatchQueue.main.async {
+                            navManager.reset()
+                            appRootManager.currentRoot = .scanner(moveToHome: false)
+                        }
+                    } else {
+                        alertVisible = true
+                    }
+                }
             }) {
                 Text("Log - In")
                     .font(.callout)
                     .foregroundColor(Color(uiColor: .wine))
                     .frame(width: txtFieldWidth, height: txtFieldHeight)
-                    .background(Color.white)
+                    .background((isValidUsername(UserText) && isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
                     .cornerRadius(10)
             }
+            .disabled(!isValidUsername(UserText) || !isValidPassword(password))
+            
+            // Loading indicator
+            if loginVM.isLoading {
+                ProgressView("Logging in...")
+                    .padding()
+            }
+            
+            // Error message from API
+            if let error = loginVM.errorMessage {
+                Text(error)
+                    .foregroundColor(.red)
+                    .padding(.horizontal)
+            }
+            
             Spacer()
         }
         .navigationBarBackButtonHidden()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(uiColor: .wine))
         .navigationBarTitleDisplayMode(.inline)
-        .alert("Login Failed", isPresented: $alertVisible) {
-            Button("OK", role: .cancel) { }
+        .alert(isPresented: $alertVisible) {
+            Alert(
+                title: Text("Validation Error"),
+                message: Text("Please enter a valid Username and password."),
+                dismissButton: .default(Text("OK"))
+            )
         }
         //  Auto-fill email whenever screen appears
         .onAppear {
-            self.UserText = UserText
+            if !UserName.isEmpty {
+                self.UserText = UserName
+                print(" Auto-filled email from co-driver: \(UserName)")
+            }
         }
     }
 }
+
+// MARK: - Username Validation
+//func isValidUsername(_ username: String) -> Bool {
+//    //  letters, numbers and underscore allowed, length 3-15
+//    let usernameRegex = "^[A-Za-z0-9_]{3,15}$"
+//    return NSPredicate(format: "SELF MATCHES %@", usernameRegex).evaluate(with: username)
+//}
+//
+//// MARK: - Password Validation (Only Numbers, min 4 digits)
+//func isValidPassword(_ password: String) -> Bool {
+//    let passwordRegex = "^[0-9]{4,}$"
+//    return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
+//}
 
 //#Preview {
 //    NewDriverLogin()
