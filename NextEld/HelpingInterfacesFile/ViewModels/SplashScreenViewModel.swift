@@ -10,6 +10,7 @@ import SwiftUI
 
 @MainActor
 class APITokenUpdateViewModel: ObservableObject {
+    
     @Published var apiMessage: String = ""
     @Published var status: String = ""
     @Published var result: String = ""
@@ -76,6 +77,12 @@ class APITokenUpdateViewModel: ObservableObject {
         //  Flags (personal use, yard moves, etc.)
         defaults.set(result.personalUse, forKey: "KEY_IS_PERSONAL_USE_ACTIVE")
         defaults.set(result.yardMoves, forKey: "KEY_IS_YARD_MOVE_ACTIVE")
+        defaults.set(result.exempt, forKey: "KEY_IS_EXEMPT_ACTIVE")
+        
+        // Update shared AppStorage flags so UI reflects latest server config even before manual login
+        AppStorageHandler.shared.personalUseActive = result.personalUse
+        AppStorageHandler.shared.yardMovesActive = result.yardMoves
+        AppStorageHandler.shared.exempt = result.exempt
         
         //  Optional loginDateTime
         if let loginTime = result.loginDateTime {

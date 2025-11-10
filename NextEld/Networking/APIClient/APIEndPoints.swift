@@ -13,6 +13,8 @@ enum API {
     
     static let baseURL = URL(string: "https://gbt-usa.com/eld_log/")!
     static let baseURLTwo = URL(string: "http://165.232.183.179:4002/api/")!
+    
+    static let DominName = "https://gbt-usa.com/"
 
     enum Endpoint {
         case login
@@ -103,7 +105,6 @@ enum API {
                 return API.baseURL.appendingPathComponent("dispatch/view_drivering_status_with_login_details")
             case .addDefectData:
                 return API.baseURL.appendingPathComponent("dispatch/add_defect_data")
-
             case .vehicleConditionApi:
                 return API.baseURL.appendingPathComponent("master/view_vehicle_condition")
             }

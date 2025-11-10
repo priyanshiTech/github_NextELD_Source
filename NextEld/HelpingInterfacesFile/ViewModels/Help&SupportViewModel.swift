@@ -21,17 +21,24 @@ class SupportViewModel: ObservableObject {
     func sendSupportMessage(userMessage: String) async {
         isLoading = true
         errorMessage = nil
+
+        let trimmedMessage = userMessage.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedMessage.isEmpty else {
+            errorMessage = "Please enter your query."
+            isLoading = false
+            return
+        }
         
-//        let requestBody = MessageRequestSupportNew(
-//            // driverId:  "\(String(describing: AppStorageHandler.shared.driverId))",
-//            driverId: "\(AppStorageHandler.shared.driverId)",
-//            message: "hello message from Excel end driver testing",
-//            companyDomainName: "exceleld.com")
+        guard let driverId = AppStorageHandler.shared.driverId, driverId != 0 else {
+            errorMessage = "Driver information not available."
+            isLoading = false
+            return
+        }
         
         let requestBody = MessageRequestSupportNew(
-            driverId: String(AppStorageHandler.shared.driverId ?? 0),
-            message: "hello message from Excel end driver testing",
-            companyDomainName: "exceleld.com"
+            driverId: String(driverId),
+            message: trimmedMessage,
+            companyDomainName: API.DominName
         )
 
 
@@ -40,7 +47,11 @@ class SupportViewModel: ObservableObject {
                 .HelpSupportInfo,
                 body: requestBody
             )
-            self.successMessage = response.message ?? "Message sent successfully"
+            if response.status?.uppercased() == "SUCCESS" {
+                self.successMessage = response.message ?? "Message sent successfully"
+            } else {
+                self.errorMessage = response.message ?? "Failed to send message."
+            }
 
         } catch {
             self.errorMessage = error.localizedDescription

@@ -240,6 +240,7 @@ struct DeviceScannerView: View {
                 }
             }
             .navigationDestination(for: AppRoute.LogsFlow.self) { route in
+                
                 switch route {
                 case .EmailLogs(let title):
                     EmailLogs(title: title)
@@ -248,6 +249,7 @@ struct DeviceScannerView: View {
                 case .LogsDetails(let title, let entry):
                     LogsDetails(title: title, entry: entry)
                 case .AddDvirPriTrip:
+                    
                     EmailDvir(
                         tittle: "Email DVIR",
                         updateRecords: DvirDatabaseManager.shared.fetchAllRecords(),

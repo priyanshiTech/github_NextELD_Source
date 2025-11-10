@@ -60,6 +60,17 @@ class LoginViewModel: ObservableObject {
             let response: TokenModelLog = try JSONDecoder().decode(TokenModelLog.self, from: data)
             print(" API Response: \(response)")
             
+            //  FIX: Check if status is FAIL or token is nil BEFORE processing
+            if response.status == "FAIL" || response.token == nil {
+                // Login failed - set error message and return false
+                self.errorMessage = response.message ?? "Login failed: Invalid credentials"
+                print("  Login failed: \(self.errorMessage ?? "Unknown error")")
+                print(" Response status: \(response.status ?? "No status")")
+                isLoading = false
+                return false
+            }
+            
+            //  Only proceed if we have a valid token
             if let token = response.token {
                 self.token = token
                 print(" Token received: \(token)")
@@ -278,10 +289,26 @@ class LoginViewModel: ObservableObject {
                        // UserDefaults.standard.set(warningBreakTime1, forKey: "warningBreakTime1")
                         AppStorageHandler.shared.warningBreakTime1 = warningBreakTime1
                     }
-                    if let warningBreakTime2 =  response.result?.rules?.first?.warningBreakTime2{
+                if let warningBreakTime2 =  response.result?.rules?.first?.warningBreakTime2{
                        // UserDefaults.standard.set(warningBreakTime2, forKey: "warningBreakTime2")
                         AppStorageHandler.shared.warningBreakTime2 = warningBreakTime2
                     }
+                
+                // MARK: - Personal Use / Yard Move / Exempt flags
+                if let personalUseFlag = response.result?.personalUse {
+                    AppStorageHandler.shared.personalUseActive = personalUseFlag
+                    print(" Personal Use Flag: \(personalUseFlag)")
+                }
+                
+                if let yardMoveFlag = response.result?.yardMoves {
+                    AppStorageHandler.shared.yardMovesActive = yardMoveFlag
+                    print(" Yard Move Flag: \(yardMoveFlag)")
+                }
+                
+                if let exemptFlag = response.result?.exempt {
+                    AppStorageHandler.shared.exempt = exemptFlag
+                    print(" Exempt Flag: \(exemptFlag)")
+                }
                    // session.logIn(token: token)
                 }
                 

@@ -215,8 +215,8 @@ func isValidUsername(_ username: String) -> Bool {
 
 //  Password Validation (Only Numbers, min 4 digits)
 func isValidPassword(_ password: String) -> Bool {
+    
     let passwordRegex =  "^[A-Za-z0-9@#$%^&+=!]{4,}$"
-    //"^[0-9]{4,}$"
     return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
 }
 

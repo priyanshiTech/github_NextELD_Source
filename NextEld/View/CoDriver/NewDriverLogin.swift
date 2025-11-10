@@ -13,7 +13,6 @@ struct NewDriverLogin: View {
     @StateObject var loginVM = LoginViewModel()
     @StateObject private var viewModel = APILoginLogViewModel()
     @StateObject private var logoutVM = APILogoutViewModel()
-
     @Binding var isLoggedIn: Bool
     
     @State private var UserText: String = ""   // start empty, sync later
@@ -97,7 +96,6 @@ struct NewDriverLogin: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 5)
             }
-            
             // Info
             HStack {
                 Text("The Current driver will be signed out and you will become Driver. Notice as per requirements from FMCSA and CCMTA")
@@ -116,24 +114,50 @@ struct NewDriverLogin: View {
                 }
                 
                 Task {
-                    // First check if someone is logged in
+                    // Step 1: First check if someone is logged in - Logout old user with all data
                     if SessionManagerClass.shared.isLoggedIn() {
+                        print(" Old user logged in, calling logout API...")
                         // Logout current user before logging in new one
                         await logoutVM.callLogoutAPI()
+                        
+                        // Check if logout was successful
+                        if logoutVM.status != "SUCCESS" {
+                            print(" Logout failed: \(logoutVM.apiMessage)")
+                            DispatchQueue.main.async {
+                                alertVisible = true
+                            }
+                            return
+                        }
+                        print(" Old user logged out successfully with all data")
                     }
-                    //  Now run login API
+                    
+                    // Step 2: Now run login API for new codriver
+                    print(" Starting login for new codriver: \(UserText)")
                     let success = await loginVM.login(email: UserText, password: password)
+                    
+                    // Step 3: Check if login was successful
                     if success && SessionManagerClass.shared.isLoggedIn() {
+                        print(" Login successful! Calling loginLogUpdate API...")
+                        
+                        // Step 4: Call loginLogUpdate API
                         await viewModel.callLoginLogUpdateAPI()
+                        print(" LoginLogUpdate API called successfully")
+                        
                         isLoggedIn = true
                         
-                        // Navigate to Home screen after successful login
+                        // Step 5: Navigate to Home screen - new user and their data will show
                         DispatchQueue.main.async {
                             navManager.reset()
                             appRootManager.currentRoot = .scanner(moveToHome: false)
                         }
+                        print(" Navigation completed - New user data will be displayed")
                     } else {
-                        alertVisible = true
+                        // Login failed - show error message
+                        print(" Login failed. Success: \(success), IsLoggedIn: \(SessionManagerClass.shared.isLoggedIn())")
+                        print(" Error message: \(loginVM.errorMessage ?? "No error message")")
+                        DispatchQueue.main.async {
+                            alertVisible = true
+                        }
                     }
                 }
             }) {
@@ -167,8 +191,8 @@ struct NewDriverLogin: View {
         .navigationBarTitleDisplayMode(.inline)
         .alert(isPresented: $alertVisible) {
             Alert(
-                title: Text("Validation Error"),
-                message: Text("Please enter a valid Username and password."),
+                title: Text(loginVM.errorMessage != nil ? "Login Failed" : (logoutVM.status != "SUCCESS" && !logoutVM.apiMessage.isEmpty ? "Logout Failed" : "Validation Error")),
+                message: Text(loginVM.errorMessage ?? (logoutVM.apiMessage.isEmpty ? "Please enter a valid Username and password." : logoutVM.apiMessage)),
                 dismissButton: .default(Text("OK"))
             )
         }
@@ -184,8 +208,8 @@ struct NewDriverLogin: View {
 
 // MARK: - Username Validation
 //func isValidUsername(_ username: String) -> Bool {
-//    //  letters, numbers and underscore allowed, length 3-15
-//    let usernameRegex = "^[A-Za-z0-9_]{3,15}$"
+//    //  letters, numbers, underscore and spaces allowed, length 3-50 (for names like "SARTAJ GILL")
+//    let usernameRegex = "^[A-Za-z0-9_ ]{3,50}$"
 //    return NSPredicate(format: "SELF MATCHES %@", usernameRegex).evaluate(with: username)
 //}
 //

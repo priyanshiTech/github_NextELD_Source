@@ -78,7 +78,6 @@ struct HomeScreenView: View {
     @StateObject private var deleteViewModel = DeleteViewModel()
 
     @StateObject private var logoutVM = APILogoutViewModel()   //logout
-    @State private var showsyncRefreshalert = RefreshViewModel()  // Refresh
     @EnvironmentObject var locationManager: LocationManager
     
     let times = DateTimeHelperVoilation.getLocalAndGMT()
@@ -381,20 +380,25 @@ struct HomeScreenView: View {
             }
         }
         
-        .onAppear {
+       // .onAppear {
             // homeVM.startTimer(for: [.onDuty])
           //  loadTodayHOSEvents()
-        }
+      //  }
         //(_)(+)_(_+(_+(_+)()_(+)_
-        ZStack {
+        ZStack(alignment: .top) {
             
             if !syncVM.syncMessage.isEmpty {
                 Text(syncVM.syncMessage)
-                    .padding()
-                    .background(syncVM.syncMessage.contains("Failed") ? Color.red : Color.green)
-                    .cornerRadius(10)
-                    .foregroundColor(.white)
-                    .transition(.scale)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.black)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(Color.white)
+                    .cornerRadius(12)
+                    .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
+                    .padding(.top, 12)
+                    .padding(.horizontal, 20)
+                    .transition(.opacity.combined(with: .scale))
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             syncVM.syncMessage = ""
@@ -416,9 +420,39 @@ struct HomeScreenView: View {
             // Save timer states when app is about to terminate
            // homeVM.saveCurrentTimerStatesBeforeSwitch()
             homeVM.saveTimerStateForStatus(status: homeVM.currentDriverStatus.getName(), note: "")
-            
-          //  homeVM.restoreAllTimersFromLastStatus()
-            //homeVM.addPublishers()
+
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .refreshStarted)) { _ in
+            withAnimation {
+                syncVM.syncMessage = "Fetching records..."
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .refreshCompleted)) { notification in
+            guard let userInfo = notification.userInfo,
+                  let status = userInfo["status"] as? String,
+                  let message = userInfo["message"] as? String else { return }
+            withAnimation {
+                if status == "success" {
+                    let finalMessage = message.isEmpty ? "Data refreshed successfully." : message
+                    syncVM.syncMessage = finalMessage
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        withAnimation {
+                            syncVM.syncMessage = ""
+                        }
+                        DispatchQueue.main.async {
+                            appRootManager.currentRoot = .splashScreen
+                        }
+                    }
+                } else {
+                    let errorMessage = message.isEmpty ? "Refresh failed." : "Refresh failed: \(message)"
+                    syncVM.syncMessage = errorMessage
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        withAnimation {
+                            syncVM.syncMessage = ""
+                        }
+                    }
+                }
+            }
         }
         
         
@@ -512,14 +546,13 @@ struct HomeScreenView: View {
                 print("Resetting all timers for new day...")
                // homeVM.resetToInitialState()
             case .refresh:
-                // Call refresh API
+                //MARK: -  Call refresh API
                 Task {
                     await viewModel.refresh()
                 }
             case .deleteLogs:
                 
                 Task {
-                    
                     if let driverId = AppStorageHandler.shared.driverId {
                         await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
                         homeVM.deleteAllAppData()
@@ -533,7 +566,6 @@ struct HomeScreenView: View {
                         print(" Driver ID not found in UserDefaults")
                     }
                 }
-                
                 break
             case .sucessConfimration:
                 appRootManager.currentRoot = .login

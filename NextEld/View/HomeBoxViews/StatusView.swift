@@ -27,6 +27,10 @@ struct StatusView: View {
     @ObservedObject var homeViewModel: HomeViewModel
     var onDriveStatusSelection: ((DriverStatusType) -> Void)
     
+    // Flags fetched from AppStorage to decide visibility of Personal Use / Yard Move buttons
+    @AppStorage("personalUse") private var personalUseActive: String?
+    @AppStorage("yardMoves") private var yardMovesActive: String?
+    
     //MARK: - Timer control functions
 //    let onStopAllTimers: () -> Void
 //    let onStartYardMoveTimers: () -> Void
@@ -138,53 +142,70 @@ struct StatusView: View {
                 }
             */
 
-                //MARK: -  Personal Use and Yard Move buttons
-                HStack {
-                    StatusButton(
-                        title: DriverStatusType.personalUse.getName(),
-                        action: {
-                            selectedDriverStatus = .personalUse
-                            onDriveStatusSelection(selectedDriverStatus)
-                            // Only show popup if not already selected
-//                            if confirmedStatus != DriverStatusConstants.personalUse {
-//                            selectedStatus = DriverStatusConstants.personalUse
-//                            showAlert = true
-//                                
-//                                // Stop all timers when Personal Use is selected
-//                               // onStopAllTimers()
-//                            }
-                        },
-                        isSelected: selectedDriverStatus == .personalUse
-                    )
-                    
-                    Spacer()
-                    StatusButton(
-                        title: DriverStatusType.yardMode.getName(),
-                        action: {
-                            selectedDriverStatus = .yardMode
-                            onDriveStatusSelection(selectedDriverStatus)
-                            // Only show popup if not already selected
-//                            if confirmedStatus != DriverStatusConstants.yardMove {
-//                                selectedStatus = DriverStatusConstants.yardMove
-//                            showAlert = true
-//                                
-//                                // Start OnDuty and Cycle timers for Yard Move
-//                              //  onStartYardMoveTimers()
-//                            }
-                        },
-                        isSelected: selectedDriverStatus == .yardMode
-                    )
+                //MARK: -  Personal Use and Yard Move buttons (conditional visibility)
+                if isPersonalUseEnabled || isYardMoveEnabled {
+                    HStack {
+                        if isPersonalUseEnabled {
+                            StatusButton(
+                                title: DriverStatusType.personalUse.getName(),
+                                action: {
+                                    selectedDriverStatus = .personalUse
+                                    onDriveStatusSelection(selectedDriverStatus)
+                                },
+                                isSelected: selectedDriverStatus == .personalUse
+                            )
+                        }
+                        
+                        if isPersonalUseEnabled && isYardMoveEnabled {
+                            Spacer()
+                        }
+                        
+                        if isYardMoveEnabled {
+                            StatusButton(
+                                title: DriverStatusType.yardMode.getName(),
+                                action: {
+                                    selectedDriverStatus = .yardMode
+                                    onDriveStatusSelection(selectedDriverStatus)
+                                },
+                                isSelected: selectedDriverStatus == .yardMode
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
             }
             .onChange(of: homeViewModel.currentDriverStatus) { newValue in
-                self.selectedDriverStatus = newValue
+                updateSelectedStatusIfNeeded(with: newValue)
             }
         }
         .onAppear {
-            selectedDriverStatus = homeViewModel.currentDriverStatus
+            updateSelectedStatusIfNeeded(with: homeViewModel.currentDriverStatus)
         }
     }
  
+}
+
+// MARK: - Private Helpers
+private extension StatusView {
+    var isPersonalUseEnabled: Bool {
+        guard let flag = AppStorageHandler.shared.personalUseActive?.lowercased() else { return false }
+        return flag == "active" || flag == "true" || flag == "1"
+    }
+    
+    var isYardMoveEnabled: Bool {
+        guard let flag = AppStorageHandler.shared.yardMovesActive?.lowercased() else { return false }
+        return flag == "active" || flag == "true" || flag == "1"
+    }
+    
+    func updateSelectedStatusIfNeeded(with newValue: DriverStatusType) {
+        switch newValue {
+        case .personalUse where !isPersonalUseEnabled,
+             .yardMode where !isYardMoveEnabled:
+            // Fallback to Off-Duty if the selected status is not enabled
+            selectedDriverStatus = .offDuty
+        default:
+            selectedDriverStatus = newValue
+        }
+    }
 }

@@ -44,10 +44,11 @@ struct SelectCoDriverPopup: View {
                 UniversalScrollView {
                     VStack(spacing: 12) {
                         ForEach(viewModel.certifyRecords, id: \.employeeId) { driver in
-                            let fullName = "\(driver.firstName ?? "") \(driver.lastName ?? "")"
+                            let fullName = "\(driver.firstName ?? "") \(driver.lastName ?? "")".trimmingCharacters(in: .whitespaces)
+                            let username = driver.username ?? driver.email ?? fullName
                             
                             HStack {
-                                Text(fullName)
+                                Text(fullName.isEmpty ? (username) : fullName)
                                     .foregroundColor(.black)
                                 Spacer()
                                 Image(systemName: selectedCoDriver == fullName
@@ -58,10 +59,12 @@ struct SelectCoDriverPopup: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 selectedCoDriver = fullName
-                                selectedCoDriverEmail = fullName 
+                                // Prefer actual username from API; fall back to email/full name
+                                selectedCoDriverEmail = username
                                 selectedCodriverID = driver.employeeId ?? 0
                                 print("Selected EmpID: \(driver.employeeId ?? 0)")
                                 print("Selected Email: \(driver.email ?? "nil")")
+                                print("Selected Username: \(username)")
                             }
                             
                             Divider()
