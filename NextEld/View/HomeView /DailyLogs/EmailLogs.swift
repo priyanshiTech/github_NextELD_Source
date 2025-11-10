@@ -18,7 +18,8 @@ struct EmailLogs: View {
     @State private var showToDatePicker = false
     @State private var isFromDateSelected = false
     @State private var isToDateSelected = false
-    
+    @State private var isLoading = true
+
     //MARK:  WebView state
     @State private var showWebView = false
     @State private var reportURL: URL?
@@ -179,7 +180,7 @@ struct EmailLogs: View {
         .overlay(
             Group {
                 if showWebView, let reportURL = reportURL {
-                    WebView(url: reportURL)
+                    WebView(url: reportURL, isLoading: $isLoading)
                         .edgesIgnoringSafeArea(.all)
                 }
                 

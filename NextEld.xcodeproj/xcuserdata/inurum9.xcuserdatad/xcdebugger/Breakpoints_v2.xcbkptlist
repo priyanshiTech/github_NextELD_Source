@@ -104,8 +104,8 @@
             filePath = "NextEld/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "528"
-            endingLineNumber = "528"
+            startingLineNumber = "516"
+            endingLineNumber = "516"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -914,10 +914,10 @@
             filePath = "NextEld/Model 2/SupportModel/SupportModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "MessageRequestSupportNew"
-            landmarkType = "14">
+            startingLineNumber = "39"
+            endingLineNumber = "39"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -930,8 +930,8 @@
             filePath = "NextEld/HelpingInterfacesFile/ViewModels/RefreshViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "25"
-            endingLineNumber = "25"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
             landmarkName = "refresh()"
             landmarkType = "7">
          </BreakpointContent>
@@ -946,13 +946,13 @@
             filePath = "NextEld/HelpingInterfacesFile/ViewModels/RefreshViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
             landmarkName = "refresh()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "37BF7A94-1E72-4694-9727-D158A79D785D - 5e57942cc9d315a4"
+                  uuid = "37BF7A94-1E72-4694-9727-D158A79D785D - 5e57942cc9d3159b"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -962,11 +962,11 @@
                   urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/HelpingInterfacesFile/ViewModels/RefreshViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34">
+                  startingLineNumber = "33"
+                  endingLineNumber = "33">
                </Location>
                <Location
-                  uuid = "37BF7A94-1E72-4694-9727-D158A79D785D - d2aab9f74d964da2"
+                  uuid = "37BF7A94-1E72-4694-9727-D158A79D785D - d2aab9f74d964d9d"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -976,8 +976,8 @@
                   urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/HelpingInterfacesFile/ViewModels/RefreshViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34">
+                  startingLineNumber = "33"
+                  endingLineNumber = "33">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -992,13 +992,13 @@
             filePath = "NextEld/HelpingInterfacesFile/ViewModels/RefreshViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
             landmarkName = "refresh()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "F633EEA6-AF16-48D7-B8F0-3DB97B5DA020 - 5e57942cc9d315a4"
+                  uuid = "F633EEA6-AF16-48D7-B8F0-3DB97B5DA020 - 5e57942cc9d3159b"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1008,11 +1008,11 @@
                   urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/HelpingInterfacesFile/ViewModels/RefreshViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34">
+                  startingLineNumber = "33"
+                  endingLineNumber = "33">
                </Location>
                <Location
-                  uuid = "F633EEA6-AF16-48D7-B8F0-3DB97B5DA020 - d2aab9f74d964da2"
+                  uuid = "F633EEA6-AF16-48D7-B8F0-3DB97B5DA020 - d2aab9f74d964d9d"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1022,8 +1022,8 @@
                   urlString = "file:///Users/inurum9/Documents/ELDDD_11Oct/NextEld/HelpingInterfacesFile/ViewModels/RefreshViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34">
+                  startingLineNumber = "33"
+                  endingLineNumber = "33">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1038,8 +1038,8 @@
             filePath = "NextEld/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "513"
-            endingLineNumber = "513"
+            startingLineNumber = "501"
+            endingLineNumber = "501"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1054,8 +1054,8 @@
             filePath = "NextEld/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "532"
-            endingLineNumber = "532"
+            startingLineNumber = "520"
+            endingLineNumber = "520"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1070,8 +1070,40 @@
             filePath = "NextEld/View/HomeView /HomeScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "551"
-            endingLineNumber = "551"
+            startingLineNumber = "539"
+            endingLineNumber = "539"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4CFD59A4-C9A9-414C-91AE-5CF9E9B22C7C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NextEld/View/Terms&amp;Condition/Terms&amp;ConditionView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5876AF9A-7A3A-4A2D-A02F-47DDB5979ABD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NextEld/View/Terms&amp;Condition/Terms&amp;ConditionView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>

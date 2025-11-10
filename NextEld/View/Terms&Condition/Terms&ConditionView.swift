@@ -11,9 +11,8 @@ struct Terms_ConditionView: View {
     
     @EnvironmentObject var navmanager: NavigationManager
     var tittle: String
-    
-    // URL to load
-    private let privacyPolicyURL = "https://exceleld.com/privacypolicy/"
+    @State private var isLoading = true
+
     
     var body: some View {
         VStack(spacing: 0) {
@@ -31,14 +30,12 @@ struct Terms_ConditionView: View {
                         .imageScale(.large)
                         .frame(width: 44, height: 44)
                 }
-                
                 Text(tittle)
                     .font(.headline)
                     .foregroundColor(.white)
                     .fontWeight(.semibold)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
-                
                 Spacer()
             }
             .padding(.horizontal, 16)
@@ -47,9 +44,24 @@ struct Terms_ConditionView: View {
             .background(Color(uiColor: .wine).shadow(radius: 1))
             
             // MARK: - WebView
-            if let url = URL(string: privacyPolicyURL) {
-                WebView(url: url)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if let url = URL(string: API.privacyPolicyURL) {
+                ZStack {
+                    WebView(url: url ,isLoading: $isLoading)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
+                    if isLoading {
+                        VStack(spacing: 8) {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle())
+                            Text("Loading…")
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+                        }
+                        .padding(16)
+                        .background(Color.black.opacity(0.15))
+                        .cornerRadius(10)
+                    }
+                }
             } else {
                 Text("Invalid URL")
                     .foregroundColor(.red)
@@ -58,8 +70,6 @@ struct Terms_ConditionView: View {
         }
         .navigationBarBackButtonHidden()
     }
-    
-    
 }
 
 #Preview {

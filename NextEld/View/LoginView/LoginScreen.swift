@@ -41,7 +41,6 @@ struct LoginScreen: View {
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .padding()
-                
                 //  Email field with validation
                 HStack {
                     Image(systemName: "envelope")

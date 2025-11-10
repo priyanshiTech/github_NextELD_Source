@@ -54,13 +54,10 @@ struct HomeScreenView: View {
     */
     
     @EnvironmentObject var navManager: NavigationManager
-   
-    // let session: SessionManager
-   // @State private var activeTimerAlert: TimerAlert?
+
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
     @StateObject private var viewModel = RefreshViewModel()
     @StateObject private var syncVM = SyncViewModel()
-
     // ELD Additions
     @AppStorage("cycleType") var cycleType: String = "8/70" // or "7/60"
     @State private var pastDutyLog: [Date: TimeInterval] = [:] // key = date, value = seconds
@@ -108,10 +105,8 @@ struct HomeScreenView: View {
                             .font(.title2)
                             .foregroundColor(.red)
                         //UserDefaults.standard.string(forKey: "truckNo"),
-                        
                         VehicleInfoView(GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
-                        
                             StatusView(homeViewModel: homeVM) { status in
                                 if !homeVM.check34HoursSleepOrOffDutyCompleted() && homeVM.cycleTimer!.remainingTime <= 0 && status != .offDuty && status != .sleep {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -122,13 +117,8 @@ struct HomeScreenView: View {
                                     homeVM.showDriverStatusAlert = (true, status)
                                 }
                         }
-
-                        
                         AvailableHoursView(homeViewModel: homeVM)
-                        
                         HOSEventsChartScreen(events: homeVM.graphEvents)
-                            
-                        
                         //MARK: - Violation Boxes (Part of Main Scroll) - Removed, now using alerts
                         
                         VStack(alignment: .leading) {
@@ -249,7 +239,6 @@ struct HomeScreenView: View {
                     .transition(.opacity)
                     .animation(.easeInOut, value: showCertifyLogAlert)
                 }
-             
             }
             
             if showLogoutPopup {
@@ -267,10 +256,8 @@ struct HomeScreenView: View {
                             }
                             showLogoutPopup = false
                             presentSideMenu = false
-
                             UserDefaults.standard.set(false, forKey: "isLoggedIn")
                             ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
-
                             // session.logOut() // Nitin
                             SessionManagerClass.shared.clearToken()
                             appRootManager.currentRoot = .splashScreen
@@ -324,6 +311,7 @@ struct HomeScreenView: View {
 //                        }
 //                    }
 //                })
+                
                 .zIndex(Double(100+index))
             }
             

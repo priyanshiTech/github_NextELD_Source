@@ -8,12 +8,11 @@ import Foundation
 
 @MainActor
 class RefreshViewModel: ObservableObject {
+    
+    
     @Published var loginResponse: TokenModelLog?
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
-
-    
-    
     var latestDriverLog: ServerDriverLog? {
         loginResponse?.result?.driverLog?.last
       }

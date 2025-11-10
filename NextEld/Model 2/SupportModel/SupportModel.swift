@@ -32,12 +32,12 @@ struct HelpSupportResponce  : Codable {
 //    let companyDomainName: String
 //
 //}
+
+
 struct MessageRequestSupportNew: Codable {
     let driverId: String
     let message: String
     let companyDomainName: String
-
- 
 }
 
 // MARK: - Response Model
