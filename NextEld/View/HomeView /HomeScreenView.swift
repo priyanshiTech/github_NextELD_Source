@@ -184,7 +184,7 @@ struct HomeScreenView: View {
                 
                 AddDvirPopup(isPresented: $homeVM.showAddDvirPopup)
                 
-                        .frame(maxWidth: 350) // optional, to keep consistent width
+                    .frame(maxWidth: 350) // optional, to keep consistent width
                         .padding(.horizontal, 20)
                         .cornerRadius(16)
                         .zIndex(10)

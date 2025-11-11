@@ -7,9 +7,28 @@
 
 import Foundation
 import SwiftUI
-import SwiftUI
 
-import SwiftUI
+
+struct DatePickerPopup: View {
+    @Binding var selectedDate: Date
+    @Binding var isPresented: Bool
+    var onDateSelected: (() -> Void)? = nil
+    var body: some View {
+        VStack {
+            DatePicker("Select Date", selection: $selectedDate, displayedComponents: .date)
+                .datePickerStyle(.graphical)
+                .padding()
+
+            Button("Done") {
+                isPresented = false
+                onDateSelected?()
+            }
+            .padding()
+        }
+        .presentationDetents([.medium])
+    }
+}
+
 
 struct CalendarButton: View {
     var title: String
@@ -53,26 +72,5 @@ struct CalendarButton: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: selectedDate)
-    }
-}
-import SwiftUI
-
-struct DatePickerPopup: View {
-    @Binding var selectedDate: Date
-    @Binding var isPresented: Bool
-    var onDateSelected: (() -> Void)? = nil
-    var body: some View {
-        VStack {
-            DatePicker("Select Date", selection: $selectedDate, displayedComponents: .date)
-                .datePickerStyle(.graphical)
-                .padding()
-
-            Button("Done") {
-                isPresented = false
-                onDateSelected?()
-            }
-            .padding()
-        }
-        .presentationDetents([.medium])
     }
 }

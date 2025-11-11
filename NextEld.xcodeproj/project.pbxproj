@@ -109,6 +109,10 @@
 		AF9DD4EF2DDDB1A70034FA8E /* AddDvirScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4EE2DDDB1A70034FA8E /* AddDvirScreenView.swift */; };
 		AF9DD4F12DDDB1FF0034FA8E /* DvirField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4F02DDDB1FF0034FA8E /* DvirField.swift */; };
 		AF9DD4F32DDDB25F0034FA8E /* DvirEditField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4F22DDDB25F0034FA8E /* DvirEditField.swift */; };
+		AF9DD4F52DDDB1FF0034FA8F /* AddDvirScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DD4F42DDDB1FF0034FA8F /* AddDvirScreenViewModel.swift */; };
+		AF9E842A2EC3198500CF40E5 /* DataTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9E84292EC3198500CF40E5 /* DataTransferModel.swift */; };
+		AF9E842C2EC31CD100CF40E5 /* DataTransferViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9E842B2EC31CD100CF40E5 /* DataTransferViewModel.swift */; };
+		AF9E84302EC3425F00CF40E5 /* SessionExpireUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9E842F2EC3425F00CF40E5 /* SessionExpireUIView.swift */; };
 		AFA691012E5465ED0035D092 /* DefectAPicalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA691002E5465ED0035D092 /* DefectAPicalling.swift */; };
 		AFA691032E54682A0035D092 /* DefectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA691022E54682A0035D092 /* DefectViewModel.swift */; };
 		AFA691052E549CF80035D092 /* Webview.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA691042E549CF80035D092 /* Webview.swift */; };
@@ -358,6 +362,10 @@
 		AF9DD4EE2DDDB1A70034FA8E /* AddDvirScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDvirScreenView.swift; sourceTree = "<group>"; };
 		AF9DD4F02DDDB1FF0034FA8E /* DvirField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirField.swift; sourceTree = "<group>"; };
 		AF9DD4F22DDDB25F0034FA8E /* DvirEditField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirEditField.swift; sourceTree = "<group>"; };
+		AF9DD4F42DDDB1FF0034FA8F /* AddDvirScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDvirScreenViewModel.swift; sourceTree = "<group>"; };
+		AF9E84292EC3198500CF40E5 /* DataTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferModel.swift; sourceTree = "<group>"; };
+		AF9E842B2EC31CD100CF40E5 /* DataTransferViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferViewModel.swift; sourceTree = "<group>"; };
+		AF9E842F2EC3425F00CF40E5 /* SessionExpireUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionExpireUIView.swift; sourceTree = "<group>"; };
 		AFA691002E5465ED0035D092 /* DefectAPicalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefectAPicalling.swift; sourceTree = "<group>"; };
 		AFA691022E54682A0035D092 /* DefectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefectViewModel.swift; sourceTree = "<group>"; };
 		AFA691042E549CF80035D092 /* Webview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Webview.swift; sourceTree = "<group>"; };
@@ -588,6 +596,7 @@
 		108FF82C2DC89C620051671B /* Model 2 */ = {
 			isa = PBXGroup;
 			children = (
+				AF9E84282EC3195300CF40E5 /* DataTransferModel */,
 				AF45BB762EB8966600DDDB4D /* VehicleConditionModel */,
 				AFBD12CD2E72A871003EA40F /* DVIRMultipartResponceModel */,
 				AF6532A12E66CFB200FB2A11 /* SplashModel */,
@@ -671,7 +680,8 @@
 			isa = PBXGroup;
 			children = (
 				10CA6EC22DCC9BA8003B265C /* Reuseable  Label.swift */,
-				AFB943442E02B99D00AD19D7 /* ViewModels */,
+				AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */,
+				AFC535562E0D631900AD10C9 /* DataBaseManagerClass.swift */,
 			);
 			path = HelpingInterfacesFile;
 			sourceTree = "<group>";
@@ -903,9 +913,7 @@
 		AF7951122E3BA766005FFFBF /* HomeScreenDataBase */ = {
 			isa = PBXGroup;
 			children = (
-				AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */,
-				AFC535582E0D677C00AD10C9 /* DriverLogViewModel.swift */,
-				AFC535562E0D631900AD10C9 /* DataBaseManagerClass.swift */,
+				AFB943442E02B99D00AD19D7 /* ViewModels */,
 			);
 			path = HomeScreenDataBase;
 			sourceTree = "<group>";
@@ -994,6 +1002,14 @@
 				AF9DB2C22DE1CD0B00B98C17 /* ADDVehicle.swift */,
 			);
 			path = DVIRDetails;
+			sourceTree = "<group>";
+		};
+		AF9E84282EC3195300CF40E5 /* DataTransferModel */ = {
+			isa = PBXGroup;
+			children = (
+				AF9E84292EC3198500CF40E5 /* DataTransferModel.swift */,
+			);
+			path = DataTransferModel;
 			sourceTree = "<group>";
 		};
 		AFA690FF2E5465D80035D092 /* DefectAPI */ = {
@@ -1142,6 +1158,7 @@
 		AFB943442E02B99D00AD19D7 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				AFC535582E0D677C00AD10C9 /* DriverLogViewModel.swift */,
 				AF72E4472DFD579500626DC0 /* BluetoothViewModel.swift */,
 				AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */,
 				AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */,
@@ -1169,6 +1186,8 @@
 				AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */,
 				AF45BB702EB61A8600DDDB4D /* addDefectViewModel.swift */,
 				AF45BB742EB893BF00DDDB4D /* VehicleConditionViewModel.swift */,
+				AF9DD4F42DDDB1FF0034FA8F /* AddDvirScreenViewModel.swift */,
+				AF9E842B2EC31CD100CF40E5 /* DataTransferViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1273,6 +1292,7 @@
 				108FF82F2DC8A8BA0051671B /* LoginScreen.swift */,
 				108FF8332DC8EC850051671B /* ForgetUserName.swift */,
 				108FF8312DC8CB470051671B /* ForgetPasswordView.swift */,
+				AF9E842F2EC3425F00CF40E5 /* SessionExpireUIView.swift */,
 			);
 			path = LoginView;
 			sourceTree = "<group>";
@@ -1601,6 +1621,7 @@
 				AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */,
 				AF7235072E55E4A4009EAA9E /* vchicleAPIViewModel.swift in Sources */,
 				AFBB48F92EBF241400E88DD5 /* Terms&ConditionView.swift in Sources */,
+				AF9E842C2EC31CD100CF40E5 /* DataTransferViewModel.swift in Sources */,
 				AFBB59FC2E4233FB0056A660 /* AppRoute.swift in Sources */,
 				AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */,
 				AF66F7A12E4CAAEA009A13A0 /* Co-DriverModel.swift in Sources */,
@@ -1609,6 +1630,8 @@
 				AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */,
 				AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */,
 				AF45BB752EB893BF00DDDB4D /* VehicleConditionViewModel.swift in Sources */,
+				AF9E842A2EC3198500CF40E5 /* DataTransferModel.swift in Sources */,
+				AF9DD4F52DDDB1FF0034FA8F /* AddDvirScreenViewModel.swift in Sources */,
 				AF7234FF2E55BE47009EAA9E /* DvirEmailViewModel.swift in Sources */,
 				AF72E4332DFD54B400626DC0 /* PT30ConnectionView.swift in Sources */,
 				AF72E4342DFD54B400626DC0 /* PT30ModelView.swift in Sources */,
@@ -1756,6 +1779,7 @@
 				AFCC878C2E56F48D00A09745 /* DisConnetedViewModel.swift in Sources */,
 				AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */,
 				AFD072622DE5889E00C939B0 /* CoDriverLogin.swift in Sources */,
+				AF9E84302EC3425F00CF40E5 /* SessionExpireUIView.swift in Sources */,
 				106586132DCCE182003CE502 /* Extension + colour.swift in Sources */,
 				AF1073582EB52C0200C3CE0E /* ImagePickerController.swift in Sources */,
 				108FF8022DC895E10051671B /* NextEldApp.swift in Sources */,
