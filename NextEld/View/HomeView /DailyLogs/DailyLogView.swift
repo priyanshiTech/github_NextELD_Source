@@ -249,16 +249,16 @@ struct DailyLogView: View {
         let today = Date()
         
         // Total worked hours today
-        let workedHours = dbManager.totalWorkedHours(for: today)
-        let workedHoursFormatted = dbManager.formatTime(workedHours)
+        let workedHours = dbManager.getTodaysWork().totalWorkedToday
+        let workedHoursFormatted = workedHours.timeString
         
         // Available hours today (14 hour limit)
-        let availableHours = dbManager.availableHoursToday()
-        let availableHoursFormatted = dbManager.formatTime(availableHours)
+        let availableHours = dbManager.getTodaysWork().remainingWorkedToday
+        let availableHoursFormatted = availableHours.timeString
         
         // Cycle hours remaining (70 hour/7 days)
-        let cycleHours = dbManager.availableCycleHours(days: 7, limitHours: 70)
-        let cycleHoursFormatted = dbManager.formatTime(cycleHours)
+        let cycleHours = dbManager.getRemainingCycleTime()
+        let cycleHoursFormatted = cycleHours.timeString
         
         return (workedHoursFormatted, availableHoursFormatted, cycleHoursFormatted)
     }
