@@ -288,12 +288,13 @@ struct HomeScreenView: View {
                     DeviceSelectorPopup(
                         selectedDevice: $selectedDevice,
                         isPresented: $showDeviceSelector,
+                        
                         onConnect: {
                             showDeviceSelector = false
                             if selectedDevice == "NT-11" {
-                                // navmanager.navigate(to:    AppRoute.vehicleFlow(.NT11Connection))
+                                navManager.navigate(to: AppRoute.BluetoothDeviceFlow.NT11Connection)
                             } else if selectedDevice == "PT30" {
-                                // navmanager.navigate(to: AppRoute.vehicleFlow(.PT30Connection))
+                                navManager.navigate(to: AppRoute.BluetoothDeviceFlow.PT30Connection)
                                 
                             }
                         }
@@ -379,6 +380,7 @@ struct HomeScreenView: View {
           //  loadTodayHOSEvents()
       //  }
         //(_)(+)_(_+(_+(_+)()_(+)_
+        
         ZStack(alignment: .top) {
             
             if !syncVM.syncMessage.isEmpty {
@@ -661,6 +663,14 @@ struct HomeScreenView: View {
             }
             
         })
+        .navigationDestination(for: AppRoute.BluetoothDeviceFlow.self) { route in
+            switch route {
+            case .NT11Connection:
+                NT11ConnectionView()
+            case .PT30Connection:
+                PT30ConnectionView()
+            }
+        }
     }
     
     //MARK: Function to Show Banner for 3 seconds

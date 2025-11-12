@@ -145,9 +145,11 @@ struct DailyLogView: View {
                     Spacer()
 
                     HStack(spacing: 5) {
-                        CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: AppRoute.DvirFlow.emailLogs(tittle: " Daily Logs"))})
+                        
+                        CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: AppRoute.LogsFlow.EmailLogs(title: AppConstants.DailyLogs))})
                             .padding()
-                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: AppRoute.RecapHours(tittle: "Hours Recap"))})
+                        
+                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: AppRoute.LogsFlow.RecapHours(title: AppConstants.HourRecap))})
                             .foregroundColor(.black)
                     }
                 }

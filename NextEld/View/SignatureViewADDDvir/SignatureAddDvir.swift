@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct SignatureAddDvir: View {
+    
     @Binding var isPresented: Bool
     @Binding var points: [CGPoint]   // parent se bhi milega
     var onSave: (UIImage) -> Void    // yeh closure parent ko image bhejega
@@ -106,7 +107,6 @@ func signatureToImage(points: [CGPoint], size: CGSize) -> UIImage {
         cgContext.strokePath()
     }
 }
-
 // MARK: - Signature Canvas
 struct SignatureCanvas: View {
     @Binding var points: [CGPoint]

@@ -173,9 +173,12 @@ struct EmailDvir: View {
                 ShippingDocView(tittle: AppConstants.shippingTittle)
                 
             case .AddVehicleForDVIR:
-             
-
                 AddVehicleForDvir(selectedVehicleNumber: .constant(""), VechicleID: .constant(Int(selectedDvirRecord?.vechicleID ?? "0") ?? 0))
+                
+            case .emailLogs:
+                EmailLogs(title: "Daily Logs")
+                
+          
                  
             default:
                 EmptyView()

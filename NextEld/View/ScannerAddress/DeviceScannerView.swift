@@ -255,6 +255,8 @@ struct DeviceScannerView: View {
                 switch route {
                 case .EmailLogs(let title):
                     EmailLogs(title: title)
+                case .RecapHours(let title):
+                    HoursRecap(tittle: title)
                 case .DataTransferView:
                     DataTransferInspectionView()
                 case .LogsDetails(let title, let entry):
@@ -272,6 +274,14 @@ struct DeviceScannerView: View {
                     EyeViewData(title: title, entry: entry)
                 default:
                     EmptyView()
+                }
+            }
+            .navigationDestination(for: AppRoute.BluetoothDeviceFlow.self) { route in
+                switch route {
+                case .NT11Connection:
+                    NT11ConnectionView()
+                case .PT30Connection:
+                    PT30ConnectionView()
                 }
             }
         }

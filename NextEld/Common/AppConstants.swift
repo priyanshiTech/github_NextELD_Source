@@ -34,6 +34,10 @@ struct AppConstants {
     static let dvirHostoryTittle = "Dvir History"
     static let trailersTittle = "Trailers"
     static let shippingTittle = "Shipping Doc"
+    static let DailyLogs = "Daily Logs"
+    static let HourRecap = "Hour Recap"
+    
+    //MARK: -
     
     //MARK: - For Alert Tittle
     
@@ -50,6 +54,7 @@ struct AppConstants {
     static let NextDaymessage  = "Next Day Started"
 
     
+
     //MARK: -  for vehicle condition
     static let vehicleCondition =  " Vehicle Condition Satisfactory"
     static let shiftChangeMessage  = "your shift has benn changed changed"

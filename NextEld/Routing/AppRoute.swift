@@ -84,12 +84,15 @@ enum AppRoute: Hashable {
         case EyeViewData(tittle: String , entry : WorkEntry )
     }
 
-
+    enum BluetoothDeviceFlow: Hashable {
+        
+        case NT11Connection
+        case PT30Connection
+    }
     
     //MARK: -  Cases of Add dvirPri trip
     case scanner
-    case NT11Connection
-    case PT30Connection
+
     // Side Menu Screens
     
     
