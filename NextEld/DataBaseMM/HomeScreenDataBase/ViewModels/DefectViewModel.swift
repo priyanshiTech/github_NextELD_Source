@@ -13,6 +13,8 @@ class DefectAPIViewModel: ObservableObject {
     @Published var defects: [ResultDefect] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
 
     private let networkManager: NetworkManager
 
@@ -21,7 +23,10 @@ class DefectAPIViewModel: ObservableObject {
     }
 
     /// Fetches defects from API
-    func fetchDefects() async {
+    func fetchDefects() async -> Bool {
+        // Reset session expired flag at start of each API call
+        isSessionExpired = false
+        
         isLoading = true
         errorMessage = nil
 
@@ -37,6 +42,19 @@ class DefectAPIViewModel: ObservableObject {
                 .DefectAPIModel,
                 body: requestBody
             )
+            
+            print(" DefectAPIViewModel - API Response received")
+            print(" Response token value: \(response.token ?? "nil")")
+            
+            if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
+                SessionManagerClass.shared.clearToken()
+                isSessionExpired = true
+                print("  Session expired detected - token is false")
+                print("  appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                appRootManager?.currentRoot = .SessionExpireUIView
+                isLoading = false
+                return false
+            }
 
             if let records = response.result, !records.isEmpty {
                 self.defects = records
@@ -45,8 +63,11 @@ class DefectAPIViewModel: ObservableObject {
             }
         } catch {
             self.errorMessage = error.localizedDescription
+            isLoading = false
+            return false
         }
 
         isLoading = false
+        return true
     }
 }

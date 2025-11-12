@@ -7,7 +7,7 @@
 
 import Foundation
 
-func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
+func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String, appRootManager: AppRootManager?) {
     let url = API.Endpoint.update_dvir_data.url
 
     let requestField: [String: String] = [
@@ -59,6 +59,15 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
                 print("  update_dvir_data API - Upload successful!")
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("  Response: \(responseString)")
+                    if let jsonData = responseString.data(using: .utf8),
+                       let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+                       let tokenValue = (json["token"] as? String)?.lowercased(), tokenValue == "false" {
+                        SessionManagerClass.shared.clearToken()
+                        print(" Session expired detected during DVIR update")
+                        print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                        appRootManager?.currentRoot = .SessionExpireUIView
+                        return
+                    }
                 } else {
                     print("  Response: (Unable to decode)")
                 }

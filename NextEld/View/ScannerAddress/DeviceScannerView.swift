@@ -11,6 +11,7 @@ struct DeviceScannerView: View {
     
    // @EnvironmentObject var navManager: NavigationManager
     @StateObject var navManager: NavigationManager = NavigationManager()
+    @EnvironmentObject var appRootManager: AppRootManager
 
     @State private var showScanner = false
     @State private var scannedCode: String?
@@ -117,6 +118,13 @@ struct DeviceScannerView: View {
                         Task {
                             await deviceStatusVM.updateDeviceStatus(status: "Disconnected")
                             
+                            // Check if session expired - if yes, don't navigate anywhere else
+                            if deviceStatusVM.isSessionExpired {
+                                print(" Session expired detected - staying on SessionExpireUIView")
+                                return 
+                                // Don't proceed with any navigation
+                            }
+                            
                             if deviceStatusVM.responseMessage != nil {
                                 
                                 // navManager.navigate(to: AppRoute.homeFlow(.home))
@@ -166,6 +174,9 @@ struct DeviceScannerView: View {
                     }
             }
             .onAppear {
+                // Inject appRootManager into ViewModel for session expire navigation
+                deviceStatusVM.appRootManager = appRootManager
+                
                 if moveToHome {
                     navManager.path.append(AppRoute.HomeFlow.Home)
                 }
@@ -271,6 +282,7 @@ struct DeviceScannerView: View {
             }
         }
         .navigationDestination(for: ApplicationRoot.self) { root in
+            
             switch root {
             case .scanner(_):
                 DeviceScannerView(checkboxClick: false, macaddress: "")
@@ -278,6 +290,8 @@ struct DeviceScannerView: View {
                 EmptyView()
             case .login:
                 EmptyView()
+            case .SessionExpireUIView:
+                SessionExpireUIView()
             }
         }
         .navigationBarHidden(true)

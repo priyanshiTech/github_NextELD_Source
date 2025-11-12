@@ -13,7 +13,7 @@ func currentTimestampMillis() -> Int64 {
     return Int64(Date().timeIntervalSince1970 * 1000)
 }
 
-func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
+func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootManager: AppRootManager?) {
     let url = API.Endpoint.dispatchadd_dvir_data.url
 
     // Convert truckDefect string to array format expected by API
@@ -204,12 +204,20 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel) {
                     // Parse response to extract _id and verify all data
                     if let jsonData = responseString.data(using: .utf8),
                        let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
+                        if let tokenValue = (json["token"] as? String)?.lowercased(), tokenValue == "false" {
+                            SessionManagerClass.shared.clearToken()
+                            print(" Session expired detected during DVIR upload")
+                            print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                            appRootManager?.currentRoot = .SessionExpireUIView
+                            return
+                        }
                         
                         print(" Response Status: \(json["status"] ?? "nil")")
                         print(" Response Message: \(json["message"] ?? "nil")")
                         
                         if let resultDict = json["result"] as? [String: Any] {
                             print(" Result object found in response")
+                            
                             
                             // Extract and save _id
                             if let dvirId = resultDict["_id"] as? String {

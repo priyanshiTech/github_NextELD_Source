@@ -12,6 +12,7 @@ import SwiftUI
 struct RulesView: View {
     
     @EnvironmentObject var navmanager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @StateObject private var viewModel = EmployViewStatusViewModel(
         networkManager: NetworkManager()
     )
@@ -137,9 +138,22 @@ struct RulesView: View {
             Spacer()
         }
         .navigationBarBackButtonHidden()
+        .onAppear {
+            // Inject appRootManager into ViewModel for session expire navigation
+            viewModel.appRootManager = appRootManager
+        }
         .task {
             // API call when screen appears
-            await viewModel.fetchEmployeeStatus(employeeId: 30, clientId: 3)
+            let employeeId = AppStorageHandler.shared.driverId ?? AppStorageHandler.shared.employeeId ?? 0
+            let clientId = AppStorageHandler.shared.clientId ?? 0
+            
+            let _ = await viewModel.fetchEmployeeStatus(employeeId: employeeId, clientId: clientId)
+            
+            // Check if session expired - if yes, don't proceed with any further processing
+            if viewModel.isSessionExpired {
+                print(" Session expired detected - staying on SessionExpireUIView")
+                return
+            }
         }
     }
 }
@@ -147,5 +161,6 @@ struct RulesView: View {
 #Preview {
     RulesView()
         .environmentObject(NavigationManager())
+        .environmentObject(AppRootManager())
 }
 

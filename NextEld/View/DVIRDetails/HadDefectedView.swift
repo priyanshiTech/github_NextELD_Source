@@ -17,6 +17,7 @@ struct DefectPopupView: View {
     
     @State private var selected: Set<String> = [] // multiple selection store
     @StateObject private var viewModel = DefectAPIViewModel(networkManager: NetworkManager())
+    @EnvironmentObject var appRootManager: AppRootManager
     
     var body: some View {
         VStack(spacing: 10) {
@@ -91,7 +92,18 @@ struct DefectPopupView: View {
         .shadow(radius: 10)
         .frame(width: 300, height: 400)
         .task {
-            await viewModel.fetchDefects()
+            viewModel.appRootManager = appRootManager
+            let success = await viewModel.fetchDefects()
+            
+            if viewModel.isSessionExpired {
+                print(" Session expired detected in DefectPopupView - staying on SessionExpireUIView")
+                isPresented = false
+                return
+            }
+            
+            if !success, let error = viewModel.errorMessage {
+                print(" Defect API error: \(error)")
+            }
         }
     }
     

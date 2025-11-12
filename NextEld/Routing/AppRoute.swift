@@ -14,6 +14,7 @@ enum ApplicationRoot: Hashable {
     case splashScreen
     case login
     case scanner(moveToHome: Bool = false)
+    case SessionExpireUIView
 }
 
 enum AppRoute: Hashable {

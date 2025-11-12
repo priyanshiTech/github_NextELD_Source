@@ -16,6 +16,7 @@ struct AddDvirScreenView: View  {
     @StateObject var viewModel = AddDvirScreenViewModel()
     // "Truck" or "Trailer"
     @StateObject var defectVM = DefectAPIViewModel(networkManager: NetworkManager())
+    @EnvironmentObject var appRootManager: AppRootManager
     @Binding var selectedRecord: DvirRecord?
     @Binding var trailers: [String]
     var isFromHome: Bool = false    //MARK: -  To handle Home Screen flag
@@ -356,6 +357,7 @@ struct AddDvirScreenView: View  {
                     truckDefectSelection: $trailerVM.truckDefectSelection,
                     trailerDefectSelection: $trailerVM.trailerDefectSelection
                 )
+                .environmentObject(appRootManager)
                 .frame(width: 300, height: 400)
                                .background(Color.white)
                                .cornerRadius(12)
@@ -379,8 +381,18 @@ struct AddDvirScreenView: View  {
             }
         }
         .onAppear {
+            defectVM.appRootManager = appRootManager
             Task {
-                await defectVM.fetchDefects()
+                let success = await defectVM.fetchDefects()
+                
+                if defectVM.isSessionExpired {
+                    print(" Session expired detected in AddDvirScreenView - staying on SessionExpireUIView")
+                    return
+                }
+                
+                if !success, let error = defectVM.errorMessage {
+                    print(" Defect API error: \(error)")
+                }
             }
         }
         .animation(.easeInOut, value: viewModel.showSignaturePopup)
@@ -658,7 +670,7 @@ struct AddDvirScreenView: View  {
                 print(" Failed to verify record update in database")
             }
             print(" Calling update API...")
-            updateDvirDataUsingCommonService(record: record, dvirLogId: viewModel.driverID)
+            updateDvirDataUsingCommonService(record: record, dvirLogId: viewModel.driverID, appRootManager: appRootManager)
             NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
             print(" Update notification posted")
         } else {
@@ -674,7 +686,7 @@ struct AddDvirScreenView: View  {
                 print(" Failed to verify record insertion in database")
             }
             print(" ========== CALLING dispatchadd_dvir_data API ==========")
-            uploadDvirDataUsingCommonService(record: dvirRecord)
+            uploadDvirDataUsingCommonService(record: dvirRecord, appRootManager: appRootManager)
             print(" API call initiated successfully!")
        
             NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)

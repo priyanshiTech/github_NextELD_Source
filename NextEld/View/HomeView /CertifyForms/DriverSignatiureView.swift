@@ -26,7 +26,9 @@ struct SignatureCertifyView: View {
     // Env
     @EnvironmentObject var trailerVM: TrailerViewModel
     @EnvironmentObject var shippingVM: ShippingDocViewModel
+    @EnvironmentObject var appRootManager: AppRootManager
     @StateObject private var networkMonitor = InternateNetworkConnectivity.shared
+    @StateObject private var certifyVM = CertifyDriverViewModel()
 
     // UI state
     @State private var showAlert = false
@@ -162,8 +164,8 @@ struct SignatureCertifyView: View {
                     
                     //  6) Call API with completion
                     isLoading = true
-                    let vm = CertifyDriverViewModel()
-                    vm.uploadCertifiedLog(
+                    certifyVM.appRootManager = appRootManager
+                    certifyVM.uploadCertifiedLog(
                         driverId: driverId,
                         vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
                         coDriverId: AppStorageHandler.shared.coDriverId ?? 0,
@@ -177,6 +179,10 @@ struct SignatureCertifyView: View {
                     ) { result in
                         DispatchQueue.main.async {
                             isLoading = false
+                            if certifyVM.isSessionExpired {
+                                print(" Session expired detected in SignatureCertifyView - staying on SessionExpireUIView")
+                                return
+                            }
                             switch result {
                             case .success(let apiMessage):
                                 alertTitle = "Success"

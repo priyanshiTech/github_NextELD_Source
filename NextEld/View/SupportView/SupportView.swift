@@ -14,6 +14,7 @@ struct SupportView: View {
     @State private var showAlert = false
     private let phoneNumber = "+919876543210"
     @EnvironmentObject var navmanager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @StateObject private var viewModel = SupportViewModel(networkManager: NetworkManager())
     
     var body: some View {
@@ -132,6 +133,9 @@ struct SupportView: View {
         }
         .navigationBarBackButtonHidden()
         .background(Color.white.edgesIgnoringSafeArea(.all))
+        .onAppear {
+            viewModel.appRootManager = appRootManager
+        }
         .alert(isPresented: $showAlert) {
             Alert(
                 title: Text(viewModel.successMessage != nil ? "Success" : "Error"),
@@ -148,6 +152,10 @@ struct SupportView: View {
     // MARK: - Actions
     private func submit() async {
         await viewModel.sendSupportMessage(userMessage: queryText)
+        if viewModel.isSessionExpired {
+            print(" Session expired detected in SupportView - staying on SessionExpireUIView")
+            return
+        }
           //show alert if success or error
         if viewModel.successMessage != nil || viewModel.errorMessage != nil {
             showAlert = true
@@ -162,6 +170,7 @@ struct SupportView: View {
 #Preview {
     SupportView()
         .environmentObject(NavigationManager()) // provide stub nav manager for preview
+        .environmentObject(AppRootManager())
 }
 
 

@@ -5,6 +5,7 @@ import SwiftUI
 
 struct DVIRHistory: View {
     @EnvironmentObject var navManager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @State var email: String = ""
     @State private var fromDate = Date()
     @State private var toDate = Date()
@@ -129,12 +130,16 @@ struct DVIRHistory: View {
                         Task {
                             let fromStr = formatDates(fromDate, endOfDay: false)
                             let toStr = formatDates(toDate, endOfDay: true)
-                            await viewModel.fetchDVIRData(fromDate: fromStr, toDate: toStr, email: email)
+                            let success = await viewModel.fetchDVIRData(fromDate: fromStr, toDate: toStr, email: email)
                             
-                            if let success = viewModel.successMessage {
-                                alertMessage = success
+                            if viewModel.isSessionExpired {
+                                print(" Session expired detected in DVIRHistory - staying on SessionExpireUIView")
+                                return
+                            }
+                            
+                            if success, let successMessage = viewModel.successMessage {
+                                alertMessage = successMessage
                                 showAPISuccessAlert = true
-                                
                             } else if let error = viewModel.errorMessage {
                                 alertMessage = error
                                 showAPISuccessAlert = true
@@ -177,6 +182,9 @@ struct DVIRHistory: View {
           } message: {
               Text(alertMessage)
           }
+        .onAppear {
+            viewModel.appRootManager = appRootManager
+        }
         .navigationBarBackButtonHidden()
     }
     
@@ -199,6 +207,8 @@ struct DVIRHistory: View {
 
 #Preview {
     DVIRHistory(title: "")
+        .environmentObject(NavigationManager())
+        .environmentObject(AppRootManager())
 }
 
 

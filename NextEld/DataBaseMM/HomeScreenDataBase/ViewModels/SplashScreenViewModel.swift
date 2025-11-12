@@ -14,31 +14,51 @@ class APITokenUpdateViewModel: ObservableObject {
     @Published var apiMessage: String = ""
     @Published var status: String = ""
     @Published var result: String = ""
-    
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
 
     
     
     @MainActor
     func callSplashUpdateAPI() async -> Bool {
+        // Reset session expired flag at start of each API call
+        isSessionExpired = false
+        
         let request = DriverRequest(
+            
             driverId: AppStorageHandler.shared.driverId ?? 0,
             tokenNo: AppStorageHandler.shared.authToken ?? ""
         )
-
         print("Request For *****TokenUpdateAPI*****: \(request)")
 
         do {
+            
             let response: TokenModelLog = try await NetworkManager.shared.post(
                 .SpalshDataAPI,
                 body: request
             )
             print("Splash API Response: \(response)")
+            print("Response token value: \(response.token ?? "nil")")
 
+            // Check if token is false - session expired
+            if let tokenValue = response.token, tokenValue.lowercased() == "false" {
+                // Session expired - token is false
+                SessionManagerClass.shared.clearToken()
+                isSessionExpired = true
+                appRootManager?.currentRoot = .SessionExpireUIView
+                print("  Session expired - token is false, navigating to SessionExpireUIView")
+                return false
+            }
+            
+            // If token is true or valid, proceed with normal flow
             if response.status == "SUCCESS", let result = response.result {
                 self.apiMessage = response.message ?? "Success"
                 self.status = response.status ?? ""
                 self.result = result.tokenNo ?? ""
+                
+                // Token is true/valid - save data and proceed normally
                 saveToUserDefaults(result: result)
+                print(" Token is valid - proceeding with normal flow")
                 return true   //  success
             } else {
                 self.apiMessage = response.message ?? "Failed"

@@ -13,6 +13,7 @@ struct SplashView: View {
     @State private var offSetImage: CGFloat = 300
     @State private var fadeOut: Bool = false
     @StateObject private var tokenVM = APITokenUpdateViewModel()
+    
 
     var body: some View {
             VStack {
@@ -33,6 +34,9 @@ struct SplashView: View {
         .ignoresSafeArea()
         .environmentObject(navManager)
         .onAppear {
+            // Set appRootManager in ViewModel
+            tokenVM.appRootManager = appRootManager
+            
             // Reset navigation state on appear to prevent stale state
             navManager.reset()
             
@@ -101,11 +105,17 @@ struct SplashView: View {
                             apiSuccess = boolResult
                         } else {
                             // Timeout occurred
-                            print(" ⚠️ Splash API timeout - proceeding with existing data")
+                            print("  Splash API timeout - proceeding with existing data")
                             apiSuccess = false
                         }
                         group.cancelAll()
                     }
+                }
+                
+                // Check if session expired - if yes, don't navigate anywhere else
+                if tokenVM.isSessionExpired {
+                    print(" Session expired detected - staying on SessionExpireUIView")
+                    return // Don't proceed with any navigation
                 }
                 
                 // Use result if available, otherwise proceed with existing data
@@ -120,11 +130,13 @@ struct SplashView: View {
                         navManager.navigate(to: AppRoute.HomeFlow.AddVichleMode)
                     }
                 } else {
+                    
                     appRootManager.currentRoot = .scanner(moveToHome: false)
                 }
             }
         } else {
             appRootManager.currentRoot = .login
+            
         }
     }
 }

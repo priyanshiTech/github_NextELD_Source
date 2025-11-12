@@ -10,9 +10,12 @@ import SwiftUI
 
 @MainActor
 class VehicleInfoViewModel: ObservableObject {
+    
     @Published var vehicles: [VehicleResult] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
 
     private let networkManager: NetworkManager
 
@@ -21,7 +24,10 @@ class VehicleInfoViewModel: ObservableObject {
     }
 
     /// Fetch Vehicle Information
-    func fetchVehicleInfo() async {
+    func fetchVehicleInfo() async -> Bool {
+        // Reset session expired flag at start of each API call
+        isSessionExpired = false
+        
         isLoading = true
         errorMessage = nil
         
@@ -48,16 +54,27 @@ class VehicleInfoViewModel: ObservableObject {
             )
             
             print(" VehicleInfoViewModel - API Response received")
-            print(" Response status: \(response.status ?? "nil")")
-            print(" Response message: \(response.message ?? "nil")")
+            print(" Response token value: \(response.token)")
+            
+            // Check if token is false - session expired (check FIRST, before any other processing)
+            if response.token.lowercased() == "false" {
+                // Session expired - token is false
+                SessionManagerClass.shared.clearToken()
+                isSessionExpired = true
+                appRootManager?.currentRoot = .SessionExpireUIView
+                print("  Session expired - token is false, navigating to SessionExpireUIView")
+                isLoading = false
+                return false
+            }
 
+            // If token is true or valid, proceed with normal flow
             if let records = response.result, !records.isEmpty {
-                self.vehicles = records
                 print(" VehicleInfoViewModel - Vehicles loaded: \(records.count)")
                 print(" Vehicle numbers: \(records.map { $0.vehicleNo })")
+                self.vehicles = records
             } else {
                 self.errorMessage = response.message
-                print(" VehicleInfoViewModel - No vehicles found. Message: \(response.message ?? "nil")")
+                print(" VehicleInfoViewModel - No vehicles found. Message: \(response.message)")
             }
 
         } catch {
@@ -66,9 +83,12 @@ class VehicleInfoViewModel: ObservableObject {
             if let nsError = error as NSError? {
                 print(" Error domain: \(nsError.domain), code: \(nsError.code)")
             }
+            isLoading = false
+            return false
         }
 
         isLoading = false
         print(" VehicleInfoViewModel - fetchVehicleInfo completed")
+        return true
     }
 }

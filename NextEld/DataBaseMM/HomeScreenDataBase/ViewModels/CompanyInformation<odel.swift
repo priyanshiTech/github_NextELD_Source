@@ -20,12 +20,16 @@ class EmployeeViewModel: ObservableObject {
     @Published var errorMessage: String?
     private let networkManager: NetworkManager
     
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
+
     init(networkManager: NetworkManager) {
         self.networkManager = networkManager
     }
     
     
-    func fetchEmployeeData(employeeId: Int, tokenNo: String) async {
+    func fetchEmployeeData(employeeId: Int, tokenNo: String) async  -> Bool{
+        isSessionExpired = false
         isLoading = true
         errorMessage = nil
         
@@ -38,6 +42,18 @@ class EmployeeViewModel: ObservableObject {
             )
             // Take the first record from the result array
             if let firstRecord = response.result?.first {
+                // Check if token is false - session expired (check FIRST, before any other processing)
+                if response.token?.lowercased() == "false" {
+                          // Session expired - token is false
+                          SessionManagerClass.shared.clearToken()
+                          isSessionExpired = true
+                          appRootManager?.currentRoot = .SessionExpireUIView
+                          print("  Session expired - token is false, navigating to SessionExpireUIView")
+                          isLoading = false
+                          return false
+                      }
+
+                
                 self.companyInfo = firstRecord
             } else {
                 self.errorMessage = "No company information found."
@@ -47,6 +63,7 @@ class EmployeeViewModel: ObservableObject {
         }
         
         isLoading = false
+        return true
     }
 }
 

@@ -23,6 +23,8 @@ struct NextEldApp: App {
                 SplashView()
             case .scanner(let moveToHome):
                 DeviceScannerView(checkboxClick: true, macaddress: "", moveToHome: moveToHome)
+            case .SessionExpireUIView:
+                SessionExpireUIView()
             }
         }
         .environmentObject(rootManager)

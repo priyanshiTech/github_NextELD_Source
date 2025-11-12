@@ -9,13 +9,15 @@ import SwiftUI
 
 struct SessionExpireUIView: View {
 
-        @EnvironmentObject var navManager: NavigationManager
+       // @EnvironmentObject var navManager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
+    
         var onSignInAgain: (() -> Void)? = nil
+    
         
         var body: some View {
             
             VStack(spacing: 30) {
-                
              
                 // replace with your truck image asset
                    Image("Excel")
@@ -31,8 +33,6 @@ struct SessionExpireUIView: View {
                     .bold()
                     .fontWeight(.medium)
                     .foregroundColor(.black)
-
-                
                 
                   //Message
                 Text("You have been logged out and logged-in on another device")
@@ -43,11 +43,11 @@ struct SessionExpireUIView: View {
                     .foregroundColor(.gray)
                     .padding(.horizontal, 30) //  Adds left & right space
                     .fixedSize(horizontal: false, vertical: true)
-                  
          
                 // Sign-In Again button
                 Button(action: {
                     onSignInAgain?()
+                    appRootManager.currentRoot = .login
                     
                 }) {
                     Text("SIGN-IN AGAIN")

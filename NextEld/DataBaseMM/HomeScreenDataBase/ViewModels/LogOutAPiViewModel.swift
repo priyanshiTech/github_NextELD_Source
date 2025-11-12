@@ -16,8 +16,11 @@ class APILogoutViewModel: ObservableObject {
     @Published var employeeId: Int = 0
     @Published var loginDateTime: Int64 = 0
     @Published var logoutDateTime: Int64 = 0
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
  
-    func callLogoutAPI() async {
+    func callLogoutAPI() async -> Bool {
+        isSessionExpired = false
         //  Prepare request
         let request = LogoutRequestModel(
             employeeId: AppStorageHandler.shared.driverId ?? 0,
@@ -34,6 +37,15 @@ class APILogoutViewModel: ObservableObject {
                 body: request
             )
 
+            print(" Logout API Response token: \(response.token ?? "nil")")
+            if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
+                SessionManagerClass.shared.clearToken()
+                isSessionExpired = true
+                print("  Session expired detected during logout - navigating to SessionExpireUIView")
+                appRootManager?.currentRoot = .SessionExpireUIView
+                return false
+            }
+
             if response.status == "SUCCESS" {
                 self.apiMessage = response.message ?? "Success"
                 self.status = response.status ?? ""
@@ -41,12 +53,15 @@ class APILogoutViewModel: ObservableObject {
                 self.employeeId = response.result?.employeeId ?? 0
                 self.loginDateTime = response.result?.loginDateTime ?? 0
                 self.logoutDateTime = response.result?.logoutDateTime ?? 0
+                return true
             } else {
                 self.apiMessage = response.message ?? "Failed"
                 self.status = response.status ?? ""
+                return false
             }
         } catch {
             self.apiMessage = "Error: \(error.localizedDescription)"
+            return false
         }
     }
 }

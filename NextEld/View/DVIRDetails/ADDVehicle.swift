@@ -12,6 +12,7 @@ struct ADDVehicle: View {
     @Binding var selectedVehicleNumber: String
     @Binding var VechicleID: Int
     @EnvironmentObject var navmanager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @State private var searchText = ""
 
     @StateObject private var vehicleVM = VehicleInfoViewModel(networkManager: NetworkManager())
@@ -115,12 +116,21 @@ struct ADDVehicle: View {
         }
         .edgesIgnoringSafeArea(.top)
         .navigationBarBackButtonHidden()
-        
-        
+        .onAppear {
+            vehicleVM.appRootManager = appRootManager
+        }
         .task {
-            await vehicleVM.fetchVehicleInfo()
-            print("API se aaye vehicles: \(vehicleVM.vehicles.map{$0.vehicleNo})")
-            print("API se aaye vehicles ID Number : \(vehicleVM.vehicles.map{$0.vehicleId})")
+            let success = await vehicleVM.fetchVehicleInfo()
+            
+            if vehicleVM.isSessionExpired {
+                print(" Session expired detected in ADDVehicle - staying on SessionExpireUIView")
+                return
+            }
+            
+            if success {
+                print("API se aaye vehicles: \(vehicleVM.vehicles.map{$0.vehicleNo})")
+                print("API se aaye vehicles ID Number : \(vehicleVM.vehicles.map{$0.vehicleId})")
+            }
         }
         
     }

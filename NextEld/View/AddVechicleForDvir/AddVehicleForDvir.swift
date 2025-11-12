@@ -15,6 +15,7 @@ struct AddVehicleForDvir: View {
     @Binding var VechicleID: Int
     
     @EnvironmentObject var navmanager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @State private var searchText = ""
     
     @State private var localSelectedVehicle: String = ""
@@ -107,12 +108,23 @@ struct AddVehicleForDvir: View {
             localSelectedVehicle = selectedVehicleNumber
             localVehicleID = VechicleID
             print("onAppear → Restored selection: \(localSelectedVehicle), ID: \(localVehicleID)")
+            vehicleVM.appRootManager = appRootManager
         }
         .task {
             print(" AddVehicleForDvir - Starting vehicle list API call...")
-            await vehicleVM.fetchVehicleInfo()
-            print(" AddVehicleForDvir - Vehicles from API: \(vehicleVM.vehicles.map { $0.vehicleNo })")
-            print(" AddVehicleForDvir - Total vehicles: \(vehicleVM.vehicles.count)")
+            let success = await vehicleVM.fetchVehicleInfo()
+            
+            // If session expired, do not process further
+            if vehicleVM.isSessionExpired {
+                print(" Session expired detected in AddVehicleForDvir - staying on SessionExpireUIView")
+                return
+            }
+            
+            if success {
+                print(" AddVehicleForDvir - Vehicles from API: \(vehicleVM.vehicles.map { $0.vehicleNo })")
+                print(" AddVehicleForDvir - Total vehicles: \(vehicleVM.vehicles.count)")
+            }
+            
             if let error = vehicleVM.errorMessage {
                 print(" AddVehicleForDvir - Error: \(error)")
             }

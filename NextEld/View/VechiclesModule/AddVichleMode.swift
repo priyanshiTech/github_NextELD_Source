@@ -85,6 +85,11 @@ struct AddVichleMode: View {
                         vehicleId: selectedVehicleId
                     )
                     
+                    // Check if session expired - if yes, don't navigate anywhere else
+                    if viewModel.isSessionExpired {
+                        print(" Session expired detected - staying on SessionExpireUIView")
+                        return // Don't proceed with any navigation
+                    }
           
                     if viewModel.responseMessage != nil {
                         print(viewModel.responseMessage as Any)

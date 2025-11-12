@@ -12,10 +12,12 @@ import SwiftUI
 
 @MainActor
 class EmployViewStatusViewModel: ObservableObject {
+    
     @Published var employees: [EmployeeRule] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
     private let networkManager: NetworkManager
 
     init(networkManager: NetworkManager) {
@@ -23,7 +25,10 @@ class EmployViewStatusViewModel: ObservableObject {
     }
 
     /// Fetch Employee View Status Info
-    func fetchEmployeeStatus(employeeId: Int, clientId: Int) async {
+    func fetchEmployeeStatus(employeeId: Int, clientId: Int) async -> Bool {
+        // Reset session expired flag at start of each API call
+        isSessionExpired = false
+        
         isLoading = true
         errorMessage = nil
 
@@ -40,6 +45,21 @@ class EmployViewStatusViewModel: ObservableObject {
                 body: requestBody
             )
 
+            print(" EmployViewStatusViewModel - API Response received")
+            print(" Response token value: \(response.token)")
+            
+            // Check if token is false - session expired (check FIRST, before any other processing)
+            if response.token.lowercased() == "false" {
+                // Session expired - token is false
+                SessionManagerClass.shared.clearToken()
+                isSessionExpired = true
+                appRootManager?.currentRoot = .SessionExpireUIView
+                print("  Session expired - token is false, navigating to SessionExpireUIView")
+                isLoading = false
+                return false
+            }
+
+            // If token is true or valid, proceed with normal flow
             if !response.result.isEmpty {
                 self.employees = response.result
                 
@@ -65,8 +85,12 @@ class EmployViewStatusViewModel: ObservableObject {
             }
         } catch {
             self.errorMessage = error.localizedDescription
+            print(" EmployViewStatusViewModel - API Error: \(error.localizedDescription)")
+            isLoading = false
+            return false
         }
 
         isLoading = false
+        return true
     }
 }

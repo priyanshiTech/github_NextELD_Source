@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CompanyInformationView: View {
+    
     @EnvironmentObject var navmanager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @StateObject private var viewModel = EmployeeViewModel(networkManager: NetworkManager.shared)
     
     var body: some View {
@@ -50,11 +52,20 @@ struct CompanyInformationView: View {
                 .padding()
             }
             .task {
-                await viewModel.fetchEmployeeData(
+                viewModel.appRootManager = appRootManager
+                let success = await viewModel.fetchEmployeeData(
                     employeeId: AppStorageHandler.shared.driverId ?? 0,
                     tokenNo: AppStorageHandler.shared.authToken ?? "",
                         //"60ea2fbd-4585-4c27-a47b-8ee8101ffb41"
                 )
+                if viewModel.isSessionExpired {
+                             print(" Session expired detected - staying on SessionExpireUIView")
+                             return // Don't proceed with any further processing
+                         }
+                if !success, let error = viewModel.errorMessage {
+                    print(" Employee info error: \(error)")
+                }
+
             }
         }
         .navigationBarBackButtonHidden()

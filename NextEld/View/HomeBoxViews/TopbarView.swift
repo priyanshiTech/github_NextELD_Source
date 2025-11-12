@@ -13,6 +13,7 @@ import SwiftUI
 struct TopBarView: View {
     @Binding var presentSideMenu: Bool
     @EnvironmentObject var navManager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     var labelValue: String
     @Binding var showDeviceSelector: Bool
     @StateObject private var deleteViewModel = DeleteViewModel()
@@ -69,6 +70,9 @@ struct TopBarView: View {
             }
             .buttonStyle(PlainButtonStyle())
 
+        }
+        .onAppear {
+            deleteViewModel.appRootManager = appRootManager
         }
     }
 }

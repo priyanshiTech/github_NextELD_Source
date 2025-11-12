@@ -13,6 +13,7 @@ struct ForgetPasswordView: View {
     @State var EntEmail = ""
     var title: String
     @EnvironmentObject var navManager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @StateObject private var viewModel = ForgetPasswordViewModel()
     @FocusState private var isfocusState: Bool
 
@@ -83,7 +84,15 @@ struct ForgetPasswordView: View {
                         viewModel.username = EntEmail //  pass to ViewModel
 
                         Task {
-                            await viewModel.submitForgetPassword()
+                            viewModel.appRootManager = appRootManager
+                            let success = await viewModel.submitForgetPassword()
+                            if viewModel.isSessionExpired {
+                                print(" Session expired detected in ForgetPasswordView - staying on SessionExpireUIView")
+                                return
+                            }
+                            if success {
+                                // Additional success handling if needed
+                            }
                         }
                     }
                     .bold()
@@ -114,4 +123,6 @@ struct ForgetPasswordView: View {
 
 #Preview {
     ForgetPasswordView( title: "Forget Password")
+        .environmentObject(NavigationManager())
+        .environmentObject(AppRootManager())
 }

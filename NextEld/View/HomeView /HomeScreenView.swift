@@ -252,16 +252,22 @@ struct HomeScreenView: View {
                         currentStatus: DriverStatusConstants.offDuty,
                         onLogout: {
                             Task {
-                                await logoutVM.callLogoutAPI()
+                                let success = await logoutVM.callLogoutAPI()
+                                if logoutVM.isSessionExpired {
+                                    print(" Session expired detected during logout - staying on SessionExpireUIView")
+                                    return
+                                }
+                                if success {
+                                    showLogoutPopup = false
+                                    presentSideMenu = false
+                                    UserDefaults.standard.set(false, forKey: "isLoggedIn")
+                                    ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
+                                    SessionManagerClass.shared.clearToken()
+                                    appRootManager.currentRoot = .splashScreen
+                                } else if !logoutVM.apiMessage.isEmpty {
+                                    print(" Logout API message: \(logoutVM.apiMessage)")
+                                }
                             }
-                            showLogoutPopup = false
-                            presentSideMenu = false
-                            UserDefaults.standard.set(false, forKey: "isLoggedIn")
-                            ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
-                            // session.logOut() // Nitin
-                            SessionManagerClass.shared.clearToken()
-                            appRootManager.currentRoot = .splashScreen
-                            
                         },
                         onCancel: {
                             showLogoutPopup = false
@@ -542,13 +548,20 @@ struct HomeScreenView: View {
                 
                 Task {
                     if let driverId = AppStorageHandler.shared.driverId {
-                        await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
-                        homeVM.deleteAllAppData()
-                        // Delete all Continue Drive data
-                        ContinueDriveDBManager.shared.deleteAllContinueDriveData()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                            self.homeVM.alertType = .sucessConfimration
-                            self.homeVM.showAlertOnHomeScreen = true
+                        let success = await deleteViewModel.deleteAllDataOnVersionClick(driverId: driverId)
+                        if deleteViewModel.isSessionExpired {
+                            print(" Session expired detected during delete - staying on SessionExpireUIView")
+                            return
+                        }
+                        if success {
+                            homeVM.deleteAllAppData()
+                            ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                self.homeVM.alertType = .sucessConfimration
+                                self.homeVM.showAlertOnHomeScreen = true
+                            }
+                        } else if !deleteViewModel.apiMessage.isEmpty {
+                            print(" Delete API message: \(deleteViewModel.apiMessage)")
                         }
                     } else{
                         print(" Driver ID not found in UserDefaults")

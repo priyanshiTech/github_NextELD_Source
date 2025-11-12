@@ -15,6 +15,9 @@ class DVIRAPIViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var successMessage: String?
 
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
+    
     private let networkManager: NetworkManager
 
     init(networkManager: NetworkManager) {
@@ -22,12 +25,17 @@ class DVIRAPIViewModel: ObservableObject {
     }
 
     /// Fetch DVIR Data
-    func fetchDVIRData(fromDate: String, toDate: String, email: String) async {
+    func fetchDVIRData(fromDate: String, toDate: String, email: String) async -> Bool {
+        
+        // Reset session expired flag at start of each API call
+        isSessionExpired = false
+        
         isLoading = true
         errorMessage = nil
         successMessage = nil
 
         let requestBody = ReportRequestModel(
+            
             driverId: AppStorageHandler.shared.driverId ?? 0,
             fromDate: fromDate,
             toDate: toDate,
@@ -40,9 +48,27 @@ class DVIRAPIViewModel: ObservableObject {
                 .EmailDVirAPI,
                 body: requestBody
             )
+            
+            print(" DVIRAPIViewModel - API Response received")
+            print(" Response token value: \(response.token)")
 
+            // Check if token is false - session expired (check FIRST, before any other processing)
+            if response.token.lowercased() == "false" {
+                // Session expired - token is false
+                SessionManagerClass.shared.clearToken()
+                isSessionExpired = true
+                print("  Session expired detected - token is false")
+                print("  appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                appRootManager?.currentRoot = .SessionExpireUIView
+                isLoading = false
+                return false
+            }
+
+            // If token is true or valid, proceed with normal flow
             if response.status == "SUCCESS" {
+                
                 self.dvirResults = response.result ?? []
+                
                 self.successMessage = response.message
             } else {
                 self.errorMessage = response.message
@@ -50,8 +76,12 @@ class DVIRAPIViewModel: ObservableObject {
 
         } catch {
             self.errorMessage = error.localizedDescription
+            print(" DVIRAPIViewModel - API Error: \(error.localizedDescription)")
+            isLoading = false
+            return false
         }
 
         isLoading = false
+        return true
     }
 }

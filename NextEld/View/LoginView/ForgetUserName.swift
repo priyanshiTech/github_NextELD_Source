@@ -11,6 +11,7 @@ struct ForgetUserName: View {
     var title: String
     @State  var mobNumber  = ""
     @EnvironmentObject var navManager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @StateObject private var viewModel = ForgetUsernameViewModel()
 
     @FocusState  private var istextfieldFocus: Bool
@@ -73,7 +74,15 @@ struct ForgetUserName: View {
                                Button("Continue") {
                                    //MARK: button action here
                                    Task {
-                                       await viewModel.submitForgetUsername()
+                                       viewModel.appRootManager = appRootManager
+                                       let success = await viewModel.submitForgetUsername()
+                                       if viewModel.isSessionExpired {
+                                           print(" Session expired detected in ForgetUserName view - staying on SessionExpireUIView")
+                                           return
+                                       }
+                                       if success {
+                                           // optional additional flow
+                                       }
                                    }
                                    print("Continue tapped with number: \(mobNumber)")
                                }

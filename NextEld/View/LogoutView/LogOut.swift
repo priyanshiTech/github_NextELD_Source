@@ -70,6 +70,7 @@ struct LogOut: View {
     @State private var isPresented: Bool = true
     @State private var isCycleCompleted: Bool = false
     @StateObject private var logoutVM = APILogoutViewModel()
+    @EnvironmentObject var appRootManager: AppRootManager
 
     var body: some View {
         ZStack {
@@ -84,10 +85,20 @@ struct LogOut: View {
                         onLogout: {
                             print("Logging out…")
                             Task {
-                                await logoutVM.callLogoutAPI()  
-                                isPresented = false
+                                logoutVM.appRootManager = appRootManager
+                                let success = await logoutVM.callLogoutAPI()
+                                if logoutVM.isSessionExpired {
+                                    print(" Session expired detected during standalone logout - staying on SessionExpireUIView")
+                                    return
+                                }
+                                if success {
+                                    isPresented = false
+                                    SessionManagerClass.shared.clearToken()
+                                    appRootManager.currentRoot = .splashScreen
+                                } else if !logoutVM.apiMessage.isEmpty {
+                                    print(" Logout API message: \(logoutVM.apiMessage)")
+                                }
                             }
-                            isPresented = false
                         },
                         onCancel: {
                             print("Cancel logout")

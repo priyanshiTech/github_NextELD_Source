@@ -14,6 +14,9 @@ class AddMacAddressViewModel: ObservableObject {
     @Published var responseMessage: String?
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
+
 
     private let networkManager: NetworkManager
 
@@ -28,7 +31,10 @@ class AddMacAddressViewModel: ObservableObject {
         modelNo: String = "",
         version: String = "",
         serialNo: String = "",
-        vehicleId: Int) async {
+        vehicleId: Int) async -> Bool {
+        
+        // Reset session expired flag at start of each API call
+        isSessionExpired = false
         
         isLoading = true
         errorMessage = nil
@@ -50,6 +56,21 @@ class AddMacAddressViewModel: ObservableObject {
                 body: requestBody
             )
             
+            print(" AddMacAddressViewModel - API Response received")
+            print(" Response token value: \(response.token)")
+            
+            // Check if token is false - session expired (check FIRST, before any other processing)
+            if response.token.lowercased() == "false" {
+                // Session expired - token is false
+                SessionManagerClass.shared.clearToken()
+                isSessionExpired = true
+                appRootManager?.currentRoot = .SessionExpireUIView
+                print("  Session expired - token is false, navigating to SessionExpireUIView")
+                isLoading = false
+                return false
+            }
+            
+            // If token is true or valid, proceed with normal flow
             if response.status == "SUCCESS" {
                 self.responseMessage = response.message
             } else {
@@ -58,8 +79,12 @@ class AddMacAddressViewModel: ObservableObject {
 
         } catch {
             self.errorMessage = error.localizedDescription
+            print(" AddMacAddressViewModel - API Error: \(error.localizedDescription)")
+            isLoading = false
+            return false
         }
 
         isLoading = false
+        return true
     }
 }

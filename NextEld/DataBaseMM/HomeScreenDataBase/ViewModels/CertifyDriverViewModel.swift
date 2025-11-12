@@ -16,6 +16,8 @@ class CertifyDriverViewModel: ObservableObject {
     @Published var result: String?
     @Published var status: String?
     @Published var token: String?
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
     
     
     func uploadCertifiedLog(
@@ -63,23 +65,34 @@ class CertifyDriverViewModel: ObservableObject {
 
         MultipartAPIService.shared.upload(url: url, fields: fields, files: [file]) { [weak self] result in
             DispatchQueue.main.async {
-                self?.isLoading = false
+                guard let self else { return }
+                self.isLoading = false
                 switch result {
                 case .success(let data):
                     do {
                         let response = try JSONDecoder().decode(CertifiedLogResponse.self, from: data)
-                        self?.message = response.message
-                        self?.result = response.result
-                        self?.status = response.status
-                        self?.token = response.token
+                        self.message = response.message
+                        self.result = response.result
+                        self.status = response.status
+                        self.token = response.token
+                        
+                        if response.token.lowercased() == "false" {
+                            SessionManagerClass.shared.clearToken()
+                            self.isSessionExpired = true
+                            print(" Session expired detected during certify upload")
+                            print(" appRootManager is \(self.appRootManager != nil ? "set" : "nil")")
+                            self.appRootManager?.currentRoot = .SessionExpireUIView
+                            completion(.failure(NSError(domain: "SessionExpired", code: 401, userInfo: [NSLocalizedDescriptionKey: "Session expired"])))
+                            return
+                        }
 
                         completion(.success(response.message ?? "Success"))   //  call completion
                     } catch {
-                        self?.message = "Decoding error: \(error.localizedDescription)"
+                        self.message = "Decoding error: \(error.localizedDescription)"
                         completion(.failure(error))
                     }
                 case .failure(let error):
-                    self?.message = "Upload failed: \(error.localizedDescription)"
+                    self.message = "Upload failed: \(error.localizedDescription)"
                     completion(.failure(error))
                 }
             }

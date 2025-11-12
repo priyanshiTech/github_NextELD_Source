@@ -118,10 +118,15 @@ struct NewDriverLogin: View {
                     if SessionManagerClass.shared.isLoggedIn() {
                         print(" Old user logged in, calling logout API...")
                         // Logout current user before logging in new one
-                        await logoutVM.callLogoutAPI()
+                        logoutVM.appRootManager = appRootManager
+                        let logoutSuccess = await logoutVM.callLogoutAPI()
+                        if logoutVM.isSessionExpired {
+                            print(" Session expired detected during codriver logout - staying on SessionExpireUIView")
+                            return
+                        }
                         
                         // Check if logout was successful
-                        if logoutVM.status != "SUCCESS" {
+                        if !logoutSuccess || logoutVM.status != "SUCCESS" {
                             print(" Logout failed: \(logoutVM.apiMessage)")
                             DispatchQueue.main.async {
                                 alertVisible = true

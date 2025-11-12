@@ -25,18 +25,29 @@ final class ForgetPasswordViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var message: String = ""
     @Published var showAlert = false
+    @Published var isSessionExpired: Bool = false
+    var appRootManager: AppRootManager?
 
-    func submitForgetPassword() async {
+    func submitForgetPassword() async -> Bool {
+        isSessionExpired = false
         let request = ForgetPasswordRequest(username: username)
 
         print("📤 Sending Forget Password Request with username: \(username)")
 
         do {
-            
+
             let response: ForgetPasswordResponse = try await NetworkManager.shared.post(.ForgetPassword, body: request)
             print(" API Call Succeeded")
             print(" Status: \(response.status)")
             print(" Message: \(response.message)")
+            print(" Token value: \(response.token ?? "nil")")
+            if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
+                SessionManagerClass.shared.clearToken()
+                isSessionExpired = true
+                print(" Session expired detected in ForgetPasswordViewModel")
+                appRootManager?.currentRoot = .SessionExpireUIView
+                return false
+            }
 
             if let result = response.result {
                 print(" Username: \(result.username)")
@@ -50,11 +61,13 @@ final class ForgetPasswordViewModel: ObservableObject {
             }
 
             message = response.message
+            showAlert = true
+            return true
         } catch {
             print(" API Call Failed with error: \(error)")
             message = "Something went wrong: \(error.localizedDescription)"
+            showAlert = true
+            return false
         }
-
-        showAlert = true
     }
 }
