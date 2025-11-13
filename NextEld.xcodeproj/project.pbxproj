@@ -96,6 +96,8 @@
 		AF9024982E93DD920005F0D7 /* AvailableHourBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9024902E93DD920005F0D7 /* AvailableHourBox.swift */; };
 		AF9024992E93DD920005F0D7 /* VechicleInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF90248E2E93DD920005F0D7 /* VechicleInfoView.swift */; };
 		AF910B5F2E14009100BCC9E9 /* VoilationsAlert's.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */; };
+		AF92D3FD2EC5B8740080F895 /* DriverWorkingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92D3FC2EC5B8740080F895 /* DriverWorkingViewModel.swift */; };
+		AF92D4002EC5B9310080F895 /* WorkingDriveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92D3FF2EC5B9310080F895 /* WorkingDriveModel.swift */; };
 		AF92F4DD2DDDE7DB00DEBBF6 /* EmailDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */; };
 		AF92F4DF2DDDEE0D00DEBBF6 /* DVIRHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DE2DDDEE0D00DEBBF6 /* DVIRHistory.swift */; };
 		AF93A58C2E67290B00B708E2 /* CoreServiceDeviceLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF93A58B2E67290B00B708E2 /* CoreServiceDeviceLocation.swift */; };
@@ -206,6 +208,7 @@
 		AFD90C8D2E50907800C56528 /* GlobalVariableclass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */; };
 		AFDBB1792E03FAC000D4A2CA /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */; };
 		AFDBF8942E5735A5002DB62D /* SharedManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDBF8932E5735A5002DB62D /* SharedManager.swift */; };
+		AFE7C0A22EBB1AF500ABCDEF /* SessionCleanupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */; };
 		AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */; };
 		AFDEF7242E4B18AE00BEB2B1 /* Help&SupportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDEF7232E4B18AE00BEB2B1 /* Help&SupportViewModel.swift */; };
 		AFDEF7272E4B1B3E00BEB2B1 /* SupportModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDEF7262E4B1B3E00BEB2B1 /* SupportModel.swift */; };
@@ -349,6 +352,8 @@
 		AF9024912E93DD920005F0D7 /* StatusBox&StatusButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatusBox&StatusButton.swift"; sourceTree = "<group>"; };
 		AF9024922E93DD920005F0D7 /* TopbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopbarView.swift; sourceTree = "<group>"; };
 		AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VoilationsAlert's.swift"; sourceTree = "<group>"; };
+		AF92D3FC2EC5B8740080F895 /* DriverWorkingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverWorkingViewModel.swift; sourceTree = "<group>"; };
+		AF92D3FF2EC5B9310080F895 /* WorkingDriveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingDriveModel.swift; sourceTree = "<group>"; };
 		AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailDvir.swift; sourceTree = "<group>"; };
 		AF92F4DE2DDDEE0D00DEBBF6 /* DVIRHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRHistory.swift; sourceTree = "<group>"; };
 		AF93A58B2E67290B00B708E2 /* CoreServiceDeviceLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreServiceDeviceLocation.swift; sourceTree = "<group>"; };
@@ -457,6 +462,7 @@
 		AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariableclass.swift; sourceTree = "<group>"; };
 		AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		AFDBF8932E5735A5002DB62D /* SharedManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedManager.swift; sourceTree = "<group>"; };
+		AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCleanupManager.swift; sourceTree = "<group>"; };
 		AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerClass.swift; sourceTree = "<group>"; };
 		AFDEF7232E4B18AE00BEB2B1 /* Help&SupportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Help&SupportViewModel.swift"; sourceTree = "<group>"; };
 		AFDEF7262E4B1B3E00BEB2B1 /* SupportModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportModel.swift; sourceTree = "<group>"; };
@@ -557,8 +563,8 @@
 				CBE886052E9969D300B7D581 /* Common */,
 				AFCE29E12E129C61001C6729 /* HelpingGroup */,
 				108FF82C2DC89C620051671B /* Model 2 */,
+				AFB943442E02B99D00AD19D7 /* ViewModels */,
 				AFC535552E0D5D5700AD10C9 /* DataBaseMM */,
-				108FF82D2DC89C6F0051671B /* View */,
 				AFFC64A32DCE1F73008D1CC0 /* Extensions */,
 				1065860B2DCCC71A003CE502 /* LiveCharts */,
 				10CA6EC12DCC9B77003B265C /* HelpingInterfacesFile */,
@@ -596,6 +602,7 @@
 		108FF82C2DC89C620051671B /* Model 2 */ = {
 			isa = PBXGroup;
 			children = (
+				AF92D3FE2EC5B91B0080F895 /* DriverWorkingModel */,
 				AF9E84282EC3195300CF40E5 /* DataTransferModel */,
 				AF45BB762EB8966600DDDB4D /* VehicleConditionModel */,
 				AFBD12CD2E72A871003EA40F /* DVIRMultipartResponceModel */,
@@ -615,6 +622,7 @@
 				AFCC4C9E2E49E7C100629DE3 /* DispatchViewStatusDate */,
 				AFC381782E290A23006FD4E1 /* Offlinedata */,
 				AFC381752E29035C006FD4E1 /* ForgetModel's */,
+				108FF82D2DC89C6F0051671B /* View */,
 				AFDBB17A2E03FAE500D4A2CA /* LoginModel */,
 				AFCB43652E2F971D00363BB6 /* DeleteModel */,
 			);
@@ -913,7 +921,6 @@
 		AF7951122E3BA766005FFFBF /* HomeScreenDataBase */ = {
 			isa = PBXGroup;
 			children = (
-				AFB943442E02B99D00AD19D7 /* ViewModels */,
 			);
 			path = HomeScreenDataBase;
 			sourceTree = "<group>";
@@ -956,6 +963,14 @@
 				AF9024922E93DD920005F0D7 /* TopbarView.swift */,
 			);
 			path = HomeBoxViews;
+			sourceTree = "<group>";
+		};
+		AF92D3FE2EC5B91B0080F895 /* DriverWorkingModel */ = {
+			isa = PBXGroup;
+			children = (
+				AF92D3FF2EC5B9310080F895 /* WorkingDriveModel.swift */,
+			);
+			path = DriverWorkingModel;
 			sourceTree = "<group>";
 		};
 		AF93A58A2E67283700B708E2 /* CoreServiceLocation */ = {
@@ -1188,6 +1203,7 @@
 				AF45BB742EB893BF00DDDB4D /* VehicleConditionViewModel.swift */,
 				AF9DD4F42DDDB1FF0034FA8F /* AddDvirScreenViewModel.swift */,
 				AF9E842B2EC31CD100CF40E5 /* DataTransferViewModel.swift */,
+				AF92D3FC2EC5B8740080F895 /* DriverWorkingViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1352,6 +1368,7 @@
 				AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */,
 				AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */,
 				AFDBF8932E5735A5002DB62D /* SharedManager.swift */,
+				AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */,
 			);
 			path = HelpingGroup;
 			sourceTree = "<group>";
@@ -1717,6 +1734,7 @@
 				AF7235092E55FC51009EAA9E /* RulesViewModels.swift in Sources */,
 				AF45BB7B2EB8AAE800DDDB4D /* vehicleCondition.swift in Sources */,
 				AFB943432E02A2B100AD19D7 /* UI&SwiftUIConnecter.swift in Sources */,
+				AF92D4002EC5B9310080F895 /* WorkingDriveModel.swift in Sources */,
 				AF900BD62E6329AD003D01A5 /* betteryLevelRealDevice.swift in Sources */,
 				AFBD12CF2E72A899003EA40F /* DvirResponceModel.swift in Sources */,
 				AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */,
@@ -1803,9 +1821,11 @@
 				10CA6EC32DCC9BA8003B265C /* Reuseable  Label.swift in Sources */,
 				AF72350D2E560567009EAA9E /* MacAddressViewModel.swift in Sources */,
 				AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */,
+				AFE7C0A22EBB1AF500ABCDEF /* SessionCleanupManager.swift in Sources */,
 				AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */,
 				108FF8302DC8A8BA0051671B /* LoginScreen.swift in Sources */,
 				AFCC4CA72E4A29C500629DE3 /* CompanyInformation<odel.swift in Sources */,
+				AF92D3FD2EC5B8740080F895 /* DriverWorkingViewModel.swift in Sources */,
 				AFE146862DEB0498007A4AF0 /* FirmWare Update.swift in Sources */,
 				AFA98C952E017C1F00E87802 /* DeviceManagerView.swift in Sources */,
 				CBE886042E995A2D00B7D581 /* HomeViewModel.swift in Sources */,

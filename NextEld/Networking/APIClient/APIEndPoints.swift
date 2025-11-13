@@ -43,7 +43,7 @@ enum API {
         case addDefectData
         case vehicleConditionApi
         case dataTransferAPI
-        case TimeManagement
+        case DriverWorkingtime
 
         
         var url: URL {
@@ -111,7 +111,7 @@ enum API {
                 return API.baseURL.appendingPathComponent("master/view_vehicle_condition")
             case .dataTransferAPI:
                 return API.baseURL.appendingPathComponent("api/jsoncrypto/encrypt")
-            case .TimeManagement:
+            case .DriverWorkingtime:
                 return API.baseURL.appendingPathComponent("dispatch/add_driver_working_status")
             }
         }
@@ -120,7 +120,7 @@ enum API {
             
             switch self {
                 
-            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi , .dataTransferAPI,.TimeManagement:
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi , .dataTransferAPI,.DriverWorkingtime:
                 return "POST"
                 
             case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI , .addDefectData:

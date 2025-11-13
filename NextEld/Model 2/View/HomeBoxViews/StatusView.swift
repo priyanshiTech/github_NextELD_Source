@@ -1,0 +1,211 @@
+//
+//  StatusView.swift
+//  NextEld
+//
+//  Created by priyanshi  on 06/10/25.
+//
+
+import Foundation
+import SwiftUI
+
+
+struct StatusView: View {
+    
+//    @Binding var confirmedStatus: String?
+//    @Binding var selectedStatus: String?
+//    @Binding var showAlert: Bool
+//    @Binding var showCertifyLogAlert: Bool
+    //MARK: -  Continue Drive ,  Rest Break
+//    @ObservedObject var ContiueDrive:  CountdownTimer
+//    @ObservedObject var RestBreak: CountdownTimer
+    @State private var selectedDriverStatus: DriverStatusType = .offDuty
+    private var driverStatusTypes: Array<DriverStatusType> = [.onDuty, .onDrive, .offDuty, .sleep]
+    let columns = [
+        GridItem(.flexible(minimum: 100, maximum: 120), spacing: 80),
+        GridItem(.flexible(minimum: 100, maximum: 120), spacing: 80)
+        ]
+    @ObservedObject var homeViewModel: HomeViewModel
+    var onDriveStatusSelection: ((DriverStatusType) -> Void)
+    
+    // Flags fetched from AppStorage to decide visibility of Personal Use / Yard Move buttons
+    @AppStorage("personalUse") private var personalUseActive: String?
+    @AppStorage("yardMoves") private var yardMovesActive: String?
+    
+    //MARK: - Timer control functions
+//    let onStopAllTimers: () -> Void
+//    let onStartYardMoveTimers: () -> Void
+    
+    init(homeViewModel: HomeViewModel, onDriveStatusSelection: @escaping (DriverStatusType) -> Void) {
+        self.homeViewModel = homeViewModel
+        self.onDriveStatusSelection = onDriveStatusSelection
+    }
+    
+    var body: some View {
+        CardContainer {
+            VStack(alignment: .center, spacing: 20) {
+                Text("Current Status")
+                    .font(.system(size: 18))
+                    .underline()
+                
+                //MARK: - Status boxes
+                HStack(spacing: 10) {
+                    StatusBox(
+                        title: TimerType.continueDrive.getName(),
+                              countDownTimer: homeViewModel.continueDriveTimer!
+                    )
+                    StatusBox(
+                        title: TimerType.breakTimer.getName(),
+                        countDownTimer: homeViewModel.breakTimer!
+                    )
+                }
+                .padding()
+                //MARK: -  Status checkboxes
+                
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(driverStatusTypes, id: \.self) { type in
+                        
+                        StatusCheckBox(
+                            isClick: type == selectedDriverStatus,
+                            labelText: type.getName(),
+                            onTap: {
+                                onDriveStatusSelection(type)                           }
+                        )
+                        
+                    }
+                   
+                }
+                .padding(.horizontal, 20)
+                .frame(maxWidth: .infinity)
+                
+                /*
+                
+                VStack(alignment: .center, spacing: 0) {
+                    HStack {
+                        
+                        StatusCheckBox(
+                            isClick: confirmedStatus == DriverStatusConstants.onDuty,
+                            labelText: "On-Duty",
+                            onTap: {
+//                                if confirmedStatus != DriverStatusConstants.onDuty {
+//                                    let hasPreviousLogs = CertifyDatabaseManager.shared.hasPreviousDayLogsUncertified()
+//                                    if hasPreviousLogs {
+//                                        //  Trigger popup overlay
+//                                        showCertifyLogAlert = true
+//                                    } else {
+//                                        // Continue normal flow
+//                                        selectedStatus = DriverStatusConstants.onDuty
+//                                        showAlert = true
+//                                    }
+//                                }
+                            }
+                        )
+
+
+                            
+                        Spacer()
+                        StatusCheckBox(
+                            isClick: confirmedStatus == DriverStatusConstants.onDrive,
+                            labelText: "Drive",
+                            onTap: {
+                                // Only show popup if not already selected
+//                                if confirmedStatus != DriverStatusConstants.onDrive {
+//                                selectedStatus = DriverStatusConstants.onDrive
+//                                showAlert = true
+//                                }
+                            })
+                    }
+                    .padding()
+                    HStack {
+                        StatusCheckBox(
+                            isClick: confirmedStatus == DriverStatusConstants.offDuty,
+                            labelText: "Off-Duty",
+                            onTap: {
+                                // Only show popup if not already selected
+//                                if confirmedStatus != DriverStatusConstants.offDuty {
+//                                    selectedStatus = DriverStatusConstants.offDuty
+//                                showAlert = true
+//                                }
+                            })
+                        Spacer()
+                        
+                        StatusCheckBox(
+                            isClick: confirmedStatus == DriverStatusConstants.onSleep,
+                            labelText: "Sleep",
+                            onTap: {
+//                                if confirmedStatus != DriverStatusConstants.onSleep {
+//                                selectedStatus = DriverStatusConstants.onSleep
+//                                showAlert = true
+//                                }
+                            })
+                    }
+                    .padding()
+                }
+            */
+
+                //MARK: -  Personal Use and Yard Move buttons (conditional visibility)
+                if isPersonalUseEnabled || isYardMoveEnabled {
+                    HStack {
+                        if isPersonalUseEnabled {
+                            StatusButton(
+                                title: DriverStatusType.personalUse.getName(),
+                                action: {
+                                    selectedDriverStatus = .personalUse
+                                    onDriveStatusSelection(selectedDriverStatus)
+                                },
+                                isSelected: selectedDriverStatus == .personalUse
+                            )
+                        }
+                        
+                        if isPersonalUseEnabled && isYardMoveEnabled {
+                            Spacer()
+                        }
+                        
+                        if isYardMoveEnabled {
+                            StatusButton(
+                                title: DriverStatusType.yardMode.getName(),
+                                action: {
+                                    selectedDriverStatus = .yardMode
+                                    onDriveStatusSelection(selectedDriverStatus)
+                                },
+                                isSelected: selectedDriverStatus == .yardMode
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
+                }
+            }
+            .onChange(of: homeViewModel.currentDriverStatus) { newValue in
+                updateSelectedStatusIfNeeded(with: newValue)
+            }
+        }
+        .onAppear {
+            updateSelectedStatusIfNeeded(with: homeViewModel.currentDriverStatus)
+        }
+    }
+ 
+}
+
+// MARK: - Private Helpers
+private extension StatusView {
+    var isPersonalUseEnabled: Bool {
+        guard let flag = AppStorageHandler.shared.personalUseActive?.lowercased() else { return false }
+        return flag == "active" || flag == "true" || flag == "1"
+    }
+    
+    var isYardMoveEnabled: Bool {
+        guard let flag = AppStorageHandler.shared.yardMovesActive?.lowercased() else { return false }
+        return flag == "active" || flag == "true" || flag == "1"
+    }
+    
+    func updateSelectedStatusIfNeeded(with newValue: DriverStatusType) {
+        switch newValue {
+        case .personalUse where !isPersonalUseEnabled,
+             .yardMode where !isYardMoveEnabled:
+            // Fallback to Off-Duty if the selected status is not enabled
+            selectedDriverStatus = .offDuty
+        default:
+            selectedDriverStatus = newValue
+        }
+    }
+}
