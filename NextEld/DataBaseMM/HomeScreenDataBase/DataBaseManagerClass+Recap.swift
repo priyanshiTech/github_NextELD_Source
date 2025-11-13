@@ -40,12 +40,14 @@ extension DatabaseManager {
                 
                 if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
                     dutySeconds += duration
-                } else if status == AppConstants.off_Duty || status == AppConstants.sleep {
-                    // optional split rule: short off-duty counts as duty
-                    if duration <= 2 * 3600 {
-                        dutySeconds += duration
-                    }
                 }
+                
+//                else if status == AppConstants.off_Duty || status == AppConstants.sleep {
+//                    // optional split rule: short off-duty counts as duty
+//                    if duration <= 2 * 3600 {
+//                        dutySeconds += duration
+//                    }
+//                }
             }
             
             results.append(WorkEntry(date: day, hoursWorked: dutySeconds))
@@ -84,12 +86,12 @@ extension DatabaseManager {
             if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
                 dutySeconds += duration
             }
-            else if status == AppConstants.off_Duty || status == AppConstants.sleep {
-                // optional split rule: short off-duty counts as duty
-                if duration <= 2 * 3600 {
-                    dutySeconds += duration
-                }
-            }
+//            else if status == AppConstants.off_Duty || status == AppConstants.sleep {
+//                // optional split rule: short off-duty counts as duty
+//                if duration <= 2 * 3600 {
+//                    dutySeconds += duration
+//                }
+//            }
         }
         let dutyTime = max(0, OnDutyTodayTotalTime - dutySeconds)
         
@@ -111,8 +113,8 @@ extension DatabaseManager {
         let logsForDay = allLogs.compactMap { log -> (Date, String)? in
             return (log.startTime, log.status)
         }
-            .filter { $0.0 >= startDate }
-            .sorted { $0.0 < $1.0 }
+        .filter { $0.0 >= startDate }
+        .sorted { $0.0 < $1.0 }
         
         var dutySeconds: TimeInterval = 0
         
@@ -132,12 +134,12 @@ extension DatabaseManager {
             if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
                 dutySeconds += duration
             }
-            else if status == AppConstants.off_Duty || status == AppConstants.sleep {
-                // optional split rule: short off-duty counts as duty
-                if duration <= 2 * 3600 {
-                    dutySeconds += duration
-                }
-            }
+//            else if status == AppConstants.off_Duty || status == AppConstants.sleep {
+//                // optional split rule: short off-duty counts as duty
+//                if duration <= 2 * 3600 {
+//                    dutySeconds += duration
+//                }
+//            }
         }
         
         let cycleTime = max(0, cycleLimit - dutySeconds)
