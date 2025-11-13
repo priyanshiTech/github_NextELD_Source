@@ -36,24 +36,44 @@ struct HomeFlowView: View {
         }
         .navigationDestination(for: AppRoute.HomeFlow.self) { route in
             switch route {
-            case .SplashScreen:
-                SplashView()
-            case .home:
+            case .Home:
                 HomeScreenView(
                     presentSideMenu: $presentSideMenu,
                     selectedSideMenuTab: $selectedSideMenuTab,
                     session: session
                 )
-            case .Scanner:
-                DeviceScannerView(tittle: "", checkboxClick: false, macaddress: "")
+            case .DailyLogs(let tittle):
+                DailyLogView(title: tittle, entry: WorkEntry(date: Date(), hoursWorked: 0))
+            case .AddDvirPriTrip:
+                EmailDvir(
+                    tittle: "Email DVIR",
+                    updateRecords: DvirDatabaseManager.shared.fetchAllRecords(),
+                    onSelect: { _ in }
+                )
+            case .DotInspection(let tittle):
+                DotInspection(title: tittle)
+            case .CoDriverLogin:
+                CoDriverLogin()
+            case .AddVichleMode:
+                AddVichleMode(selectedVehicle: .constant(""), selectedVehicleId: .constant(0))
+            case .CompanyInformationView:
+                CompanyInformationView()
+            case .InformationPacket:
+                InformationPacket()
+            case .RulesView:
+                RulesView()
             case .Settings:
                 SettingsLanguageView()
             case .SupportView:
                 SupportView()
-            case .logout:
-                LogOut()
-            case .firmWareUpdate:
+            case .FirmWare_Update:
                 FirmWare_Update()
+            case .ADDVehicle:
+                ADDVehicle(selectedVehicleNumber: .constant(""), VechicleID: .constant(0))
+            case .CertifySelectedView(let tittle):
+                CertifySelectedView(vehiclesc: .constant(""), VechicleID: .constant(0), title: tittle)
+                    .environmentObject(TrailerViewModel())
+                    .environmentObject(ShippingDocViewModel())
             }
         }
         .navigationDestination(for: AppRoute.VehicleFlow.self) { route in
@@ -127,6 +147,28 @@ struct HomeFlowView: View {
                 InformationPacket()
             case .RulesView:
                 RulesView()
+            }
+        }
+        .navigationDestination(for: AppRoute.self) { route in
+            switch route {
+            case .scanner:
+                DeviceScannerView(tittle: "ELD Connection", checkboxClick: false, macaddress: "")
+            case .NT11Connection:
+                NT11ConnectionView()
+            case .PT30Connection:
+                PT30ConnectionView()
+            case .DataTransferView:
+                DataTransferInspectionView()
+            case .LogsDetails(let title, let entry):
+                LogsDetails(title: title, entry: entry)
+            case .NewDriverLogin(let title, let email):
+                NewDriverLogin(isLoggedIn: .constant(false), tittle: title, UserName: email)
+            case .Logout:
+                LogOut()
+            case .RecapHours(let tittle):
+                HoursRecap(tittle: tittle)
+            @unknown default:
+                EmptyView()
             }
         }
     }

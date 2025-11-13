@@ -42,8 +42,7 @@ enum AppRoute: Hashable {
         case FirmWare_Update
         case ADDVehicle
         case CertifySelectedView(tittle: String)
-        case RecapHours(tittle: String)
-        case LogsDetails(title: String, entry: WorkEntry)
+ 
         
     }
     
@@ -58,6 +57,21 @@ enum AppRoute: Hashable {
         case UploadDefectView
         
     }
+    enum LogsFlow: Hashable {
+        case DailyLogs(title: String)
+        case EmailLogs(title: String)
+        case RecapHours(title: String)
+        case continueDriveTableView
+        case DatabaseCertifyView
+        case CertifySelectedView(title: String)
+        case LogsDetails(title: String, entry: WorkEntry)
+        case EyeViewData(title: String, entry: WorkEntry)
+        case driverLogListView
+        case DvirDataListView
+        case AddDvirPriTrip
+        case DvirHostory(title: String)
+        case DataTransferView
+    }
    // case scanner
     
     enum DatabaseFlow: Hashable {
@@ -67,6 +81,7 @@ enum AppRoute: Hashable {
         case DvirDataListView
         case ContinueDriveTableView
         case AddDvirScreenView
+        case EyeViewData(tittle: String , entry : WorkEntry )
     }
 
 
@@ -77,6 +92,9 @@ enum AppRoute: Hashable {
     case PT30Connection
     // Side Menu Screens
     
+    
+    case RecapHours(tittle: String)
+    
 
 
     
@@ -84,8 +102,8 @@ enum AppRoute: Hashable {
 
 
     //  With associated value
-    
-    case EyeViewData(tittle: String , entry : WorkEntry )
+    case LogsDetails(title: String, entry: WorkEntry)
+ 
    
     case NewDriverLogin(title: String , email: String)
     //Vichle Mode

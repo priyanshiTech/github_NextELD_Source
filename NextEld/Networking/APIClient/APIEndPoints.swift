@@ -13,6 +13,8 @@ enum API {
     
     static let baseURL = URL(string: "https://gbt-usa.com/eld_log/")!
     static let baseURLTwo = URL(string: "http://165.232.183.179:4002/api/")!
+    static let privacyPolicyURL = "https://exceleld.com/privacypolicy/"
+    static let DominName = "https://gbt-usa.com/"
 
     enum Endpoint {
         case login
@@ -40,6 +42,8 @@ enum API {
         case SpalshDataAPI
         case addDefectData
         case vehicleConditionApi
+        case dataTransferAPI
+        case DriverWorkingtime
 
         
         var url: URL {
@@ -103,9 +107,12 @@ enum API {
                 return API.baseURL.appendingPathComponent("dispatch/view_drivering_status_with_login_details")
             case .addDefectData:
                 return API.baseURL.appendingPathComponent("dispatch/add_defect_data")
-
             case .vehicleConditionApi:
                 return API.baseURL.appendingPathComponent("master/view_vehicle_condition")
+            case .dataTransferAPI:
+                return API.baseURL.appendingPathComponent("api/jsoncrypto/encrypt")
+            case .DriverWorkingtime:
+                return API.baseURL.appendingPathComponent("dispatch/add_driver_working_status")
             }
         }
 
@@ -113,13 +120,12 @@ enum API {
             
             switch self {
                 
-            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi:
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi , .dataTransferAPI,.DriverWorkingtime:
                 return "POST"
                 
             case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI , .addDefectData:
                 return "POST"
 
-    
             }
         }
     }

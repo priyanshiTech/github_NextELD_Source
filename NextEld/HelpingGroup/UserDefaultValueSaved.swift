@@ -41,7 +41,11 @@ struct AppStorageHandler {
     @AppStorage("employeeId") var employeeId: Int?
     @AppStorage("clientName")var company: String?
     
-    
+    //MARK: - for rule/personal use API Code
+    @AppStorage("personalUse") var personalUseActive: String?
+    @AppStorage("yardMoves") var yardMovesActive: String?
+    @AppStorage("exempt") var exempt: String?
+   
     
     
     // MARK: - Warning Timer

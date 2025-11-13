@@ -10,54 +10,6 @@ import Foundation
 import SwiftUI
 
 
-
-/*@MainActor
-class EmployeeRulesViewModel: ObservableObject {
-    @Published var employees: [EmployeeRuleResult] = []
-    @Published var isLoading = false
-    @Published var errorMessage: String?
-
-    private let networkManager: NetworkManager
-
-    init(networkManager: NetworkManager) {
-        self.networkManager = networkManager
-    }
-
-    /// Fetch Employee Rules Info
-    func fetchEmployeeRules(employeeId: Int, clientId: Int) async {
-        isLoading = true
-        errorMessage = nil
-
-        let requestBody = EmployeeRulesRequest(
-            employeeId: AppStorageHandler.shared.driverId ?? 17,
-            clientId: AppStorageHandler.shared.clientId ?? 1,
-            tokenNo: AppStorageHandler.shared.authToken
-        )
-
-        do {
-            let response: EmployeeResponse = try await networkManager.post(
-                .ForRulesAPI,
-                body: requestBody
-            )
-
-            if !response.result.isEmpty {
-                self.employees = response.result
-            } else {
-                self.errorMessage = response.message
-            }
-
-        } catch {
-            self.errorMessage = error.localizedDescription
-        }
-
-        isLoading = false
-    }
-}*/
-
-
-import Foundation
-import SwiftUI
-
 @MainActor
 class EmployViewStatusViewModel: ObservableObject {
     @Published var employees: [EmployeeRule] = []
@@ -90,6 +42,24 @@ class EmployViewStatusViewModel: ObservableObject {
 
             if !response.result.isEmpty {
                 self.employees = response.result
+                
+                // Persist feature flags for the current driver (or first record as fallback)
+                let activeEmployee =
+                response.result.first(where: { $0.employeeId == requestBody.employeeId }) ??
+                response.result.first
+                
+                if let employee = activeEmployee {
+                    let defaults = UserDefaults.standard
+                    defaults.set(employee.personalUse, forKey: "KEY_IS_PERSONAL_USE_ACTIVE")
+                    defaults.set(employee.yardMoves, forKey: "KEY_IS_YARD_MOVE_ACTIVE")
+                    defaults.set(employee.exempt, forKey: "KEY_IS_EXEMPT_ACTIVE")
+                    
+                    AppStorageHandler.shared.personalUseActive = employee.personalUse
+                    AppStorageHandler.shared.yardMovesActive = employee.yardMoves
+                    AppStorageHandler.shared.exempt = employee.exempt
+                    
+                    print(" Rules View Flags → Personal: \(employee.personalUse), Yard: \(employee.yardMoves), Exempt: \(employee.exempt)")
+                }
             } else {
                 self.errorMessage = response.message
             }

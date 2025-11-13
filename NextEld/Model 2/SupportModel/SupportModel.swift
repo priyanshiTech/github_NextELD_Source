@@ -32,16 +32,12 @@ struct HelpSupportResponce  : Codable {
 //    let companyDomainName: String
 //
 //}
+
+
 struct MessageRequestSupportNew: Codable {
     let driverId: String
     let message: String
     let companyDomainName: String
-
-    enum CodingKeys: String, CodingKey {
-        case driverId = "driverId"
-        case message = "message"
-        case companyDomainName = "company_domain_name"  //  IMPORTANT
-    }
 }
 
 // MARK: - Response Model
