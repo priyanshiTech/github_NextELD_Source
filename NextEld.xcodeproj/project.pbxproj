@@ -184,9 +184,7 @@
 		AFC3CF9F2DE5D6BE00D83558 /* InformationPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC3CF9E2DE5D6BE00D83558 /* InformationPacket.swift */; };
 		AFC3CFA22DE5F1A200D83558 /* RulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC3CFA12DE5F1A200D83558 /* RulesView.swift */; };
 		AFC535542E0D5B8A00AD10C9 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = AFC535532E0D5B8A00AD10C9 /* SQLite */; };
-		AFC535572E0D631900AD10C9 /* DataBaseManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC535562E0D631900AD10C9 /* DataBaseManagerClass.swift */; };
 		AFC535592E0D677C00AD10C9 /* DriverLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC535582E0D677C00AD10C9 /* DriverLogViewModel.swift */; };
-		AFC5355B2E0D67F900AD10C9 /* DriverLogList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */; };
 		AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AFCAF8242DD85D9200D82F29 /* assets .xcassets */; };
 		AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB43662E2F978100363BB6 /* DeleteModelAPI.swift */; };
 		AFCB43692E2F9E2400363BB6 /* DeleteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */; };
@@ -221,6 +219,8 @@
 		AFF3666C2E587AA20068AC2D /* excel_Manual_ppt.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */; };
 		AFFC64A22DCE1EE2008D1CC0 /* AlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */; };
 		CB283E722E9D5C5100B431DD /* HomeViewModel+Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB283E712E9D5C4400B431DD /* HomeViewModel+Database.swift */; };
+		CB5EBDC32EC61D2D00164F71 /* DriverLogList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EBDC02EC61D2D00164F71 /* DriverLogList.swift */; };
+		CB5EBDC42EC61D2D00164F71 /* DataBaseManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EBDBF2EC61D2D00164F71 /* DataBaseManagerClass.swift */; };
 		CB99EBD12EA2CA5B0062AC9A /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD02EA2C3420062AC9A /* Double+Extension.swift */; };
 		CB99EBD32EA3E58A0062AC9A /* HomeViewModel+Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */; };
 		CBE886042E995A2D00B7D581 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE886032E995A2500B7D581 /* HomeViewModel.swift */; };
@@ -438,9 +438,7 @@
 		AFC3CF9B2DE5D0C100D83558 /* CompanyInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyInformationView.swift; sourceTree = "<group>"; };
 		AFC3CF9E2DE5D6BE00D83558 /* InformationPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationPacket.swift; sourceTree = "<group>"; };
 		AFC3CFA12DE5F1A200D83558 /* RulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesView.swift; sourceTree = "<group>"; };
-		AFC535562E0D631900AD10C9 /* DataBaseManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerClass.swift; sourceTree = "<group>"; };
 		AFC535582E0D677C00AD10C9 /* DriverLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLogViewModel.swift; sourceTree = "<group>"; };
-		AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLogList.swift; sourceTree = "<group>"; };
 		AFCAF8242DD85D9200D82F29 /* assets .xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "assets .xcassets"; sourceTree = "<group>"; };
 		AFCB43662E2F978100363BB6 /* DeleteModelAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteModelAPI.swift; sourceTree = "<group>"; };
 		AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteViewModel.swift; sourceTree = "<group>"; };
@@ -475,6 +473,8 @@
 		AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = excel_Manual_ppt.pdf; sourceTree = "<group>"; };
 		AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModifier.swift; sourceTree = "<group>"; };
 		CB283E712E9D5C4400B431DD /* HomeViewModel+Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+Database.swift"; sourceTree = "<group>"; };
+		CB5EBDBF2EC61D2D00164F71 /* DataBaseManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerClass.swift; sourceTree = "<group>"; };
+		CB5EBDC02EC61D2D00164F71 /* DriverLogList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLogList.swift; sourceTree = "<group>"; };
 		CB99EBD02EA2C3420062AC9A /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+Graph.swift"; sourceTree = "<group>"; };
 		CBE886032E995A2500B7D581 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -688,8 +688,6 @@
 			isa = PBXGroup;
 			children = (
 				10CA6EC22DCC9BA8003B265C /* Reuseable  Label.swift */,
-				AFC5355A2E0D67F900AD10C9 /* DriverLogList.swift */,
-				AFC535562E0D631900AD10C9 /* DataBaseManagerClass.swift */,
 			);
 			path = HelpingInterfacesFile;
 			sourceTree = "<group>";
@@ -921,6 +919,8 @@
 		AF7951122E3BA766005FFFBF /* HomeScreenDataBase */ = {
 			isa = PBXGroup;
 			children = (
+				CB5EBDBF2EC61D2D00164F71 /* DataBaseManagerClass.swift */,
+				CB5EBDC02EC61D2D00164F71 /* DriverLogList.swift */,
 			);
 			path = HomeScreenDataBase;
 			sourceTree = "<group>";
@@ -1655,7 +1655,6 @@
 				AFA869412E4DC0AD0061A115 /* CertifyDriverViewModel.swift in Sources */,
 				AF2E0D262E8BBFCE00172174 /* ContinueDriveDB.swift in Sources */,
 				AF72E4352DFD54B400626DC0 /* DutyLogEntryView .swift in Sources */,
-				AFC5355B2E0D67F900AD10C9 /* DriverLogList.swift in Sources */,
 				AFC381742E290180006FD4E1 /* OfflineSavingData.swift in Sources */,
 				AF7235022E55DC5F009EAA9E /* RuleModel.swift in Sources */,
 				AF72E4362DFD54B400626DC0 /* ToggleRow.swift in Sources */,
@@ -1673,7 +1672,6 @@
 				AFC3817A2E290A3B006FD4E1 /* ofParamDataModel.swift in Sources */,
 				AF72E4392DFD54B400626DC0 /* DriverSignatiureView.swift in Sources */,
 				AF72E43A2DFD54B400626DC0 /* Foam&certify.swift in Sources */,
-				AFC535572E0D631900AD10C9 /* DataBaseManagerClass.swift in Sources */,
 				AF72E43B2DFD54B400626DC0 /* DeviceScannerView.swift in Sources */,
 				AF72350B2E560307009EAA9E /* MacaddressModel.swift in Sources */,
 				AFCC4C9D2E49E23A00629DE3 /* EyeViewAllRecords.swift in Sources */,
@@ -1782,6 +1780,8 @@
 				AFC3CF9C2DE5D0C100D83558 /* CompanyInformationView.swift in Sources */,
 				AF80FFA92DDF64DE00CC6A3D /* DotInspection.swift in Sources */,
 				CB99EBD12EA2CA5B0062AC9A /* Double+Extension.swift in Sources */,
+				CB5EBDC32EC61D2D00164F71 /* DriverLogList.swift in Sources */,
+				CB5EBDC42EC61D2D00164F71 /* DataBaseManagerClass.swift in Sources */,
 				108FF8342DC8EC850051671B /* ForgetUserName.swift in Sources */,
 				AF95DD462DE9C4940099D4CC /* LogOut.swift in Sources */,
 				AF9DB2C12DE1B3FE00B98C17 /* HadDefectedView.swift in Sources */,
