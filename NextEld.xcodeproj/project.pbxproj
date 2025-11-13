@@ -213,7 +213,6 @@
 		AFE146862DEB0498007A4AF0 /* FirmWare Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE146852DEB0498007A4AF0 /* FirmWare Update.swift */; };
 		AFE5DFFD2E5345AB0069BE27 /* LogOutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE5DFFC2E5345AB0069BE27 /* LogOutModel.swift */; };
 		AFE5DFFF2E5349B20069BE27 /* LogOutAPiViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE5DFFE2E5349B20069BE27 /* LogOutAPiViewModel.swift */; };
-		AFE7C0A22EBB1AF500ABCDEF /* SessionCleanupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */; };
 		AFEEDF822DE6DD06005675C2 /* HOSEventChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */; };
 		AFF3666A2E587A8F0068AC2D /* excel_eld_instruction.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */; };
 		AFF3666C2E587AA20068AC2D /* excel_Manual_ppt.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */; };
@@ -223,6 +222,7 @@
 		CB5EBDC42EC61D2D00164F71 /* DataBaseManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EBDBF2EC61D2D00164F71 /* DataBaseManagerClass.swift */; };
 		CB99EBD12EA2CA5B0062AC9A /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD02EA2C3420062AC9A /* Double+Extension.swift */; };
 		CB99EBD32EA3E58A0062AC9A /* HomeViewModel+Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */; };
+		CBBC96FE2EC6235D0049E376 /* SessionCleanupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */; };
 		CBE886042E995A2D00B7D581 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE886032E995A2500B7D581 /* HomeViewModel.swift */; };
 		CBE886072E9969F900B7D581 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE886062E9969F300B7D581 /* AppConstants.swift */; };
 /* End PBXBuildFile section */
@@ -467,7 +467,6 @@
 		AFE146852DEB0498007A4AF0 /* FirmWare Update.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirmWare Update.swift"; sourceTree = "<group>"; };
 		AFE5DFFC2E5345AB0069BE27 /* LogOutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutModel.swift; sourceTree = "<group>"; };
 		AFE5DFFE2E5349B20069BE27 /* LogOutAPiViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutAPiViewModel.swift; sourceTree = "<group>"; };
-		AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCleanupManager.swift; sourceTree = "<group>"; };
 		AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HOSEventChartView.swift; sourceTree = "<group>"; };
 		AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = excel_eld_instruction.pdf; sourceTree = "<group>"; };
 		AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = excel_Manual_ppt.pdf; sourceTree = "<group>"; };
@@ -477,6 +476,7 @@
 		CB5EBDC02EC61D2D00164F71 /* DriverLogList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLogList.swift; sourceTree = "<group>"; };
 		CB99EBD02EA2C3420062AC9A /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+Graph.swift"; sourceTree = "<group>"; };
+		CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCleanupManager.swift; sourceTree = "<group>"; };
 		CBE886032E995A2500B7D581 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		CBE886062E9969F300B7D581 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		CBEF2F572EAE098900451B22 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
@@ -1368,7 +1368,7 @@
 				AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */,
 				AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */,
 				AFDBF8932E5735A5002DB62D /* SharedManager.swift */,
-				AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */,
+				CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */,
 			);
 			path = HelpingGroup;
 			sourceTree = "<group>";
@@ -1647,6 +1647,7 @@
 				AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */,
 				AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */,
 				AF45BB752EB893BF00DDDB4D /* VehicleConditionViewModel.swift in Sources */,
+				CBBC96FE2EC6235D0049E376 /* SessionCleanupManager.swift in Sources */,
 				AF9E842A2EC3198500CF40E5 /* DataTransferModel.swift in Sources */,
 				AF9DD4F52DDDB1FF0034FA8F /* AddDvirScreenViewModel.swift in Sources */,
 				AF7234FF2E55BE47009EAA9E /* DvirEmailViewModel.swift in Sources */,
@@ -1821,7 +1822,6 @@
 				10CA6EC32DCC9BA8003B265C /* Reuseable  Label.swift in Sources */,
 				AF72350D2E560567009EAA9E /* MacAddressViewModel.swift in Sources */,
 				AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */,
-				AFE7C0A22EBB1AF500ABCDEF /* SessionCleanupManager.swift in Sources */,
 				AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */,
 				108FF8302DC8A8BA0051671B /* LoginScreen.swift in Sources */,
 				AFCC4CA72E4A29C500629DE3 /* CompanyInformation<odel.swift in Sources */,
