@@ -27,6 +27,7 @@ enum AppRoute: Hashable {
     }
     
     enum HomeFlow: Hashable {
+        
         case Home
         case DailyLogs(tittle: String)
         case AddDvirPriTrip

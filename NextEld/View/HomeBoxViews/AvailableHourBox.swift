@@ -2,7 +2,7 @@
 //  AvailableHourBox.swift
 //  NextEld
 //
-//  Created by priyanshi   on 06/10/25.
+//  Created by priyanshi  on 06/10/25.
 //
 
 import Foundation
@@ -22,25 +22,29 @@ struct AvailableHoursView: View {
     }
     
     var body: some View {
+        
         CardContainer {
+            
             VStack(spacing: 2) {
                 HStack(spacing: 5) {
+                    
                     Button("Recap") {
                         navmanager.navigate(to: AppRoute.HomeFlow.RecapHours(tittle: "Hours Recap"))
                     }
                     .buttonStyle(.plain)
                     .foregroundColor(.purple)
-                    
-                    Spacer()
+                        Spacer()
+                      
                     Text("Available Hours")
                         .font(.system(size: 18))
                         .underline()
                         .font(.title3)
-                    Spacer()
+                          Spacer()
                     
                     Button("Daily Logs") {
-                       // navmanager.navigate(to: AppRoute.logsFlow(.DailyLogs(title: "Daily Logs")))
+                        navmanager.navigate(to: AppRoute.HomeFlow.DailyLogs(tittle: "Daily Logs"))
                     }
+                    
                     .buttonStyle(.plain)
                     .foregroundColor(.purple)
                 }
