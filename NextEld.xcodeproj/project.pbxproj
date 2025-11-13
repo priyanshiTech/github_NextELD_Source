@@ -208,7 +208,6 @@
 		AFD90C8D2E50907800C56528 /* GlobalVariableclass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */; };
 		AFDBB1792E03FAC000D4A2CA /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */; };
 		AFDBF8942E5735A5002DB62D /* SharedManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDBF8932E5735A5002DB62D /* SharedManager.swift */; };
-		AFE7C0A22EBB1AF500ABCDEF /* SessionCleanupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */; };
 		AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */; };
 		AFDEF7242E4B18AE00BEB2B1 /* Help&SupportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDEF7232E4B18AE00BEB2B1 /* Help&SupportViewModel.swift */; };
 		AFDEF7272E4B1B3E00BEB2B1 /* SupportModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDEF7262E4B1B3E00BEB2B1 /* SupportModel.swift */; };
@@ -216,6 +215,7 @@
 		AFE146862DEB0498007A4AF0 /* FirmWare Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE146852DEB0498007A4AF0 /* FirmWare Update.swift */; };
 		AFE5DFFD2E5345AB0069BE27 /* LogOutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE5DFFC2E5345AB0069BE27 /* LogOutModel.swift */; };
 		AFE5DFFF2E5349B20069BE27 /* LogOutAPiViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE5DFFE2E5349B20069BE27 /* LogOutAPiViewModel.swift */; };
+		AFE7C0A22EBB1AF500ABCDEF /* SessionCleanupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */; };
 		AFEEDF822DE6DD06005675C2 /* HOSEventChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */; };
 		AFF3666A2E587A8F0068AC2D /* excel_eld_instruction.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */; };
 		AFF3666C2E587AA20068AC2D /* excel_Manual_ppt.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */; };
@@ -462,7 +462,6 @@
 		AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariableclass.swift; sourceTree = "<group>"; };
 		AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		AFDBF8932E5735A5002DB62D /* SharedManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedManager.swift; sourceTree = "<group>"; };
-		AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCleanupManager.swift; sourceTree = "<group>"; };
 		AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerClass.swift; sourceTree = "<group>"; };
 		AFDEF7232E4B18AE00BEB2B1 /* Help&SupportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Help&SupportViewModel.swift"; sourceTree = "<group>"; };
 		AFDEF7262E4B1B3E00BEB2B1 /* SupportModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportModel.swift; sourceTree = "<group>"; };
@@ -470,6 +469,7 @@
 		AFE146852DEB0498007A4AF0 /* FirmWare Update.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirmWare Update.swift"; sourceTree = "<group>"; };
 		AFE5DFFC2E5345AB0069BE27 /* LogOutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutModel.swift; sourceTree = "<group>"; };
 		AFE5DFFE2E5349B20069BE27 /* LogOutAPiViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutAPiViewModel.swift; sourceTree = "<group>"; };
+		AFE7C0A12EBB1AF500ABCDEF /* SessionCleanupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCleanupManager.swift; sourceTree = "<group>"; };
 		AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HOSEventChartView.swift; sourceTree = "<group>"; };
 		AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = excel_eld_instruction.pdf; sourceTree = "<group>"; };
 		AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = excel_Manual_ppt.pdf; sourceTree = "<group>"; };

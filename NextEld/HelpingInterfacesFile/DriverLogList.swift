@@ -13,7 +13,7 @@ struct DriverLogListView: View {
     @State private var currentPage = 0
     private let logsPerPage = 10
     @State private var showConfirmation = false
-
+ 
     // MARK: - Pagination Logic
     var paginatedLogs: [DriverLogModel] {
         let start = currentPage * logsPerPage
@@ -106,9 +106,9 @@ struct DriverLogListView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
-            print("🔄 DriverLogListView appeared - loading logs...")
+            print(" DriverLogListView appeared - loading logs...")
             viewModel.loadLogs()
-            print("📊 Loaded \(viewModel.logs.count) logs")
+            print(" Loaded \(viewModel.logs.count) logs")
         }
     }
 }
