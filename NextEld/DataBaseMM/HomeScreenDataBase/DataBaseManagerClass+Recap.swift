@@ -33,7 +33,7 @@ extension DatabaseManager {
                 if i + 1 < logsForDay.count {
                     endDate = logsForDay[i+1].0
                 } else {
-                    endDate = calendar.isDateInToday(day) ? today : startOfNextDay
+                    endDate = today
                 }
                 
                 let duration = max(0, endDate.timeIntervalSince(startDate))
@@ -41,13 +41,12 @@ extension DatabaseManager {
                 if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
                     dutySeconds += duration
                 }
-                
-//                else if status == AppConstants.off_Duty || status == AppConstants.sleep {
-//                    // optional split rule: short off-duty counts as duty
-//                    if duration <= 2 * 3600 {
-//                        dutySeconds += duration
-//                    }
-//                }
+                else if status == AppConstants.off_Duty {
+                    // optional split rule: short off-duty counts as duty
+                    if duration <= 2 * 3600 {
+                        dutySeconds += duration
+                    }
+                }
             }
             
             results.append(WorkEntry(date: day, hoursWorked: dutySeconds))
@@ -58,7 +57,6 @@ extension DatabaseManager {
     
     func getTodaysWork() -> (totalWorkedToday: TimeInterval, remainingWorkedToday: TimeInterval) {
         let OnDutyTodayTotalTime = TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0)
-        let calendar = DateTimeHelper.calendar
         let allLogs = fetchLogs(filterTypes: [.getTodayRecord])
         if allLogs.isEmpty {
             return (0,OnDutyTodayTotalTime)
@@ -86,12 +84,12 @@ extension DatabaseManager {
             if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
                 dutySeconds += duration
             }
-//            else if status == AppConstants.off_Duty || status == AppConstants.sleep {
-//                // optional split rule: short off-duty counts as duty
-//                if duration <= 2 * 3600 {
-//                    dutySeconds += duration
-//                }
-//            }
+            else if status == AppConstants.off_Duty {
+                // optional split rule: short off-duty counts as duty
+                if duration <= 2 * 3600 {
+                    dutySeconds += duration
+                }
+            }
         }
         let dutyTime = max(0, OnDutyTodayTotalTime - dutySeconds)
         
@@ -134,7 +132,7 @@ extension DatabaseManager {
             if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
                 dutySeconds += duration
             }
-//            else if status == AppConstants.off_Duty || status == AppConstants.sleep {
+//            else if status == AppConstants.off_Duty {
 //                // optional split rule: short off-duty counts as duty
 //                if duration <= 2 * 3600 {
 //                    dutySeconds += duration
