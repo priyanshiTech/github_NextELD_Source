@@ -213,7 +213,7 @@ class LoginViewModel: ObservableObject {
                     print(" Saved VechicleID: \(VechicleID)")
                     }
                 
-                    if let originAddres = response.result?.driverLog?.first?.origin{
+                    if let originAddres = response.result?.driverLog?.first?.origin {
                   //  UserDefaults.standard.set(originAddres, forKey: "origin")
                         AppStorageHandler.shared.origin = originAddres
                     print(" Saved Origin: \(originAddres)")

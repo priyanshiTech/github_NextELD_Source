@@ -79,18 +79,19 @@ struct HoursRecap: View {
                 HStack {
                     Text("Hours Worked Today")
                     Spacer()
-                    Text(formatTime(last7Days.last?.hoursWorked ?? 0))
+                    Text(DatabaseManager.shared.getTodaysWork().totalWorkedToday.timeString)
                 }
                 HStack {
                     Text("Hours Available Today")
                     Spacer()
-                    Text(DatabaseManager.shared.formatTime(DatabaseManager.shared.availableHoursToday()))
+                    Text(DatabaseManager.shared.getTodaysWork().remainingWorkedToday.timeString)
                 }
                 HStack {
                     Text("Hours Available Tomorrow")
                     Spacer()
                    // Text("60:41:32") // replace with real calculation
-                    Text(DatabaseManager.shared.formatTime(DatabaseManager.shared.availableCycleHours(days: 7, limitHours: 70)))
+                  //  Text(DatabaseManager.shared.formatTime(DatabaseManager.shared.availableCycleHours(days: 7, limitHours: 70)))
+                    Text(DatabaseManager.shared.getRemainingCycleTime().timeString)
                 }
             }
         }

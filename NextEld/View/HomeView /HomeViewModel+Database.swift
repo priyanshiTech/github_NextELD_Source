@@ -3,7 +3,7 @@ import Foundation
 
 extension HomeViewModel {
 
-    func saveTimerStateForStatus(status: String, note: String?) {
+    func saveTimerStateForStatus(status: String, note: String? = nil, date: Date? = nil) {
         print("Saving timer state for status: \(status)")
         var messge = note ?? ""
         if messge.isEmpty {
@@ -12,7 +12,7 @@ extension HomeViewModel {
 
         DatabaseManager.shared.saveTimerLog(
             status: status,
-            startTime: DateTimeHelper.currentDateTime(),
+            startTime: date ?? DateTimeHelper.currentDateTime(),
             dutyType: messge,
             remainingWeeklyTime: Int(cycleTimer?.remainingTime ?? 0),
             remainingDriveTime: Int(onDriveTimer?.remainingTime ?? 0),

@@ -106,7 +106,7 @@ struct DotInspection: View {
                     
                         Button(action: {
                             let selectedEntry = WorkEntry(date: Date(), hoursWorked: 0)
-                            navManager.navigate(to: AppRoute.LogsDetails(title: "Road Side Inspection", entry: selectedEntry))
+                            navManager.navigate(to: AppRoute.HomeFlow.LogsDetails(title: "Road Side Inspection", entry: selectedEntry))
                            // navManager.navigate(to: AppRoute.logsFlow(.LogsDetails(title: "Road Side Inspection", entry: selectedEntry)))
                         }) {
                             Text("Review On Device")

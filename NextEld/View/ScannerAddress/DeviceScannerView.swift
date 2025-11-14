@@ -213,6 +213,10 @@ struct DeviceScannerView: View {
                 case .CertifySelectedView(let title):
                     CertifySelectedView( vehiclesc:  .constant(""), VechicleID: .constant(0), title: title)
           
+                case .RecapHours(let tittle):
+                    HoursRecap(tittle: tittle)
+                case .LogsDetails(title: let title, entry: let entry):
+                    DailyLogView(title: title, entry: WorkEntry(date: Date(), hoursWorked: 0))
                 }
             }
         }

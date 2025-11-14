@@ -178,7 +178,7 @@ struct HomeScreenView: View {
                     onClose: { homeVM.showDriverStatusAlert.showAlert = false },
                     onSubmit: { note in
                         let status = homeVM.showDriverStatusAlert.status
-                        
+                        AppStorageHandler.shared.origin = OriginType.driver.description
                         // Set new status and start timers
                        homeVM.setDriverStatus(status: status)
                         // Save new timer state after status change

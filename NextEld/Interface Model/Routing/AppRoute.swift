@@ -42,7 +42,8 @@ enum AppRoute: Hashable {
         case FirmWare_Update
         case ADDVehicle
         case CertifySelectedView(tittle: String)
- 
+        case RecapHours(tittle: String)
+        case LogsDetails(title: String, entry: WorkEntry)
         
     }
     
@@ -76,9 +77,6 @@ enum AppRoute: Hashable {
     case PT30Connection
     // Side Menu Screens
     
-    
-    case RecapHours(tittle: String)
-    
 
 
     
@@ -86,7 +84,7 @@ enum AppRoute: Hashable {
 
 
     //  With associated value
-    case LogsDetails(title: String, entry: WorkEntry)
+    
     case EyeViewData(tittle: String , entry : WorkEntry )
    
     case NewDriverLogin(title: String , email: String)

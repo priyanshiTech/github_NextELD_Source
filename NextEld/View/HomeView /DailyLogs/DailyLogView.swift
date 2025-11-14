@@ -147,7 +147,7 @@ struct DailyLogView: View {
                     HStack(spacing: 5) {
                         CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: AppRoute.DvirFlow.emailLogs(tittle: " Daily Logs"))})
                             .padding()
-                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: AppRoute.RecapHours(tittle: "Hours Recap"))})
+                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: AppRoute.HomeFlow.RecapHours(tittle: "Hours Recap"))})
                             .foregroundColor(.black)
                     }
                 }

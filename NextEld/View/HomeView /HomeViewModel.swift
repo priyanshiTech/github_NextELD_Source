@@ -295,18 +295,18 @@ class HomeViewModel: ObservableObject {
     
     var alertType: AlertType = .sucessConfimration
     
-  
-    
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
     init() {
+        restoreAllTimersFromLastStatus()
         validateScenarioInEveryMinute()
         timer
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.validateScenarioInEveryMinute()
+                self?.addIntermediateLogs()
             }
             .store(in: &cancellable)
     }
@@ -323,7 +323,7 @@ class HomeViewModel: ObservableObject {
     }
     
     func validateScenarioInEveryMinute() {
-        restoreAllTimersFromLastStatus()
+        
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
@@ -393,7 +393,7 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    func resetToInitialState(isResetCycleTimer: Bool = false) {
+    func resetToInitialState(isResetCycleTimer: Bool = false, cycleTime: Int = 0)  {
         onDutyTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0))
         breakTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.breakTime ?? 0))
         sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
@@ -401,44 +401,13 @@ class HomeViewModel: ObservableObject {
         continueDriveTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.continueDriveTime ?? 0))
         if isResetCycleTimer {
             cycleTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.cycleTime ?? 0))
+        } else if cycleTime != 0 {
+            cycleTimer = CountdownTimer(startTime: TimeInterval(cycleTime))
         }
         currentDriverStatus = .offDuty
         self.loadEventsFromDatabase()
        // setupTimerCallbacks()
     }
-    
-    // MARK: - Setup Timer Callbacks
-//    func setupTimerCallbacks() {
-//        // On Duty Timer Callback
-//        onDutyTimer?.onTimeChanged = { [weak self] remainingTime in
-//            self?.onChangeRemaingTime(type: .onDuty, remainigTime: remainingTime)
-//        }
-//        
-//        // On Drive Timer Callback
-//        onDriveTimer?.onTimeChanged = { [weak self] remainingTime in
-//            self?.onChangeRemaingTime(type: .onDrive, remainigTime: remainingTime)
-//        }
-//        
-//        // Cycle Timer Callback
-//        cycleTimer?.onTimeChanged = { [weak self] remainingTime in
-//            self?.onChangeRemaingTime(type: .cycleTimer, remainigTime: remainingTime)
-//        }
-//        
-//        // Continue Drive Timer Callback
-//        continueDriveTimer?.onTimeChanged = { [weak self] remainingTime in
-//            self?.onChangeRemaingTime(type: .continueDrive, remainigTime: remainingTime)
-//        }
-//        
-////        breakTimer?.onTimeChanged = { [weak self] remainingTime in
-////            self?.onChangeRemaingTime(type: .breakTimer, remainigTime: remainingTime)
-////        }
-//        
-//        // Sleep Timer Callback
-////        sleepTimer?.onTimeChanged = { [weak self] remainingTime in
-//////            self?.checkSleepTimerCompletion(remainingTime: remainingTime)
-////        }
-//
-//    }
     
     // MARK: - Delete All App Data
     func deleteAllAppData() {
@@ -462,7 +431,7 @@ class HomeViewModel: ObservableObject {
         case .onDuty:
             checkedOffDutyTimeIsLessThan2Hour()
             timerTypes = [.onDuty, .cycleTimer]
-            if previousStatus == .onDrive{
+            if previousStatus == .onDrive {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer, .continueDrive]
                 saveContinueDriveDB(status: AppConstants.onDuty)
             }
@@ -535,7 +504,7 @@ class HomeViewModel: ObservableObject {
         guard let latestLog = lastLog else {
             if let lastRecordFromDB = DatabaseManager.shared.getLastRecordOfDriverLogs() {
                 lastLog = lastRecordFromDB
-                resetToInitialState()
+                resetToInitialState(cycleTime: lastLog?.remainingWeeklyTime ?? 0)
             } else {
                 resetToInitialState(isResetCycleTimer: true)
             }
@@ -821,5 +790,18 @@ class HomeViewModel: ObservableObject {
         let totalSleepAllowed = AppStorageHandler.shared.onSleepTime ?? 0
         let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
         return calculatedSleepTaken >= TimeInterval(totalSleepAllowed)
+    }
+    
+    func addIntermediateLogs() {
+        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day]), lastLog.status == AppConstants.on_Drive else {
+            return
+        }
+        AppStorageHandler.shared.origin = OriginType.intermediate.description
+        let startTime = lastLog.startTime
+        let afterOneHourTime = DateTimeHelper.calendar.date(byAdding: .hour, value: 1, to: startTime) ?? DateTimeHelper.currentDateTime()
+        let currentTime = DateTimeHelper.currentDateTime()
+        if afterOneHourTime <= currentTime && lastLog.odometer != .zero {
+            saveTimerStateForStatus(status: lastLog.status, date: afterOneHourTime)
+        }
     }
 }
