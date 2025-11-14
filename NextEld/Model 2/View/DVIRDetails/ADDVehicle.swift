@@ -108,10 +108,11 @@ struct ADDVehicle: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                     .foregroundColor(.white)
-                    .background(Color(uiColor: .wine))
+                    .background(selectedVehicleNumber.isEmpty || VechicleID == 0 ? Color.gray : Color(uiColor: .wine))
                     .cornerRadius(8)
                     .padding(.horizontal)
             }
+            .disabled(selectedVehicleNumber.isEmpty || VechicleID == 0)
             .padding(.bottom, 16)
         }
         .edgesIgnoringSafeArea(.top)

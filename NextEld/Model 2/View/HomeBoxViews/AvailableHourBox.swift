@@ -39,7 +39,8 @@ struct AvailableHoursView: View {
                     Spacer()
                     
                     Button("Daily Logs") {
-                        navmanager.navigate(to: AppRoute.LogsFlow.DailyLogs(title: AppConstants.DailyLogs))
+                        
+                        navmanager.path.append(AppRoute.HomeFlow.DailyLogs(tittle: "Daily Logs"))
                     }
                     .buttonStyle(.plain)
                     .foregroundColor(.purple)

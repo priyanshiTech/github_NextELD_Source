@@ -190,7 +190,7 @@ struct DVIRHistory: View {
     
     func formatDates(_ date: Date, endOfDay: Bool = false) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd"
         formatter.timeZone = .current
         if endOfDay {
             return formatter.string(from: Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: date)!)

@@ -11,6 +11,7 @@ import SwiftUI
 struct AddVichleMode: View {
 
     @EnvironmentObject var navmanager: NavigationManager
+    @EnvironmentObject var appRootManager: AppRootManager
     @Binding var selectedVehicle: String
     @Binding var selectedVehicleId: Int
 
@@ -51,6 +52,7 @@ struct AddVichleMode: View {
             //MARK: -  Vehicle selection
             CardContainer {
                 Button(action: {
+                    // Navigate to ADDVehicle with proper bindings
                     navmanager.navigate(to: AppRoute.HomeFlow.ADDVehicle)
                 }) {
                     HStack {
@@ -59,10 +61,10 @@ struct AddVichleMode: View {
                                 .font(.headline)
                                 .foregroundColor(.black)
 
-                            Text("\(selectedVehicle)")
+                            Text(selectedVehicle.isEmpty ? "Select Vehicle" : selectedVehicle)
                            // show selected data
                                 .font(.headline)
-                                .foregroundColor(.black)
+                                .foregroundColor(selectedVehicle.isEmpty ? .gray : .black)
                         }
                        
                         Spacer()
@@ -74,6 +76,18 @@ struct AddVichleMode: View {
                 .buttonStyle(PlainButtonStyle())
             }
             .padding(20)
+            .onAppear {
+                // Sync selected vehicle from AppStorageHandler when view appears
+                let savedVehicleNo = AppStorageHandler.shared.vehicleNo ?? ""
+                let savedVehicleId = AppStorageHandler.shared.vehicleId ?? 0
+                
+                if !savedVehicleNo.isEmpty {
+                    selectedVehicle = savedVehicleNo
+                }
+                if savedVehicleId != 0 {
+                    selectedVehicleId = savedVehicleId
+                }
+            }
 
             Button(action: {
                 Task {
@@ -99,8 +113,10 @@ struct AddVichleMode: View {
                          print("Saved selected vehicle: \(selectedVehicle)")
                         UserDefaults.standard.set(selectedVehicleId, forKey: "vehicleId")
                         print(" Saved vehicle: \(selectedVehicle), ID: \(selectedVehicleId)")
-
-                        navmanager.navigate(to: AppRoute.scanner)
+                        
+                        navmanager.reset()
+                        appRootManager.currentRoot = .scanner(moveToHome: false)
+                  
                     }
                 }
             }) {
