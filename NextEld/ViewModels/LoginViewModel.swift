@@ -99,6 +99,11 @@ class LoginViewModel: ObservableObject {
                     
                 }
                 
+                if let disclaimer = response.result?.disclaimerRead {
+                    AppStorageHandler.shared.disclaimerRead = disclaimer
+                    //UserDefaults.standard.set(clintId, forKey: "clientId")
+                }
+                
                 //MARK: - ClientId
                 if let clintId = response.result?.clientId {
                     AppStorageHandler.shared.clientId = clintId

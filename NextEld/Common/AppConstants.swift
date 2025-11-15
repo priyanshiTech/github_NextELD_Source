@@ -36,6 +36,7 @@ struct AppConstants {
     static let shippingTittle = "Shipping Doc"
     static let DailyLogs = "Daily Logs"
     static let HourRecap = "Hour Recap"
+    static let Disclaimer = "Accept Disclaimer"
     
     //MARK: -
     

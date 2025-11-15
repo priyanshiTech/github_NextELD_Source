@@ -83,7 +83,6 @@ struct LoginScreen: View {
                     }
                 }
                 .inputBoxStyle(isValid: password.isEmpty || isValidPassword(password))
-                
                 // Inline validation message
                 if !password.isEmpty && !isValidPassword(password) {
                     // Text("Password must be 8+ chars, 1 uppercase, 1 number & 1 symbol")
@@ -107,7 +106,6 @@ struct LoginScreen: View {
                 }
                 
                 //MARK:  With API Verification
-                
                 Button {
                         if !isValidUsername(UserName) || !isValidPassword(password) {
                             alertVisible = true
@@ -117,10 +115,11 @@ struct LoginScreen: View {
                         Task {
                             let success = await loginVM.login(email: UserName, password: password)
                             if success && SessionManagerClass.shared.isLoggedIn() {
-        
+                               
                                 await viewModel.callLoginLogUpdateAPI()
-                                appRootManager.currentRoot = .scanner()
-                               // navManager.navigate(to: .SplashScreen)
+                                
+                                appRootManager.currentRoot = .DisclaimerView
+                              //  appRootManager.currentRoot = .scanner()
                                 
                             } else {
                                 alertVisible = true

@@ -75,8 +75,8 @@ struct CertifySelectedView: View {
                         CustomIconButton(
                             iconName: "alarm_icon",
                             title: "Event",
-                            action: { navManager.navigate(to: AppRoute.RecapHours(tittle: "Hours Recap")) }
-                          //  action: { navManager.navigate(to: AppRoute.logsFlow(.RecapHours(title: "Hours Recap"))) }
+                            action: { navManager.navigate(to: AppRoute.LogsFlow.RecapHours(title: AppConstants.HourRecap)) }
+                            
                         )
                         .padding()
                     }

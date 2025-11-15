@@ -47,6 +47,7 @@ func generateWorkEntries() -> [WorkEntry] {
 
 struct DateStepperView: View {
        @Binding var currentDate: Date
+       var maximumDate: Date? = nil // Optional maximum date limit
 // private var currentDate = Date()
     var body: some View {
         
@@ -70,13 +71,21 @@ struct DateStepperView: View {
             Spacer()
             
             
-            //MARK: -  Right chevron - increment date
+            //MARK: -  Right chevron - increment date (disabled if at maximum date)
             Button(action: {
-                currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                if let maxDate = maximumDate {
+                    let nextDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                    if nextDate <= maxDate {
+                        currentDate = nextDate
+                    }
+                } else {
+                    currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                }
             }) {
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.black)
+                    .foregroundColor(isAtMaximumDate ? .gray : .black)
             }
+            .disabled(isAtMaximumDate)
         }
         .padding()
     }
@@ -88,6 +97,12 @@ struct DateStepperView: View {
         
 
         return formatter.string(from: currentDate)
+    }
+    
+    //MARK: - Check if date is at maximum
+    private var isAtMaximumDate: Bool {
+        guard let maxDate = maximumDate else { return false }
+        return Calendar.current.isDate(currentDate, inSameDayAs: maxDate) || currentDate > maxDate
     }
 }
 //MARK: Global function

@@ -11,10 +11,11 @@ import Foundation
 
 enum API {
     
-    static let baseURL = URL(string: "https://gbt-usa.com/eld_log/")!
+    static let baseURL = URL(string: "https://admin.allstarelogs.com/eld_log/")!
     static let baseURLTwo = URL(string: "http://165.232.183.179:4002/api/")!
     static let privacyPolicyURL = "https://exceleld.com/privacypolicy/"
-    static let DominName = "https://gbt-usa.com/"
+    static let DominName = "https://admin.gbt-usa.com/"
+   // static let AllStarDisclamer = "https://admin.allstarelogs.com/eld_log/"
 
     enum Endpoint {
         case login
@@ -44,40 +45,31 @@ enum API {
         case vehicleConditionApi
         case dataTransferAPI
         case DriverWorkingtime
+        case DisclamerAPI
 
         
         var url: URL {
             switch self {
             case .login:
                 return API.baseURL.appendingPathComponent("auth/login")
-                
             case . ForgetPassword:
                 return API.baseURL.appendingPathComponent("auth/forgot_password")
-                
             case .ForgetUserName:
                 return API.baseURL.appendingPathComponent("auth/forgot_username")
-                
             case .ForSavingOfflineData:
                 return API.baseURL.appendingPathComponent("dispatch/add_drivering_status_offline")
-                
             case .getAllDatadelete:
                 return API.baseURL.appendingPathComponent("dispatch/delete_all_driver_status_by_id")
-                
             case .dispatchadd_dvir_data:
                 return API.baseURL.appendingPathComponent("dispatch/add_dvir_data")
-                
             case .update_dvir_data:
                 return API.baseURL.appending(components: "dispatch/update_dvir_data")
-                
             case .getRefershAlldata:
                 return API.baseURL.appendingPathComponent("auth/login_data_by_employee_id")
-                
             case .viewdriveringstatusbydate:
                 return API.baseURL.appendingPathComponent("dispatch/view_drivering_status_by_date")
-                
             case .CompanyDriverInformation:
                 return API.baseURL.appendingPathComponent("master/view_driver_information")
-                
             case .HelpSupportInfo:
                 //return API.baseURL.appendingPathComponent("dispatch/add_eld_support")
                 return API.baseURLTwo.appendingPathComponent("driver/messageToSupport")
@@ -113,18 +105,20 @@ enum API {
                 return API.baseURL.appendingPathComponent("api/jsoncrypto/encrypt")
             case .DriverWorkingtime:
                 return API.baseURL.appendingPathComponent("dispatch/add_driver_working_status")
+            case .DisclamerAPI:
+                return API.baseURL.appending(components: "master/update_disclaimer_in_driver")
             }
         }
-
+        
         var method: String {
-            
             switch self {
                 
-            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi , .dataTransferAPI,.DriverWorkingtime:
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi , .dataTransferAPI,.DriverWorkingtime ,.DisclamerAPI:
                 return "POST"
                 
             case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI , .addDefectData:
                 return "POST"
+
 
             }
         }

@@ -15,16 +15,20 @@ enum ApplicationRoot: Hashable {
     case login
     case scanner(moveToHome: Bool = false)
     case SessionExpireUIView
+    case DisclaimerView
+    
 }
 
 enum AppRoute: Hashable {
     
     enum LoginFlow: Hashable {
+        
         case forgetPassword(tittle: String)
         case forgetUser(tittle: String)
     }
     
     enum HomeFlow: Hashable {
+        
         case Home
         case DailyLogs(tittle: String)
         case AddDvirPriTrip
@@ -42,12 +46,9 @@ enum AppRoute: Hashable {
         case NewDriverLogin(title: String , email: String)
         case CertifySelectedView(tittle: String)
         
- 
-        
     }
     
     enum DvirFlow: Hashable{
-        
         case AddDvirScreenView
         case emailLogs(tittle: String)
         case DvirHostory(tittle: String)
@@ -75,7 +76,6 @@ enum AppRoute: Hashable {
    // case scanner
     
     enum DatabaseFlow: Hashable {
-        
         case DatabaseCertifyView
         case DriverLogListView
         case DvirDataListView
@@ -85,32 +85,18 @@ enum AppRoute: Hashable {
     }
 
     enum BluetoothDeviceFlow: Hashable {
-        
         case NT11Connection
         case PT30Connection
     }
     
     //MARK: -  Cases of Add dvirPri trip
     case scanner
-
     // Side Menu Screens
-    
-    
     case RecapHours(tittle: String)
-    
-
-
-    
     case DataTransferView
-
-
     //  With associated value
     case LogsDetails(title: String, entry: WorkEntry)
- 
-   
-   
     //Vichle Mode
-
     case Logout
     
 

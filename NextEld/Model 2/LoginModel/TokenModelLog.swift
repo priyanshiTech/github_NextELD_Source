@@ -19,6 +19,7 @@ struct TokenModelLog: Decodable {
 struct TokenResult: Decodable {
     
     let tokenNo : String?
+    let disclaimerRead: Int?
     let status : String?
     let employeeId : Int?
     let clientId : Int?

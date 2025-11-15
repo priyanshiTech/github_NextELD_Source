@@ -25,6 +25,8 @@ struct NextEldApp: App {
                 DeviceScannerView(checkboxClick: true, macaddress: "", moveToHome: moveToHome)
             case .SessionExpireUIView:
                 SessionExpireUIView()
+            case .DisclaimerView:
+                DisclamerView()
             }
         }
         .environmentObject(rootManager)

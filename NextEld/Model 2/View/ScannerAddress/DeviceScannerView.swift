@@ -302,6 +302,8 @@ struct DeviceScannerView: View {
                 EmptyView()
             case .SessionExpireUIView:
                 SessionExpireUIView()
+            case .DisclaimerView:
+                DisclamerView()
             }
         }
         .navigationBarHidden(true)

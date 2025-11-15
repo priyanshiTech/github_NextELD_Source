@@ -45,6 +45,7 @@ struct AppStorageHandler {
     @AppStorage("personalUse") var personalUseActive: String?
     @AppStorage("yardMoves") var yardMovesActive: String?
     @AppStorage("exempt") var exempt: String?
+    @AppStorage("disclaimerRead") var disclaimerRead:Int?
    
     
     

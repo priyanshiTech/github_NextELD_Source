@@ -55,7 +55,7 @@ struct DailyLogView: View {
         
         for record in certifiedRecords {
             // Convert DB date to same format for comparison
-            if let dbDate = parseDate(record.date) {
+            if let dbDate = DateTimeHelper.parseDate(record.date) {
                 let dbDateString = formatter.string(from: dbDate)
                 
                 print("     Comparing with DB record:")
@@ -90,29 +90,7 @@ struct DailyLogView: View {
         return false
     }
     
-    // Helper function to parse various date formats
-    private func parseDate(_ dateString: String) -> Date? {
-        let formats = [
-            "yyyy-MM-dd",
-            "dd-MM-yyyy",
-            "yyyy-MM-dd'T'HH:mm:ss",
-            "yyyy-MM-dd HH:mm:ss",
-            "MM/dd/yyyy",
-            "dd/MM/yyyy"
-        ]
-        
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone.current
-        
-        for format in formats {
-            formatter.dateFormat = format
-            if let date = formatter.date(from: dateString) {
-                return date
-            }
-        }
-        return nil
-    }
-    
+
     var body: some View {
         
         //MARK: top Header Colour
@@ -176,13 +154,21 @@ struct DailyLogView: View {
                     HStack {
                         Text(dateFormattedString(log.date))
                             .foregroundColor(.primary)
-
-                        Spacer()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                // Navigate to LogsDetails on cell click
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "dd-MM-yyyy"
+                                if let logDate = formatter.date(from: log.date) {
+                                    let selectedEntry = WorkEntry(date: logDate, hoursWorked: 0)
+                                    navManager.navigate(to: AppRoute.LogsFlow.LogsDetails(title: "Daily Log", entry: selectedEntry))
+                                }
+                            }
 
                         let isCertified = isDateFullyCertified(log.date)
-
                         Button(action: {
-                            // Navigate to your certify screen
+                            // Navigate to certify screen on button click
                             navManager.navigate(to: AppRoute.HomeFlow.CertifySelectedView(tittle: dateFormattedString(log.date)))
                             print("Tapped for \(dateFormattedString(log.date)) → Certified: \(isCertified)")
                         }) {
@@ -195,7 +181,6 @@ struct DailyLogView: View {
                                 .cornerRadius(6)
                         }
                     }
-                    .contentShape(Rectangle())
                 }
             }
 
@@ -212,7 +197,7 @@ struct DailyLogView: View {
                     
                     // Show detailed certification status for debugging
                     for record in certifiedRecords {
-                        if let dbDate = parseDate(record.date) {
+                        if let dbDate = DateTimeHelper.parseDate(record.date) {
                             let formatter = DateFormatter()
                             formatter.dateFormat = "dd-MM-yyyy"
                             let dbDateString = formatter.string(from: dbDate)
@@ -232,14 +217,7 @@ struct DailyLogView: View {
     }
 
 
-    
-    // MARK: - Helper Function
-    private func dateFormatted(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy"
-        return formatter.string(from: date)
-    }
-    
+
     private func dateFormattedString(_ date: String) -> String {
         // Since logDates are now already in dd-MM-yyyy format, just return as is
         return date

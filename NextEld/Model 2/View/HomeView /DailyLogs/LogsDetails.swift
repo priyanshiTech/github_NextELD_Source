@@ -17,14 +17,17 @@ struct LogsDetails: View {
     @State private var timer: Timer?
     
     init(title: String, entry: WorkEntry) {
+        
         self.title = title
         self.entry = entry
-        self._selectedDate = State(initialValue: entry.date)
+        // Ensure selected date doesn't exceed current date
+        let currentDate = Date()
+        let initialDate = entry.date > currentDate ? currentDate : entry.date
+        self._selectedDate = State(initialValue: initialDate)
     }
     
     var body: some View {
         //MARK: -  Header
-        
         
         VStack(spacing: 0){
             ZStack(alignment: .topLeading){
@@ -49,7 +52,6 @@ struct LogsDetails: View {
                     //MARK: - previous page click date show
                     // Text(DateUtils.formatDate(entry.date, format: "dd-MM-yyyy"))
                     Text(title)
-                    
                         .font(.headline)
                         .foregroundColor(.white)
                         .fontWeight(.semibold)
@@ -74,7 +76,7 @@ struct LogsDetails: View {
             }
             //MARK: -  show a date Format
             HStack{
-                DateStepperView(currentDate: $selectedDate)
+                DateStepperView(currentDate: $selectedDate, maximumDate: Date())
             }  .background(Color.white.shadow(radius: 5))
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
