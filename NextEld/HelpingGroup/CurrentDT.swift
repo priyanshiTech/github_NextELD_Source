@@ -121,6 +121,31 @@ struct DateTimeHelper {
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         return dateFormatter.date(from: dateString) ?? Date()
     }
+    
+    // Helper function to parse various date formats
+    static func parseDate(_ dateString: String) -> Date? {
+        let formats = [
+            "yyyy-MM-dd",
+            "dd-MM-yyyy",
+            "yyyy-MM-dd'T'HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss",
+            "MM/dd/yyyy",
+            "dd/MM/yyyy"
+        ]
+        
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        
+        for format in formats {
+            formatter.dateFormat = format
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+        }
+        return nil
+    }
+
+    
 }
 
 
