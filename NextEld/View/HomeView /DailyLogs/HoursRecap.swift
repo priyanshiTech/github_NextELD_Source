@@ -90,7 +90,6 @@ struct HoursRecap: View {
                     Text("Hours Available Tomorrow")
                     Spacer()
                    // Text("60:41:32") // replace with real calculation
-                  //  Text(DatabaseManager.shared.formatTime(DatabaseManager.shared.availableCycleHours(days: 7, limitHours: 70)))
                     Text(DatabaseManager.shared.getRemainingCycleTime().timeString)
                 }
             }

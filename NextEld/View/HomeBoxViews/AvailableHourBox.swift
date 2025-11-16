@@ -26,7 +26,7 @@ struct AvailableHoursView: View {
             VStack(spacing: 2) {
                 HStack(spacing: 5) {
                     Button("Recap") {
-                        navmanager.navigate(to: AppRoute.HomeFlow.RecapHours(tittle: "Hours Recap"))
+                        navmanager.navigate(to: AppRoute.LogsFlow.RecapHours(title: AppConstants.HourRecap))
                     }
                     .buttonStyle(.plain)
                     .foregroundColor(.purple)
@@ -39,7 +39,8 @@ struct AvailableHoursView: View {
                     Spacer()
                     
                     Button("Daily Logs") {
-                       // navmanager.navigate(to: AppRoute.logsFlow(.DailyLogs(title: "Daily Logs")))
+                        
+                        navmanager.path.append(AppRoute.HomeFlow.DailyLogs(tittle: "Daily Logs"))
                     }
                     .buttonStyle(.plain)
                     .foregroundColor(.purple)

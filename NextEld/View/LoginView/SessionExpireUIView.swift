@@ -11,6 +11,7 @@ struct SessionExpireUIView: View {
 
        // @EnvironmentObject var navManager: NavigationManager
     @EnvironmentObject var appRootManager: AppRootManager
+    @State private var hasClearedSessionData = false
     
         var onSignInAgain: (() -> Void)? = nil
     
@@ -46,8 +47,10 @@ struct SessionExpireUIView: View {
          
                 // Sign-In Again button
                 Button(action: {
+                    
                     onSignInAgain?()
                     appRootManager.currentRoot = .login
+                    
                     
                 }) {
                     Text("SIGN-IN AGAIN")
@@ -63,6 +66,11 @@ struct SessionExpireUIView: View {
                 .padding(.bottom, 40)
             }
             .background(Color.white.ignoresSafeArea())
+            .onAppear {
+                guard !hasClearedSessionData else { return }
+                SessionCleanupManager.clearAllPersistentData()
+                hasClearedSessionData = true
+            }
         }
     }
 
