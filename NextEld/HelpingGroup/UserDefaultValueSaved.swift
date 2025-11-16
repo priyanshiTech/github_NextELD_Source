@@ -40,7 +40,7 @@ struct AppStorageHandler {
     @AppStorage("logType") var logType: String?
     @AppStorage("employeeId") var employeeId: Int?
     @AppStorage("clientName")var company: String?
-    
+    @AppStorage("splitShiftIdentifier") var splitShiftIdentifier: Int = 0
     //MARK: - for rule/personal use API Code
     @AppStorage("personalUse") var personalUseActive: String?
     @AppStorage("yardMoves") var yardMovesActive: String?

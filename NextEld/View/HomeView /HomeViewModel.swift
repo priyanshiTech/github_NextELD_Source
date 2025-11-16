@@ -10,6 +10,7 @@ enum AlertType {
     case sucessConfimration
     case shiftChange
     case thirtyFourHours
+    case splitShiftEnds
     
     
     func getTitle() -> String {
@@ -28,6 +29,8 @@ enum AlertType {
         case .shiftChange:
             title = AppConstants.shiftChangeAlertTitle
         case .thirtyFourHours:
+            title = ""
+        case .splitShiftEnds:
             title = ""
         }
         return title
@@ -51,6 +54,8 @@ enum AlertType {
             message = AppConstants.shiftChangeMessage
         case .thirtyFourHours:
             message = AppConstants.thirtyFourHourAlertMsg
+        case .splitShiftEnds:
+            message = AppConstants.splitShiftEndsMsg
         }
         return message
     }
@@ -323,7 +328,6 @@ class HomeViewModel: ObservableObject {
     }
     
     func validateScenarioInEveryMinute() {
-        
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
@@ -411,6 +415,7 @@ class HomeViewModel: ObservableObject {
     
     // MARK: - Delete All App Data
     func deleteAllAppData() {
+        
         stopTimers(for: TimerType.allCases)
         UserDefaults.standard.removePersistentDomain(forName: "Inurum.Technology.EldTruckTrace")
         //  Clear SessionManager token
@@ -420,7 +425,7 @@ class HomeViewModel: ObservableObject {
         print(" All app data deleted successfully")
     }
     
-    func setDriverStatus(status: DriverStatusType, restoreBreakTimerRunning: Bool = false) {
+    func setDriverStatus(status: DriverStatusType, restoreBreakTimerRunning: Bool = false, note: String? = nil, saveLogsToDatabase: Bool = false) {
         let previousStatus = currentDriverStatus
         currentDriverStatus = status
 
@@ -430,6 +435,7 @@ class HomeViewModel: ObservableObject {
 
         case .onDuty:
             checkedOffDutyTimeIsLessThan2Hour()
+            checkForSplitShift()
             timerTypes = [.onDuty, .cycleTimer]
             if previousStatus == .onDrive {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer, .continueDrive]
@@ -438,6 +444,7 @@ class HomeViewModel: ObservableObject {
 
         case .onDrive:
             checkedOffDutyTimeIsLessThan2Hour()
+            checkForSplitShift()
             if isTimerRunning(.breakTimer) {
                 breakTimer?.reset(startTime: breakTimer?.startDuration ?? 0)
                 breakTimer?.stop()
@@ -464,7 +471,10 @@ class HomeViewModel: ObservableObject {
         case .none:
             timerTypes = []
         }
-
+       
+        if saveLogsToDatabase {
+            saveTimerStateForStatus(status: status.getName(), note: note)
+        }
         startTimers(for: timerTypes)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {[weak self] in
             self?.loadEventsFromDatabase()
@@ -707,7 +717,7 @@ class HomeViewModel: ObservableObject {
                 break // for other status will break the loop
             }
           }
-        debugPrint("Total sleep: \(totalSleep.getHours())")
+        debugPrint("Total sleep: \(totalSleep.getHours()) hours")
         return totalSleep
     }
     
@@ -783,6 +793,7 @@ class HomeViewModel: ObservableObject {
     func check34HoursSleepOrOffDutyCompleted() -> Bool {
         let shiftChangeSleepTotalSeconds = AppStorageHandler.shared.cycleRestartTime ?? 0 // 34 hours
         let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
+        print("Total sleep taken: \(shiftChangeSleepTotalSeconds) - \(calculatedSleepTaken)")
         return calculatedSleepTaken >= TimeInterval(shiftChangeSleepTotalSeconds)// return true if calculatedSleepTaken > shiftChangeSleepTotalSeconds
     }
     

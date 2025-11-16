@@ -112,8 +112,8 @@ struct HomeScreenView: View {
                         //UserDefaults.standard.string(forKey: "truckNo"),
                         VehicleInfoView(GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
                                         trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
-                            StatusView(homeViewModel: homeVM) { status in
-                                if !homeVM.check34HoursSleepOrOffDutyCompleted() && homeVM.cycleTimer!.remainingTime <= 0 && status != .offDuty && status != .sleep {
+                            StatusView(homeViewModel: homeVM) {  status in
+                                if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                         homeVM.alertType = .thirtyFourHours
                                         homeVM.showAlertOnHomeScreen = true
@@ -175,9 +175,8 @@ struct HomeScreenView: View {
                         let status = homeVM.showDriverStatusAlert.status
                         
                         // Set new status and start timers
-                       homeVM.setDriverStatus(status: status)
-                        // Save new timer state after status change
-                        homeVM.saveTimerStateForStatus(status: status.getName(), note: note)
+                       homeVM.setDriverStatus(status: status, note: note, saveLogsToDatabase: true)
+                    
                         // Close the popup after submit
                         homeVM.showDriverStatusAlert.showAlert = false
                     },
@@ -594,6 +593,9 @@ struct HomeScreenView: View {
             case .shiftChange:
                 break
             case .thirtyFourHours:
+                break
+            case .splitShiftEnds:
+                AppStorageHandler.shared.splitShiftIdentifier = 0
                 break
             }
         }
