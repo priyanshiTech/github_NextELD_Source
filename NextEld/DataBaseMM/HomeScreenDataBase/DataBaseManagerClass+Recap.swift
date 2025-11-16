@@ -6,7 +6,7 @@ extension DatabaseManager {
         var dutySeconds: TimeInterval = 0
         let calendar = DateTimeHelper.calendar
         let today = DateTimeHelper.currentDateTime()
-        let dayValue = -8
+        let dayValue = -(AppStorageHandler.shared.cycleDays ?? 0)
         guard let day = calendar.date(byAdding: .day, value: dayValue, to: today) else { return nil }
         let startOfDay = calendar.startOfDay(for: day)
         let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
@@ -38,36 +38,24 @@ extension DatabaseManager {
     }
     
     func fetchWorkEntriesLast7Days() -> [WorkEntry] {
+        let totalCycle = AppStorageHandler.shared.cycleDays ?? 8
         let calendar = DateTimeHelper.calendar
         let today = DateTimeHelper.currentDateTime()
-        
-        // Fetch all logs
-        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [])
-        
         var results: [WorkEntry] = []
-        
-        for offset in ((-7)...(-1)) {
-            guard let day = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
+        for offset in (1..<totalCycle) {
+            var dutySeconds: TimeInterval = 0
+            let dayOffset = offset - totalCycle
+            guard let day = calendar.date(byAdding: .day, value: dayOffset, to: today) else { continue }
             let startOfDay = calendar.startOfDay(for: day)
             let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-            
-            // Filter logs for this day
-            let logsForDay = allLogs.compactMap { log -> (Date, String)? in
-                // guard let startDate = df.date(from: log.startTime) else { return nil }
-                return (log.startTime, log.status)
-            }
-                .filter { $0.0 >= startOfDay && $0.0 < startOfNextDay }
-                .sorted { $0.0 < $1.0 }
-            
-            var dutySeconds: TimeInterval = 0
-            
-            for (i, log) in logsForDay.enumerated() {
-                let startDate = log.0
-                let status = log.1
+            let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startOfDay, endDate: startOfNextDay)])
+            for (i, log) in allLogs.enumerated() {
+                let startDate = log.startTime
+                let status = log.status
                 
                 let endDate: Date
-                if i + 1 < logsForDay.count {
-                    endDate = logsForDay[i+1].0
+                if i + 1 < allLogs.count {
+                    endDate = allLogs[i+1].startTime
                 } else {
                     endDate = today
                 }
@@ -86,8 +74,8 @@ extension DatabaseManager {
             }
             
             results.append(WorkEntry(date: day, hoursWorked: dutySeconds))
+            
         }
-        
         return results//.sorted { $0.date < $1.date }
     }
     
@@ -163,15 +151,11 @@ extension DatabaseManager {
             if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
                 dutySeconds += duration
             }
-//            else if status == AppConstants.off_Duty {
-//                // optional split rule: short off-duty counts as duty
-//                if duration <= 2 * 3600 {
-//                    dutySeconds += duration
-//                }
-//            }
         }
         
         let cycleTime = max(0, cycleLimit - dutySeconds)
         return cycleTime
     }
+    
+    
 }
