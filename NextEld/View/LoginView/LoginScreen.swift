@@ -20,7 +20,7 @@ struct LoginScreen: View {
     
     
     @State private var alertVisible = false
-    @State private var UserName = "johnthomas"
+    @State private var UserName = "aman.rai"
     //  @State private var email = ""
     
     @State private var password = "123456"
@@ -49,18 +49,18 @@ struct LoginScreen: View {
                         .autocapitalization(.none)
                         .keyboardType(.emailAddress)
                 }
-                .inputBoxStyle(isValid: UserName.isEmpty || isValidUsername(UserName))
+                .inputBoxStyle(isValid: UserName.isEmpty)
                 
                 // Inline validation message
-                if !UserName.isEmpty && !isValidUsername(UserName) {
-                    // Text("Enter a valid email address")
-                    Text("Enter a  UserName")
-                    
-                        .foregroundColor(.red)
-                        .font(.caption)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 5)
-                }
+//                if !UserName.isEmpty {
+//                    // Text("Enter a valid email address")
+//                    Text("Enter a  UserName")
+//
+//                        .foregroundColor(.red)
+//                        .font(.caption)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                        .padding(.horizontal, 5)
+//                }
                 
                 //  Password field with validation
                 HStack {
@@ -109,7 +109,7 @@ struct LoginScreen: View {
                 //MARK:  With API Verification
                 
                 Button {
-                        if !isValidUsername(UserName) || !isValidPassword(password) {
+                        if !isValidPassword(password) {
                             alertVisible = true
                             return
                         }
@@ -132,12 +132,12 @@ struct LoginScreen: View {
                         .foregroundColor(Color(uiColor: .wine))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background((isValidUsername(UserName) && isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
+                        .background((isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
                         .cornerRadius(10)
                 }
                 
                 .frame(width: txtFieldWidth, height: txtFieldHeight)
-                .disabled(!isValidUsername(UserName) || !isValidPassword(password))
+                .disabled(!isValidPassword(password))
                 
                 
               

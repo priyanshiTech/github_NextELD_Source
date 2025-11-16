@@ -11,7 +11,7 @@ import Foundation
 
 enum API {
     
-    static let baseURL = URL(string: "https://gbt-usa.com/eld_log/")!
+    static let baseURL = URL(string: "https://admin.allstarelogs.com/eld_log/")!
     static let baseURLTwo = URL(string: "http://165.232.183.179:4002/api/")!
     static let privacyPolicyURL = "https://exceleld.com/privacypolicy/"
     static let DominName = "https://gbt-usa.com/"
