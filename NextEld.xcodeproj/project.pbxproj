@@ -223,6 +223,7 @@
 		CB29DA572EC7B44600269C93 /* DataBaseManagerClass+Recap.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB29DA562EC7B44600269C93 /* DataBaseManagerClass+Recap.swift */; };
 		CB4D817E2ECA803A00590F62 /* DisclamerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4D817C2ECA803A00590F62 /* DisclamerView.swift */; };
 		CB4D81802ECA846D00590F62 /* DataBaseManagerClass+SplitShift .swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4D817F2ECA846D00590F62 /* DataBaseManagerClass+SplitShift .swift */; };
+		CB4D81822ECA86E400590F62 /* HomeViewModel+splitshift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4D81812ECA86E400590F62 /* HomeViewModel+splitshift.swift */; };
 		CB99EBD12EA2CA5B0062AC9A /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD02EA2C3420062AC9A /* Double+Extension.swift */; };
 		CB99EBD32EA3E58A0062AC9A /* HomeViewModel+Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */; };
 		CBBC96FE2EC6235D0049E376 /* SessionCleanupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */; };
@@ -483,6 +484,7 @@
 		CB29DA562EC7B44600269C93 /* DataBaseManagerClass+Recap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataBaseManagerClass+Recap.swift"; sourceTree = "<group>"; };
 		CB4D817C2ECA803A00590F62 /* DisclamerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclamerView.swift; sourceTree = "<group>"; };
 		CB4D817F2ECA846D00590F62 /* DataBaseManagerClass+SplitShift .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataBaseManagerClass+SplitShift .swift"; sourceTree = "<group>"; };
+		CB4D81812ECA86E400590F62 /* HomeViewModel+splitshift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+splitshift.swift"; sourceTree = "<group>"; };
 		CB99EBD02EA2C3420062AC9A /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+Graph.swift"; sourceTree = "<group>"; };
 		CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCleanupManager.swift; sourceTree = "<group>"; };
@@ -922,6 +924,7 @@
 			isa = PBXGroup;
 			children = (
 				CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */,
+				CB4D81812ECA86E400590F62 /* HomeViewModel+splitshift.swift */,
 				CB283E712E9D5C4400B431DD /* HomeViewModel+Database.swift */,
 				CBE886032E995A2500B7D581 /* HomeViewModel.swift */,
 				AF72E41D2DFD54B400626DC0 /* CertifyForms */,
@@ -1868,6 +1871,7 @@
 				AF66F7932E4C7B26009A13A0 /* ShippingDocView.swift in Sources */,
 				AFC3CF992DE5C4A100D83558 /* AddVichleMode.swift in Sources */,
 				10CA6EC32DCC9BA8003B265C /* Reuseable  Label.swift in Sources */,
+				CB4D81822ECA86E400590F62 /* HomeViewModel+splitshift.swift in Sources */,
 				AF72350D2E560567009EAA9E /* MacAddressViewModel.swift in Sources */,
 				AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */,
 				AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */,

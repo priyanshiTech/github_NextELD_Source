@@ -22,6 +22,10 @@ enum FilterType {
     case violation
     case warning
     case nextDayAlert
+    case splitShiftIdentifier
+    case onDuty
+    case onDrive
+
 }
 
 enum SQLiteQuery {
@@ -79,9 +83,11 @@ class DatabaseManager: DatabaseHandler {
     static let shared = DatabaseManager()
 
     var db: Connection?
-    // Store last row values
-    var lastDay: Int = 1
-    var lastShift: Int = 1
+   
+    //MARK: - Split shift Table
+    let splitShiftTable = Table("SplitShiftLog")
+    let splitTime = Expression<Double>("splitTime")
+
 
     // MARK: - Table and Columns
     let driverLogs = Table("driverLogs")
@@ -126,10 +132,28 @@ class DatabaseManager: DatabaseHandler {
             print("*__________ SQLite DB path: \(path)")
 
             createTable()
+            createSplitShiftTable()
         } catch {
             print("******DB Init Error: \(error)")
         }
     }
+    
+    
+    func createSplitShiftTable() {
+        do {
+            try db?.run(splitShiftTable.create(ifNotExists: true) { t in
+                t.column(id, primaryKey: .autoincrement)
+                t.column(status)
+                t.column(userId)
+                t.column(day)
+                t.column(shift)
+                t.column(splitTime)
+            })
+        } catch {
+            print("******splitShiftTable creation Error: \(error)")
+        }
+    }
+
     
    func createTable() {
         do {
@@ -241,6 +265,13 @@ class DatabaseManager: DatabaseHandler {
             return status != AppConstants.warning
         case .nextDayAlert:
             return status != AppConstants.nextDayAlertTitle
+        case .splitShiftIdentifier:
+            return self.identifier == AppStorageHandler.shared.splitShiftIdentifier
+        case .onDuty:
+            return self.status == AppConstants.on_Duty
+        case .onDrive:
+            return self.status == AppConstants.on_Drive
+
             
         }
     }
@@ -376,8 +407,9 @@ class DatabaseManager: DatabaseHandler {
         
         do {
             
-            let safeDay = model.day == 0 ? self.lastDay : model.day
-            let safeShift = model.shift == 0 ? self.lastShift : model.shift
+            let safeDay = model.day == 0 ? 1 : model.day
+            let safeShift = model.shift == 0 ? 1 : model.shift
+
             
             let insert = driverLogs.insert(
                 status <- model.status,
@@ -414,10 +446,7 @@ class DatabaseManager: DatabaseHandler {
             let rowID = try db?.run(insert) ?? 0
             print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
 
-            //  Update lastDay & lastShift after every insert
-            self.updateLastDayAndShift(for: model.userId)
-            print("Last Day: \(DatabaseManager.shared.lastDay)")
-            print(" Last Shift: \(DatabaseManager.shared.lastShift)")
+           
         } catch {
             print(" Insert Log Error: \(error.localizedDescription)")
         }
@@ -432,6 +461,8 @@ class DatabaseManager: DatabaseHandler {
     func deleteAllLogs() {
         do {
             try db?.run(driverLogs.delete()) //  Uses the same table instance you declared at top
+            try db?.run(splitShiftTable.delete())
+
             print("All logs deleted successfully")
         } catch {
             print("Error deleting logs: \(error)")
@@ -520,38 +551,38 @@ class DatabaseManager: DatabaseHandler {
 
 extension DatabaseManager {
     //MARK: - Fetch last recent Day & Shift from DB
-    func updateLastDayAndShift(for userIdValue: Int) {
-        guard let db = db else { return }
-        do {
-            if let row = try db.pluck(
-                driverLogs
-                    .filter(userId == userIdValue)
-                    .order(timestamp.desc)
-                    .limit(1)
-            ) {
-                var fetchedDay = row[day]
-                var fetchedShift = row[shift]
-
-                //  Default handling: agar 0 ya blank aaye to 1 set karo
-                if fetchedDay == 0 { fetchedDay = 1 }
-                if fetchedShift == 0 { fetchedShift = 1 }
-
-                // Save to properties
-                self.lastDay = fetchedDay
-                self.lastShift = fetchedShift
-
-                print(" Last row → Day: \(fetchedDay), Shift: \(fetchedShift)")
-            } else {
-                print(" No rows found for userId: \(userIdValue)")
-                self.lastDay = 1
-                self.lastShift = 1
-            }
-        } catch {
-            print(" Error fetching last day/shift: \(error)")
-            self.lastDay = 1
-            self.lastShift = 1
-        }
-    }
+//    func updateLastDayAndShift(for userIdValue: Int) {
+//        guard let db = db else { return }
+//        do {
+//            if let row = try db.pluck(
+//                driverLogs
+//                    .filter(userId == userIdValue)
+//                    .order(timestamp.desc)
+//                    .limit(1)
+//            ) {
+//                var fetchedDay = row[day]
+//                var fetchedShift = row[shift]
+//
+//                //  Default handling: agar 0 ya blank aaye to 1 set karo
+//                if fetchedDay == 0 { fetchedDay = 1 }
+//                if fetchedShift == 0 { fetchedShift = 1 }
+//
+//                // Save to properties
+//                self.lastDay = fetchedDay
+//                self.lastShift = fetchedShift
+//
+//                print(" Last row → Day: \(fetchedDay), Shift: \(fetchedShift)")
+//            } else {
+//                print(" No rows found for userId: \(userIdValue)")
+//                self.lastDay = 1
+//                self.lastShift = 1
+//            }
+//        } catch {
+//            print(" Error fetching last day/shift: \(error)")
+//            self.lastDay = 1
+//            self.lastShift = 1
+//        }
+//    }
 }
 
  
@@ -600,7 +631,7 @@ extension DatabaseManager {
             timestamp:TimeUtils.currentTimestamp(with: AppStorageHandler.shared.timeZoneOffset ?? ""),
               //CurrentTimeHelperStamp.currentTimestamp,
             // Int64(Date().timeIntervalSince1970),
-            identifier: 0,
+            identifier: AppStorageHandler.shared.splitShiftIdentifier,
             remainingWeeklyTime: remainingWeeklyTime,
             remainingDriveTime: remainingDriveTime,
             remainingDutyTime: remainingDutyTime,
@@ -620,19 +651,27 @@ extension DatabaseManager {
     
 
     //MARK: -  Upload sync Data
-    
-    extension DatabaseManager {
-        
-        func markLogAsSynced(localId: Int64, serverId: String) {
-            do {
-                let log = driverLogs.filter(id == localId)
-                try db?.run(log.update(isSynced <- true, self.serverId <- serverId))
-                print(" Marked localId \(localId) as synced with serverId \(serverId)")
-            } catch {
-                print(" Update Sync Status Error: \(error)")
-            }
+extension DatabaseManager {
+    func updateIdentifier(uniqueId: Int64, identifier: Int) {
+        do {
+            let log = driverLogs.filter(id == uniqueId)
+            try db?.run(log.update(self.identifier <- identifier))
+            print("Identifier updated for \(uniqueId) to \(identifier)")
+        } catch {
+            print("failed to update Identifier: \(error)")
         }
     }
+    
+    func markLogAsSynced(localId: Int64, serverId: String) {
+        do {
+            let log = driverLogs.filter(id == localId)
+            try db?.run(log.update(isSynced <- true, self.serverId <- serverId))
+            print(" Marked localId \(localId) as synced with serverId \(serverId)")
+        } catch {
+            print(" Update Sync Status Error: \(error)")
+        }
+    }
+}
 
 //MARK: - Check for previous day logs that need certification
 extension DatabaseManager {
