@@ -251,7 +251,9 @@ struct DutyLinePathView: View {
                 
                 // Map Personal Use and Yard Move to OFF_DUTY level (row 0)
                 let level: Int
-                if isPersonalUse(event) || isYardMove(event) {
+                if isYardMove(event) {
+                    level = levelMap["ON"] ?? 0
+                } else if isPersonalUse(event)  {
                     level = levelMap["OF"] ?? 0
                 } else {
                     level = levelMap[getStatusLabel(event.dutyType)] ?? 0
