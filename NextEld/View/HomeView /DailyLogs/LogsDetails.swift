@@ -36,7 +36,7 @@ struct LogsDetails: View {
             ZStack(alignment: .top) {
                 Color(uiColor: .wine)
                     .frame(height: 50)
-                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
+                    .shadow(color:  Color(uiColor:.black).opacity(0.2), radius: 4, x: 0, y: 4)
                 HStack {
                     Button(action: {
                         navManager.goBack()

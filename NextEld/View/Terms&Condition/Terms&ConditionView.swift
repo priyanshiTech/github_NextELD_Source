@@ -58,7 +58,7 @@ struct Terms_ConditionView: View {
                                 .foregroundColor(.gray)
                         }
                         .padding(16)
-                        .background(Color.black.opacity(0.15))
+                        .background( Color(uiColor:.black).opacity(0.15))
                         .cornerRadius(10)
                     }
                 }

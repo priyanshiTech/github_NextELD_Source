@@ -146,7 +146,7 @@ struct DisclamerView: View {
         Group {
             if isLoading {
                 ZStack {
-                    Color.black.opacity(0.2).ignoresSafeArea()
+                   Color(uiColor:.black).opacity(0.2).ignoresSafeArea()
                     ProgressView("Loading...")
                         .padding()
                         .background(Color.white)

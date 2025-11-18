@@ -22,17 +22,17 @@ struct CommonTimerAlertView: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.4).ignoresSafeArea()
+            Color(uiColor:.black).opacity(0.4).ignoresSafeArea()
 
             VStack(spacing: 16) {
                 Text(violationData.getTitle())
                     .font(.title2)
                     .bold()
-                    .foregroundColor(.black)
+                    .foregroundColor( Color(uiColor:.black))
 
                 Text(violationData.getWarningText())
                     .multilineTextAlignment(.center)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(uiColor:.black))
                     .padding(.horizontal)
 
                 Button(action: onDismiss) {
@@ -40,7 +40,7 @@ struct CommonTimerAlertView: View {
                         .bold()
                         .padding(.vertical, 10)
                         .padding(.horizontal, 30)
-                        .background(Color.white)
+                        .background( Color(uiColor:.white))
                         .cornerRadius(8)
                         .foregroundColor(Color(uiColor: .wine))
                 }

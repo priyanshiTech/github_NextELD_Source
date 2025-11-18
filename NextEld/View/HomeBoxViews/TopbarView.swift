@@ -24,7 +24,7 @@ struct TopBarView: View {
         ZStack {
             Color.white
                 .frame(height: 50)
-                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
+                .shadow(color:  Color(uiColor:.black).opacity(0.2), radius: 4, x: 0, y: 4)
             
             HStack {
                 
@@ -32,7 +32,7 @@ struct TopBarView: View {
                     presentSideMenu.toggle()
                     print("Hamburger tapped, presentSideMenu is now: \(presentSideMenu)")
                 },
-                iconColor: .black, iconSize: 20)
+                iconColor:  Color(uiColor:.black), iconSize: 20)
                 .padding(.leading, 8)
                 Spacer()
                 
