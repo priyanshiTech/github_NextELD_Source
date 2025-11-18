@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct NewDriverLogin: View {
+    
     @EnvironmentObject var navManager: NavigationManager
     @EnvironmentObject var appRootManager: AppRootManager
     @EnvironmentObject var session: SessionManager
@@ -149,11 +150,12 @@ struct NewDriverLogin: View {
                         print(" LoginLogUpdate API called successfully")
                         
                         isLoggedIn = true
-                        
+                        handlePostNewDriverNavigation()  //forchecking condition
                         // Step 5: Navigate to Home screen - new user and their data will show
                         DispatchQueue.main.async {
                             navManager.reset()
-                            appRootManager.currentRoot = .scanner(moveToHome: false)
+                            appRootManager.currentRoot = .DisclaimerView
+                           // appRootManager.currentRoot = .scanner(moveToHome: false)
                         }
                         print(" Navigation completed - New user data will be displayed")
                     } else {
@@ -208,6 +210,35 @@ struct NewDriverLogin: View {
                 print(" Auto-filled email from co-driver: \(UserName)")
             }
         }
+    }
+    private func handlePostNewDriverNavigation() {
+        let disclaimerValue = AppStorageHandler.shared.disclaimerRead ?? 0
+        if disclaimerValue == 0 {
+            appRootManager.currentRoot = .DisclaimerView
+            return
+        }
+        
+        if hasValidVehicleInfo() {
+            appRootManager.currentRoot = .scanner(moveToHome: false)
+        } else {
+            navManager.reset()
+            navManager.navigate(to: AppRoute.HomeFlow.AddVichleMode)
+        }
+    }
+    
+    private func hasValidVehicleInfo() -> Bool {
+        if let vehicleId = AppStorageHandler.shared.vehicleId, vehicleId != 0 {
+            return true
+        }
+        
+        if let vehicleNumber = AppStorageHandler.shared.vehicleNo?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+           !vehicleNumber.isEmpty,
+           vehicleNumber.lowercased() != "none" {
+            return true
+        }
+        
+        return false
     }
 }
 

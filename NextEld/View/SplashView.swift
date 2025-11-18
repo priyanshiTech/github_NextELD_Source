@@ -13,9 +13,12 @@ struct SplashView: View {
     @State private var offSetImage: CGFloat = 300
     @State private var fadeOut: Bool = false
     @StateObject private var tokenVM = APITokenUpdateViewModel()
+    @State private var selectedVehicleNumber: String = AppStorageHandler.shared.vehicleNo ?? ""
+    @State private var selectedVehicleId: Int = AppStorageHandler.shared.vehicleId ?? 0
     
 
     var body: some View {
+        NavigationStack(path: $navManager.path) {
             VStack {
                 Text("Excel Eld")
                     .padding(0.0)
@@ -26,8 +29,23 @@ struct SplashView: View {
                     .frame(width: 200, height: 250)
                     .offset(y: offSetImage)
             }
-            
-        
+            .navigationDestination(for: AppRoute.HomeFlow.self) { route in
+                switch route {
+                case .AddVichleMode:
+                    AddVichleMode(
+                        selectedVehicle: $selectedVehicleNumber,
+                        selectedVehicleId: $selectedVehicleId
+                    )
+                case .ADDVehicle:
+                    ADDVehicle(
+                        selectedVehicleNumber: $selectedVehicleNumber,
+                        VechicleID: $selectedVehicleId
+                    )
+                default:
+                    EmptyView()
+                }
+            }
+        }
         .navigationBarBackButtonHidden()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(uiColor: .wine))
@@ -57,16 +75,6 @@ struct SplashView: View {
             }
             //  Decide navigation after splash delay
         }
-//        .navigationDestination(for: AppRoute.HomeFlow.self) { type in
-//            switch type {
-//            case .Home:
-//                HomeScreenView()
-//            case .AddVichleMode:
-//                AddVichleMode(selectedVehicle: .constant(""), selectedVehicleId: .constant(0))
-//            default:
-//                EmptyView()
-//            }
-//        }
         
     }
     
@@ -119,25 +127,44 @@ struct SplashView: View {
                 }
                 
                 // Use result if available, otherwise proceed with existing data
-                let success = apiSuccess ?? false
-                
-                let vehicleNo = AppStorageHandler.shared.vehicleNo ?? ""
-                if vehicleNo.isEmpty || vehicleNo.lowercased() == "none" {
-                    print(" Vehicle No is missing → navigating to AddVehicle screen")
-                    appRootManager.currentRoot = .scanner(moveToHome: false)
-                    // Navigate to Add Vehicle after a short delay
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        navManager.navigate(to: AppRoute.HomeFlow.AddVichleMode)
-                    }
-                } else {
-                    
-                    appRootManager.currentRoot = .scanner(moveToHome: false)
-                }
+                let _ = apiSuccess ?? false
+                handlePostSplashNavigation()
             }
         } else {
             appRootManager.currentRoot = .login
             
         }
+    }
+    
+    @MainActor
+    private func handlePostSplashNavigation() {
+        let disclaimerValue = AppStorageHandler.shared.disclaimerRead ?? 0
+        if disclaimerValue == 0 {
+            appRootManager.currentRoot = .DisclaimerView
+            return
+        }
+        
+        if hasValidVehicleInfo() {
+            appRootManager.currentRoot = .scanner(moveToHome: false)
+        } else {
+            navManager.reset()
+            navManager.navigate(to: AppRoute.HomeFlow.AddVichleMode)
+        }
+    }
+    
+    private func hasValidVehicleInfo() -> Bool {
+        if let vehicleId = AppStorageHandler.shared.vehicleId, vehicleId != 0 {
+            return true
+        }
+        
+        if let vehicleNumber = AppStorageHandler.shared.vehicleNo?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+           !vehicleNumber.isEmpty,
+           vehicleNumber.lowercased() != "none" {
+            return true
+        }
+        
+        return false
     }
 }
 //#Preview {

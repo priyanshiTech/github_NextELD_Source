@@ -20,15 +20,18 @@ struct LoginScreen: View {
     
     
     @State private var alertVisible = false
-    @State private var UserName = "aman.rai"
+    @State private var UserName: String = ""
     //  @State private var email = ""
     
-    @State private var password = "123456"
+    @State private var password: String = ""
+    @State private var hasLoadedSavedCredentials = false
     @State private var isPasswordShowing = false
     @State private var txtFieldHeight: CGFloat = 56
     @State private var txtFieldWidth: CGFloat = 320
     // @Binding var isLoggedIn: Bool
     @State private var hasNavigated = false
+    @State private var selectedVehicleNumber: String = ""
+    @State private var selectedVehicleId: Int = 0
 
     
     var body: some View {
@@ -119,8 +122,7 @@ struct LoginScreen: View {
                             if success && SessionManagerClass.shared.isLoggedIn() {
         
                                 await viewModel.callLoginLogUpdateAPI()
-                                appRootManager.currentRoot = .scanner()
-                               // navManager.navigate(to: .SplashScreen)
+                                handlePostLoginNavigation()
                                 
                             } else {
                                 alertVisible = true
@@ -138,11 +140,7 @@ struct LoginScreen: View {
                 
                 .frame(width: txtFieldWidth, height: txtFieldHeight)
                 .disabled(!isValidPassword(password))
-                
-                
-              
 
-                
                 // Loading indicator
                 if loginVM.isLoading {
                     ProgressView("Logging in...")
@@ -179,6 +177,22 @@ struct LoginScreen: View {
                     ForgetUserName(title: title)
                 }
             })
+            .navigationDestination(for: AppRoute.HomeFlow.self, destination: { route in
+                switch route {
+                case .AddVichleMode:
+                    AddVichleMode(
+                        selectedVehicle: $selectedVehicleNumber,
+                        selectedVehicleId: $selectedVehicleId
+                    )
+                case .ADDVehicle:
+                    ADDVehicle(
+                        selectedVehicleNumber: $selectedVehicleNumber,
+                        VechicleID: $selectedVehicleId
+                    )
+                default:
+                    EmptyView()
+                }
+            })
             
             .padding()
             .navigationBarBackButtonHidden()
@@ -192,7 +206,46 @@ struct LoginScreen: View {
                 )
             }
         }
+        .onAppear {
+            guard !hasLoadedSavedCredentials,
+                  let savedUser = loginVM.loadUserData()
+            else { return }
+            
+            UserName = savedUser.username
+            password = savedUser.password
+            hasLoadedSavedCredentials = true
+        }
         .environmentObject(navManager)
+    }
+    
+    private func handlePostLoginNavigation() {
+        let disclaimerValue = AppStorageHandler.shared.disclaimerRead ?? 0
+        if disclaimerValue == 0 {
+            appRootManager.currentRoot = .DisclaimerView
+            return
+        }
+        
+        if hasValidVehicleInfo() {
+            appRootManager.currentRoot = .scanner(moveToHome: false)
+        } else {
+            navManager.reset()
+            navManager.navigate(to: AppRoute.HomeFlow.AddVichleMode)
+        }
+    }
+    
+    private func hasValidVehicleInfo() -> Bool {
+        if let vehicleId = AppStorageHandler.shared.vehicleId, vehicleId != 0 {
+            return true
+        }
+        
+        if let vehicleNumber = AppStorageHandler.shared.vehicleNo?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+           !vehicleNumber.isEmpty,
+           vehicleNumber.lowercased() != "none" {
+            return true
+        }
+        
+        return false
     }
     
 }
