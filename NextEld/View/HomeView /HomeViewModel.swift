@@ -778,6 +778,8 @@ class HomeViewModel: ObservableObject {
         self.saveTimerStateForStatus(status: AppConstants.nextDayAlertTitle, note: "Next Day Started")
         AppStorageHandler.shared.days += 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.nextDayAlert)
+        
+        
     }
     
     func changeShiftAfter34HoursComplete(uniqueValue: String) {
@@ -788,6 +790,7 @@ class HomeViewModel: ObservableObject {
         AppStorageHandler.shared.shift += 1
         AppStorageHandler.shared.days = 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.shiftChanged)
+        calculateTimeWhenDaysIsGreaterThan8days() // When days greater than 8 days cycle
     }
     
     func check34HoursSleepOrOffDutyCompleted() -> Bool {
@@ -813,6 +816,35 @@ class HomeViewModel: ObservableObject {
         let currentTime = DateTimeHelper.currentDateTime()
         if afterOneHourTime <= currentTime && lastLog.odometer != .zero {
             saveTimerStateForStatus(status: lastLog.status, date: afterOneHourTime)
+        }
+    }
+    
+    func calculateTimeWhenDaysIsGreaterThan8days() {
+        if AppStorageHandler.shared.days <= 8 {
+            return
+        }
+        let onDutyTime = AppStorageHandler.shared.onDutyTime ?? 0
+        let onDriveTime = AppStorageHandler.shared.onDriveTime ?? 0
+        var remainingCycleTime: TimeInterval = DatabaseManager.shared.getRemainingCycleTime()
+        var remainingOnDutyTime: TimeInterval = onDutyTime
+        var remainingOnDriveTime: TimeInterval = onDriveTime
+        if let workEntry = DatabaseManager.shared.getRecapeAfterSevenDays() {
+            let totalTime = workEntry.hoursWorked + remainingCycleTime
+            if totalTime > onDutyTime {
+                remainingCycleTime =  onDutyTime
+            } else if totalTime > onDriveTime && totalTime <= onDutyTime {
+                remainingCycleTime = totalTime
+                remainingOnDutyTime = totalTime
+            } else if totalTime < onDriveTime {
+                remainingCycleTime = totalTime
+                remainingOnDutyTime = totalTime
+                remainingOnDriveTime = totalTime
+            }
+            
+            onDutyTimer = CountdownTimer(startTime: remainingOnDutyTime)
+            cycleTimer = CountdownTimer(startTime: remainingCycleTime)
+            onDriveTimer = CountdownTimer(startTime: remainingOnDriveTime)
+            
         }
     }
 }

@@ -1,6 +1,42 @@
 import Foundation
 
 extension DatabaseManager {
+    
+    func getRecapeAfterSevenDays() -> WorkEntry? {
+        var dutySeconds: TimeInterval = 0
+        let calendar = DateTimeHelper.calendar
+        let today = DateTimeHelper.currentDateTime()
+        let dayValue = -8
+        guard let day = calendar.date(byAdding: .day, value: dayValue, to: today) else { return nil }
+        let startOfDay = calendar.startOfDay(for: day)
+        let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startOfDay, endDate: startOfNextDay)])
+        for (i, log) in allLogs.enumerated() {
+            let startDate = log.startTime
+            let status = log.status
+            
+            let endDate: Date
+            if i + 1 < allLogs.count {
+                endDate = allLogs[i+1].startTime
+            } else {
+                endDate = today
+            }
+            
+            let duration = max(0, endDate.timeIntervalSince(startDate))
+            
+            if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
+                dutySeconds += duration
+            }
+            else if status == AppConstants.off_Duty {
+                // optional split rule: short off-duty counts as duty
+                if duration <= 2 * 3600 {
+                    dutySeconds += duration
+                }
+            }
+        }
+        return WorkEntry(date: day, hoursWorked: dutySeconds)
+    }
+    
     func fetchWorkEntriesLast7Days() -> [WorkEntry] {
         let calendar = DateTimeHelper.calendar
         let today = DateTimeHelper.currentDateTime()
@@ -97,21 +133,16 @@ extension DatabaseManager {
     }
     
     func getRemainingCycleTime() -> TimeInterval {
-        let calendar = DateTimeHelper.calendar
         let today = DateTimeHelper.currentDateTime()
         let cycleLimit: TimeInterval = TimeInterval(AppStorageHandler.shared.cycleTime ?? 0)
-        guard let startDate = calendar.date(byAdding: .day, value: -((AppStorageHandler.shared.cycleDays ?? 8) - 1), to: today) else {
-            return 0
-        }
         
-        let allLogs = fetchLogs(filterTypes: [])
+        let allLogs = fetchLogs(filterTypes: [.shift])
         if allLogs.isEmpty {
             return cycleLimit
         }
         let logsForDay = allLogs.compactMap { log -> (Date, String)? in
             return (log.startTime, log.status)
         }
-        .filter { $0.0 >= startDate }
         .sorted { $0.0 < $1.0 }
         
         var dutySeconds: TimeInterval = 0

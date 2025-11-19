@@ -13,6 +13,7 @@ struct HoursRecap: View {
     var tittle: String
     @EnvironmentObject var navManager: NavigationManager
     @State private var last7Days: [WorkEntry] = []
+    @State private var remainingCycleTime: TimeInterval = 0
 
     private let calendar = Calendar.current
 
@@ -96,8 +97,27 @@ struct HoursRecap: View {
         }
         .onAppear {
             last7Days = DatabaseManager.shared.fetchWorkEntriesLast7Days()
+           // calculateTimeWhenDaysIsGreaterThan8days()
+            
         }
         .navigationBarBackButtonHidden()
+    }
+    
+    func calculateTimeWhenDaysIsGreaterThan8days() {
+        if AppStorageHandler.shared.days <= 8 {
+            return
+        }
+        let onDutyTime = AppStorageHandler.shared.onDutyTime ?? 0
+        var remainingCycleTime: TimeInterval = DatabaseManager.shared.getRemainingCycleTime()
+
+        if let workEntry = DatabaseManager.shared.getRecapeAfterSevenDays() {
+            let totalTime = workEntry.hoursWorked + remainingCycleTime
+            if totalTime > onDutyTime {
+                remainingCycleTime =  onDutyTime
+            } else {
+                remainingCycleTime = totalTime
+            }
+        }
     }
 }
 

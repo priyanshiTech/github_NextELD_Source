@@ -25,6 +25,9 @@ enum FilterType {
     case splitShiftIdentifier
     case onDuty
     case onDrive
+    case betweenDates(startDate: Date, endDate: Date)
+    case specificDay(Int)
+    case shift
 
 }
 
@@ -247,9 +250,7 @@ class DatabaseManager: DatabaseHandler {
         let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) ?? Date()
         let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
         let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
-        
-        let lastWeekStartOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: -7, to: yesterDayStartOfDay) ?? Date()
-        
+    
         switch type {
         case .getTodayRecord:
             return startTime >= currentStartOfDay && startTime < currentEndOfDay
@@ -271,8 +272,12 @@ class DatabaseManager: DatabaseHandler {
             return self.status == AppConstants.on_Duty
         case .onDrive:
             return self.status == AppConstants.on_Drive
-
-            
+        case .betweenDates(let startDate, let endDate):
+            return startTime >= startDate && startTime < endDate
+        case .specificDay(let currentDay):
+            return day == currentDay
+        case .shift:
+            return shift == AppStorageHandler.shared.shift
         }
     }
     
