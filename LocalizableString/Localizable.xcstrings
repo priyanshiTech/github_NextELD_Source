@@ -1,0 +1,892 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "  The user is Manual  , instruction sheet, and malfunction instruction Sheet can be in electronic form. this is accordance with fedral register titled Regulatory Guidance Concerning Electronic Signature and Documents (76 FR 411)" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\nਉਪਭੋਗਤਾ ਮੈਨੂਅਲ, ਹਦਾਇਤ ਸ਼ੀਟ, ਅਤੇ ਖਰਾਬੀ ਨਿਰਦੇਸ਼ ਸ਼ੀਟ ਇਲੈਕਟ੍ਰਾਨਿਕ ਰੂਪ ਵਿੱਚ ਹੋ ਸਕਦੀ ਹੈ। ਇਹ ਫੈਡਰਲ ਰਜਿਸਟਰ ਦੇ ਅਨੁਸਾਰ ਹੈ ਜਿਸਦਾ ਸਿਰਲੇਖ ਹੈ ਰੈਗੂਲੇਟਰੀ ਗਾਈਡੈਂਸ ਕੰਸਰਨਿੰਗ ਇਲੈਕਟ੍ਰਾਨਿਕ ਦਸਤਖਤ ਅਤੇ ਦਸਤਾਵੇਜ਼ (76 FR 411)।"
+          }
+        }
+      }
+    },
+    " / %lld Days" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\n/ %lld ਦਿਨ"
+          }
+        }
+      }
+    },
+    " %@" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " %@"
+          }
+        }
+      }
+    },
+    " In additional the above the above , a supply of blank  driver's records of duty status (RODS) graph - grids sufficient  to records the driver's duty status and other related information for a minimum of 8 days must be Onboard the commercisl motor Vechicle (CMV)" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\nਉਪਰੋਕਤ ਤੋਂ ਇਲਾਵਾ, ਕਮਰਸ਼ੀਅਲ ਮੋਟਰ ਵਾਹਨ (CMV) ਵਿੱਚ ਘੱਟੋ-ਘੱਟ 8 ਦਿਨਾਂ ਲਈ ਡਰਾਈਵਰ ਦੀ ਡਿਊਟੀ ਸਥਿਤੀ ਅਤੇ ਹੋਰ ਸੰਬੰਧਿਤ ਜਾਣਕਾਰੀ ਨੂੰ ਰਿਕਾਰਡ ਕਰਨ ਲਈ ਕਾਫ਼ੀ ਖਾਲੀ ਡਰਾਈਵਰ ਦੇ ਡਿਊਟੀ ਰਿਕਾਰਡ (RODS) ਗ੍ਰਾਫ - ਗਰਿੱਡ ਦੀ ਸਪਲਾਈ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ।"
+          }
+        }
+      }
+    },
+    "%@" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        },
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: %@"
+          }
+        }
+      }
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        },
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: %@"
+          }
+        }
+      }
+    },
+    "%lld Defects" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\n%lld ਨੁਕਸ\n"
+          }
+        }
+      }
+    },
+    "%lld%%" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        }
+      }
+    },
+    "0.00" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0.00"
+          }
+        }
+      }
+    },
+    "16Hr Short Haul Exception" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "16 ਘੰਟੇ ਦੀ ਛੋਟੀ ਦੂਰੀ ਦੀ ਛੋਟ"
+          }
+        }
+      }
+    },
+    "Accept & Continue" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸਵੀਕਾਰ ਕਰੋ ਅਤੇ ਜਾਰੀ ਰੱਖੋ"
+          }
+        }
+      }
+    },
+    "Add" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸ਼ਾਮਲ ਕਰੋ"
+          }
+        }
+      }
+    },
+    "Add Co-Driver" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸਹਿ-ਡਰਾਈਵਰ ਸ਼ਾਮਲ ਕਰੋ\n"
+          }
+        }
+      }
+    },
+    "Add Condition" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸ਼ਰਤ ਜੋੜੋ"
+          }
+        }
+      }
+    },
+    "Add Driver Signature" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਡਰਾਈਵਰ ਦਸਤਖਤ ਸ਼ਾਮਲ ਕਰੋ"
+          }
+        }
+      }
+    },
+    "Add Dvir" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dvir ਸ਼ਾਮਲ ਕਰੋ"
+          }
+        }
+      }
+    },
+    "Add DVIR" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DVIR ਸ਼ਾਮਲ ਕਰੋ"
+          }
+        }
+      }
+    },
+    "Add Dvir List" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dvir ਸੂਚੀ ਸ਼ਾਮਲ ਕਰੋ"
+          }
+        }
+      }
+    },
+    "Add Vehicle" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਵਾਹਨ ਸ਼ਾਮਲ ਕਰੋ"
+          }
+        }
+      }
+    },
+    "Agree" : {
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸਹਿਮਤ ਹੋ"
+          }
+        }
+      }
+    },
+    "app_name" : {
+
+    },
+    "Available Hours" : {
+
+    },
+    "Available Version :" : {
+
+    },
+    "Back" : {
+
+    },
+    "Battery Charge :" : {
+
+    },
+    "Camera is not available on this device. Would you like to use the photo library instead?" : {
+
+    },
+    "Camera Not Available" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Cargo Type" : {
+
+    },
+    "Certified" : {
+
+    },
+    "Certify" : {
+
+    },
+    "Certify Log" : {
+
+    },
+    "Certify Records" : {
+
+    },
+    "Checking update" : {
+
+    },
+    "Clear" : {
+
+    },
+    "Clear Signature" : {
+
+    },
+    "Close" : {
+
+    },
+    "Co-Driver" : {
+
+    },
+    "Comments" : {
+
+    },
+    "Company Information" : {
+
+    },
+    "Connect" : {
+
+    },
+    "CONNECT" : {
+
+    },
+    "Connect Now" : {
+
+    },
+    "Connected Now" : {
+
+    },
+    "Contact Us" : {
+
+    },
+    "Continue" : {
+
+    },
+    "Continue Disconnect" : {
+
+    },
+    "Continue Drive" : {
+
+    },
+    "Continue Drive Records" : {
+
+    },
+    "Current Day Logs" : {
+
+    },
+    "Current Location:" : {
+
+    },
+    "Current Odometer:" : {
+
+    },
+    "Current Status" : {
+
+    },
+    "Current Version :" : {
+
+    },
+    "Cycle" : {
+
+    },
+    "Cycle Rule" : {
+
+    },
+    "Daily Logs" : {
+
+    },
+    "Data Transfer" : {
+
+    },
+    "Data Transfer Type" : {
+
+    },
+    "Date" : {
+
+    },
+    "Date: %@" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Device 1" : {
+
+    },
+    "Device 2" : {
+
+    },
+    "Device Connection" : {
+
+    },
+    "Disconnected" : {
+
+    },
+    "Document" : {
+
+    },
+    "Done" : {
+
+    },
+    "Driver Logs" : {
+
+    },
+    "Driver Signature" : {
+
+    },
+    "DVIR Records" : {
+
+    },
+    "ELD ID - %@" : {
+
+    },
+    "ELD Log" : {
+
+    },
+    "Email" : {
+
+    },
+    "Email  your logs to the officer if they request" : {
+
+    },
+    "Email Dvir" : {
+
+    },
+    "Email DVIR" : {
+
+    },
+    "Email DVIR for the 24-hour period and the previous day for one HOS cycle" : {
+
+    },
+    "Email Logs" : {
+
+    },
+    "Email logs for the 24-hour period and the previous day for one HOS cycle" : {
+
+    },
+    "Email your logs in the pdf format" : {
+
+    },
+    "Enter a UserName" : {
+
+    },
+    "Enter Comments" : {
+
+    },
+    "Enter Email" : {
+
+    },
+    "Enter Mobile Number" : {
+
+    },
+    "Enter note" : {
+
+    },
+    "Enter text here" : {
+
+    },
+    "Error" : {
+
+    },
+    "Error: %@" : {
+
+    },
+    "Excel Eld" : {
+
+    },
+    "Excel ELD" : {
+
+    },
+    "Explain the problem" : {
+
+    },
+    "Fetching data..." : {
+
+    },
+    "Fetching location..." : {
+
+    },
+    "Forget Password?" : {
+
+    },
+    "Forget Username?" : {
+
+    },
+    "Form" : {
+
+    },
+    "From Date" : {
+
+    },
+    "Go Back" : {
+
+    },
+    "Go Off-Duty before Log-out" : {
+
+    },
+    "Hardware Version :" : {
+
+    },
+    "Help and Support" : {
+
+    },
+    "Hours Available Today" : {
+
+    },
+    "Hours Available Tomorrow" : {
+
+    },
+    "Hours Of Service" : {
+
+    },
+    "Hours Worked" : {
+
+    },
+    "Hours Worked Today" : {
+
+    },
+    "I agree to Disclaimer & Terms" : {
+
+    },
+    "I hereby certify that my data entries and my record of duty status for this 24 hour period are true and correct" : {
+
+    },
+    "I hereby certify that my data entries are true and correct" : {
+
+    },
+    "If you are experiencing any issue, please let us know. We will try to solve them as soon as possible." : {
+
+    },
+    "Inspect logs for the 24-hour period and the previous days for men HOS cycle" : {
+
+    },
+    "Instruction" : {
+
+    },
+    "Invalid URL" : {
+
+    },
+    "Language" : {
+
+    },
+    "Loading co-drivers..." : {
+
+    },
+    "Loading defects..." : {
+
+    },
+    "Loading..." : {
+
+    },
+    "Loading…" : {
+
+    },
+    "Log - In" : {
+
+    },
+    "Log Out" : {
+
+    },
+    "Log Report" : {
+
+    },
+    "Log report sent successfully, please check your mail." : {
+
+    },
+    "Log-out" : {
+
+    },
+    "Logging in..." : {
+
+    },
+    "Login Failed" : {
+
+    },
+    "Logout Failed" : {
+
+    },
+    "Lower" : {
+
+    },
+    "Message" : {
+
+    },
+    "Missing Information" : {
+
+    },
+    "Next" : {
+
+    },
+    "Next ELD" : {
+      "extractionState" : "manual"
+    },
+    "No data available" : {
+
+    },
+    "No DVIR Records Available." : {
+
+    },
+    "No logs available for this date." : {
+
+    },
+    "No logs found" : {
+
+    },
+    "No vehicle conditions found." : {
+
+    },
+    "Note" : {
+
+    },
+    "Note: If you want to update eld device, mobile battery should be charge atleast 30% or plugin charger." : {
+
+    },
+    "Notes" : {
+
+    },
+    "NT - 11" : {
+
+    },
+    "NT11 Connection" : {
+
+    },
+    "Ok" : {
+
+    },
+    "OK" : {
+
+    },
+    "Open Settings" : {
+
+    },
+    "Page %lld of %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Page %1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "Password" : {
+
+    },
+    "Password must be numeric (min 4 digits)" : {
+
+    },
+    "PDF not found" : {
+
+    },
+    "Personal Conveyance" : {
+
+    },
+    "Please display required logs as per FMCSA and CCATM" : {
+
+    },
+    "Please enter a valid Username and password." : {
+
+    },
+    "Please Enter Valid Email Address" : {
+
+    },
+    "Please remember this will send 8 days of daily logs via FMCSA Data Transfer." : {
+
+    },
+    "Please wait..." : {
+
+    },
+    "Previous" : {
+
+    },
+    "PT - 30" : {
+
+    },
+    "PT30" : {
+
+    },
+    "Recap" : {
+
+    },
+    "Response" : {
+
+    },
+    "Rest Break" : {
+
+    },
+    "Restart" : {
+
+    },
+    "Review On Device" : {
+
+    },
+    "Road side inspection" : {
+
+    },
+    "Rules" : {
+
+    },
+    "Save" : {
+
+    },
+    "Scan result (tap to connect)" : {
+
+    },
+    "Search vehicle" : {
+
+    },
+    "Select 'review ON Device'and give your Device to the Officer " : {
+
+    },
+    "Select %@" : {
+
+    },
+    "Select %@ Defect" : {
+
+    },
+    "Select a device" : {
+
+    },
+    "Select Co-Driver" : {
+
+    },
+    "Select Data Transfer Type" : {
+
+    },
+    "Select Date" : {
+
+    },
+    "Select Device" : {
+
+    },
+    "Select Option" : {
+
+    },
+    "Select Vehicle Condition" : {
+
+    },
+    "Select your Device Type and Enter The ELD Mac address Listed On The Device" : {
+
+    },
+    "Selected Device" : {
+
+    },
+    "Send" : {
+
+    },
+    "Send  your logs to the officer if they request" : {
+
+    },
+    "Send 8 daily logs via FMCSA data transfer" : {
+
+    },
+    "Send Data Transfer" : {
+
+    },
+    "Send logs for the 24-hour period and the previous days for one HOS cycle" : {
+
+    },
+    "Sending data..." : {
+
+    },
+    "Session Expired" : {
+
+    },
+    "SIGN-IN AGAIN" : {
+
+    },
+    "Start Scan" : {
+
+    },
+    "Start using the app to see logs here" : {
+
+    },
+    "Submit" : {
+
+    },
+    "Submit Defects" : {
+
+    },
+    "Success" : {
+
+    },
+    "Switch to Off-Duty before Co-Driver can login." : {
+
+    },
+    "Terms & Privacy Policy" : {
+
+    },
+    "The Current driver will be signed out and you will become Driver. Notice as per requirements from FMCSA and CCMTA" : {
+
+    },
+    "Time" : {
+
+    },
+    "Time in Hours" : {
+
+    },
+    "Time: %@" : {
+
+    },
+    "To Date" : {
+
+    },
+    "Total 7 day work" : {
+
+    },
+    "Total: %lld" : {
+
+    },
+    "Trailer" : {
+
+    },
+    "Trailer - %@" : {
+
+    },
+    "Trailer Defects" : {
+
+    },
+    "Truck" : {
+
+    },
+    "Truck Defects" : {
+
+    },
+    "Type Mac address Here" : {
+
+    },
+    "Type your query here" : {
+
+    },
+    "Uncertified" : {
+
+    },
+    "Unlimited Shipping Documents" : {
+
+    },
+    "Unlimited Trailers" : {
+
+    },
+    "Upload" : {
+
+    },
+    "Upload Defects" : {
+
+    },
+    "Uploaded" : {
+
+    },
+    "Uploading..." : {
+
+    },
+    "Upper" : {
+
+    },
+    "Use Photo Library" : {
+
+    },
+    "User Manual" : {
+
+    },
+    "UserName" : {
+
+    },
+    "Validation Error" : {
+
+    },
+    "Value" : {
+
+    },
+    "Vehicle" : {
+
+    },
+    "Vehicle - %@" : {
+
+    },
+    "Vehicle Condition" : {
+
+    },
+    "Vehicle Condition Satisfactory" : {
+
+    },
+    "Version - %@" : {
+
+    },
+    "Version - OS/02/May" : {
+
+    },
+    "View Defects" : {
+
+    },
+    "View Instruction" : {
+
+    },
+    "View User Manual" : {
+
+    },
+    "View/Edit Signature" : {
+
+    },
+    "We'll Send a sms for User Name" : {
+
+    },
+    "Write note here..." : {
+
+    },
+    "Yard Moves" : {
+
+    },
+    "You have been logged out and logged-in on another device" : {
+
+    },
+    "Your current status is:" : {
+
+    },
+    "Your Cycle is Completed ? " : {
+
+    }
+  },
+  "version" : "1.0"
+}

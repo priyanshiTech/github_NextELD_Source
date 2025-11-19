@@ -91,6 +91,8 @@
 		AF8717FA2DFFF97400544383 /* blueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8717F92DFFF97400544383 /* blueModel.swift */; };
 		AF8E3A032DD1D646004AE777 /* SideMenuRowEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */; };
 		AF8E3A052DD1D9F8004AE777 /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8E3A042DD1D9F8004AE777 /* SideMenuView.swift */; };
+		AF8EB9D12ECDDACB006614A3 /* LocalizablePunjabi.strings in Resources */ = {isa = PBXBuildFile; fileRef = AF8EB9CF2ECDDACB006614A3 /* LocalizablePunjabi.strings */; };
+		AF8EB9D72ECE00B0006614A3 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = AF8EB9D62ECE00B0006614A3 /* Localizable.xcstrings */; };
 		AF900BD62E6329AD003D01A5 /* betteryLevelRealDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF900BD52E6329AD003D01A5 /* betteryLevelRealDevice.swift */; };
 		AF9024942E93DD920005F0D7 /* StatusBox&StatusButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9024912E93DD920005F0D7 /* StatusBox&StatusButton.swift */; };
 		AF9024952E93DD920005F0D7 /* TopbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9024922E93DD920005F0D7 /* TopbarView.swift */; };
@@ -354,6 +356,8 @@
 		AF8717F92DFFF97400544383 /* blueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blueModel.swift; sourceTree = "<group>"; };
 		AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuRowEnum.swift; sourceTree = "<group>"; };
 		AF8E3A042DD1D9F8004AE777 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
+		AF8EB9D02ECDDACB006614A3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LocalizablePunjabi.strings; sourceTree = "<group>"; };
+		AF8EB9D62ECE00B0006614A3 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		AF900BD52E6329AD003D01A5 /* betteryLevelRealDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = betteryLevelRealDevice.swift; sourceTree = "<group>"; };
 		AF90248D2E93DD920005F0D7 /* TimerBoxViewFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerBoxViewFile.swift; sourceTree = "<group>"; };
 		AF90248E2E93DD920005F0D7 /* VechicleInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VechicleInfoView.swift; sourceTree = "<group>"; };
@@ -713,6 +717,8 @@
 			isa = PBXGroup;
 			children = (
 				AF04B1B02DE9839000A5F3D1 /* LocalizableEng.strings */,
+				AF8EB9CF2ECDDACB006614A3 /* LocalizablePunjabi.strings */,
+				AF8EB9D62ECE00B0006614A3 /* Localizable.xcstrings */,
 			);
 			path = LocalizableString;
 			sourceTree = "<group>";
@@ -1621,6 +1627,7 @@
 			knownRegions = (
 				en,
 				Base,
+				pa,
 			);
 			mainGroup = 108FF7F52DC895E10051671B;
 			packageReferences = (
@@ -1646,7 +1653,9 @@
 				AFB943102E029C5B00AD19D7 /* Main.storyboard in Resources */,
 				AF217C212EC867F800A30C7D /* eld_disclaimer 1.html in Resources */,
 				AFB943192E029C9500AD19D7 /* DashboardReportView.xib in Resources */,
+				AF8EB9D12ECDDACB006614A3 /* LocalizablePunjabi.strings in Resources */,
 				AFB9431A2E029C9500AD19D7 /* DeviceInfoView.xib in Resources */,
+				AF8EB9D72ECE00B0006614A3 /* Localizable.xcstrings in Resources */,
 				AFB943112E029C5B00AD19D7 /* LaunchScreen.storyboard in Resources */,
 				AF04B1B12DE9839000A5F3D1 /* LocalizableEng.strings in Resources */,
 				AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */,
@@ -1921,6 +1930,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		AF8EB9CF2ECDDACB006614A3 /* LocalizablePunjabi.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AF8EB9D02ECDDACB006614A3 /* en */,
+			);
+			name = LocalizablePunjabi.strings;
+			sourceTree = "<group>";
+		};
 		AFB9430C2E029C5B00AD19D7 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

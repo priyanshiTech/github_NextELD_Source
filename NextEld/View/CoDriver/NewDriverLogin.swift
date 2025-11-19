@@ -47,6 +47,7 @@ struct NewDriverLogin: View {
             .background(Color(uiColor: .wine).shadow(radius: 1))
             
             Text("Next ELD")
+            //Text("app_name")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .foregroundColor(.white)

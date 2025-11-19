@@ -1,0 +1,426 @@
+/* 
+  LocalizablePunjabi.strings
+  NextEld
+
+  Created by Inurum   on 19/11/25.
+  
+*/
+"app_name" = "ਐਕਸਲ ਈ.ਐੱਲ.ਡੀ";
+"dispatch" = "Dispatch & Payroll";
+"forgot_password" = "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ ?";
+"forgot_username" = "ਉਪਭੋਗਤਾ ਨਾਮ ਭੁੱਲ ਗਏ ਹੋ?";
+"recap" = "ਰੀਕੈਪ";
+"logout" = "ਲੌਗ-ਆਊਟ ਕਰੋ";
+"ccmta" = "ਮੌਜੂਦਾ ਡਰਾਈਵਰ ਸਾਈਨ ਆਊਟ ਹੋ ਜਾਵੇਗਾ ਅਤੇ ਤੁਸੀਂ ਡਰਾਈਵਰ ਬਣ ਜਾਓਗੇ। FMCSA ਦੀਆਂ ਲੋੜਾਂ ਅਨੁਸਾਰ ਨੋਟਿਸ";
+"shipping_docs" = "ਸ਼ਿਪਿੰਗ ਦਸਤਾਵੇਜ਼";
+"trailer" = "ਟ੍ਰੇਲਰ";
+"truck" = "ਟਰੱਕ";
+"switch_equipment" = "ਉਪਕਰਣ ਬਦਲੋ";
+"no_connection_n_at_this_time" = "ਇਸ ਸਮੇਂ ਕੋਈ ਕਨੈਕਸ਼ਨ ਨਹੀਂ ਹੈ";
+"re_set_connection" = "ਕਨੈਕਸ਼ਨ ਦੁਬਾਰਾ ਸੈੱਟ ਕਰੋ";
+"connect" = "ਜੁੜੋ";
+"cancel" = "ਰੱਦ ਕਰੋ";
+"connected" = "ਜੁੜਿਆ";
+"on_duty" = "ਆਨ-ਡਿਊਟੀ";
+"submit" = "ਜਮ੍ਹਾਂ ਕਰੋ";
+"editInfo" = "ਜਾਣਕਾਰੀ ਦਾ ਸੰਪਾਦਨ ਕਰੋ";
+"drive" = "ਗੱਡੀ";
+"offduty" = "ਆਫ-ਡਿਊਟੀ";
+"split_sleep" = "ਵਿਭਾਜਨ-ਨੀਂਦ";
+"sleep" = "ਸਲੀਪ";
+"personal_use" = "ਨਿੱਜੀ ਵਰਤੋਂ";
+"yard_move" = "ਯਾਰਡ ਮੂਵ";
+"exit" = "ਨਿਕਾਸ";
+"daily_logs" = "ਰੋਜ਼ਾਨਾ ਲੌਗਸ";
+"dvir_history" = "Dvir ਇਤਿਹਾਸ";
+"email_dvir" = "Dvir ਨੂੰ ਈਮੇਲ ਕਰੋ";
+"send" = "ਭੇਜੋ";
+"elog" = "Elog 365";
+"password" = "ਪਾਸਵਰਡ";
+"user_id_or_email" = "ਯੂਜ਼ਰ ਆਈਡੀ ਜਾਂ ਈਮੇਲ";
+"bluetooth_connection" = "ਬਲੂਟੁੱਥ ਕਨੈਕਸ਼ਨ";
+"road_side_inspection" = "ਸੜਕ ਕਿਨਾਰੇ ਨਿਰੀਖਣ";
+"phone" = "ਫ਼ੋਨ :";
+"dateTime" = "ਮਿਤੀ & ਸਮਾਂ :";
+"referMode" = "ਰੈਫਰ ਮੋਡ :";
+"pickup_" = "ਚੁੱਕਣਾ # ";
+"cases" = "Cases :";
+"commodity" = "Commodity :";
+"pallets" = "Pallets :";
+"weight" = "Weight :";
+"temp" = "Temp Set :";
+"we_are_unable_to_process_your_request" = "ਅਸੀਂ ਇਸ ਸਮੇਂ ਤੁਹਾਡੀ ਬੇਨਤੀ 'ਤੇ ਕਾਰਵਾਈ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ ਹਾਂ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ.";
+"no_internet_connection" = "ਕੋਈ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਨਹੀਂ";
+"forgot_pass" = "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ";
+"forgot_user" = "ਯੂਜ਼ਰਨੇਮ ਭੁੱਲ ਗਏ";
+"verify_email_message" = "ਅਸੀਂ ਪਾਸਵਰਡ ਲਈ ਇੱਕ ਈਮੇਲ ਭੇਜਾਂਗੇ.";
+"verify_moblie_message" = "ਅਸੀਂ ਉਪਭੋਗਤਾ ਨਾਮ ਲਈ ਇੱਕ ਐਸਐਮਐਸ ਭੇਜਾਂਗੇ.";
+"please_enter_valid_email_id" = "ਕਿਰਪਾ ਕਰਕੇ ਵੈਧ ਈਮੇਲ ਪਤਾ ਦਾਖਲ ਕਰੋ";
+"please_enter_validmobile" = "ਕਿਰਪਾ ਕਰਕੇ ਵੈਧ ਮੋਬਾਈਲ ਨੰਬਰ ਦਾਖਲ ਕਰੋ";
+"forgot_passsword" = "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ";
+"upload_document" = "ਦਸਤਾਵੇਜ਼ ਅੱਪਲੋਡ ਕਰੋ";
+"location_permission" = "Location Permission";
+"location_text" = "ਐਪ ਨੂੰ ਇਸ ਡੀਵਾਈਸ ਟਿਕਾਣਾ ਇਜਾਜ਼ਤ ਤੱਕ ਪਹੁੰਚ ਕਰਨ ਦਿਓ। \n -ਸਹੀ ਟਿਕਾਣਾ ਪ੍ਰਦਾਨ ਕਰਨ ਲਈ.";
+"enable_location" = "ਟਿਕਾਣਾ ਚਾਲੂ ਕਰੋ";
+"nevermiss" = "ਕਦੇ ਵੀ ਇਵੈਂਟ ਲੌਗ ਨਾ ਛੱਡੋ";
+"turnonoverlay" = "ਬਲੂਟੁੱਥ ਕਨੈਕਸ਼ਨ ਪ੍ਰਦਰਸ਼ਿਤ ਕਰਨ ਲਈ ਆਪਣੇ ਫ਼ੋਨ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਓਵਰਲੇਅ ਅਨੁਮਤੀ ਨੂੰ ਚਾਲੂ ਕਰੋ.";
+"not_now" = "ਹਾਲੇ ਨਹੀਂ";
+"settings" = "ਸੈਟਿੰਗ";
+"language" = "ਭਾਸ਼ਾ";
+
+"gooffDuty" = "ਲੌਗ-ਆਉਟ ਤੋਂ ਪਹਿਲਾਂ ਆਫ-ਡਿਊਟੀ ਜਾਓ";
+"gooffDutyCodriver" = "ਲੌਗ-ਇਨ ਕੋ-ਡ੍ਰਾਈਵਰ ਤੋਂ ਪਹਿਲਾਂ ਆਫ-ਡਿਊਟੀ ਜਾਓ";
+"wanna_logout" = "ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ ਲੌਗਆਊਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?";
+"cycle_complete" = "ਸਾਈਕਲ ਪੂਰਾ";
+"violation" = "ਉਲੰਘਣਾ";
+"loading" = "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ..";
+
+"ble_playground" = "BLE Playground";
+"location_permission_required" = "Location Permission Required";
+"location_permission_rationale" = "Android 6 ਤੋਂ ਸ਼ੁਰੂ ਹੋ ਕੇ, ਸਿਸਟਮ ਨੂੰ BLE ਡਿਵਾਈਸਾਂ ਲਈ ਸਕੈਨ ਕਰਨ ਲਈ ਐਪਸ ਨੂੰ ਸਥਾਨ ਪਹੁੰਚ ਦੀ ਅਨੁਮਤੀ ਦਿੱਤੀ ਜਾਣੀ ਚਾਹੀਦੀ ਹੈ.\n\nਤੁਹਾਡਾ ਟਿਕਾਣਾ ਕਦੇ ਵੀ BLE ਸਕੈਨਾਂ ਤੋਂ ਇਲਾਵਾ ਵਰਤਿਆ ਨਹੀਂ ਜਾਂਦਾ.";
+"bluetooth_permission_required" = "Nearby Devices Permission Required";
+"bluetooth_permission_rationale" = "Android 12 ਤੋਂ ਸ਼ੁਰੂ ਹੋ ਕੇ, ਸਿਸਟਮ ਨੂੰ BLE ਡਿਵਾਈਸਾਂ ਲਈ ਸਕੈਨ ਕਰਨ ਅਤੇ ਕਨੈਕਟ ਕਰਨ ਲਈ ਐਪਸ ਨੂੰ ਨਜ਼ਦੀਕੀ ਡਿਵਾਈਸ ਪਹੁੰਚ ਦੀ ਅਨੁਮਤੀ ਦੀ ਲੋੜ ਹੁੰਦੀ ਹੈ.";
+"please_grant_relevant_permissions" = "ਕਿਰਪਾ ਕਰਕੇ ਲੋੜੀਂਦੀਆਂ ਅਨੁਮਤੀਆਂ ਦਿਓ";
+"app_settings_rationale" = "ਲੋੜੀਂਦੀਆਂ ਅਨੁਮਤੀਆਂ ਲਈ ਪਹਿਲਾਂ ਕੀਤੀਆਂ ਬੇਨਤੀਆਂ ਨੂੰ ਵਾਰੰ-ਵਾਰ ਜਾਂ ਸਥਾਈ ਤੌਰ 'ਤੇ ਅਸਵੀਕਾਰ ਕੀਤਾ ਗਿਆ ਹੈ। ਤੁਹਾਨੂੰ ਐਪ ਦੀਆਂ ਸੈਟਿੰਗਾਂ ਵਿੱਚੋਂ ਹੱਥੋਂ-ਹੱਥ ਇਹ ਅਨੁਮਤੀਆਂ ਦੇਣੀਆਂ ਪੈਣਗੀਆਂ.";
+"cannot_launch_app_settings" = "ਐਪ ਸੈਟਿੰਗਾਂ ਨੂੰ ਸ਼ੁਰੂ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ, ਕਿਰਪਾ ਕਰਕੇ ਹੱਥੋਂ-ਹੱਥ ਜਾਓ";
+"app_settings" = "App Settings";
+"quit" = "ਛੱਡੋ";
+"disconnected" = "ਡਿਸਕਨੈਕਟ ਕੀਤਾ";
+"disconnected_or_unable_to_connect_to_device" = "Disconnected or unable to connect to %@.";
+"ok" = "ਠੀਕ ਹੈ";
+"pt30" = "PT30";
+"ble" = "NT-11";
+
+"instruction" = "ਉਪਰ ਦਿੱਤੀ ਜਾਣਕਾਰੀ ਤੋਂ ਇਲਾਵਾ, ਡਰਾਈਵਰ ਦੇ ਡਿਊਟੀ ਸਟੇਟਸ (RODS) ਅਤੇ ਹੋਰ ਸਬੰਧਤ ਜਾਣਕਾਰੀ ਨੂੰ ਦਰਜ ਕਰਨ ਲਈ ਘੱਟੋ-ਘੱਟ 8 ਦਿਨਾਂ ਲਈ ਕਾਫੀ ਖਾਲੀ ਗ੍ਰਾਫ-ਗ੍ਰਿਡ ਰਿਕਾਰਡ ਵਪਾਰਕ ਮੋਟਰ ਵਾਹਨ (CMV) ਵਿੱਚ ਰੱਖਣੇ ਲਾਜ਼ਮੀ ਹਨ।";
+
+"user_manual_text" = "ਯੂਜ਼ਰ ਮੈਨੁਅਲ, ਨਿਰਦੇਸ਼ ਸ਼ੀਟ ਅਤੇ ਖਰਾਬੀ ਨਿਰਦੇਸ਼ ਸ਼ੀਟ ਇਲੈਕਟ੍ਰਾਨਿਕ ਰੂਪ ਵਿੱਚ ਹੋ ਸਕਦੇ ਹਨ। ਇਹ ਫੈਡਰਲ ਰਜਿਸਟਰ ਦੇ ਹੁਕਮ \"Regulatory Guidance Concerning Electronic Signatures and Documents\" (76 FR 411) ਅਨੁਸਾਰ ਹੈ।";
+
+"tracker_running" = "ਟਰੈਕਿੰਗ ਜਾਰੀ ਹੈ ...";
+
+"pt_name" = "ਪੈਸਿਫਿਕ ਟ੍ਰੈਕ";
+
+"navigation_drawer_open" = "ਨੇਵੀਗੇਸ਼ਨ ਡ੍ਰਾਅਰ ਖੋਲ੍ਹੋ";
+
+"navigation_drawer_close" = "ਨੇਵੀਗੇਸ਼ਨ ਡ੍ਰਾਅਰ ਬੰਦ ਕਰੋ";
+
+"device" = "ਡਿਵਾਈਸ:";
+"no_device" = "<ਕੋਈ ਡਿਵਾਈਸ ਚੁਣੋ>";
+
+"select_device" = "ਡਿਵਾਈਸ ਚੁਣੋ";
+
+"status" = "ਸਥਿਤੀ";
+
+"llsWrite" = "ਲਿੰਕ ਲੌਸ ਅਲਰਟ";
+
+"iasWrite" = "ਤੁਰੰਤ ਅਲਰਟ";
+
+"scanning" = "ਡਿਵਾਈਸਾਂ ਲਈ ਸਕੈਨ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...";
+
+"no_ble_devices" = "ਕੋਈ LE ਡਿਵਾਈਸ ਨਹੀਂ ਮਿਲੀ।";
+
+"no_required_permission" = "ਅਨੁਮਤੀ ਅਸਵੀਕਾਰ ਕੀਤੀ ਗਈ ਹੈ।";
+
+"ready" = "ਤਿਆਰ";
+
+"disconnect" = "ਡਿਸਕਨੈਕਟ";
+"connecting" = "ਰੱਦ ਕਰੋ";
+"disconnecting" = "ਰੱਦ ਕਰੋ";
+
+"RadioButton1" = "ਉੱਚਾ ਅਲਰਟ ਪੱਧਰ";
+"RadioButton2" = "ਦਰਮਿਆਨਾ ਅਲਰਟ ਪੱਧਰ";
+"RadioButton3" = "ਅਲਰਟ ਰੋਕੋ";
+
+"SystemId" = "ਸਿਸਟਮ ID";
+"ModelNumber" = "ਮਾਡਲ ਨੰਬਰ";
+"SerialNumber" = "ਸੀਰੀਅਲ ਨੰਬਰ";
+"FirmwareRevision" = "ਫਰਮਵੇਅਰ ਰੀਵਿਜ਼ਨ";
+"HardwareRevision" = "ਹਾਰਡਵੇਅਰ ਰੀਵਿਜ਼ਨ";
+"SoftwareRevision" = "ਸੌਫਟਵੇਅਰ ਰੀਵਿਜ਼ਨ";
+"ManufactureName" = "ਨਿਰਮਾਤਾ ਦਾ ਨਾਮ";
+"RegCertDataList" = "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਸਰਟੀਫਿਕੇਟ ਡਾਟਾ ਲਿਸਟ";
+
+"ManufactureId" = "    ਨਿਰਮਾਤਾ ID";
+"BatteryLevel" = "    ਬੈਟਰੀ ਪੱਧਰ";
+"OrgId" = "    ਸੰਸਥਾ ID";
+"Txpower" = "    Tx ਪਾਵਰ ਪੱਧਰ";
+"Noupdate" = "    ਕੋਈ ਅੱਪਡੇਟ ਨਹੀਂ";
+
+"ReadTxPower" = "Tx Power ਪੜ੍ਹੋ";
+
+"high_alert" = "ਉੱਚ ਪੱਧਰ ਦਾ ਅਲਰਟ ਟ੍ਰਿਗਰ ਹੋਇਆ!";
+"low_alert" = "ਘੱਟ ਪੱਧਰ ਦਾ ਅਲਰਟ ਟ੍ਰਿਗਰ ਹੋਇਆ!";
+"writeTxnoti" = "Tx ਨੋਟੀ";
+"readRssi" = "RSSI ਮੁੱਲ ਪੜ੍ਹੋ";
+"Readdummy" = "D ਪੜ੍ਹੋ";
+"removeBond" = "ਬਾਂਡ ਹਟਾਓ";
+"paired" = "ਜੋੜਿਆ ਗਿਆ";
+
+"popup_title" = "EldMan ਬੰਦ ਕਰੋ";
+"popup_message" = "ਕੀ ਤੁਸੀਂ ਇਸ ਐਪਲੀਕੇਸ਼ਨ ਨੂੰ ਬੰਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?";
+"popup_yes" = "ਹਾਂ";
+"popup_no" = "ਨਹੀਂ";
+
+"ble_not_supported" = "ਬਲੂਟੂਥ ਲੋ-ਐਨਰਜੀ ਸਪੋਰਟ ਨਹੀਂ ਹੈ";
+"scan" = "ਸਕੈਨ";
+"action_settings" = "ਸੈਟਿੰਗਾਂ";
+"action_fup" = "ਫਰਮਵੇਅਰ ਅੱਪਡੇਟ ਕਰੋ";
+"action_chk_fup" = "ਅੱਪਡੇਟ ਚੈੱਕ ਕਰੋ";
+"action_sd" = "ਨਿਪੁੰਨਤਾ ਚਲਾਓ";
+"action_fup_file" = "ਫਰਮਵੇਅਰ ਚੁਣੋ";
+"action_sv" = "ਸਿਸਟਮ ਵੇਰੀਏਬਲਜ਼";
+"action_demo_spn" = "ਫਿਊਲ ਲੈਵਲ SPN ਰਜਿਸਟਰ ਕਰੋ";
+"action_get_ctrl_fw" = "ਕੰਟਰੋਲਰ ਫਰਮਵੇਅਰ";
+"action_get_ble_fw" = "BLE ਫਰਮਵੇਅਰ";
+"action_adv" = "ਕਮਾਂਡ";
+"action_get_dtc" = "DTC ਪ੍ਰਾਪਤ ਕਰੋ";
+"action_clear_dtc" = "DTC ਸਾਫ਼ ਕਰੋ";
+
+"txt_for_certify" = "ਮੈਂ ਇਥੇ ਪ੍ਰਮਾਣਿਤ ਕਰਦਾ/ਕਰਦੀ ਹਾਂ ਕਿ ਮੇਰੇ ਡਾਟਾ ਐਂਟਰੀ ਅਤੇ ਇਸ 24 ਘੰਟਿਆਂ ਦੀ ਮਿਆਦ ਲਈ ਮੇਰਾ ਡਿਊਟੀ ਸਟੇਟਸ ਰਿਕਾਰਡ ਸਹੀ ਅਤੇ ਠੀਕ ਹੈ।";
+
+"scanner_title" = "ਡਿਵਾਈਸ ਚੁਣੋ:";
+"scanner_empty" = "ਕੋਈ ਡਿਵਾਈਸ ਨਹੀਂ ਮਿਲੀ!";
+"scanner_action_scan" = "ਸਕੈਨ";
+"scanner_action_cancel" = "ਰੱਦ ਕਰੋ";
+"scanner_subtitle_bonded" = "ਬਾਂਡ ਕੀਤੀਆਂ ਡਿਵਾਈਸਾਂ:";
+"scanner_subtitle_not_bonded" = "ਉਪਲਬਧ ਡਿਵਾਈਸਾਂ:";
+"scanner_permission_rationale" = "ਲੋੜੀਂਦੀਆਂ ਅਨੁਮਤੀਆਂ ਗਾਇਬ ਹਨ -- ਜਾਰੀ ਰੱਖਣਾ ਸੰਭਵ ਨਹੀਂ!\\nਜੇ ਪਹਿਲਾਂ ਅਨੁਮਤੀਆਂ ਰੱਦ ਕੀਤੀਆਂ ਗਈਆਂ ਸਨ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਸੈਟਿੰਗ ਮੈਨੂ ਤੋਂ ਉਹਨਾਂ ਨੂੰ ਇਜਾਜ਼ਤ ਦਿਓ, ਨਹੀਂ ਤਾਂ ਸਿਰਫ CONNECT ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।";
+
+"not_available" = "ਉਪਲਬਧ ਨਹੀਂ";
+
+"title_activity_test" = "ਟੈਸਟ ਐਕਟੀਵਿਟੀ";
+"title_activity_dev_settings" = "ਸੈਟਿੰਗਾਂ";
+"title_activity_sv_settings" = "ਡਿਵਾਈਸ ਸੈਟਿੰਗਾਂ";
+
+"pref_header_general" = "ਜਨਰਲ";
+"pref_title_devmode" = "ਡਿਵ ਮੋਡ";
+"pref_description_devmode" = "ਡਿਵੈਲਪਮੈਂਟ ਮੋਡ ਨੂੰ ਚਾਲੂ/ਬੰਦ ਕਰੋ";
+
+"pref_title_ver_override" = "ਡਿਵਾਈਸ ਵਰਜਨ ਓਵਰਰਾਈਡ";
+"pref_description_ver_override" = "ਵਰਜਨ ਓਵਰਰਾਈਡ ਨੂੰ ਚਾਲੂ/ਬੰਦ ਕਰੋ";
+
+"pref_title_version_user" = "ਡਿਵਾਈਸ ਵਰਜਨ xxxx,nn ਵਿੱਚ";
+
+"upgrade_in_progress" = "ਅੱਪਡੇਟ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ ...";
+"upgrade_uptodate" = "ਮੁਕੰਮਲ";
+
+"perf_file" = "com.pt.devicemanager.perf";
+
+"pref_description_sv_pe" = "ਪੀਰੀਓਡਿਕ ਇਵੈਂਟਸ ਦੇ ਵਿਚਕਾਰ ਸਮਾਂ (ਸੈਕਿੰਡ)";
+"pref_title_sv_pe" = "PE/HUC";
+
+"pref_description_sv_be" = "BLE ਇਵੈਂਟਸ ਚਾਲੂ/ਬੰਦ ਕਰੋ";
+"pref_title_sv_be" = "BE";
+
+"pref_description_sv_ue" = "UART ਇਵੈਂਟਸ ਚਾਲੂ/ਬੰਦ ਕਰੋ";
+"pref_title_sv_ue" = "UE";
+
+"privacy_policy" = "";
+
+"privacy_notice" = "ਮੈਂ ਪ੍ਰਾਈਵੇਸੀ ਨੀਤੀ ਪੜ੍ਹੀ ਹੈ ਅਤੇ ਸਹਿਮਤ ਹਾਂ।";
+"privacy_accept" = "ਸਵੀਕਾਰ ਕਰੋ";
+
+"channel_connected_devices_title" = "ਟਰੈਕਿੰਗ ਜਾਰੀ ਹੈ ...";
+"channel_update_title" = "ਅੱਪਡੇਟ ਜਾਰੀ ਹੈ ...";
+
+"channel_connected_devices_description" = "ਜਦੋਂ ਬੈਕਗਰਾਊਂਡ ਵਿੱਚ ਟ੍ਰੈਕਰ ਕਨੈਕਟ ਹੁੰਦਾ ਹੈ ਤਾਂ ਨੋਟੀਫਿਕੇਸ਼ਨ ਦਿਖਾਉਂਦਾ ਹੈ।";
+"channel_update_description" = "ਜਦੋਂ ਅੱਪਡੇਟ ਚਲ ਰਹੀ ਹੁੰਦੀ ਹੈ ਤਾਂ ਨੋਟੀਫਿਕੇਸ਼ਨ ਦਿਖਾਉਂਦਾ ਹੈ।";
+
+"title_activity_tracker_manager" = "EldMan";
+
+"disclosure" = "ELD ਨੂੰ ਟੈਲੀਮੇਟਰੀ ਲਈ ਸਥਾਨ ਡਾਟਾ ਇਕੱਠਾ ਕਰਨਾ ਲੋੜੀਂਦਾ ਹੈ, ਭਾਵੇਂ ਐਪ ਬੰਦ ਹੋਵੇ ਜਾਂ ਵਰਤੋਂ ਵਿੱਚ ਨਾ ਹੋਵੇ।\\n ਇਸ ਲਈ ELD ਨੂੰ ਸਾਰੀਆਂ ਲੋੜੀਂਦੀਆਂ ਅਨੁਮਤੀਆਂ ਦੀ ਲੋੜ ਹੈ.";
+"hello_blank_fragment" = "ਹੈਲੋ ਖਾਲੀ ਫ੍ਰੈਗਮੈਂਟ";
+"permission_granted" = "ਅਨੁਮਤੀ ਮਿਲ ਗਈ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।";
+"tracker_updated" = "ਟਰੈਕਰ ਸਫਲਤਾਪੂਰਵਕ ਅੱਪਡੇਟ ਹੋ ਗਿਆ ਹੈ।";
+"dtc_cleared" = "DTC ਕਲੀਅਰ ਕਰ ਦਿੱਤਾ ਗਿਆ!";
+"dtc_clear_failed" = "DTC ਕਲੀਅਰ ਕਰਨ ਵਿੱਚ ਅਸਫਲ!";
+"vin_fetch_failed" = "VIN ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਗਲਤੀ";
+"update_available" = "ਇੱਕ ਅੱਪਡੇਟ ਉਪਲਬਧ ਹੈ!";
+"update_na" = "ਕੋਈ ਅੱਪਡੇਟ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।";
+"storage_permission_na" = "ਸਟੋਰੇਜ ਅਨੁਮਤੀ ਨਹੀਂ ਹੈ!";
+"accept_permissions" = "ਸਵੀਕਾਰੋ";
+"email_log_text" = "24-ਘੰਟਿਆਂ ਦੀ ਮਿਆਦ ਅਤੇ ਇੱਕ HOS ਚੱਕਰ ਲਈ ਪਹਿਲੇ ਦਿਨ ਦੇ ਲਾਗ ਈਮੇਲ ਕਰੋ";
+"email_pdf" = "ਆਪਣੇ ਲਾਗਾਂ ਨੂੰ PDF ਫਾਰਮੈਟ ਵਿੱਚ ਈਮੇਲ ਕਰੋ";
+"email_dvir_text" = "24-ਘੰਟਿਆਂ ਦੀ ਮਿਆਦ ਅਤੇ ਇੱਕ HOS ਚੱਕਰ ਲਈ ਪਹਿਲੇ ਦਿਨ ਦਾ DVIR ਈਮੇਲ ਕਰੋ";
+"email_dvir_pdf" = "ਆਪਣਾ DVIR PDF ਫਾਰਮੈਟ ਵਿੱਚ ਈਮੇਲ ਕਰੋ";
+"Origin_driver" = "ਡਰਾਈਵਰ";
+"Origin_auto" = "ਆਟੋ";
+"Origin_intermediat" = "ਇੰਟਰਮੀਡੀਏਟ w/ CLP";
+"hint_email" = "ਈਮੇਲ";
+"hint_password" = "ਪਾਸਵਰਡ";
+"log_in" = "ਲੌਗ-ਇਨ";
+"wrong_pass_error" = "\"ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰ ਲੰਬਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ\"";
+"please_enter_valid_email" = "ਕਿਰਪਾ ਕਰਕੇ ਵੈਧ ਈਮੇਲ ਦਰਜ ਕਰੋ";
+"select_device_type" = "ਡਿਵਾਈਸ ਕਿਸਮ ਚੁਣੋ";
+"please_enable_bluetooth" = "ਕਿਰਪਾ ਕਰਕੇ ਬਲੂਟੂਥ ਚਾਲੂ ਕਰੋ";
+"please_enter_valid_mac" = "ਕਿਰਪਾ ਕਰਕੇ ਵੈਧ MAC ਦਰਜ ਕਰੋ";
+"connection_failed" = "ਕਨੈਕਸ਼ਨ ਅਸਫਲ ਹੋਇਆ";
+"connect_with_pt_30" = "PT-30 ਨਾਲ ਕਨੈਕਟ ਕਰੋ";
+"select_your_device_type_and_enter_eld_mac_address_listed_on_the_device" = "ਆਪਣੀ ਡਿਵਾਈਸ ਕਿਸਮ ਚੁਣੋ ਅਤੇ ਡਿਵਾਈਸ 'ਤੇ ਦਿੱਤਾ ELD MAC ਐਡਰੈੱਸ ਦਰਜ ਕਰੋ।";
+"type_mac_address_here" = "ਇੱਥੇ MAC ਐਡਰੈੱਸ ਟਾਈਪ ਕਰੋ";
+"continue_disconnected" = "ਬਿਨਾਂ ਕਨੈਕਸ਼ਨ ਜਾਰੀ ਰੱਖੋ";
+"vehicle" = "ਵਾਹਨ";
+"add_vehicle" = "ਵਾਹਨ ਜੋੜੋ";
+"please_select_vehicle" = "ਕਿਰਪਾ ਕਰਕੇ ਵਾਹਨ ਚੁਣੋ";
+"add_log_testing" = "ਲਾਗ ਜੋੜੋ (ਟੈਸਟਿੰਗ)";
+"firmware_update" = "ਫਰਮਵੇਅਰ ਅੱਪਡੇਟ";
+"dvir_pri_trip" = "DVIR - ਟ੍ਰਿਪ ਤੋਂ ਪਹਿਲਾਂ";
+"dot_inspection" = "DOT ਜਾਂਚ";
+"co_driver" = "ਸਹਾਇਕ ਡਰਾਈਵਰ";
+"company_info" = "ਕੰਪਨੀ ਜਾਣਕਾਰੀ";
+"information_packet" = "ਜਾਣਕਾਰੀ ਪੈਕਟ";
+"rules" = "ਨਿਯਮ";
+"exception" = "ਛੂਟ";
+"log_out" = "ਲੌਗ ਆਉਟ";
+"version" = "ਵਰਜਨ";
+"breaktime" = "ਡਰਾਈਵ ਜਾਰੀ ਰੱਖੋ";
+"break_time_left" = "ਆਰਾਮ ਦਾ ਸਮਾਂ";
+"off_duty" = "ਆਫ-ਡਿਊਟੀ";
+"cycle" = "ਸਾਈਕਲ /";
+"english" = "ਅੰਗ੍ਰੇਜ਼ੀ";
+"punjabi" = "ਪੰਜਾਬੀ";
+"search_vehicle" = "ਵਾਹਨ ਖੋਜੋ";
+"scan_qr" = "QR ਸਕੈਨ ਕਰੋ";
+"connection_text" = "ਜੁੜ ਰਿਹਾ ਹੈ...";
+"you_can_resume_your_work_after" = "ਤੁਸੀਂ ਆਪਣੇ ਕੰਮ ਨੂੰ ਇਸ ਤੋਂ ਬਾਅਦ ਦੁਬਾਰਾ ਸ਼ੁਰੂ ਕਰ ਸਕਦੇ ਹੋ";
+"violations" = "ਉਲੰਘਣਾਵਾਂ -";
+"current_status" = "ਮੌਜੂਦਾ ਸਥਿਤੀ";
+"available_hours" = "ਉਪਲਬਧ ਘੰਟੇ";
+"connect_now" = "ਹੁਣੇ ਕਨੈਕਟ ਕਰੋ";
+"current_location" = "ਮੌਜੂਦਾ ਸਥਾਨ :";
+"current_odometer" = "ਮੌਜੂਦਾ ਓਡੋਮੀਟਰ :";
+"enter_note" = "ਨੋਟ ਦਰਜ ਕਰੋ";
+"note_split_time_will_work_with_7_3_and_8_2_ratio" = "ਨੋਟ: ਸਪਲਿਟ ਸਮਾਂ 7:3 ਅਤੇ 8:2 ਅਨੁਪਾਤ ਨਾਲ ਕੰਮ ਕਰੇਗਾ";
+"your_are_up_to_date" = "ਤੁਸੀਂ ਅਪ-ਟੂ-ਡੇਟ ਹੋ";
+"checking_update" = "ਅੱਪਡੇਟ ਚੈੱਕ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ";
+"new_version_found" = "ਨਵਾਂ ਵਰਜਨ ਮਿਲਿਆ: ";
+"company_information" = "ਕੰਪਨੀ ਜਾਣਕਾਰੀ";
+"driver_name" = "ਡਰਾਈਵਰ ਦਾ ਨਾਮ";
+"enter_driver_name" = "ਡਰਾਈਵਰ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ";
+"driver_email" = "ਡਰਾਈਵਰ ਦੀ ਈਮੇਲ";
+"enter_driver_email" = "ਡਰਾਈਵਰ ਦੀ ਈਮੇਲ ਦਰਜ ਕਰੋ";
+"driver_phone" = "ਡਰਾਈਵਰ ਦਾ ਫ਼ੋਨ";
+"enter_driver_phone" = "ਡਰਾਈਵਰ ਦਾ ਫ਼ੋਨ ਦਰਜ ਕਰੋ";
+"driver_licence" = "ਡਰਾਈਵਰ ਲਾਇਸੈਂਸ";
+"enter_driver_licence" = "ਡਰਾਈਵਰ ਲਾਇਸੈਂਸ ਦਰਜ ਕਰੋ";
+"company_name" = "ਕੰਪਨੀ ਦਾ ਨਾਮ";
+"enter_company_name" = "ਕੰਪਨੀ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ";
+"main_office_address" = "ਮੁੱਖ ਦਫ਼ਤਰ ਦਾ ਪਤਾ";
+"enter_main_office_address" = "ਮੁੱਖ ਦਫ਼ਤਰ ਦਾ ਪਤਾ ਦਰਜ ਕਰੋ";
+"home_terminal_address" = "ਘਰੇਲੂ ਟਰਮੀਨਲ ਦਾ ਪਤਾ";
+"enter_home_terminal_address" = "ਘਰੇਲੂ ਟਰਮੀਨਲ ਦਾ ਪਤਾ ਦਰਜ ਕਰੋ";
+"time_zone" = "ਟਾਈਮ ਜ਼ੋਨ";
+"enter_time_zone" = "ਟਾਈਮ ਜ਼ੋਨ ਦਰਜ ਕਰੋ";
+"enter_language" = "ਭਾਸ਼ਾ ਦਰਜ ਕਰੋ";
+"user_manual" = "ਯੂਜ਼ਰ ਮੈਨੁਅਲ";
+"view_user_manual" = "ਯੂਜ਼ਰ ਮੈਨੁਅਲ ਵੇਖੋ";
+"instruction_view" = "ਹਦਾਇਤਾਂ";
+"view_instruction" = "ਹਦਾਇਤਾਂ ਵੇਖੋ";
+"hours_recap" = "ਘੰਟਿਆਂ ਦਾ ਸੰਖੇਪ";
+"total_7_day_work" = "ਕੁੱਲ 7 ਦਿਨਾਂ ਦਾ ਕੰਮ";
+"hours_worked_today" = "ਅੱਜ ਕੰਮ ਕੀਤੇ ਘੰਟੇ";
+"hours_available_today" = "ਅੱਜ ਉਪਲਬਧ ਘੰਟੇ";
+"hours_available_tomorrow" = "ਕੱਲ੍ਹ ਉਪਲਬਧ ਘੰਟੇ";
+"date" = "ਤਾਰੀਖ";
+"hours_worked" = "ਕੰਮ ਕੀਤੇ ਘੰਟੇ";
+"cycle_complete_text" = "ਸਾਈਕਲ ਪੂਰੀ";
+"completeCycleMessage" = "ਤੁਹਾਡਾ ਹਫ਼ਤਾਵਾਰ ਸਾਈਕਲ ਪੂਰਾ ਹੋ ਗਿਆ ਹੈ, ਤੁਸੀਂ 34 ਘੰਟਿਆਂ ਬਾਅਦ ਡਿਊਟੀ ਸ਼ੁਰੂ ਕਰ ਸਕਦੇ ਹੋ।";
+"verifyLogHeading" = "ਲਾਗ ਦੀ ਪ੍ਰਮਾਣਿਕਤਾ";
+"verifyMessage" = "ਕਿਰਪਾ ਕਰਕੇ ਪਿਛਲੇ ਦਿਨ ਦੀ ਲਾਗ ਦੀ ਪ੍ਰਮਾਣਿਕਤਾ ਕਰੋ।";
+"dvirHeading" = "DVIR ਸ਼ਾਮਲ ਕਰੋ";
+"dvirMessage" = "ਕਿਰਪਾ ਕਰਕੇ ਓਨ-ਡਰਾਈਵ 'ਤੇ ਜਾਣ ਤੋਂ ਪਹਿਲਾਂ DVIR ਸ਼ਾਮਲ ਕਰੋ।";
+"dvirDutyMessage" = "ਕਿਰਪਾ ਕਰਕੇ ON-Duty 'ਤੇ ਜਾਣ ਤੋਂ ਪਹਿਲਾਂ DVIR ਸ਼ਾਮਲ ਕਰੋ।";
+"please_display_required_logs_as_per_fmcsa_and_ccatm" = "ਕਿਰਪਾ ਕਰਕੇ FMCSA ਅਤੇ CCATM ਦੇ ਅਨੁਸਾਰ ਲੋੜੀਂਦੇ ਲਾਗ ਦਿਖਾਓ";
+"certified" = "ਪ੍ਰਮਾਣਿਤ";
+"uncertified" = "ਨਾ-ਪ੍ਰਮਾਣਿਤ";
+"form" = "ਫਾਰਮ";
+"certify" = "ਪ੍ਰਮਾਣਿਤ ਕਰੋ";
+"driver" = "ਡਰਾਈਵਰ";
+"save" = "ਸੇਵ ਕਰੋ";
+"driver_signature" = "ਡਰਾਈਵਰ ਦਸਤਖਤ";
+"clear_signature" = "ਦਸਤਖਤ ਮਿਟਾਓ";
+"agree" = "ਸਹਿਮਤ";
+"events" = "ਇਵੈਂਟਸ";
+"press_back_again_to_exit" = "ਬਾਹਰ ਨਿਕਲਣ ਲਈ ਇਕ ਵਾਰ ਫਿਰ ਬੈਕ ਦਬਾਓ";
+"please_add_shipping_documents" = "ਕਿਰਪਾ ਕਰਕੇ ਸ਼ਿਪਿੰਗ ਦਸਤਾਵੇਜ਼ ਸ਼ਾਮਲ ਕਰੋ";
+"form_has_been_saved" = "ਫਾਰਮ ਸੇਵ ਕਰ ਦਿੱਤਾ ਗਿਆ ਹੈ।";
+"add_co_driver" = "ਸਹਾਇਕ ਡਰਾਈਵਰ ਸ਼ਾਮਲ ਕਰੋ";
+"select_co_driver" = "ਸਹਾਇਕ ਡਰਾਈਵਰ ਚੁਣੋ";
+"please_select_co_driver" = "ਕਿਰਪਾ ਕਰਕੇ ਸਹਾਇਕ ਡਰਾਈਵਰ ਚੁਣੋ";
+"signature_required" = "ਦਸਤਖਤ ਲੋੜੀਂਦੇ ਹਨ";
+"fill_form_first" = "ਪਹਿਲਾਂ ਫਾਰਮ ਭਰੋ।";
+"log_has_been_certified" = "ਲਾਗ ਦੀ ਪ੍ਰਮਾਣਿਕਤਾ ਹੋ ਚੁੱਕੀ ਹੈ";
+"you_need_to_fill_and_save_form_first" = "ਤੁਹਾਨੂੰ ਪਹਿਲਾਂ ਫਾਰਮ ਭਰ ਕੇ ਸੇਵ ਕਰਨਾ ਹੋਵੇਗਾ।";
+"your_current_status_is" = "ਤੁਹਾਡਾ ਮੌਜੂਦਾ ਸਥਿਤੀ ਹੈ :";
+"go_off_duty_before_log_out" = "ਲਾਗ-ਆਉਟ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਆਫ-ਡਿਊਟੀ ਜਾਓ";
+"your_cycle_is_completed" = "ਤੁਹਾਡਾ ਸਾਈਕਲ ਪੂਰਾ ਹੋ ਗਿਆ ਹੈ?";
+"cycle_rule" = "ਸਾਈਕਲ ਨਿਯਮ";
+"cargo_type" = "ਸਾਮਾਨ ਦੀ ਕਿਸਮ";
+"restart" = "ਰੀਸਟਾਰਟ";
+"rest_break" = "ਆਰਾਮ ਬ੍ਰੇਕ";
+"_16hr_short_haul_exception" = "16 ਘੰਟੇ ਦਾ ਸ਼ਾਰਟ ਹੌਲ ਛੂਟ";
+"personal_conveyance" = "ਨਿੱਜੀ ਚਲਾਣਾ";
+"yard_moves" = "ਯਾਰਡ ਮੂਵਜ਼";
+"unlimited_trailers" = "ਅਨਲਿਮਿਟੇਡ ਟ੍ਰੇਲਰ";
+"unlimited_shipping_documents" = "ਅਨਲਿਮਿਟੇਡ ਸ਼ਿਪਿੰਗ ਦਸਤਾਵੇਜ਼";
+"driver_id" = "ਡਰਾਈਵਰ ID";
+"driver_license" = "ਡਰਾਈਵਰ ਲਾਇਸੈਂਸ";
+"driver_license_state" = "ਡਰਾਈਵਰ ਲਾਇਸੈਂਸ ਰਾਜ";
+"exempt_driver_status" = "ਛੂਟ ਪ੍ਰਾਪਤ ਡਰਾਈਵਰ ਸਥਿਤੀ";
+"unidentified_driving_records" = "ਗੁਪਤ ਡ੍ਰਾਈਵਿੰਗ ਰਿਕਾਰਡ";
+"co_driver_id" = "ਸਹਾਇਕ ਡਰਾਈਵਰ ID";
+"log_date" = "ਲਾਗ ਤਾਰੀਖ";
+"display_date" = "ਦਿਖਾਉਣ ਦੀ ਤਾਰੀਖ";
+"display_location" = "ਦਿਖਾਉਣ ਵਾਲਾ ਸਥਾਨ";
+"driver_certified" = "ਡਰਾਈਵਰ ਪ੍ਰਮਾਣਿਤ";
+"update_records" = "ਲਾਗ ਤਾਜ਼ਾ ਕਰੋ";
+"eld_registration_id" = "ELD ਰਜਿਸਟ੍ਰੇਸ਼ਨ ID";
+"eld_identifier" = "ELD ਪਛਾਣ";
+"provider" = "ਪ੍ਰਦਾਤਾ";
+"_24_period_starting_time" = "24-ਘੰਟੇ ਦੀ ਸ਼ੁਰੂਆਤੀ ਵਾਰ";
+"data_dig_indincators" = "ਡਾਟਾ ਡਿਗ. ਇੰਡਿਕੇਟਰ";
+"device_malfn_indicators" = "ਡਿਵਾਈਸ ਮਾਲਫੰਕਸ਼ਨ ਇੰਡਿਕੇਟਰ";
+"vin" = "VIN";
+"odometer" = "ਓਡੋਮੀਟਰ";
+"distance" = "ਦੂਰੀ";
+"carrier" = "ਕੈਰੀਅਰ";
+"main_office" = "ਮੁੱਖ ਦਫ਼ਤਰ";
+"engine_hours" = "ਇੰਜਣ ਘੰਟੇ";
+"home_terminal" = "ਹੋਮ ਟਰਮੀਨਲ";
+"time" = "ਸਮਾਂ";
+"location" = "ਸਥਾਨ";
+"origin" = "ਮੂਲ";
+"notes" = "ਨੋਟਸ";
+"add_dvir" = "DVIR ਸ਼ਾਮਲ ਕਰੋ";
+"company" = "ਕੰਪਨੀ";
+"no_defects" = "ਕੋਈ ਖਾਮੀ ਨਹੀਂ";
+"has_defects" = "ਖਾਮੀਆਂ ਮੌਜੂਦ ਹਨ";
+"write_note_here" = "ਇੱਥੇ ਨੋਟ ਲਿਖੋ";
+"vehicle_condition" = "ਵਾਹਨ ਦੀ ਸਥਿਤੀ";
+"update_dvir" = "DVIR ਅੱਪਡੇਟ ਕਰੋ";
+"from_dates" = "ਤਾਰੀਖ ਤੋਂ";
+"to_date" = "ਤਾਰੀਖ ਤੱਕ";
+"enter_email" = "ਈਮੇਲ ਦਰਜ ਕਰੋ";
+"please_select_date" = "ਕਿਰਪਾ ਕਰਕੇ ਤਾਰੀਖ ਚੁਣੋ";
+"log_report" = "ਲਾਗ ਰਿਪੋਰਟ";
+"log_report_send_successfully_please_check_your_mail" = "ਲਾਗ ਰਿਪੋਰਟ ਸਫਲਤਾਪੂਰਵਕ ਭੇਜੀ ਗਈ, ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਮੇਲ ਚੈੱਕ ਕਰੋ।";
+"go_back" = "ਪਿੱਛੇ ਜਾਓ";
+"sending_report" = "ਰਿਪੋਰਟ ਭੇਜੀ ਜਾ ਰਹੀ ਹੈ...";
+"please_select_any_co_driver" = "ਕਿਰਪਾ ਕਰਕੇ ਕੋਈ ਵੀ ਸਹਾਇਕ ਡਰਾਈਵਰ ਚੁਣੋ";
+"co_driver_log_in" = "ਸਹਾਇਕ ਡਰਾਈਵਰ ਲਾਗ-ਇਨ";
+"none" = "ਕੋਈ ਨਹੀਂ";
+"select_vehicle" = "ਵਾਹਨ ਚੁਣੋ";
+"password_must_be_at_least_6_characters_long" = "\"ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ\"";
+"email_logs" = "ਈਮੇਲ ਲਾਗ";
+"data_transfer" = "ਡਾਟਾ ਟ੍ਰਾਂਸਫਰ";
+"review_on_device" = "ਡਿਵਾਈਸ 'ਤੇ ਸਮੀਖਿਆ ਕਰੋ";
+"send_logs_for_the_24_hours_period_and_tha_previous_days_for_one_hos_cycle" = "24 ਘੰਟਿਆਂ ਦੇ ਸਮੇਂ ਅਤੇ ਇੱਕ HOS ਸਾਈਕਲ ਲਈ ਪਿਛਲੇ ਦਿਨਾਂ ਦੀ ਲਾਗ ਭੇਜੋ";
+"send_your_logs_to_the_officer_if_they_request" = "ਜੇ ਅਧਿਕਾਰੀ ਮੰਗੇ ਤਾਂ ਆਪਣੀਆਂ ਲਾਗ ਭੇਜੋ";
+"inspect_logs_for_the_24_hour_period_and_the_previous_days_for_men_hos_cycle" = "24 ਘੰਟਿਆਂ ਅਤੇ ਪਿਛਲੇ ਦਿਨਾਂ ਲਈ HOS ਸਾਈਕਲ ਦੀਆਂ ਲਾਗਜ਼ ਦੀ ਜਾਂਚ ਕਰੋ";
+"select_review_on_device_and_give_your_device_to_the_officer" = "'ਡਿਵਾਈਸ 'ਤੇ ਸਮੀਖਿਆ ਕਰੋ' ਚੁਣੋ ਅਤੇ ਆਪਣੀ ਡਿਵਾਈਸ ਅਧਿਕਾਰੀ ਨੂੰ ਦਿਓ";
+"fetching_your_records" = "ਤੁਹਾਡੇ ਰਿਕਾਰਡ ਲਏ ਜਾ ਰਹੇ ਹਨ...";
+"toll_free" = "ਟੋਲ-ਫ੍ਰੀ";
+"days_remaining" = " ਦਿਨ ਬਾਕੀ";
+"engine" = "ਇੰਜਣ";
+"eld_connection" = "ELD ਕਨੈਕਸ਼ਨ";
+"support" = "ਸਹਾਇਤਾ";
+"are_you_sure_you_want_to_refersh_your_logs" = "ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਆਪਣੀਆਂ ਲਾਗਜ਼ ਤਾਜ਼ਾ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?";
