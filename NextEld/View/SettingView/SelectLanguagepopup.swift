@@ -25,7 +25,7 @@ struct SelectLanguagepopup:View {
                     ForEach(languagesSelect, id: \.self) { lang in
                         HStack {
                             Text(lang)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color(uiColor:.black))
 
                             Spacer()
 
@@ -47,7 +47,7 @@ struct SelectLanguagepopup:View {
             }) {
                 Text("Ok")
                     .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(uiColor:.white))
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color(uiColor: .wine))

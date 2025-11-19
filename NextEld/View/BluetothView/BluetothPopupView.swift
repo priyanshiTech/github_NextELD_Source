@@ -25,7 +25,7 @@ struct BluetothPopupview: View {
                 Text("Select Device")
                     .padding()
                     .background( Color(uiColor: .wine))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(uiColor: .whiteBG))
                     .cornerRadius(10)
             }
             .sheet(isPresented: $isPopupVisible) {

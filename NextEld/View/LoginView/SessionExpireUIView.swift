@@ -26,14 +26,14 @@ struct SessionExpireUIView: View {
                     .scaledToFit()
                     .frame(width: 200, height: 200)
                     .padding(.top, 10)
-                    .shadow(color: .black.opacity(0.2), radius: 5, x: 5, y: 5)
+                    .shadow(color: Color(uiColor:.black).opacity(0.2), radius: 5, x: 5, y: 5)
                     .padding()
                
                 Text("Session Expired")
                     .font(.title)
                     .bold()
                     .fontWeight(.medium)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(uiColor:.black))
                 
                   //Message
                 Text("You have been logged out and logged-in on another device")

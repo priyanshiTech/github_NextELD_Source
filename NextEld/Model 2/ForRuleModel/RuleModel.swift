@@ -78,8 +78,8 @@ struct EmployeeRule: Codable, Identifiable {
     let vehicleNo: [String]
     let manageEquipement: String
     let transferLog: String
-    let remarks: String
-    let workingStatus: String
+    let remarks: String?
+    let workingStatus: String?
     let onDutyTime: String?
     let onDriveTime: String?
     let onSleepTime: String?

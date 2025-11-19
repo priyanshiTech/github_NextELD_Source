@@ -40,10 +40,10 @@ struct PT30ConnectionView: View {
                     }
                     .padding(.horizontal, 24)
                     .padding(.vertical, 14)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(uiColor:.black))
                     .background(Color(UIColor.colorFabConnect))
                     .clipShape(Capsule())
-                    .shadow(color: .black.opacity(0.25), radius: 6, x: 0, y: 4)
+                    .shadow(color: Color(uiColor:.black).opacity(0.25), radius: 6, x: 0, y: 4)
                     .padding(.bottom, 24)
                     .padding(.trailing, 20)
                 }

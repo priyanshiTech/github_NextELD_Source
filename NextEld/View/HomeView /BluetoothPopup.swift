@@ -39,10 +39,10 @@ struct DeviceSelectorPopup: View {
                 HStack {
                     Circle()
                         .strokeBorder(Color.gray, lineWidth: 1)
-                        .background(Circle().fill(selectedDevice == device ?Color(uiColor: .wine) : Color.white))
+                        .background(Circle().fill(selectedDevice == device ?Color(uiColor: .wine) :  Color(uiColor:.whiteBG)))
                         .frame(width: 20, height: 20)
                     Text(device)
-                        .foregroundColor(.black)
+                        .foregroundColor( Color(uiColor:.black))
                     Spacer()
                 }
                 .onTapGesture {
@@ -57,7 +57,7 @@ struct DeviceSelectorPopup: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color(uiColor: .wine))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(uiColor: .whiteBG))
                     .cornerRadius(10)
             }
 

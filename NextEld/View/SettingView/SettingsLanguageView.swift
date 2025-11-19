@@ -58,20 +58,20 @@ struct SettingsLanguageView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Language")
                                     .font(.headline)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color(uiColor:.black))
                                 
                                 Text(selectedLanguage ?? "Select language")
                                     .font(.footnote)
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(Color(uiColor:.gray))
                             }
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(.black)
+                                .foregroundColor(Color(uiColor:.black))
                         }
                         .padding(.vertical, 12)
                         .padding(.horizontal)
-                        .background(Color.white)
+                        .background(Color(uiColor:.white))
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
@@ -88,11 +88,11 @@ struct SettingsLanguageView: View {
                         HStack(spacing: 4) {
                             Text("Terms & Privacy Policy")
                                 .bold()
-                                .foregroundColor(.gray)
+                                .foregroundColor(Color(uiColor:.gray))
                             
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 12, weight: .bold))
-                                .foregroundColor(.gray)
+                                .foregroundColor(Color(uiColor:.gray))
                         }
                     }
                     .padding(.leading, 25)
@@ -106,7 +106,7 @@ struct SettingsLanguageView: View {
             // MARK: - Centered Popup (150x150)
             if showLanguagePicker {
                 // Dim background
-                Color.black.opacity(0.4)
+                Color(uiColor:.black).opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
                     .onTapGesture {
                         showLanguagePicker = false

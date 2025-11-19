@@ -70,7 +70,7 @@ struct DVIRHistory: View {
             HStack(spacing: 16) {
                 Button(action: { showFromDatePicker = true }) {
                     Text(isFromDateSelected ? "\(formatDates(fromDate))" : "From Date")
-                        .foregroundColor(isFromDateSelected ? .black : .gray)
+                        .foregroundColor(isFromDateSelected ? Color(uiColor:.black) : Color(uiColor:.gray))
                         .font(.system(size: 18))
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color(uiColor: .wine), lineWidth: 2))
@@ -85,7 +85,7 @@ struct DVIRHistory: View {
                 
                 Button(action: { showToDatePicker = true }) {
                     Text(isToDateSelected ? " \(formatDates(toDate))" : "To Date")
-                        .foregroundColor(isToDateSelected ? .black : .gray)
+                        .foregroundColor(isToDateSelected ? Color(uiColor:.black) : Color(uiColor:.gray))
                         .font(.system(size: 18))
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color(uiColor: .wine), lineWidth: 2))
@@ -106,7 +106,7 @@ struct DVIRHistory: View {
                 TextField(
                     "",
                     text: $email,
-                    prompt: Text("Enter Email").foregroundColor(.gray)
+                    prompt: Text("Enter Email").foregroundColor(Color(uiColor:.gray))
                 )
                 .padding()
                 .font(.system(size: 18))
@@ -153,7 +153,7 @@ struct DVIRHistory: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(Color(uiColor: .wine))
-                .foregroundColor(.white)
+                .foregroundColor(Color(uiColor:.white))
             }
             .padding(.horizontal)
             .padding(.top, 12)

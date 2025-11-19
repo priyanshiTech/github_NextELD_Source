@@ -59,16 +59,16 @@ struct AddVichleMode: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Vehicle")
                                 .font(.headline)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color(uiColor:.black))
 
                             Text(selectedVehicle.isEmpty ? "Select Vehicle" : selectedVehicle)
                            // show selected data
                                 .font(.headline)
-                                .foregroundColor(selectedVehicle.isEmpty ? .gray : .black)
+                                .foregroundColor(selectedVehicle.isEmpty ? Color(uiColor:.gray) : Color(uiColor:.black))
                         }
                        
                         Spacer()
-                        Image("pencil").foregroundColor(.gray)
+                        Image("pencil").foregroundColor(Color(uiColor:.gray))
                     }
                     .padding()
                     .background(Color.white)

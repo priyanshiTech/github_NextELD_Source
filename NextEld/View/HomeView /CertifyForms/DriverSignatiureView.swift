@@ -277,7 +277,7 @@ struct PopupContainer<Content: View>: View {
     var body: some View {
         if isPresented {
             ZStack {
-                Color.black.opacity(0.4)
+                Color(uiColor:.black).opacity(0.4)
                     .ignoresSafeArea()
 
                 VStack(spacing: 0) {

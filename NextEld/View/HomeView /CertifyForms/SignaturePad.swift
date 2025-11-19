@@ -17,8 +17,8 @@ struct SignaturePad: View {
         GeometryReader { geo in
             ZStack {
                 path
-                    .stroke(Color.black, lineWidth: 2)
-                    .background(Color.white)
+                    .stroke( Color(uiColor:.black), lineWidth: 2)
+                    .background( Color(uiColor:.white))
                     .cornerRadius(10)
                     .frame(width: geo.size.width, height: geo.size.height)
                     .clipped()

@@ -50,7 +50,7 @@ struct VehicleConditionPopupView: View {
                         ForEach(viewModel.conitions, id: \.vehicleConditionId) { condition in
                             HStack {
                                 Text(condition.vehicleConditionName ?? "Not Fund")
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color(uiColor:.black))
                                 Spacer()
                                 Image(systemName: selected == condition.vehicleConditionName ? "checkmark.circle.fill" : "circle")
                                     .foregroundColor(Color(uiColor: .wine))

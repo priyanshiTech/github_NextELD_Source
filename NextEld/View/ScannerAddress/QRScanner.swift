@@ -31,7 +31,7 @@ struct _ScannerQR: View {
                     }
                 }
             }
-                        Color.black.opacity(0.5)
+            Color(uiColor:.black).opacity(0.5)
                             .mask {
                                 Rectangle()
                                     .overlay(
@@ -60,7 +60,7 @@ struct _ScannerQR: View {
 
                     Text(tittle)
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(uiColor:.white))
                         .fontWeight(.semibold)
 
                     Spacer()

@@ -33,7 +33,7 @@ struct LogOutPopup: View {
                 HStack {
                     Text("Go Off-Duty before Log-out")
                         .font(.subheadline)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color(uiColor:.black))
                 }
                 
                 HStack (spacing: 2){
@@ -74,7 +74,7 @@ struct LogOut: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.1)
+            Color(uiColor:.black).opacity(0.1)
                 .ignoresSafeArea()
 
             if isPresented {

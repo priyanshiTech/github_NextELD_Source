@@ -19,7 +19,7 @@ struct ReportConfirmationView: View {
                 Spacer()
                 Text("Log Report")
                     .font(.headline)
-                    .foregroundColor(.black)
+                    .foregroundColor( Color(uiColor:.black))
                 Spacer()
             }
             .padding(.top, 16)
@@ -37,7 +37,7 @@ struct ReportConfirmationView: View {
             Text("Log report sent successfully, please check your mail.")
                 .multilineTextAlignment(.center)
                 .font(.system(size: 18))
-                .foregroundColor(.black)
+                .foregroundColor( Color(uiColor:.black))
                 .padding(.horizontal, 24)
             
             Spacer()

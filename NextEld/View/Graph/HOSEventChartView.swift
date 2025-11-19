@@ -170,7 +170,7 @@ struct GridLinesView: View {
                             path.move(to: CGPoint(x: x, y: sectionStart + height / 3.0))
                             path.addLine(to: CGPoint(x: x, y: sectionStart + height / 4.0 - quarterHeight))
                         }
-                        context.stroke(path, with: .color(.black), lineWidth: 0.5)
+                        context.stroke(path, with: .color(Color(uiColor:.black)), lineWidth: 0.5)
                     }
                 }
             }
@@ -419,7 +419,7 @@ struct HOSEventsChart: View {
                     .frame(height: rowHeight * 4)
                     .overlay(
                         Rectangle()
-                            .stroke(Color.black, lineWidth: 1)
+                            .stroke(Color(uiColor:.black), lineWidth: 1)
                     )
                 }
                 .frame(width: hourWidth * 24)
@@ -434,7 +434,7 @@ struct HOSEventsChart: View {
                     ForEach(dutyLabels, id: \.self) { label in
                         Text(formatDuration(durations[label] ?? 0))
                             .font(.system(size: 8))
-                            .foregroundColor(.black)
+                            .foregroundColor(Color(uiColor:.black))
                             .frame(height: rowHeight)
                     }
                 }
@@ -462,7 +462,7 @@ struct HOSEventsChartScreen: View {
             
             Text("Time in Hours")
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundColor(Color(uiColor:.gray))
 
             
             //MARK: -    HOSEventsChart(events: viewModel.events)
@@ -471,7 +471,7 @@ struct HOSEventsChartScreen: View {
            
         }
         .padding(8)  // Reduced padding
-        .background(Color.white)
+        .background(Color(uiColor:.white))
         .cornerRadius(8)
         .shadow(radius: 1)
     }

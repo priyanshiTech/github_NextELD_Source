@@ -19,7 +19,7 @@ struct DataTransferInspectionView: View {
             content
             
             if viewModel.isLoading {
-                Color.black.opacity(0.2)
+                Color(uiColor:.black).opacity(0.2)
                     .ignoresSafeArea()
                 ProgressView("Sending data...")
                     .padding()
@@ -31,7 +31,7 @@ struct DataTransferInspectionView: View {
                 VStack(spacing: 16) {
                     Text("Select Data Transfer Type")
                         .font(.headline)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color(uiColor:.black))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
                     ForEach(viewModel.dataTransferTypes, id: \.self) { type in
@@ -41,7 +41,7 @@ struct DataTransferInspectionView: View {
                         }) {
                             HStack {
                                 Text(type)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color(uiColor:.black))
                                 Spacer()
                                 if viewModel.dataTransferType == type {
                                     Image(systemName: "checkmark.circle.fill")
@@ -100,7 +100,7 @@ struct DataTransferInspectionView: View {
                     .foregroundColor(.blue)
                 Text("Send 8 daily logs via FMCSA data transfer")
                     .font(.subheadline)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(uiColor:.black))
             }
             
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -118,13 +118,13 @@ struct DataTransferInspectionView: View {
                                 viewModel.showFromDatePicker = true
                             }) {
                                 Text(viewModel.fromDateSelected ? viewModel.formatDate(viewModel.fromDate) : "From Date")
-                                    .foregroundColor(viewModel.fromDateSelected ? .black : .gray)
+                                    .foregroundColor(viewModel.fromDateSelected ? Color(uiColor:.black) : Color(uiColor:.gray))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding()
-                                    .background(Color.white)
+                                    .background(Color(uiColor:.white))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 8)
-                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                            .stroke(Color(uiColor:.gray).opacity(0.3), lineWidth: 1)
                                     )
                             }
                         }
@@ -135,13 +135,13 @@ struct DataTransferInspectionView: View {
                                 viewModel.showToDatePicker = true
                             }) {
                                 Text(viewModel.toDateSelected ? viewModel.formatDate(viewModel.toDate) : "To Date")
-                                    .foregroundColor(viewModel.toDateSelected ? .black : .gray)
+                                    .foregroundColor(viewModel.toDateSelected ? Color(uiColor:.black) : Color(uiColor:.gray))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding()
-                                    .background(Color.white)
+                                    .background(Color(uiColor:.white))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 8)
-                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                            .stroke(Color(uiColor:.gray).opacity(0.3), lineWidth: 1)
                                     )
                             }
                         }
@@ -151,20 +151,20 @@ struct DataTransferInspectionView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Data Transfer Type")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color(uiColor:.black))
                         Button(action: {
                             viewModel.showDataTransferTypePicker = true
                         }) {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Data Transfer Type")
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color(uiColor:.black))
                                 Text(viewModel.dataTransferType)
                                     .font(.caption)
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(Color(uiColor:.gray))
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
-                            .background(Color.white)
+                            .background(Color(uiColor:.white))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(Color.gray.opacity(0.3), lineWidth: 1)
@@ -177,12 +177,12 @@ struct DataTransferInspectionView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Email")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color(uiColor:.gray))
                         TextField("Enter Email", text: $viewModel.email)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .padding()
-                            .background(Color.white)
+                            .background(Color(uiColor:.white))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(Color.gray.opacity(0.3), lineWidth: 1)
@@ -194,10 +194,10 @@ struct DataTransferInspectionView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Comments")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color(uiColor:.gray))
                         TextField("Enter Comments", text: $viewModel.comments)
                             .padding()
-                            .background(Color.white)
+                            .background(Color(uiColor:.white))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(Color.gray.opacity(0.3), lineWidth: 1)
@@ -208,7 +208,7 @@ struct DataTransferInspectionView: View {
                     // Reminder text
                     Text("Please remember this will send 8 days of daily logs via FMCSA Data Transfer.")
                         .font(.footnote)
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color(uiColor:.gray))
                         .padding(.horizontal)
                         .padding(.top, 10)
                 }
@@ -221,7 +221,7 @@ struct DataTransferInspectionView: View {
             }) {
                 Text("Send Data Transfer")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(uiColor:.white))
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color(uiColor: .wine))

@@ -44,7 +44,7 @@ struct AddDvirScreenView: View  {
                 ZStack(alignment: .top) {
                     Color.white
                         .frame(height: 52)
-                        .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
+                        .shadow(color: Color(uiColor:.black).opacity(0.2), radius: 4, x: 0, y: 4)
                     
                     HStack {
                         Button(action: {
@@ -107,16 +107,16 @@ struct AddDvirScreenView: View  {
                     VStack(alignment: .leading, spacing: 4) {
                                         Text("Vehicle")
                                             .font(.headline)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(Color(uiColor:.black))
                         Text(vehicleVM.selectedVehicleNumber.isEmpty ? (AppStorageHandler.shared.vehicleNo ?? "Select Vehicle") : vehicleVM.selectedVehicleNumber)
                                             .font(.headline)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(Color(uiColor:.black))
                                     }
                                     Spacer()
-                                    Image("pencil").foregroundColor(.gray)
+                                    Image("pencil").foregroundColor(Color(uiColor:.gray))
                                 }
                                 .padding()
-                                .background(Color.white)
+                                .background(Color(uiColor:.white))
                             }
                             .buttonStyle(PlainButtonStyle())
         }
@@ -131,16 +131,16 @@ struct AddDvirScreenView: View  {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("Trailer")
                                             .font(.headline)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(Color(uiColor:.black))
                                         Text(trailerVM.trailers.isEmpty ? "None" : trailerVM.trailers.joined(separator: ", "))
                                             .font(.headline)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(Color(uiColor:.black))
                                     }
                                     Spacer()
-                                    Image("pencil").foregroundColor(.gray)
+                                    Image("pencil").foregroundColor(Color(uiColor:.gray))
                                 }
                                 .padding()
-                                .background(Color.white)
+                                .background(Color(uiColor:.white))
                             }
                             .buttonStyle(PlainButtonStyle())
         }
@@ -180,7 +180,7 @@ struct AddDvirScreenView: View  {
                         CardContainer {
                             Text("Notes")
                                 .font(.headline)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color(uiColor:.black))
                                 .padding()
                             
                             ZStack(alignment: .topLeading) {
@@ -192,7 +192,7 @@ struct AddDvirScreenView: View  {
                                 
                                 if viewModel.notesText.isEmpty {
                                     Text("Write note here...")
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(Color(uiColor:.gray))
                                         .padding(.horizontal, 14)
                                         .padding(.vertical, 12)
                                 }
@@ -206,10 +206,10 @@ struct AddDvirScreenView: View  {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("Vehicle Condition")
                                             .fontWeight(.bold)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(Color(uiColor:.black))
                                         Text(vehicleVM.selectedCondition ?? "None")
                                             .font(.subheadline)
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(Color(uiColor:.gray))
                                     }
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 10)
@@ -240,7 +240,7 @@ struct AddDvirScreenView: View  {
                     }
                     
                     Text(viewModel.signatureImage != nil ? "View/Edit Signature" : "Add Driver Signature")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color(uiColor:.black))
                         .font(.headline)
                     
                     Spacer()
@@ -258,7 +258,7 @@ struct AddDvirScreenView: View  {
             Text(buttonText)
                             .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color(uiColor:.black))
                             .background(Color(UIColor.wine))
                             .cornerRadius(10)
                             .padding(.horizontal, 20)
@@ -346,7 +346,7 @@ struct AddDvirScreenView: View  {
 
             // MARK: - Defect Popup Overlay
             if viewModel.showPopup {
-                Color.black.opacity(0.4)
+                Color(uiColor:.black).opacity(0.4)
                     .ignoresSafeArea()
                     .zIndex(1)
                     .onTapGesture { viewModel.showPopup = false }
@@ -359,7 +359,7 @@ struct AddDvirScreenView: View  {
                 )
                 .environmentObject(appRootManager)
                 .frame(width: 300, height: 400)
-                               .background(Color.white)
+                               .background(Color(uiColor:.white))
                                .cornerRadius(12)
                                .shadow(radius: 10)
                                .zIndex(2)
@@ -371,7 +371,7 @@ struct AddDvirScreenView: View  {
             //MARK: - Vehicle popup
             
             if vehicleVM.showPopupVechicle {
-                Color.black.opacity(0.4)
+                Color(uiColor:.black).opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
                     .onTapGesture { vehicleVM.showPopupVechicle = false }
                 

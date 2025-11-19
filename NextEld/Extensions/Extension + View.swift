@@ -17,11 +17,16 @@ extension View {
         self
             .padding(.horizontal)
             .frame(width: width, height: height)
-            .background(Color.white)
+            .background(Color(UIColor.secondarySystemBackground))
             .cornerRadius(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(isValid ? Color.gray.opacity(0.5) : Color.red, lineWidth: 1.5)
+                    .stroke(
+                        isValid
+                        ? Color(UIColor.separator)
+                        : Color(UIColor.systemRed),
+                        lineWidth: 1.5
+                    )
             )
     }
 }

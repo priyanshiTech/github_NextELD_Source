@@ -136,7 +136,7 @@ struct DeviceScannerView: View {
                         if deviceStatusVM.isLoading {
                             ProgressView()
                                 .frame(width: 300, height: 40)
-                                .background(Color.black)
+                                .background(Color(uiColor:.black))
                                 .cornerRadius(10)
                                 .padding()
                         } else {
@@ -144,8 +144,8 @@ struct DeviceScannerView: View {
                                 .bold()
                                 .frame(width: 300, height: 40)
                                 .buttonStyle(.bordered)
-                                .background(Color.black)
-                                .foregroundColor(.white)
+                                .background(Color(uiColor:.black))
+                                .foregroundColor(Color(uiColor:.white))
                                 .cornerRadius(10)
                                 .padding()
                         }
@@ -154,12 +154,12 @@ struct DeviceScannerView: View {
                     //  Show API response/error feedback
                     if let error = deviceStatusVM.errorMessage {
                         Text(error)
-                            .foregroundColor(.red)
+                            .foregroundColor(Color(uiColor:.red))
                             .padding()
                     }
                     if let success = deviceStatusVM.responseMessage {
                         Text(success)
-                            .foregroundColor(.green)
+                            .foregroundColor(Color(uiColor:.green))
                             .padding()
                     }
                     Spacer()

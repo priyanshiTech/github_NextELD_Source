@@ -67,7 +67,7 @@ struct EmailLogs: View {
                         showFromDatePicker = true
                     }) {
                         Text(isFromDateSelected ? "\(dateFormatted(fromDate))" : "From Date")
-                            .foregroundColor(isFromDateSelected ? .black : .gray)
+                            .foregroundColor(isFromDateSelected ?  Color(uiColor:.black) :  Color(uiColor:.gray))
                             .font(.system(size: 18))
                             .frame(maxWidth: .infinity, minHeight: 50)
                             .overlay(
@@ -87,7 +87,7 @@ struct EmailLogs: View {
                         showToDatePicker = true
                     }) {
                         Text(isToDateSelected ? "\(dateFormatted(toDate))" : "To Date")
-                            .foregroundColor(isToDateSelected ? .black : .gray)
+                            .foregroundColor(isToDateSelected ?  Color(uiColor:.black) :  Color(uiColor:.gray))
                             .font(.system(size: 18))
                             .frame(maxWidth: .infinity, minHeight: 50)
                             .overlay(
@@ -162,7 +162,7 @@ struct EmailLogs: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(Color(uiColor: .wine))
-                    .foregroundColor(.white)
+                    .foregroundColor( Color(uiColor:.white))
                 }
                 .padding(.horizontal)
                 .padding(.top, 12)

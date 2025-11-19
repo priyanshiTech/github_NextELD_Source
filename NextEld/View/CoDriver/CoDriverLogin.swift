@@ -56,21 +56,21 @@ struct CoDriverLogin: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Co-Driver")
                                     .font(.headline)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color(uiColor:.black))
 
                                 // Show selected value
                                 //Text((((selectionCoDriver?.isEmpty) != nil) ? "None" : selectionCoDriver) ?? "")
                                 Text(selectionCoDriver ?? "None")
                                     .font(.headline)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color(uiColor:.black))
                                     .lineLimit(1)
 
                             }
                             Spacer()
-                            Image("pencil").foregroundColor(.gray)
+                            Image("pencil").foregroundColor(Color(uiColor:.gray))
                         }
                         .padding()
-                        .background(Color.white)
+                        .background(Color(uiColor:.white))
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
@@ -113,7 +113,7 @@ struct CoDriverLogin: View {
 
             //  Popup overlay (only shows when showDriver == true)
             if showDriver {
-                Color.black.opacity(0.4) // dim background
+                Color(uiColor:.black).opacity(0.4) // dim background
                     .ignoresSafeArea()
                     .onTapGesture { showDriver = false } // tap outside to close
 

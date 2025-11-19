@@ -16,18 +16,21 @@ struct NextEldApp: App {
 
     var body: some Scene {
         WindowGroup {
-            switch rootManager.currentRoot {
-            case .login:
-                LoginScreen()
-            case .splashScreen:
-                SplashView()
-            case .scanner(let moveToHome):
-                DeviceScannerView(checkboxClick: true, macaddress: "", moveToHome: moveToHome)
-            case .SessionExpireUIView:
-                SessionExpireUIView()
-            case .DisclaimerView:
-                DisclamerView()
+            Group {
+                switch rootManager.currentRoot {
+                case .login:
+                    LoginScreen()
+                case .splashScreen:
+                    SplashView()
+                case .scanner(let moveToHome):
+                    DeviceScannerView(checkboxClick: true, macaddress: "", moveToHome: moveToHome)
+                case .SessionExpireUIView:
+                    SessionExpireUIView()
+                case .DisclaimerView:
+                    DisclamerView()
+                }
             }
+            .preferredColorScheme(.light)
         }
         .environmentObject(rootManager)
         .environmentObject(networkMonitor)

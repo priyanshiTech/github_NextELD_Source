@@ -65,7 +65,7 @@ struct SideMenuView: View {
                 .clipShape(Circle())
                 .overlay(
                     Circle()
-                        .stroke(Color.black.opacity(0.5), lineWidth: 3)
+                        .stroke(Color(uiColor:.black).opacity(0.5), lineWidth: 3)
                 )
                 .padding(.leading, 16)
 
@@ -73,14 +73,14 @@ struct SideMenuView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(AppStorageHandler.shared.driverName ?? "")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(uiColor:.black))
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Text("ELD ID - \(String(AppStorageHandler.shared.driverId ?? 0))")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color(uiColor:.gray))
                     .lineLimit(1)
             }
             .padding(.leading, 2)
@@ -146,18 +146,18 @@ func handleSelection(_ row: SideMenuRowType) {
                 Image(imageName)
                     .resizable()
                     .renderingMode(.template)
-                    .foregroundColor(isSelected ? .black : .black)
+                    .foregroundColor(isSelected ? Color(uiColor:.black) : Color(uiColor:.black))
                     .frame(width: 26, height: 26)
 
                 Text(title)
                     .font(.system(size: 17))
-                    .foregroundColor(isSelected ? .black : .black)
+                    .foregroundColor(isSelected ? Color(uiColor:.black) : Color(uiColor:.black))
 
                 Spacer()
             }
             .padding(.horizontal, 16)
             .frame(height: 50)
-            .background(isSelected ? Color(uiColor: .systemGray6) : Color.white)
+            .background(isSelected ? Color(uiColor: .systemGray6) : Color(uiColor:.white))
         }
         .buttonStyle(PlainButtonStyle())
     }

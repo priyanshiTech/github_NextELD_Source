@@ -143,7 +143,7 @@ struct HomeScreenView: View {
             .disabled(presentSideMenu || showLogoutPopup || ShowrefreshPopup )
             
             if presentSideMenu {
-                Color.black.opacity(0.3)
+                Color(uiColor:.black).opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture {
                         withAnimation(.easeOut(duration: 0.2)) {
@@ -160,7 +160,7 @@ struct HomeScreenView: View {
                     
                 )
                 .frame(width: 250)
-                .background(Color.white)
+                .background(Color(uiColor:.white))
                 .transition(.move(edge: .leading))
                 .zIndex(1)
             }
@@ -220,7 +220,7 @@ struct HomeScreenView: View {
             if showCertifyLogAlert {
                 ZStack {
                     // Dimmed background
-                    Color.black.opacity(0.4)
+                    Color(uiColor:.black).opacity(0.4)
                         .ignoresSafeArea()
                         .zIndex(9)
                     
@@ -247,7 +247,7 @@ struct HomeScreenView: View {
             }
             
             if showLogoutPopup {
-                Color.black.opacity(0.5)
+                Color(uiColor:.black).opacity(0.5)
                     .ignoresSafeArea()
                     .zIndex(2)
                 
@@ -284,7 +284,7 @@ struct HomeScreenView: View {
             
             if showDeviceSelector {
                 ZStack {
-                    Color.black.opacity(0.4)
+                    Color(uiColor:.black).opacity(0.4)
                         .ignoresSafeArea()
                         .onTapGesture {
                             showDeviceSelector = false
@@ -391,12 +391,12 @@ struct HomeScreenView: View {
             if !syncVM.syncMessage.isEmpty {
                 Text(syncVM.syncMessage)
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(uiColor:.black))
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
                     .background(Color.white)
                     .cornerRadius(12)
-                    .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
+                    .shadow(color: Color(uiColor:.black).opacity(0.15), radius: 8, x: 0, y: 4)
                     .padding(.top, 12)
                     .padding(.horizontal, 20)
                     .transition(.opacity.combined(with: .scale))

@@ -35,13 +35,13 @@ struct EyeViewData: View {
             ZStack(alignment: .top) {
                 Color(uiColor: .wine)
                     .frame(height: 50)
-                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
+                    .shadow(color:  Color(uiColor:.black).opacity(0.2), radius: 4, x: 0, y: 4)
                 HStack {
                     Button(action: {
                         navManager.goBack()
                     }) {
                         Image(systemName: "arrow.left")
-                            .foregroundColor(.white)
+                            .foregroundColor( Color(uiColor:.white))
                             .imageScale(.large)
                     }
                     Spacer()
@@ -49,7 +49,7 @@ struct EyeViewData: View {
                     // Text(DateUtils.formatDate(entry.date, format: "dd-MM-yyyy"))
                     Text(title)
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor( Color(uiColor:.white))
                         .fontWeight(.semibold)
                     Spacer()
                     
@@ -77,7 +77,7 @@ struct EyeViewData: View {
                         ProgressView("Loading...")
                         Text("Fetching data...")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor( Color(uiColor:.gray))
                             .padding(.top, 8)
                     }
                     .padding()
@@ -197,9 +197,9 @@ struct EyeViewData: View {
                     VStack(spacing: 12) {
                         Image(systemName: "exclamationmark.triangle")
                             .font(.largeTitle)
-                            .foregroundColor(.orange)
+                            .foregroundColor( Color(uiColor:.orange))
                         Text(error)
-                            .foregroundColor(.gray)
+                            .foregroundColor( Color(uiColor:.gray))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
                     }
@@ -209,9 +209,9 @@ struct EyeViewData: View {
                     VStack(spacing: 12) {
                         Image(systemName: "tray")
                             .font(.largeTitle)
-                            .foregroundColor(.gray)
+                            .foregroundColor( Color(uiColor:.gray))
                         Text("No data available")
-                            .foregroundColor(.gray)
+                            .foregroundColor( Color(uiColor:.gray))
                     }
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

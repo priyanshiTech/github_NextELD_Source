@@ -55,7 +55,7 @@ struct DateStepperView: View {
                 currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.black)
+                    .foregroundColor( Color(uiColor:.black))
             }
             Spacer()
             
@@ -65,7 +65,7 @@ struct DateStepperView: View {
             Text(DateUtils.formatDate(currentDate, format: "dd-MM-yyyy"))
 
 
-                .foregroundColor(.black)
+                .foregroundColor( Color(uiColor:.black))
                 .bold()
             Spacer()
             
@@ -75,7 +75,7 @@ struct DateStepperView: View {
                 currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
             }) {
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.black)
+                    .foregroundColor( Color(uiColor:.black))
             }
         }
         .padding()

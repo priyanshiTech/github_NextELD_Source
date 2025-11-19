@@ -49,7 +49,7 @@ struct SelectCoDriverPopup: View {
                             
                             HStack {
                                 Text(fullName.isEmpty ? (username) : fullName)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color(uiColor:.black))
                                 Spacer()
                                 Image(systemName: selectedCoDriver == fullName
                                       ? "checkmark.circle.fill"
@@ -80,7 +80,7 @@ struct SelectCoDriverPopup: View {
             }) {
                 Text("Add Co-Driver")
                     .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(uiColor:.white))
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color(uiColor: .wine))

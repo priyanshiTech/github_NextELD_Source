@@ -311,7 +311,7 @@ struct DvirListItemView: View {
                     Text("\(record.DAY) \(record.DvirTime)")
                         .fontWeight(.semibold)
                         .font(.headline)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color(uiColor:.black))
                     
                     // Vehicle Condition Status
                     Text(record.vehicleCondition.isEmpty ? (hasDefects ? "Defects Need Not Be Corrected" : "Vehicle Condition Satisfactory") : record.vehicleCondition)
@@ -325,12 +325,12 @@ struct DvirListItemView: View {
                         HStack(spacing: 4) {
                             Text("Vehicle - \(record.vehicleName.isEmpty ? "N/A" : record.vehicleName)")
                                 .font(.subheadline)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color(uiColor:.black))
                             
                             if truckDefectCount > 0 {
                                 Text("\(truckDefectCount) Defects")
                                     .font(.subheadline)
-                                    .foregroundColor(.red)
+                                    .foregroundColor(Color(uiColor:.red))
                                     .fontWeight(.none)
                             }
                         }
@@ -340,7 +340,7 @@ struct DvirListItemView: View {
                             let trailerNames = record.Trailer.isEmpty ? "None" : record.Trailer
                             Text("Trailer - \(trailerNames)")
                                 .font(.subheadline)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color(uiColor:.black))
                             
                             if trailerDefectCount > 0 {
                                 Text("\(trailerDefectCount) Defects")

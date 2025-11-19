@@ -37,6 +37,15 @@ struct CertifySelectedView: View {
 
     var title: String
     
+    private var logsEntry: WorkEntry {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        if let date = formatter.date(from: title) {
+            return WorkEntry(date: date, hoursWorked: 0)
+        }
+        return WorkEntry(date: Date(), hoursWorked: 0)
+    }
+    
     var body: some View {
         ZStack { // Root ZStack to overlay popup
             VStack(spacing: 0) {
@@ -51,12 +60,12 @@ struct CertifySelectedView: View {
                 ZStack(alignment: .top) {
                     Color(UIColor.wine)
                         .frame(height: 50)
-                        .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
+                        .shadow(color: Color(uiColor:.black).opacity(0.2), radius: 4, x: 0, y: 4)
                     
                     HStack {
                         Button(action: { navManager.goBack() }) {
                             Image(systemName: "arrow.left")
-                                .foregroundColor(.white)
+                                .foregroundColor(Color(uiColor:.white))
                                 .imageScale(.large)
                         }.padding()
 
@@ -65,7 +74,7 @@ struct CertifySelectedView: View {
                       //  }) {
                             Text(title)
                                 .font(.headline)
-                                .foregroundColor(.white)
+                                .foregroundColor(Color(uiColor:.white))
                                 .fontWeight(.semibold)
                   //      }
 
@@ -75,8 +84,14 @@ struct CertifySelectedView: View {
                         CustomIconButton(
                             iconName: "alarm_icon",
                             title: "Event",
-                            action: { navManager.navigate(to: AppRoute.RecapHours(tittle: "Hours Recap")) }
-                          //  action: { navManager.navigate(to: AppRoute.logsFlow(.RecapHours(title: "Hours Recap"))) }
+                            action: {
+                                navManager.navigate(
+                                    to: AppRoute.LogsFlow.LogsDetails(
+                                        title: "Daily Log",
+                                        entry: logsEntry
+                                    )
+                                )
+                            }
                         )
                         .padding()
                     }
@@ -93,7 +108,7 @@ struct CertifySelectedView: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(selectedTab == "Form" ? Color(UIColor.wine) : Color.white.opacity(0.2))
-                    .foregroundColor(selectedTab == "Form" ? .white : .black)
+                    .foregroundColor(selectedTab == "Form" ? Color(uiColor:.white) : Color(uiColor:.black))
                     
                     Button("Certify") {
                         selectedTab = "Certify"
@@ -103,7 +118,7 @@ struct CertifySelectedView: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(selectedTab == "Certify" ? Color(UIColor.wine) : Color.white.opacity(0.2))
-                    .foregroundColor(selectedTab == "Certify" ? .white : .black)
+                    .foregroundColor(selectedTab == "Certify" ? Color(uiColor:.white) : Color(uiColor:.black))
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
@@ -308,7 +323,7 @@ struct CertifySelectedView: View {
             
             // MARK: - CoDriver Popup Overlay (Centered)
             if showCoDriverPopup && selectedTab == "Form" {
-                Color.black.opacity(0.4)
+                Color(uiColor:.black).opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
                     .onTapGesture { showCoDriverPopup = false
                     }
@@ -394,15 +409,15 @@ struct FormField: View {
             VStack(alignment: .leading) {
                 Text(label)
                     .bold()
-                    .foregroundColor(.black)
+                    .foregroundColor( Color(uiColor:.black))
                 Text(value)
-                    .foregroundColor(.black)
+                    .foregroundColor( Color(uiColor:.black))
             }
             Spacer()
             if editable {
                 Button(action: { onTap?() }) {
                     Image("pencil")
-                        .foregroundColor(.black)
+                        .foregroundColor( Color(uiColor:.black))
                         .bold()
                 }
             }

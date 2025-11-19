@@ -23,7 +23,7 @@ struct CardContainer<Content: View>: View {
         .padding(10)
         .background(Color.white)
         .cornerRadius(10)
-        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
+        .shadow(color: Color(uiColor:.black).opacity(0.1), radius: 10, x: 0, y: 5)
     }
 
 }

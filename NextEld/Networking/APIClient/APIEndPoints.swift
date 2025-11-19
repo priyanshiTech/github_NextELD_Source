@@ -11,8 +11,8 @@ import Foundation
 
 enum API {
     
-   // static let baseURL = URL(string: "https://admin.allstarelogs.com/eld_log/")!
-    static let baseURL = URL(string: "https://admin.gbt-usa.com/eld_log/")!
+    static let baseURL = URL(string: "https://admin.allstarelogs.com/eld_log/")!
+  //  static let baseURL = URL(string: "https://admin.gbt-usa.com/eld_log/")!
     static let baseURLTwo = URL(string: "http://165.232.183.179:4002/api/")!
     static let privacyPolicyURL = "https://exceleld.com/privacypolicy/"
     static let DominName = "https://admin.gbt-usa.com/"
@@ -110,7 +110,7 @@ enum API {
                 return API.baseURL.appending(components: "master/update_disclaimer_in_driver")
             }
         }
-        
+         
         var method: String {
             
             switch self {

@@ -57,7 +57,7 @@ struct StatusDetailsPopup: View {
     var body: some View {
         ZStack {
             // Background overlay
-            Color.black.opacity(0.5)
+            Color(uiColor:.black).opacity(0.5)
                 .ignoresSafeArea()
                 .onTapGesture {
                     onClose()

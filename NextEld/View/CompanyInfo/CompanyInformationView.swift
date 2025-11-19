@@ -79,7 +79,7 @@ struct InputField: View {
         VStack(alignment: .leading, spacing: 6) {
             Text(label)
                 .font(.callout)
-                .foregroundColor(.black)
+                .foregroundColor(Color(uiColor:.black))
                 .bold()
             TextField("", text: $text)
                 .padding(10)

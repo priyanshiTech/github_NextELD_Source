@@ -42,7 +42,7 @@ struct LoginScreen: View {
                 Text("Excel ELD")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .foregroundStyle(Color(uiColor: .white))
                     .padding()
                 //  Email field with validation
                 HStack {
@@ -51,6 +51,7 @@ struct LoginScreen: View {
                     TextField("UserName", text: $UserName)
                         .autocapitalization(.none)
                         .keyboardType(.emailAddress)
+                        .foregroundColor(Color.primary)
                 }
                 .inputBoxStyle(isValid: UserName.isEmpty)
                 
@@ -73,9 +74,11 @@ struct LoginScreen: View {
                     if isPasswordShowing {
                         TextField("Password", text: $password)
                             .autocapitalization(.none)
+                            .foregroundColor(Color.primary)
                     } else {
                         SecureField("Password", text: $password)
                             .autocapitalization(.none)
+                            .foregroundColor(Color.primary)
                     }
                     
                     Button {
@@ -91,7 +94,7 @@ struct LoginScreen: View {
                 if !password.isEmpty && !isValidPassword(password) {
                     // Text("Password must be 8+ chars, 1 uppercase, 1 number & 1 symbol")
                     Text( "Password must be numeric (min 4 digits)")
-                        .foregroundColor(.red)
+                        .foregroundColor(Color(uiColor:.red))
                         .font(.caption)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 5)
@@ -104,7 +107,7 @@ struct LoginScreen: View {
                     Text("Forget Password?")
                         .font(.callout)
                         .fontWeight(.semibold)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(uiColor:.white))
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .padding(.horizontal, 20)
                 }
@@ -134,7 +137,11 @@ struct LoginScreen: View {
                         .foregroundColor(Color(uiColor: .wine))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background((isValidPassword(password)) ? Color.white : Color.gray.opacity(0.3))
+                        .background(
+                            isValidPassword(password)
+                            ? Color(UIColor.systemBackground)
+                            : Color(UIColor.systemGray4)
+                        )
                         .cornerRadius(10)
                 }
                 
@@ -156,7 +163,7 @@ struct LoginScreen: View {
                     Text("Forget Username?")
                         .font(.callout)
                         .fontWeight(.semibold)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(uiColor:.white))
                 }
                 
                 Spacer()
@@ -164,7 +171,7 @@ struct LoginScreen: View {
                 // Error message from API
                 if let error = loginVM.errorMessage {
                     Text(error)
-                        .foregroundColor(.red)
+                        .foregroundColor(Color(uiColor:.red))
                         .padding(.horizontal)
                 }
             }

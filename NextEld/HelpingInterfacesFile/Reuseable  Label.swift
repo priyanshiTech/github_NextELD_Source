@@ -35,7 +35,7 @@ struct DynamicLabel: View {
 struct IconButton: View {
     var iconName: String
     var action: () -> Void
-    var iconColor: Color = .black
+    var iconColor: Color = Color(uiColor:.black)
     var iconSize: CGFloat = 25
     
     var body: some View {
