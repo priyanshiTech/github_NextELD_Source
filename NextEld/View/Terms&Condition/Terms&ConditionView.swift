@@ -46,6 +46,7 @@ struct Terms_ConditionView: View {
             // MARK: - WebView
             if let url = URL(string: API.privacyPolicyURL) {
                 ZStack {
+                    
                     WebView(url: url ,isLoading: $isLoading)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     

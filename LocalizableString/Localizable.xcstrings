@@ -226,6 +226,17 @@
         }
       }
     },
+    "are you sure you want to refersh your logs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਆਪਣੀਆਂ ਲਾਗਜ਼ ਤਾਜ਼ਾ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?\""
+          }
+        }
+      }
+    },
     "Available Hours" : {
       "localizations" : {
         "pa" : {
@@ -726,6 +737,17 @@
         }
       }
     },
+    "eld connection" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "eld_ਕਨੈਕਸ਼ਨ"
+          }
+        }
+      }
+    },
     "ELD ID - %@" : {
       "localizations" : {
         "pa" : {
@@ -1157,10 +1179,17 @@
       }
     },
     "language" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਭਾਸ਼ਾ"
+          }
+        }
+      }
     },
     "Language" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1442,7 +1471,14 @@
       }
     },
     "ok" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਠੀਕ ਹੈ"
+          }
+        }
+      }
     },
     "Ok" : {
       "localizations" : {
@@ -1526,6 +1562,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ਨਿੱਜੀ ਆਵਾਜਾਈ"
+          }
+        }
+      }
+    },
+    "Personal Use" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਨਿੱਜੀ ਵਰਤੋਂ"
           }
         }
       }
@@ -1821,7 +1868,14 @@
       }
     },
     "select_language" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਚੁਣੋ ਭਾਸ਼ਾ"
+          }
+        }
+      }
     },
     "Selected Device" : {
       "localizations" : {
@@ -1974,7 +2028,7 @@
       }
     },
     "Terms & Privacy Policy" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1985,7 +2039,14 @@
       }
     },
     "terms_privacy_policy" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸ਼ਰਤਾਂ ਗੋਪਨੀਯਤਾ ਨੀਤੀ"
+          }
+        }
+      }
     },
     "The Current driver will be signed out and you will become Driver. Notice as per requirements from FMCSA and CCMTA" : {
       "localizations" : {

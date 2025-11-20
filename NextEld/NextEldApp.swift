@@ -21,12 +21,16 @@ struct NextEldApp: App {
                 switch rootManager.currentRoot {
                 case .login:
                     LoginScreen()
+                    
                 case .splashScreen:
                     SplashView()
+                    
                 case .scanner(let moveToHome):
                     DeviceScannerView(checkboxClick: true, macaddress: "", moveToHome: moveToHome)
+                    
                 case .SessionExpireUIView:
                     SessionExpireUIView()
+                    
                 case .DisclaimerView:
                     DisclamerView()
                 }
