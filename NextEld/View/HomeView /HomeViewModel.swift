@@ -101,21 +101,41 @@ enum DriverStatusType: Hashable, CaseIterable {
     }
     
     init?(fromName name: String) {
-        switch name {
-        case AppConstants.on_Duty:
+        let normalized = name
+            .replacingOccurrences(of: "-", with: "_")
+            .replacingOccurrences(of: " ", with: "_")
+            .lowercased()
+        
+        switch normalized {
+        case "on_duty", "onduty":
             self = .onDuty
-        case AppConstants.off_Duty:
+        case "off_duty", "offduty":
             self = .offDuty
-        case AppConstants.on_Drive:
+        case "on_drive", "ondrive", "drive", "driving":
             self = .onDrive
-        case AppConstants.personalUse:
-            self = .personalUse
-        case AppConstants.yardMove:
-            self = .yardMode
-        case AppConstants.sleep:
+        case "sleep", "sleeper", "on_sleep", "onsleep":
             self = .sleep
+        case "personal_use", "personaluse", "personal_conveyance":
+            self = .personalUse
+        case "yard_mode", "yardmode", "yard_move", "yardmove":
+            self = .yardMode
         default:
-            return nil
+            switch name {
+            case AppConstants.on_Duty:
+                self = .onDuty
+            case AppConstants.off_Duty:
+                self = .offDuty
+            case AppConstants.on_Drive:
+                self = .onDrive
+            case AppConstants.personalUse:
+                self = .personalUse
+            case AppConstants.yardMove:
+                self = .yardMode
+            case AppConstants.sleep:
+                self = .sleep
+            default:
+                return nil
+            }
         }
     }
 }

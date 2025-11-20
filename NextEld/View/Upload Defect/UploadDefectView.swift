@@ -221,8 +221,7 @@ extension UploadDefectView {
                 Text(viewModel.isUploading ? "Uploading..." : "Upload")
                     .font(.headline)
                     .foregroundColor(.white)
-                   // .frame(maxWidth: .infinity, height: 50)
-                   .frame(width: .infinity , height: 50)
+                    .frame(maxWidth: .infinity, minHeight: 50)
                     .background(viewModel.isUploading ? Color.gray : Color(UIColor.wine))
                     .cornerRadius(8)
                     .padding()
@@ -424,6 +423,7 @@ extension UploadDefectView {
 #Preview {
     UploadDefectView(selectedRecord: nil)
 }
+
 
 
 

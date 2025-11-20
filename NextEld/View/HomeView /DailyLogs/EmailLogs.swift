@@ -141,7 +141,7 @@ struct EmailLogs: View {
                             showAlert = true
                         } else {
                             //  Proceed if all filled correctly
-                            let base = "https://gbt-usa.com/eldchart/generateCharts"
+                            let base = "https://admin.allstarelogs.com/eldchart/generateCharts"
                             let fromStr = "\(dateFormatted(fromDate)) 00:00:00"
                             let toStr = "\(dateFormatted(toDate)) 23:59:59"
                             let urlString = "\(base)/\(driverId ?? 0)/\(fromStr)/\(toStr)/\(email)"

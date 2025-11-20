@@ -29,7 +29,6 @@ class DVIRAPIViewModel: ObservableObject {
         
         // Reset session expired flag at start of each API call
         isSessionExpired = false
-        
         isLoading = true
         errorMessage = nil
         successMessage = nil

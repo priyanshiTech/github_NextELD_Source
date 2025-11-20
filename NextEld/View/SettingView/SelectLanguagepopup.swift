@@ -8,44 +8,46 @@
 import Foundation
 import SwiftUI
 
-struct SelectLanguagepopup:View {
+struct SelectLanguagepopup: View {
     
-    @Binding var selectedlanguage: String?
+    let options: [LanguageOption]
+    @Binding var selectedLanguageCode: String
     @Binding var isPresented: Bool
-    let languagesSelect: [String] = ["English" , "Panjabi"]
     
     var body: some View {
         VStack(spacing: 10) {
-            Text("Language")
+            Text("language")
                 .font(.headline)
                 .padding(.top)
-
+            
             Divider()
-                VStack(spacing: 12) {
-                    ForEach(languagesSelect, id: \.self) { lang in
-                        HStack {
-                            Text(lang)
-                                .foregroundColor(Color(uiColor:.black))
-
-                            Spacer()
-
-                            Image(systemName: selectedlanguage == lang ? "checkmark.circle.fill" : "checkmark.circle")
-                                .foregroundColor(Color(uiColor: .wine))
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            selectedlanguage = lang
-                        }
-                        Divider()
+            
+            VStack(spacing: 12) {
+                ForEach(options) { option in
+                    HStack {
+                        Text(option.displayName)
+                            .foregroundColor(Color(uiColor:.black))
+                        
+                        Spacer()
+                        
+                        Image(systemName: selectedLanguageCode == option.code ? "checkmark.circle.fill" : "checkmark.circle")
+                            .foregroundColor(Color(uiColor: .wine))
                     }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        selectedLanguageCode = option.code
+                        isPresented = false
+                    }
+                    
+                    Divider()
                 }
-                .padding(.horizontal)
-      
-
+            }
+            .padding(.horizontal)
+            
             Button(action: {
                 isPresented = false
             }) {
-                Text("Ok")
+                Text("ok")
                     .fontWeight(.bold)
                     .foregroundColor(Color(uiColor:.white))
                     .padding()
@@ -59,4 +61,3 @@ struct SelectLanguagepopup:View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-
