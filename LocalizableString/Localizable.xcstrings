@@ -226,6 +226,9 @@
         }
       }
     },
+    "All Star Elogs" : {
+
+    },
     "are you sure you want to refersh your logs" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -929,6 +932,7 @@
       }
     },
     "Excel Eld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -939,6 +943,7 @@
       }
     },
     "Excel ELD" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {

@@ -223,7 +223,7 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
                             if let dvirId = resultDict["_id"] as? String {
                                 AppStorageHandler.shared.dvirLogId = dvirId
                                 print(" Saved dvirLogId: \(dvirId)")
-                            } else {
+                            } else {      
                                 print(" Could not extract _id from response")
                             }
                 

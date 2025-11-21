@@ -24,7 +24,7 @@ struct SplashView: View {
                 Color(uiColor: .wine)   // Background always wine
                     .ignoresSafeArea()
                 VStack {
-                    Text("Excel Eld")
+                    Text("All Star Elogs")
                         .padding(0.0)
                         .scaledToFit()
                         .foregroundColor(.white)

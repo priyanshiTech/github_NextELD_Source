@@ -320,11 +320,19 @@ class HomeViewModel: ObservableObject {
     
     var alertType: AlertType = .sucessConfimration
     
+    // SyncViewModel for syncOfflineData API
+    let syncViewModel: SyncViewModel
+    
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    let syncTimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
     init() {
+        // Initialize SyncViewModel on main actor
+        self.syncViewModel = MainActor.assumeIsolated {
+            SyncViewModel()
+        }
         restoreAllTimersFromLastStatus()
         validateScenarioInEveryMinute()
         timer
@@ -332,6 +340,16 @@ class HomeViewModel: ObservableObject {
             .sink { [weak self] _ in
                 self?.validateScenarioInEveryMinute()
                 self?.addIntermediateLogs()
+            }
+            .store(in: &cancellable)
+        
+        // Timer to call syncOfflineData every 10 seconds
+        syncTimer
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                Task { @MainActor in
+                    await self?.syncViewModel.syncOfflineData()
+                }
             }
             .store(in: &cancellable)
     }

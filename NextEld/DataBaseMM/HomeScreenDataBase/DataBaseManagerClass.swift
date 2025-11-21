@@ -531,6 +531,53 @@ class DatabaseManager: DatabaseHandler {
         }
     }
 
+    func fetchLastRecord(before date: Date) -> DriverLogModel? {
+        guard let db = self.db else { return nil }
+        let baseFilter = getFilter(for: .user) && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert)
+        let filterExpression = baseFilter && startTime < date
+        do {
+            if let row = try db.pluck(driverLogs.filter(filterExpression).order(startTime.desc).limit(1)) {
+                return DriverLogModel(
+                    id: row[id],
+                    status: row[status],
+                    startTime: row[startTime],
+                    userId: row[userId],
+                    day: row[day],
+                    isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
+                    dutyType: row[dutyType],
+                    shift: row[shift],
+                    vehicle: row[vehicleName],
+                    isRunning: true,
+                    odometer: row[odometer],
+                    engineHours: row[engineHours],
+                    location: row[location],
+                    lat: row[lat],
+                    long: row[long],
+                    origin: row[origin],
+                    isSynced: row[isSynced],
+                    vehicleId: row[vehicleId],
+                    trailers: row[trailers],
+                    notes: row[notes],
+                    serverId: row[serverId],
+                    timestamp: row[timestamp],
+                    identifier: row[identifier],
+                    remainingWeeklyTime: row[remainingWeeklyTime],
+                    remainingDriveTime: row[remainingDriveTime],
+                    remainingDutyTime: row[remainingDutyTime],
+                    remainingSleepTime: row[remainingSleepTime],
+                    breaktimerRemaning: row[breaktimerRemaning],
+                    lastSleepTime: row[lastSleepTime],
+                    isSplit: row[isSplit],
+                    engineStatus: row[engineStatus],
+                    isCertifiedLog: ""
+                )
+            }
+        } catch {
+            print(" Fetch last record before date error: \(error)")
+        }
+        return nil
+    }
+
     
     func fetchDutyEventsForToday() -> [DutyLog] {
         let fetchTodaysLogs = fetchLogs(filterTypes: [.getTodayRecord])
@@ -548,6 +595,35 @@ class DatabaseManager: DatabaseHandler {
             logs.insert(logFromToday12AMtoCurrentTime, at: 0)
         }
         return logs
+    }
+
+    func fetchDutyEvents(for date: Date) -> [DutyLog] {
+        let startOfDay = DateTimeHelper.startOfDay(for: date)
+        let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
+
+        let dayLogs = fetchLogs(filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)])
+        var dutyLogs: [DutyLog] = dayLogs
+            .map { DutyLog(id: Int($0.id ?? 0), status: $0.status, startTime: $0.startTime, endTime: $0.startTime) }
+
+        if let previousLog = fetchLastRecord(before: startOfDay) {
+            dutyLogs.insert(
+                DutyLog(id: Int(previousLog.id ?? 0), status: previousLog.status, startTime: startOfDay, endTime: startOfDay),
+                at: 0
+            )
+        } else {
+            dutyLogs.insert(
+                DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: startOfDay, endTime: startOfDay),
+                at: 0
+            )
+        }
+
+        if dutyLogs.isEmpty {
+            dutyLogs = [
+                DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: startOfDay, endTime: startOfDay)
+            ]
+        }
+
+        return dutyLogs.sorted { $0.startTime < $1.startTime }
     }
 }
 

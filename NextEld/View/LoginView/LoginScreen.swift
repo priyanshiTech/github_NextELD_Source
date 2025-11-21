@@ -39,7 +39,7 @@ struct LoginScreen: View {
         NavigationStack(path: $navManager.path) {
             VStack(spacing: 15) {
                 Spacer()
-                Text("Excel ELD")
+                Text("All Star Elogs")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundStyle(Color(uiColor: .white))

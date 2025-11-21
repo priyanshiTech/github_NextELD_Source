@@ -61,6 +61,11 @@ struct AppStorageHandler {
     @AppStorage("_id") var IdShowing : Int?
     @AppStorage("dvirLogId") var dvirLogId: String?
 
+    var customLocation: String? {
+        get { Location }
+        set { Location = newValue }
+    }
+
 
     func deleteAll() {
         if let bundleID = Bundle.main.bundleIdentifier {

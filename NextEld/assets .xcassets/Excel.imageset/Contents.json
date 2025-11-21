@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Excel.png",
+      "filename" : "AppIconAllStar.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Excel 1.png",
+      "filename" : "AppIconAllStar 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Excel 2.png",
+      "filename" : "AppIconAllStar 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
