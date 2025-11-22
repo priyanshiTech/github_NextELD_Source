@@ -9,14 +9,13 @@ import Foundation
 import Combine
 import SwiftUI
 
-@MainActor
 class SyncViewModel: ObservableObject {
     @Published var isSyncing = false
     @Published var syncMessage: String = ""
     
     func syncOfflineData() async {
         
-        let unsyncedLogs = DatabaseManager.shared.fetchLogs().filter { !$0.isSynced }
+        let unsyncedLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.notSync])
 
         guard !unsyncedLogs.isEmpty else {
             print(" No unsynced logs found. All data already synced!")
@@ -46,14 +45,14 @@ class SyncViewModel: ObservableObject {
             }
         }
         
-        let dateFormatter: DateFormatter = {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            formatter.timeZone = TimeZone(secondsFromGMT: 0)
-            formatter.locale = Locale(identifier: "en_US_POSIX")
-            return formatter
-        }()
-        
+//        let dateFormatter: DateFormatter = {
+//            let formatter = DateFormatter()
+//            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+//            formatter.locale = Locale(identifier: "en_US_POSIX")
+//            return formatter
+//        }()
+//        
         
         let driveringStatusData = unsyncedLogs.map { log in
             
@@ -71,8 +70,8 @@ class SyncViewModel: ObservableObject {
             return DriveringStatusData(
                 appVersion: AppInfo.version,
                 clientId: AppStorageHandler.shared.clientId ?? 1,
-                currentLocation: AppStorageHandler.shared.Location,
-                customLocation: AppStorageHandler.shared.Location,
+                currentLocation: safeLocation,
+                customLocation: safeLocation,
                 dateTime: DateTimeHelper.getCurrentDateTimeString(),
                 days: log.day,
                 driverId: AppStorageHandler.shared.driverId ?? 0,
@@ -82,10 +81,10 @@ class SyncViewModel: ObservableObject {
                 isSplit: log.isSplit,
                 isVoilation: log.isVoilations,
                 lastOnSleepTime: Int(log.lastSleepTime),
-                lattitude: AppStorageHandler.shared.lattitude,
+                lattitude: safeLatitude,
                 localId: "\(log.id ?? 0)",
                 logType: safeLogType,
-                longitude: AppStorageHandler.shared.longitude,
+                longitude: safeLongitude,
                 note: log.notes,
                 odometer: Double(log.odometer),
                 origin: AppStorageHandler.shared.origin,
@@ -99,7 +98,6 @@ class SyncViewModel: ObservableObject {
                 utcDateTime: Int(log.timestamp),
                 vehicleId: "\(AppStorageHandler.shared.vehicleId ?? 0)"
             )
-            
         }
         
         guard let firstLog = unsyncedLogs.first else { return }
