@@ -44,16 +44,7 @@ class SyncViewModel: ObservableObject {
                 return value.isEmpty ? "OnDuty" : value
             }
         }
-        
-//        let dateFormatter: DateFormatter = {
-//            let formatter = DateFormatter()
-//            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//            formatter.timeZone = TimeZone(secondsFromGMT: 0)
-//            formatter.locale = Locale(identifier: "en_US_POSIX")
-//            return formatter
-//        }()
-//        
-        
+                
         let driveringStatusData = unsyncedLogs.map { log in
             
             let safeStatus = normalizedStatus(log.status)
@@ -64,9 +55,9 @@ class SyncViewModel: ObservableObject {
             let trimmedLocation = log.location.trimmingCharacters(in: .whitespacesAndNewlines)
             let safeLocation = trimmedLocation.isEmpty ? storedLocation : trimmedLocation
             
-            let safeLatitude = log.lat == 0 ? (AppStorageHandler.shared.lattitude ?? 0) : log.lat
-            let safeLongitude = log.long == 0 ? (AppStorageHandler.shared.longitude ?? 0) : log.long
-//            
+            let safeLatitude = AppStorageHandler.shared.lattitude ?? 0//log.lat == 0 ? (AppStorageHandler.shared.lattitude ?? 0) : log.lat
+            let safeLongitude = AppStorageHandler.shared.longitude ?? 0//log.long == 0 ? (AppStorageHandler.shared.longitude ?? 0) : log.long
+////
             return DriveringStatusData(
                 appVersion: AppInfo.version,
                 clientId: AppStorageHandler.shared.clientId ?? 1,
