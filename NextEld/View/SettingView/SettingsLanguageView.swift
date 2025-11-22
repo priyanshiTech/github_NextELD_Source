@@ -24,7 +24,7 @@ struct SettingsLanguageView: View {
     
     private let languageOptions: [LanguageOption] = [
         LanguageOption(code: "en", displayName: "English"),
-        LanguageOption(code: "pa", displayName: "ਪੰਜਾਬੀ")
+        LanguageOption(code: "pa", displayName: "punjabi")
     ]
     
     var body: some View {

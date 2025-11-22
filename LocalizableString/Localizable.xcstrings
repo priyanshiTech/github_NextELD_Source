@@ -1168,7 +1168,7 @@
         "pa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instruction"
+            "value" : "ਹਦਾਇਤ"
           }
         }
       }
@@ -1182,6 +1182,9 @@
           }
         }
       }
+    },
+    "Key" : {
+      "extractionState" : "manual"
     },
     "language" : {
       "localizations" : {
@@ -1505,6 +1508,28 @@
         }
       }
     },
+    "On-Duty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਆਨ-ਡਿਊਟੀ"
+          }
+        }
+      }
+    },
+    "OnDuty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਆਨਡਿਊਟੀ"
+          }
+        }
+      }
+    },
     "Open Settings" : {
       "localizations" : {
         "pa" : {
@@ -1678,6 +1703,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ਜਵਾਬ"
+          }
+        }
+      }
+    },
+    "Rest break" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਆਰਾਮ ਬਰੇਕ"
           }
         }
       }

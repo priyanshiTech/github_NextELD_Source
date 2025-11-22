@@ -46,7 +46,7 @@ struct AppStorageHandler {
     @AppStorage("yardMoves") var yardMovesActive: String?
     @AppStorage("exempt") var exempt: String?
     @AppStorage("disclaimerRead") var disclaimerRead:Int?
-   
+    @AppStorage("trailer") var TrailerInput:String?
     
     
     // MARK: - Warning Timer

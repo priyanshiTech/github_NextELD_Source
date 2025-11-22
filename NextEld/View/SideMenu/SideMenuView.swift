@@ -152,7 +152,6 @@ func handleSelection(_ row: SideMenuRowType) {
                 Text(title)
                     .font(.system(size: 17))
                     .foregroundColor(isSelected ? Color(uiColor:.black) : Color(uiColor:.black))
-
                 Spacer()
             }
             .padding(.horizontal, 16)
