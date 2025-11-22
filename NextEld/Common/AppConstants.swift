@@ -8,7 +8,7 @@ struct AppConstants {
     static let personalUse = "Personal Use"
     static let yardMove = "Yard Move"
     static let restBreak = "Rest break"
-    static let continueDrive = "Continue drive"
+    static let continueDrive = "Continue Drive"
     static let cycle = "Cycle"
     static let sleep = "Sleep"
     static let on_Duty = "On-Duty"

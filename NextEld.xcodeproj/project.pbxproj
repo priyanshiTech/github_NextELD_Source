@@ -106,6 +106,7 @@
 		AF92F4DD2DDDE7DB00DEBBF6 /* EmailDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */; };
 		AF92F4DF2DDDEE0D00DEBBF6 /* DVIRHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DE2DDDEE0D00DEBBF6 /* DVIRHistory.swift */; };
 		AF93A58C2E67290B00B708E2 /* CoreServiceDeviceLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF93A58B2E67290B00B708E2 /* CoreServiceDeviceLocation.swift */; };
+		AF941AA72ED1FAF5005B4CFC /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEF2F572EAE098900451B22 /* String+Extension.swift */; };
 		AF9593B02DDE0AC800C5FCC1 /* CalanderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9593AF2DDE0AC800C5FCC1 /* CalanderView.swift */; };
 		AF95DD432DE9C1280099D4CC /* PDFInformationEld.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF95DD422DE9C1280099D4CC /* PDFInformationEld.swift */; };
 		AF95DD462DE9C4940099D4CC /* LogOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF95DD452DE9C4940099D4CC /* LogOut.swift */; };
@@ -1833,6 +1834,7 @@
 				AFA691072E54B04F0035D092 /* RecordUpdateInterface .swift in Sources */,
 				AFD90C8D2E50907800C56528 /* GlobalVariableclass.swift in Sources */,
 				AFB943242E029CB000AD19D7 /* StoredEventsViewController.swift in Sources */,
+				AF941AA72ED1FAF5005B4CFC /* String+Extension.swift in Sources */,
 				AFB943562E02D62E00AD19D7 /* APIEndPoints.swift in Sources */,
 				AFB943252E029CB000AD19D7 /* StoredEventsViewController+UITableView.swift in Sources */,
 				AFDEF7242E4B18AE00BEB2B1 /* Help&SupportViewModel.swift in Sources */,
