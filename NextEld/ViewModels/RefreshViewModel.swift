@@ -203,7 +203,7 @@ class RefreshViewModel: ObservableObject {
         AppStorageHandler.shared.exempt = result.exempt
         
         // Save driver logs to database
-        if let logs = result.driverLog {
+        if let logs = result.driverLog, !logs.isEmpty {
             DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
         }
     }

@@ -28,6 +28,7 @@ enum FilterType {
     case betweenDates(startDate: Date, endDate: Date)
     case specificDay(Int)
     case shift
+    case notSync
 
 }
 
@@ -278,6 +279,8 @@ class DatabaseManager: DatabaseHandler {
             return day == currentDay
         case .shift:
             return shift == AppStorageHandler.shared.shift
+        case .notSync:
+            return self.isSynced == false
         }
     }
     
