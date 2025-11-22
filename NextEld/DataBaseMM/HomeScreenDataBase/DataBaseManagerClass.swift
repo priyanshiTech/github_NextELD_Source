@@ -805,6 +805,24 @@ extension DatabaseManager {
             print(" Update Sync Status Error: \(error)")
         }
     }
+    
+    func updateValues(id: Int64, remainingCycleTime: TimeInterval? = nil, remainingOnDutyTime: TimeInterval? = nil, remainingOnDriveTime: TimeInterval? = nil) {
+        do {
+            let log = driverLogs.filter(self.id == id)
+            if let remainingCycleTime {
+                try db?.run(log.update(self.remainingWeeklyTime <- Int(remainingCycleTime)))
+            }
+            if let remainingOnDutyTime {
+                try db?.run(log.update(self.remainingDutyTime <- Int(remainingOnDutyTime)))
+            }
+            if let remainingOnDriveTime {
+                try db?.run(log.update(self.remainingDriveTime <- Int(remainingOnDriveTime)))
+            }
+            
+        } catch {
+            print(" Update Timer Value Error: \(error)")
+        }
+    }
 }
 
 //MARK: - Check for previous day logs that need certification

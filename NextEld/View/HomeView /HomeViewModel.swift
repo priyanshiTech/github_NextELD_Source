@@ -812,7 +812,7 @@ class HomeViewModel: ObservableObject {
         self.saveTimerStateForStatus(status: AppConstants.nextDayAlertTitle, note: "Next Day Started")
         AppStorageHandler.shared.days += 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.nextDayAlert)
-        
+        calculateTimeWhenDaysIsGreaterThan8days() // When days greater than 8 days cycle
         
     }
     
@@ -824,7 +824,7 @@ class HomeViewModel: ObservableObject {
         AppStorageHandler.shared.shift += 1
         AppStorageHandler.shared.days = 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.shiftChanged)
-        calculateTimeWhenDaysIsGreaterThan8days() // When days greater than 8 days cycle
+        
     }
     
     func check34HoursSleepOrOffDutyCompleted() -> Bool {
@@ -854,9 +854,11 @@ class HomeViewModel: ObservableObject {
     }
     
     func calculateTimeWhenDaysIsGreaterThan8days() {
-        if AppStorageHandler.shared.days <= 8 {
+        guard let lastRecord = DatabaseManager.shared.getLastRecordOfDriverLogs(),
+        AppStorageHandler.shared.days > 8 else {
             return
         }
+        
         let onDutyTime = AppStorageHandler.shared.onDutyTime ?? 0
         let onDriveTime = AppStorageHandler.shared.onDriveTime ?? 0
         var remainingCycleTime: TimeInterval = DatabaseManager.shared.getRemainingCycleTime()
@@ -866,13 +868,16 @@ class HomeViewModel: ObservableObject {
             let totalTime = workEntry.hoursWorked + remainingCycleTime
             if totalTime > onDutyTime {
                 remainingCycleTime =  onDutyTime
+                DatabaseManager.shared.updateValues(id: lastRecord.id ?? 0, remainingCycleTime: remainingCycleTime)
             } else if totalTime > onDriveTime && totalTime <= onDutyTime {
                 remainingCycleTime = totalTime
                 remainingOnDutyTime = totalTime
+                DatabaseManager.shared.updateValues(id: lastRecord.id ?? 0, remainingCycleTime: remainingCycleTime, remainingOnDutyTime: remainingOnDutyTime)
             } else if totalTime < onDriveTime {
                 remainingCycleTime = totalTime
                 remainingOnDutyTime = totalTime
                 remainingOnDriveTime = totalTime
+                DatabaseManager.shared.updateValues(id: lastRecord.id ?? 0, remainingCycleTime: remainingCycleTime, remainingOnDutyTime: remainingOnDutyTime, remainingOnDriveTime: remainingOnDriveTime)
             }
             
             onDutyTimer = CountdownTimer(startTime: remainingOnDutyTime)
