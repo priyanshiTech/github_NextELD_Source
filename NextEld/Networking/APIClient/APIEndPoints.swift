@@ -16,7 +16,7 @@ enum API {
     static let baseURLTwo = URL(string: "http://165.232.183.179:4002/api/")!
     static let privacyPolicyURL = "https://exceleld.com/privacypolicy/"
     static let DominName = "https://admin.gbt-usa.com/"
-   // static let AllStarDisclamer = "https://admin.allstarelogs.com/eld_log/"
+   //static let AllStarDisclamer = "https://admin.allstarelogs.com/eld_log/"
 
     enum Endpoint {
         case login

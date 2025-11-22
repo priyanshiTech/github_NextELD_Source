@@ -110,8 +110,10 @@ struct HomeScreenView: View {
                             .font(.title2)
                             .foregroundColor(.red)
                         //UserDefaults.standard.string(forKey: "truckNo"),
-                        VehicleInfoView(GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
-                                        trailer: UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming")
+                        VehicleInfoView(
+                            GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
+                            trailer: /*AppStorageHandler.shared.trailer ?? */UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming"
+                        )
                             StatusView(homeViewModel: homeVM) {  status in
                                 if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -408,11 +410,11 @@ struct HomeScreenView: View {
             }
         }
         //MARK: -  call sync API In every 10 sec
-        //        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
-        //            // Save timer states when app goes to background
-        //            saveCurrentTimerStatesBeforeSwitch()
-        //            saveCurrentTimerStates()
-        //        }
+//                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+//                    // Save timer states when app goes to background
+//                    saveCurrentTimerStatesBeforeSwitch()
+//                    saveCurrentTimerStates()
+//                }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     // Restore timer states when app becomes active
                     homeVM.restoreAllTimersFromLastStatus()

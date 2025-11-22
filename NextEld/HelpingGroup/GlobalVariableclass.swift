@@ -74,7 +74,7 @@ enum OriginType: Int {
         switch self {
         case .driver: return "Driver"
         case .auto: return "Auto"
-        case .intermediate: return "Intermediate w/ CLP"
+        case .intermediate: return "Intermediate"
         case .unidentified: return "Unidentified"
         }
     }

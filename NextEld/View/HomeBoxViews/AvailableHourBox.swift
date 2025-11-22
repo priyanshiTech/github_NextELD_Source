@@ -29,7 +29,7 @@ struct AvailableHoursView: View {
                         navmanager.navigate(to: AppRoute.LogsFlow.RecapHours(title: AppConstants.HourRecap))
                     }
                     .buttonStyle(.plain)
-                    .foregroundColor(.purple)
+                    .foregroundColor(Color(uiColor: .wine))
                     
                     Spacer()
                     Text("Available Hours")
@@ -43,7 +43,7 @@ struct AvailableHoursView: View {
                         navmanager.path.append(AppRoute.HomeFlow.DailyLogs(tittle: "Daily Logs"))
                     }
                     .buttonStyle(.plain)
-                    .foregroundColor(.purple)
+                    .foregroundColor(Color(uiColor: .wine))
                 }
                 .padding()
                 

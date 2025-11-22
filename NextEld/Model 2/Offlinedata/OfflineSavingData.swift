@@ -11,8 +11,9 @@ import SwiftUI
 
 struct SyncResponse: Codable {
     let status: String
-    let message: String
-    let result: [SyncResult]
+    let message: String?
+    let result: [SyncResult]?
+    let token: String?
 }
 
 struct SyncResult: Codable {

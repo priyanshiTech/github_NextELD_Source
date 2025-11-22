@@ -18,7 +18,7 @@ class AddDefectViewModel: ObservableObject {
     
     // MARK: - Upload Defect Image
     func uploadDefectImage(image: UIImage, defectType: String,defectName: String, completion: @escaping (Bool) -> Void) {
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+        guard let imageData = image.prepareForUpload(maxFileSize: 800_000, maxDimension: 1400) else {
             errorMessage = "Failed to convert image to data"
             print("Failed to convert image to data")
             completion(false)
@@ -116,4 +116,49 @@ class AddDefectViewModel: ObservableObject {
         isTrailerUploaded = false
         errorMessage = nil
     }
+}
+
+// MARK: - UIImage helpers
+private extension UIImage {
+    func prepareForUpload(maxFileSize: Int, maxDimension: CGFloat) -> Data? {
+        var targetImage = self.resized(toMaxDimension: maxDimension)
+        var compression: CGFloat = 0.8
+        guard var data = targetImage.jpegData(compressionQuality: compression) else { return nil }
+        
+        while data.count > maxFileSize && compression > 0.2 {
+            compression -= 0.1
+            if let newData = targetImage.jpegData(compressionQuality: compression) {
+                data = newData
+            }
+        }
+        
+        while data.count > maxFileSize {
+            let newDimension = targetImage.size.maxSide * 0.8
+            targetImage = targetImage.resized(toMaxDimension: newDimension)
+            if let newData = targetImage.jpegData(compressionQuality: compression) {
+                data = newData
+            } else {
+                break
+            }
+        }
+        
+        return data.count <= maxFileSize ? data : nil
+    }
+    
+    func resized(toMaxDimension maxDimension: CGFloat) -> UIImage {
+        let longestSide = size.maxSide
+        guard longestSide > maxDimension else { return self }
+        
+        let scale = maxDimension / longestSide
+        let newSize = CGSize(width: size.width * scale, height: size.height * scale)
+        
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        return renderer.image { _ in
+            self.draw(in: CGRect(origin: .zero, size: newSize))
+        }
+    }
+}
+
+private extension CGSize {
+    var maxSide: CGFloat { max(width, height) }
 }

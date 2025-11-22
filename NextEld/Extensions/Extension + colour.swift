@@ -16,7 +16,9 @@ extension UIColor{
     static let blueLight2 = UIColor(red: 0.37, green: 0.58, blue: 0.86, alpha: 1.0)
     static let blueLight = UIColor(red: 0.62, green: 0.75, blue: 0.93, alpha: 1.0)
    // static let lightBlue = UIColor(red: 0.77, green: 0.86, blue: 0.98, alpha: 1.0)
-    static let lightWine = UIColor(red: 243/255, green: 235/255, blue: 249/255, alpha: 1.0)
+    static let lightWine = UIColor(red: 229/255, green: 240/255, blue: 255/255, alpha: 1.0)
+
+    //UIColor(red: 243/255, green: 235/255, blue: 249/255, alpha: 1.0)
 
     static let teal200 = UIColor(red: 0.01, green: 0.85, blue: 0.77, alpha: 1.0)
     static let teal700 = UIColor(red: 0.80, green: 0.27, blue: 0.42, alpha: 0.69)
@@ -62,6 +64,8 @@ extension UIColor{
     static let homeCardBg = UIColor(red: 0.88, green: 0.91, blue: 1.00, alpha: 1.0)
     static let greyNew = UIColor(red: 0.44, green: 0.44, blue: 0.48, alpha: 1.0)
    // static let wine = UIColor(red: 61/255, green: 22/255, blue: 45/255, alpha: 1.0)  //MARK: -  wine plum colour
-    static let wine = UIColor(red: 82/255, green: 47/255, blue: 116/255, alpha: 1.0)
+   // static let wine = UIColor(red: 82/255, green: 47/255, blue: 116/255, alpha: 1.0) //MARK:  wine colour dark
+    static let wine =  UIColor(red: 0.027, green: 0.098, blue: 0.275, alpha: 1.0)   //MARK: - Dark Navy Blue
+
 
 }

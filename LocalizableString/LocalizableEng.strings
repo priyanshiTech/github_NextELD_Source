@@ -60,6 +60,7 @@
 "not_now" = "Not Now";
 "settings" = "Setting";
 "language" = "Language";
+"select_language" = "Select language";
 "gooffDuty" = "Go Off-Duty before Log-out";
 "gooffDutyCodriver" = "Go Off-Duty before Log-in Co-Driver";
 "wanna_logout" = "Are you sure you want to logout ?";
@@ -374,3 +375,4 @@
 "eld_connection" = "ELD Connection";
 "support" = "Support";
 "are_you_sure_you_want_to_refersh_your_logs" = "Are you sure you want to refersh your logs ?";
+"terms_privacy_policy" = "Terms & Privacy Policy";

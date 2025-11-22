@@ -6,14 +6,26 @@
 import Foundation
 import SwiftUI
 
+struct LanguageOption: Identifiable, Equatable {
+    let code: String
+    let displayName: String
+    
+    var id: String { code }
+}
 
 struct SettingsLanguageView: View {
     
     @EnvironmentObject var navmanager: NavigationManager
-  
+    @EnvironmentObject var appRootManager: AppRootManager
+    @AppStorage("selectedLanguageCode") private var selectedLanguageCode: String = "en"
     
-    @State private var selectedLanguage: String? = nil
     @State private var showLanguagePicker: Bool = false
+    @State private var appliedLanguageCode: String = ""
+    
+    private let languageOptions: [LanguageOption] = [
+        LanguageOption(code: "en", displayName: "English"),
+        LanguageOption(code: "pa", displayName: "ਪੰਜਾਬੀ")
+    ]
     
     var body: some View {
         ZStack {
@@ -56,11 +68,11 @@ struct SettingsLanguageView: View {
                                 .padding(.top, 4)
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Language")
+                                Text("language")
                                     .font(.headline)
                                     .foregroundColor(Color(uiColor:.black))
                                 
-                                Text(selectedLanguage ?? "Select language")
+                                Text(displayName(for: selectedLanguageCode))
                                     .font(.footnote)
                                     .foregroundColor(Color(uiColor:.gray))
                             }
@@ -86,7 +98,7 @@ struct SettingsLanguageView: View {
                         print("Terms & Privacy tapped")
                     }) {
                         HStack(spacing: 4) {
-                            Text("Terms & Privacy Policy")
+                            Text("terms_privacy_policy")
                                 .bold()
                                 .foregroundColor(Color(uiColor:.gray))
                             
@@ -115,7 +127,8 @@ struct SettingsLanguageView: View {
                 // Small centered popup
                 VStack {
                     SelectLanguagepopup(
-                        selectedlanguage: $selectedLanguage,
+                        options: languageOptions,
+                        selectedLanguageCode: $selectedLanguageCode,
                         isPresented: $showLanguagePicker
                     )
                     .frame(width: 250, height: 250)
@@ -128,6 +141,19 @@ struct SettingsLanguageView: View {
                 .animation(.spring(), value: showLanguagePicker)
             }
         }
+        .onAppear {
+            appliedLanguageCode = selectedLanguageCode
+        }
+        .onChange(of: selectedLanguageCode) { newValue in
+            guard newValue != appliedLanguageCode else { return }
+            appliedLanguageCode = newValue
+            appRootManager.currentRoot = .splashScreen
+        }
+    }
+    
+    private func displayName(for code: String) -> String {
+        languageOptions.first(where: { $0.code == code })?.displayName
+        ?? String(localized: "select_language")
     }
 }
 

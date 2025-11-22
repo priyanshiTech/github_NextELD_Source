@@ -101,21 +101,41 @@ enum DriverStatusType: Hashable, CaseIterable {
     }
     
     init?(fromName name: String) {
-        switch name {
-        case AppConstants.on_Duty:
+        let normalized = name
+            .replacingOccurrences(of: "-", with: "_")
+            .replacingOccurrences(of: " ", with: "_")
+            .lowercased()
+        
+        switch normalized {
+        case "on_duty", "onduty":
             self = .onDuty
-        case AppConstants.off_Duty:
+        case "off_duty", "offduty":
             self = .offDuty
-        case AppConstants.on_Drive:
+        case "on_drive", "ondrive", "drive", "driving":
             self = .onDrive
-        case AppConstants.personalUse:
-            self = .personalUse
-        case AppConstants.yardMove:
-            self = .yardMode
-        case AppConstants.sleep:
+        case "sleep", "sleeper", "on_sleep", "onsleep":
             self = .sleep
+        case "personal_use", "personaluse", "personal_conveyance":
+            self = .personalUse
+        case "yard_mode", "yardmode", "yard_move", "yardmove":
+            self = .yardMode
         default:
-            return nil
+            switch name {
+            case AppConstants.on_Duty:
+                self = .onDuty
+            case AppConstants.off_Duty:
+                self = .offDuty
+            case AppConstants.on_Drive:
+                self = .onDrive
+            case AppConstants.personalUse:
+                self = .personalUse
+            case AppConstants.yardMove:
+                self = .yardMode
+            case AppConstants.sleep:
+                self = .sleep
+            default:
+                return nil
+            }
         }
     }
 }
@@ -300,9 +320,13 @@ class HomeViewModel: ObservableObject {
     
     var alertType: AlertType = .sucessConfimration
     
+    // SyncViewModel for syncOfflineData API
+    let syncViewModel: SyncViewModel = SyncViewModel()
+    
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    let syncTimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
     init() {
         restoreAllTimersFromLastStatus()
@@ -312,6 +336,16 @@ class HomeViewModel: ObservableObject {
             .sink { [weak self] _ in
                 self?.validateScenarioInEveryMinute()
                 self?.addIntermediateLogs()
+            }
+            .store(in: &cancellable)
+        
+        // Timer to call syncOfflineData every 10 seconds
+        syncTimer
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                Task { @MainActor in
+                    await self?.syncViewModel.syncOfflineData()
+                }
             }
             .store(in: &cancellable)
     }

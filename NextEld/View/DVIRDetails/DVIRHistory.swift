@@ -189,14 +189,22 @@ struct DVIRHistory: View {
     }
     
     func formatDates(_ date: Date, endOfDay: Bool = false) -> String {
+        let calendar = Calendar.current
+        let hour = endOfDay ? 23 : 0
+        let minute = endOfDay ? 59 : 0
+        let second = endOfDay ? 59 : 0
+        
+        let adjustedDate = calendar.date(
+            bySettingHour: hour,
+            minute: minute,
+            second: second,
+            of: date
+        ) ?? date
+        
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         formatter.timeZone = .current
-        if endOfDay {
-            return formatter.string(from: Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: date)!)
-        } else {
-            return formatter.string(from: Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: date)!)
-        }
+        return formatter.string(from: adjustedDate)
     }
     
     func isValidEmail(_ email: String) -> Bool {

@@ -78,7 +78,7 @@ struct LogsDetails: View {
             }  .background(Color.white.shadow(radius: 5))
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
-                    HOSEventsChartScreen(events: [])
+                    HOSEventsChartScreen(events: hoseEventsForSelectedDate)
                         .frame(maxWidth: .infinity)
                     
                     Text("Version - OS/02/May")
@@ -156,6 +156,51 @@ struct LogsDetails: View {
         return allLogs
             .filter { $0.startTime >= startOfDay && $0.startTime < endOfDay }
             .sorted { $0.startTime < $1.startTime }
+    }
+    
+    private var hoseEventsForSelectedDate: [HOSEvent] {
+        let logs = logsForSelectedDate
+        guard !logs.isEmpty else { return [] }
+        
+        var events: [HOSEvent] = []
+        let calendar = Calendar.current
+        
+        for (index, log) in logs.enumerated() {
+            let start = log.startTime
+            let nextStart = index + 1 < logs.count
+            ? logs[index + 1].startTime
+            : DateTimeHelper.currentDateTime()
+            
+            events.append(
+                HOSEvent(
+                    id: Int(log.id ?? Int64(index)),
+                    x: start,
+                    event_end_time: nextStart,
+                    dutyType: DriverStatusType(fromName: log.status) ?? .offDuty
+                )
+            )
+        }
+        
+        return events
+    }
+    
+    private func driverStatusType(for status: String) -> DriverStatusType {
+        switch status.lowercased() {
+        case "onduty", "on-duty", "on_duty":
+            return .onDuty
+        case "drive", "driving", "ondrive", "on-drive", "on_drive":
+            return .onDrive
+        case "sleep", "sleeper", "on_sleep", "on-sleep":
+            return .sleep
+        case "personal_use", "personaluse", "personal conveyance":
+            return .personalUse
+        case "yardmove", "yard_move", "yard":
+            return .yardMode
+        case "offduty", "off-duty", "off_duty":
+            return .offDuty
+        default:
+            return .offDuty
+        }
     }
     
     private func loadLogsFromDatabase() {

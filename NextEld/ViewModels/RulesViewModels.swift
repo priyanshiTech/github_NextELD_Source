@@ -28,7 +28,6 @@ class EmployViewStatusViewModel: ObservableObject {
     func fetchEmployeeStatus(employeeId: Int, clientId: Int) async -> Bool {
         // Reset session expired flag at start of each API call
         isSessionExpired = false
-        
         isLoading = true
         errorMessage = nil
 
@@ -47,7 +46,6 @@ class EmployViewStatusViewModel: ObservableObject {
 
             print(" EmployViewStatusViewModel - API Response received")
             print(" Response token value: \(response.token)")
-            
             // Check if token is false - session expired (check FIRST, before any other processing)
             if response.token.lowercased() == "false" {
                 // Session expired - token is false
@@ -89,7 +87,6 @@ class EmployViewStatusViewModel: ObservableObject {
             isLoading = false
             return false
         }
-
         isLoading = false
         return true
     }

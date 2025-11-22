@@ -59,20 +59,19 @@ struct DateStepperView: View {
             }
             Spacer()
             
-            
-            //MARK: -  Date label (only date, no weekday)
-           // Text(formattedDate)
             Text(DateUtils.formatDate(currentDate, format: "dd-MM-yyyy"))
-
-
                 .foregroundColor( Color(uiColor:.black))
                 .bold()
+            
             Spacer()
             
-            
-            //MARK: -  Right chevron - increment date
             Button(action: {
-                currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                let calendar = Calendar.current
+                let nextDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+                let today = calendar.startOfDay(for: Date())
+                if calendar.startOfDay(for: nextDate) <= today {
+                    currentDate = nextDate
+                }
             }) {
                 Image(systemName: "chevron.right")
                     .foregroundColor( Color(uiColor:.black))
