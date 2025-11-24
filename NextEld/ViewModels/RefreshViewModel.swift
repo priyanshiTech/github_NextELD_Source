@@ -126,7 +126,7 @@ class RefreshViewModel: ObservableObject {
         }
         
         if let location = result.driverLog?.first?.customLocation {
-            AppStorageHandler.shared.Location = location
+            AppStorageHandler.shared.customLocation = location
         }
         
         if let latitude = result.driverLog?.first?.lattitude {

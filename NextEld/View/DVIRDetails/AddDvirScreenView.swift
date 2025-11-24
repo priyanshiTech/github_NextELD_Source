@@ -67,7 +67,7 @@ struct AddDvirScreenView: View  {
                     .background(Color(UIColor.wine).shadow(radius: 1))
                     .frame(height: 40, alignment: .topLeading)
         }
-                }
+    }
                 
     private var mainContent: some View {
                 UniversalScrollView {

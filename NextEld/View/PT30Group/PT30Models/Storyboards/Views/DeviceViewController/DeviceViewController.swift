@@ -77,9 +77,7 @@ class DeviceViewController: UIViewController {
     //MARK: -  IBACTION For BACK Button ADD by PJ
     
     @IBAction func actionOnBackButton(_ sender: Any) {
-        
-      //  navmanager.navigate(to: AppRoute.homeFlow(.home))
-    
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func selectedSegmentChanged(_ sender: UISegmentedControl) {

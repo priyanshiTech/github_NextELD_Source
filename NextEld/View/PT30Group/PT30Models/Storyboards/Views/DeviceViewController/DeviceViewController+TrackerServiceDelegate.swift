@@ -58,8 +58,15 @@ extension DeviceViewController: TrackerServiceDelegate {
         dashboardReportView.fuelEconomyLabel.text = virtualDashboardData.averageFuelEconomy != nil ? "\(virtualDashboardData.averageFuelEconomy!.roundTo(numberOfDecimals: 2))" : "-"
         dashboardReportView.ambientTemperatureLabel.text = virtualDashboardData.ambientAirTemperature != nil ? "\(virtualDashboardData.ambientAirTemperature!.roundTo(numberOfDecimals: 2))" : "-"
         dashboardReportView.odometerLabel.text = virtualDashboardData.odometer != nil ? "\(virtualDashboardData.odometer!)" : "-"
+        AppStorageHandler.shared.odometer = virtualDashboardData.odometer ?? 0
+        
         dashboardReportView.engineHoursLabel.text = virtualDashboardData.engineHours != nil ? "\(virtualDashboardData.engineHours!)" : "-"
+        
+        AppStorageHandler.shared.engineHours = virtualDashboardData.engineHours ?? 0
+       
         dashboardReportView.idleHoursLabel.text = virtualDashboardData.idleHours != nil ? "\(virtualDashboardData.speed!)" : "-"
+        
+        
         dashboardReportView.PTOLabel.text = virtualDashboardData.PTOHours != nil ? "\(virtualDashboardData.PTOHours!)" : "-"
         dashboardReportView.totalFuelIdleLabel.text = virtualDashboardData.totalIdleFuel != nil ? "\(virtualDashboardData.totalIdleFuel!)" : "-"
         dashboardReportView.totalFuelUsedLabel.text = virtualDashboardData.totalFuelUsed != nil ? "\(virtualDashboardData.totalFuelUsed!)" : "-"
@@ -123,12 +130,20 @@ extension DeviceViewController: TrackerServiceDelegate {
         deviceInfoView.dateTimeLabel.text = dateFormater.string(from: event.datetime)
         
         deviceInfoView.latLongLabel.text = "\(event.geolocation.latitude) / \(event.geolocation.longitude)"
+        
+        
+            
         deviceInfoView.headingLabel.text = "\(event.geolocation.heading)"
         deviceInfoView.sateliteStatusLabel.text = "\(event.geolocation.isLocked ? "Locked" : "Not Locked") (Sat. Count: \(event.geolocation.sateliteCount))"
         deviceInfoView.odometerLabel.text = "\(event.odometer) km"
         deviceInfoView.velocityLabel.text = "\(event.velocity) km/h"
         deviceInfoView.engineHoursLabel.text = "\(event.engineHours)"
         deviceInfoView.rpmLabel.text = "\(event.rpm)"
+        
+        AppStorageHandler.shared.lattitude = Double(event.geolocation.latitude)
+        AppStorageHandler.shared.longitude = Double(event.geolocation.longitude)
+        AppStorageHandler.shared.odometer = Double(event.odometer)
+        AppStorageHandler.shared.engineHours = Double(event.engineHours)
         
         // returning true tell tracker that the event was processed so that it
         // doesn't need to store it trakcer's memory

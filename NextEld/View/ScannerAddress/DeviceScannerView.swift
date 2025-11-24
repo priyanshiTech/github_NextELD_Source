@@ -166,6 +166,7 @@ struct DeviceScannerView: View {
                 }
                 Spacer()
                     .onAppear {
+                        deviceStatusVM.resetDeviceValuesAfterlogin()
                         //  Load vehicle from AppStorage
                         if let savedVehicle = AppStorageHandler.shared.vehicleNo{
                             tittle = savedVehicle
@@ -309,6 +310,7 @@ struct DeviceScannerView: View {
         .navigationBarHidden(true)
         .environmentObject(navManager)
         .onAppear {
+            
             if let storedVehicle = AppStorageHandler.shared.vehicleNo, !storedVehicle.isEmpty {
                 selectedVehicleNumber = storedVehicle
             }

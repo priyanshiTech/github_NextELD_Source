@@ -73,8 +73,9 @@ class DeviceListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        SharedInfoManager.shared.centralManager = centralManager
         //trackerService.apiKey = "YOUR_KEY_GOES_HERE"
     }
     

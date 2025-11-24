@@ -205,7 +205,7 @@ class LoginViewModel: ObservableObject {
                 
                 //Save Location (if available)
                     if let location = response.result?.driverLog?.first?.customLocation {
-                        AppStorageHandler.shared.Location = location
+                        AppStorageHandler.shared.customLocation = location
                     print(" Saved location: \(location)")
                     }
                 
@@ -385,6 +385,8 @@ class LoginViewModel: ObservableObject {
             components.queryItems = dict.map { URLQueryItem(name: $0.key, value: $0.value) }
             return components.query?.data(using: .utf8)
         }
+    
+        
     }
     
 

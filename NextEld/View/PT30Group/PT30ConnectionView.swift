@@ -28,32 +28,34 @@ struct PT30ConnectionView: View {
                 .padding()
                 .background(Color(uiColor: .wine))
 
-                Spacer()
+                DeviceListWrapper()
+                    .edgesIgnoringSafeArea(.all)
             }
+            .navigationBarBackButtonHidden(true)
             // CONNECT button
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button("CONNECT") {
-                        showDeviceList = true
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 14)
-                    .foregroundColor(Color(uiColor:.black))
-                    .background(Color(UIColor.colorFabConnect))
-                    .clipShape(Capsule())
-                    .shadow(color: Color(uiColor:.black).opacity(0.25), radius: 6, x: 0, y: 4)
-                    .padding(.bottom, 24)
-                    .padding(.trailing, 20)
-                }
-            }
+//            VStack {
+//                Spacer()
+//                HStack {
+//                    Spacer()
+//                    Button("CONNECT") {
+//                        showDeviceList = true
+//                    }
+//                    .padding(.horizontal, 24)
+//                    .padding(.vertical, 14)
+//                    .foregroundColor(Color(uiColor:.black))
+//                    .background(Color(UIColor.colorFabConnect))
+//                    .clipShape(Capsule())
+//                    .shadow(color: Color(uiColor:.black).opacity(0.25), radius: 6, x: 0, y: 4)
+//                    .padding(.bottom, 24)
+//                    .padding(.trailing, 20)
+//                }
+//            }
         }
-        .fullScreenCover(isPresented: $showDeviceList) {
-            DeviceListWrapper()
-                .edgesIgnoringSafeArea(.all)
-        }
-        .navigationBarBackButtonHidden(true)
+//        .fullScreenCover(isPresented: $showDeviceList) {
+//            DeviceListWrapper()
+//                .edgesIgnoringSafeArea(.all)
+//        }
+        
     }
 }
 

@@ -410,6 +410,9 @@
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="chevron.left" catalog="system"/>
+                                <connections>
+                                    <action selector="actionOnBackButton:" destination="oDw-wB-bEF" eventType="touchUpInside" id="QsP-mL-Edd"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="5lK-5Z-WaI"/>
@@ -450,6 +453,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="JBW-Ud-bhS"/>
                     <connections>
+                        <outlet property="backButtonLeftChevron" destination="pjx-f5-ZGU" id="4pN-ky-dxO"/>
                         <outlet property="bleVersionLabel" destination="F8h-1e-ggv" id="OFO-th-pcd"/>
                         <outlet property="clearStoredEventsButton" destination="uag-zR-6BV" id="Bzx-ku-Rj2"/>
                         <outlet property="dashboardReportView" destination="ASh-gf-ETZ" id="wPc-Fp-M4j"/>
@@ -777,7 +781,7 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
