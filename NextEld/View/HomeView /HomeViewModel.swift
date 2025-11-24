@@ -488,6 +488,7 @@ class HomeViewModel: ObservableObject {
                 updateContinueDriveDBEndTime()
             }
             timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
+            
         case .sleep:
             timerTypes = [.sleepTimer]
             if restoreBreakTimerRunning {

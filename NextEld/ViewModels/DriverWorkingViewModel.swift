@@ -27,7 +27,7 @@ final class DriverWorkingViewModel: ObservableObject {
         let request = ELDStatusRequest(driverId: AppStorageHandler.shared.driverId ?? 0,
                                        shift: AppStorageHandler.shared.shift,
                                        days: AppStorageHandler.shared.days,
-                                       status: status ,
+                                       status: status,
                                        onDutyTime: onDutyTime,
                                        onDriveTime: onDriveTime,
                                        onSleepTime: onSleepTime,
@@ -47,7 +47,7 @@ final class DriverWorkingViewModel: ObservableObject {
                 appRootManager?.currentRoot = .SessionExpireUIView
                 return false
             }
-            
+                                                                        
 
             message = response.message
             showAlert = true

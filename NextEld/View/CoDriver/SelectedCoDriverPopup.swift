@@ -6,6 +6,8 @@
 //
 import Foundation
 import SwiftUI
+
+
 extension CertifyViewModel {
     func fetchCertifyDataFromStoredSession() async {
        
@@ -42,17 +44,37 @@ struct SelectCoDriverPopup: View {
                     .padding()
             } else {
                 UniversalScrollView {
+
                     VStack(spacing: 12) {
-                        
+
+                        // --- NONE OPTION ---
+                        HStack {
+                            Text("None")
+                                .foregroundColor(.black)
+                            Spacer()
+                            Image(systemName: selectedCoDriver == "None"
+                                  ? "checkmark.circle.fill"
+                                  : "checkmark.circle")
+                                .foregroundColor(Color(uiColor: .wine))
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            selectedCoDriver = "None"
+                            selectedCoDriverEmail = ""
+                            selectedCodriverID = nil
+                            print("Selected: None")
+                        }
+
+                        Divider()
+
+                        // --- EXISTING DRIVER LIST ---
                         ForEach(viewModel.certifyRecords, id: \.employeeId) { driver in
                             let fullName = "\(driver.firstName ?? "") \(driver.lastName ?? "")".trimmingCharacters(in: .whitespaces)
-                           // let username = driver.username ?? driver.email ?? fullName
                             let username = driver.username ?? ""
 
-                            
                             HStack {
-                                Text(fullName.isEmpty ? (username) : fullName)
-                                    .foregroundColor(Color(uiColor:.black))
+                                Text(fullName.isEmpty ? username : fullName)
+                                    .foregroundColor(Color(uiColor: .black))
                                 Spacer()
                                 Image(systemName: selectedCoDriver == fullName
                                       ? "checkmark.circle.fill"
@@ -62,18 +84,18 @@ struct SelectCoDriverPopup: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 selectedCoDriver = fullName
-                                // Prefer actual username from API; fall back to email/full name
-//                                selectedCoDriverEmail = username
-                                selectedCoDriverEmail = driver.username ?? ""
+                                selectedCoDriverEmail = username
                                 selectedCodriverID = driver.employeeId ?? 0
+
                                 print("Selected EmpID: \(driver.employeeId ?? 0)")
                                 print("Selected Email: \(driver.email ?? "nil")")
                                 print("Selected Username: \(username)")
                             }
-                            
+
                             Divider()
                         }
                     }
+
                     .padding(.horizontal)
                 }
                 .frame(maxHeight: 250)
@@ -104,3 +126,4 @@ struct SelectCoDriverPopup: View {
         }
     }
 }
+

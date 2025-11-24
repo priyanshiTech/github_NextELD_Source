@@ -738,6 +738,14 @@ extension DatabaseManager {
         //isVoilations: String
 
     ) {
+        let storedOrigin = AppStorageHandler.shared.origin?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let originCode = UserDefaults.standard.integer(forKey: "origin")
+        let fallbackOrigin = OriginType(rawValue: originCode)?.description ?? OriginType.driver.description
+        let resolvedOrigin = (storedOrigin?.isEmpty == false) ? storedOrigin! : fallbackOrigin
+        if storedOrigin?.isEmpty ?? true {
+            AppStorageHandler.shared.origin = resolvedOrigin
+        }
+        
         let log = DriverLogModel(
             id: nil,
             status: status,
@@ -755,7 +763,7 @@ extension DatabaseManager {
             location: UserDefaults.standard.string(forKey: "customLocation") ?? "",
             lat: Double(UserDefaults.standard.string(forKey: "lattitude") ?? "") ?? 0,
             long: Double(UserDefaults.standard.string(forKey: "longitude") ?? "") ?? 0,
-            origin: AppStorageHandler.shared.origin ?? "",
+            origin: resolvedOrigin,
             isSynced: false,
             vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
                 //UserDefaults.standard.integer(forKey: "vehicleId"),

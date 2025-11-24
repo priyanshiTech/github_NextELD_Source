@@ -49,6 +49,7 @@ struct SyncRequest: Codable {
 //    let utcDateTime: Int64
 //    let vehicleId: String
 //}
+
 struct DriveringStatusData : Codable {
     let appVersion : String?
     let clientId : Int?
