@@ -31,8 +31,8 @@ class CertifyViewModel: ObservableObject {
         errorMessage = nil
 
         let requestBody = ClientEmployeeToken(
-            clientId: driverId,
-            employeeId: employeeID,
+            clientId: AppStorageHandler.shared.clientId ?? 0,
+            employeeId: AppStorageHandler.shared.employeeId ?? 0,
             tokenNo: tokenNo
         )
 
