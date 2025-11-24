@@ -107,7 +107,6 @@ struct DeviceScannerView: View {
                     Button("Connect") { }
                         .bold()
                         .frame(width: 300 , height: 40)
-                        .buttonStyle(.bordered)
                         .background(Color(uiColor: .wine))
                         .foregroundColor(.white)
                         .cornerRadius(10)

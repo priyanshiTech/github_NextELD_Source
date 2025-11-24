@@ -177,44 +177,4 @@ class CountdownTimer: ObservableObject {
 
 //import Foundation
 //
-extension String {
-    /// Convert `HH:mm:ss` or `-HH:mm:ss` string to TimeInterval
-    func asTimeInterval() -> TimeInterval {
-        let isNegative = self.hasPrefix("-")
-        let cleanString = isNegative ? String(self.dropFirst()) : self
-        
-        let parts = cleanString.split(separator: ":").compactMap { Int($0) }
-        guard parts.count == 3 else { return 0 }
-        let hours = parts[0]
-        let minutes = parts[1]
-        let seconds = parts[2]
-        
-        let timeInterval = TimeInterval(hours * 3600 + minutes * 60 + seconds)
-        return isNegative ? -timeInterval : timeInterval
-    }
 
-    /// Convert `yyyy-MM-dd HH:mm:ss` string to Date
-    func asDate() -> Date? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        return formatter.date(from: self)
-    }
-}
-//
-//
-//
-//func formatTime(_ timeInterval: TimeInterval) -> String {
-//    // Always show 00:00:00 in UI when time is up
-//    if timeInterval <= 0 {
-//        return "00:00:00"
-//    }
-//    
-//    let hours = Int(timeInterval) / 3600
-//    let minutes = (Int(timeInterval) % 3600) / 60
-//    let seconds = Int(timeInterval) % 60
-//    return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-//}
-//
-//
-//

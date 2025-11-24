@@ -54,11 +54,11 @@ struct EyeViewData: View {
                         .fontWeight(.semibold)
                     Spacer()
                     
-                    HStack(spacing: 5) {
-                        CustomIconButton(iconName: "eye_fill_icon", title: "", action: {
-                            navManager.navigate(to: AppRoute.LogsFlow.EyeViewData(title: "daily Logs", entry: entry))
-                    })
-                    }
+//                    HStack(spacing: 5) {
+//                        CustomIconButton(iconName: "eye_fill_icon", title: "", action: {
+//                            navManager.navigate(to: AppRoute.LogsFlow.EyeViewData(title: "daily Logs", entry: entry))
+//                    })
+//                    }
                 }
                 .padding(.horizontal)
                 .frame(height: 50)
@@ -208,6 +208,7 @@ struct EyeViewData: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     VStack(spacing: 12) {
+                        
                         Image(systemName: "tray")
                             .font(.largeTitle)
                             .foregroundColor( Color(uiColor:.gray))
@@ -222,6 +223,7 @@ struct EyeViewData: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarBackButtonHidden()
+        
         .task {
             print(" EyeViewData: Starting to fetch driver data...")
             await fetchDriverData()
@@ -382,7 +384,6 @@ struct EyeViewData: View {
                     .padding(6)
             }
         }
-        
         Divider()
     }
 }

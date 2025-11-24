@@ -52,6 +52,24 @@ class TrailerViewModel: ObservableObject {
             trailers = saved
         }
     }
+    
+    // MARK: - Get Trailer Value (from AppStorage or Database)
+    func getTrailerValue() -> String {
+        // First try to get from AppStorageHandler
+        if let trailerInput = AppStorageHandler.shared.TrailerInput,
+           !trailerInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return trailerInput
+        }
+        
+        // If not found in AppStorage, fetch from database
+        if let recentTrailer = DatabaseManager.shared.getMostRecentTrailer(),
+           !recentTrailer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return recentTrailer
+        }
+        
+        // Default fallback
+        return "Upcoming"
+    }
 }
 
 

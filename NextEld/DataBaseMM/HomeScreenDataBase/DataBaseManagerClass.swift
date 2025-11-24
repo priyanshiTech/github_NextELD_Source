@@ -345,6 +345,56 @@ class DatabaseManager: DatabaseHandler {
         }
         return logs
     }
+    
+    // MARK: - Get Most Recent Trailer from Database
+    func getMostRecentTrailer() -> String? {
+        // First check DriverLogs database
+        let logs = fetchLogs(filterTypes: [.user], addWarningAndViolation: false, order: [startTime.desc], limit: 100)
+        
+        print(" Searching for trailer in \(logs.count) driver logs...")
+        
+        // Find the most recent log with a non-empty trailer
+        for (index, log) in logs.enumerated() {
+            let trailer = log.trailers.trimmingCharacters(in: .whitespacesAndNewlines)
+            print(" Log \(index + 1): status=\(log.status), trailer='\(trailer)'")
+            
+            if !trailer.isEmpty && trailer.lowercased() != "upcoming" {
+                print(" Found trailer in driver logs: \(trailer)")
+                return trailer
+            }
+        }
+        
+        // If not found in DriverLogs, check DVIR database
+        print(" Checking DVIR database for trailer...")
+        let dvirRecords = DvirDatabaseManager.shared.fetchAllRecords()
+        let sortedDvirRecords = dvirRecords.sorted { record1, record2 in
+            // Sort by timestamp descending (most recent first)
+            let timestamp1 = Int64(record1.timestamp) ?? 0
+            let timestamp2 = Int64(record2.timestamp) ?? 0
+            return timestamp1 > timestamp2
+        }
+        
+        for (index, record) in sortedDvirRecords.enumerated() {
+            let trailer = record.Trailer.trimmingCharacters(in: .whitespacesAndNewlines)
+            print(" DVIR Record \(index + 1): trailer='\(trailer)'")
+            
+            if !trailer.isEmpty && trailer.lowercased() != "upcoming" {
+                print("Found trailer in DVIR database: \(trailer)")
+                return trailer
+            }
+        }
+        
+        // Last fallback: Check UserDefaults
+        if let userDefaultsTrailer = UserDefaults.standard.string(forKey: "trailer"),
+           !userDefaultsTrailer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+           userDefaultsTrailer.lowercased() != "upcoming" {
+            print(" Found trailer in UserDefaults: \(userDefaultsTrailer)")
+            return userDefaultsTrailer
+        }
+        
+        print(" No valid trailer found in any database or UserDefaults")
+        return nil
+    }
 
     
     func saveDriverLogsToSQLite(from logs: [ServerDriverLog]) {
@@ -688,6 +738,14 @@ extension DatabaseManager {
         //isVoilations: String
 
     ) {
+        let storedOrigin = AppStorageHandler.shared.origin?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let originCode = UserDefaults.standard.integer(forKey: "origin")
+        let fallbackOrigin = OriginType(rawValue: originCode)?.description ?? OriginType.driver.description
+        let resolvedOrigin = (storedOrigin?.isEmpty == false) ? storedOrigin! : fallbackOrigin
+        if storedOrigin?.isEmpty ?? true {
+            AppStorageHandler.shared.origin = resolvedOrigin
+        }
+        
         let log = DriverLogModel(
             id: nil,
             status: status,
@@ -705,7 +763,7 @@ extension DatabaseManager {
             location: AppStorageHandler.shared.customLocation ?? "",
             lat: AppStorageHandler.shared.lattitude ?? 0,
             long: AppStorageHandler.shared.longitude ?? 0,
-            origin: AppStorageHandler.shared.origin ?? "",
+            origin: resolvedOrigin,
             isSynced: false,
             vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
                 //UserDefaults.standard.integer(forKey: "vehicleId"),

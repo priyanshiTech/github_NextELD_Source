@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct StatusBox: View {
-    let title: String
+    let title: LocalizedStringKey
     @ObservedObject var countDownTimer: CountdownTimer
     
     var body: some View {

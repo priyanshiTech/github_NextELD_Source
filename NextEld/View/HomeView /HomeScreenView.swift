@@ -112,7 +112,7 @@ struct HomeScreenView: View {
                         //UserDefaults.standard.string(forKey: "truckNo"),
                         VehicleInfoView(
                             GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
-                            trailer: /*AppStorageHandler.shared.trailer ?? */UserDefaults.standard.string(forKey: "trailer") ?? "Upcoming"
+                            trailer: trailerVM.getTrailerValue()
                         )
                             StatusView(homeViewModel: homeVM) {  status in
                                 if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
@@ -135,13 +135,7 @@ struct HomeScreenView: View {
                     }
                 }
                 .scrollIndicators(.hidden)
-        .onAppear {
-            
-            //  loadViolationsFromDatabase()
-          //  initializeViolationFlags()
-          //  homeVM.resetDailyViolationFlags() // Reset daily flags on app start
-        }
-                .scrollIndicators(.hidden)
+              .scrollIndicators(.hidden)
             }
             .disabled(presentSideMenu || showLogoutPopup || ShowrefreshPopup )
             

@@ -441,6 +441,7 @@
       }
     },
     "CONNECT" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1168,7 +1169,7 @@
         "pa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instruction"
+            "value" : "ਹਦਾਇਤ"
           }
         }
       }
@@ -1182,6 +1183,9 @@
           }
         }
       }
+    },
+    "Key" : {
+      "extractionState" : "manual"
     },
     "language" : {
       "localizations" : {
@@ -1425,6 +1429,9 @@
         }
       }
     },
+    "None" : {
+
+    },
     "Note" : {
       "localizations" : {
         "pa" : {
@@ -1486,6 +1493,7 @@
       }
     },
     "Ok" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1501,6 +1509,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ਠੀਕ ਹੈ"
+          }
+        }
+      }
+    },
+    "On-Duty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਆਨ-ਡਿਊਟੀ"
+          }
+        }
+      }
+    },
+    "OnDuty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਆਨਡਿਊਟੀ"
           }
         }
       }
@@ -1678,6 +1708,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ਜਵਾਬ"
+          }
+        }
+      }
+    },
+    "Rest break" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਆਰਾਮ ਬਰੇਕ"
           }
         }
       }

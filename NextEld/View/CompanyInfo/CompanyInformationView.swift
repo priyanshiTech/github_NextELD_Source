@@ -41,13 +41,16 @@ struct CompanyInformationView: View {
             UniversalScrollView {
                 VStack(alignment: .leading, spacing: 30) {
                     
-                    InputField(label: "Driver Name", text: .constant("\(viewModel.companyInfo?.firstName ?? "") \(viewModel.companyInfo?.lastName ?? "")"))
+                    InputField(label: "Driver Name", text: .constant("\(viewModel.companyInfo?.firstName ?? "")\(viewModel.companyInfo?.lastName ?? "")"))
                     InputField(label: "Driver Email", text: .constant(viewModel.companyInfo?.email ?? ""))
                     InputField(label: "Driver Phone", text: .constant("\(viewModel.companyInfo?.mobileNo ?? 0)"))
                     InputField(label: "Driver Licence", text: .constant(viewModel.companyInfo?.cdlNo ?? ""))
                     InputField(label: "Company Name", text: .constant(viewModel.companyInfo?.companyName ?? ""))
                     InputField(label: "Main Office Address", text: .constant(viewModel.companyInfo?.mainOfficeAddress ?? ""))
                     InputField(label: "Home Terminal Address", text: .constant(viewModel.companyInfo?.homeTerminalAddress ?? ""))
+                    InputField(label: "Time Zone", text: .constant(viewModel.companyInfo?.timeZone ?? ""))
+                    InputField(label: "Language", text: .constant(viewModel.companyInfo?.languageName ?? ""))
+                    
                 }
                 .padding()
             }

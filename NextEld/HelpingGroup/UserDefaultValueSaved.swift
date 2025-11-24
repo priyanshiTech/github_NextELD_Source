@@ -49,6 +49,7 @@ struct AppStorageHandler {
     @AppStorage("exempt") var exempt: String?
     @AppStorage("disclaimerRead") var disclaimerRead:Int?
     @AppStorage("isDeviceConnected") var isDeviceConnected: Bool = false
+    @AppStorage("trailer") var TrailerInput:String?
     
     
     // MARK: - Warning Timer

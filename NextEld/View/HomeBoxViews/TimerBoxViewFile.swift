@@ -11,7 +11,7 @@ import SwiftUI
 struct TimeBox: View {
     @ObservedObject var timer: CountdownTimer  = .init(startTime: 0)
     let type: TimerType
-    let title: String
+    let title: LocalizedStringKey
 //    @ObservedObject var timer: CountdownTimer
     
     var body: some View {

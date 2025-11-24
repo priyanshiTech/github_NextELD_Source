@@ -26,9 +26,5 @@
 		<string>bluetooth-central</string>
 		<string>location</string>
 	</array>
-	<key>CFBundleDisplayName</key>
-	<string>All Star Elogs</string>
-	<key>CFBundleName</key>
-	<string>All Star Elogs</string>
 </dict>
 </plist>

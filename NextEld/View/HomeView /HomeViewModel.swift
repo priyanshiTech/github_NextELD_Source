@@ -149,7 +149,7 @@ enum TimerType: Hashable, CaseIterable {
     case cycleTimer
     case none
     
-    func getName() -> String {
+    func getName() -> LocalizedStringKey {
         var title = ""
         switch self {
         case .onDuty:
@@ -167,7 +167,7 @@ enum TimerType: Hashable, CaseIterable {
         case .none:
             return ""
         }
-        return title
+        return title.localised()
     }
 }
 
@@ -231,6 +231,9 @@ enum ViolationType: Hashable {
         }
     }
 }
+
+
+
 
 struct ViolationData: Equatable {
     var id = UUID()
@@ -486,6 +489,7 @@ class HomeViewModel: ObservableObject {
                 updateContinueDriveDBEndTime()
             }
             timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
+            
         case .sleep:
             timerTypes = [.sleepTimer]
             if restoreBreakTimerRunning {

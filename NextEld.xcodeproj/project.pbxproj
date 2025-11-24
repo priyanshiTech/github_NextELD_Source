@@ -88,6 +88,8 @@
 		AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7951152E3BA7B5005FFFBF /* DvirdataBaseManager.swift */; };
 		AF79511C2E3BA83D005FFFBF /* DVIRViewModelUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF79511B2E3BA83D005FFFBF /* DVIRViewModelUpload.swift */; };
 		AF80FFA92DDF64DE00CC6A3D /* DotInspection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF80FFA82DDF64DE00CC6A3D /* DotInspection.swift */; };
+		AF82B04D2ED4415900081803 /* all_star_manual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AF82B04C2ED4415900081803 /* all_star_manual.pdf */; };
+		AF82B04F2ED4417200081803 /* all_star_instruction.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AF82B04E2ED4417200081803 /* all_star_instruction.pdf */; };
 		AF8717FA2DFFF97400544383 /* blueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8717F92DFFF97400544383 /* blueModel.swift */; };
 		AF8E3A032DD1D646004AE777 /* SideMenuRowEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */; };
 		AF8E3A052DD1D9F8004AE777 /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8E3A042DD1D9F8004AE777 /* SideMenuView.swift */; };
@@ -106,6 +108,7 @@
 		AF92F4DD2DDDE7DB00DEBBF6 /* EmailDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */; };
 		AF92F4DF2DDDEE0D00DEBBF6 /* DVIRHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DE2DDDEE0D00DEBBF6 /* DVIRHistory.swift */; };
 		AF93A58C2E67290B00B708E2 /* CoreServiceDeviceLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF93A58B2E67290B00B708E2 /* CoreServiceDeviceLocation.swift */; };
+		AF941AA72ED1FAF5005B4CFC /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEF2F572EAE098900451B22 /* String+Extension.swift */; };
 		AF9593B02DDE0AC800C5FCC1 /* CalanderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9593AF2DDE0AC800C5FCC1 /* CalanderView.swift */; };
 		AF95DD432DE9C1280099D4CC /* PDFInformationEld.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF95DD422DE9C1280099D4CC /* PDFInformationEld.swift */; };
 		AF95DD462DE9C4940099D4CC /* LogOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF95DD452DE9C4940099D4CC /* LogOut.swift */; };
@@ -354,6 +357,8 @@
 		AF7951162E3BA7B5005FFFBF /* DVIRDataTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRDataTableView.swift; sourceTree = "<group>"; };
 		AF79511B2E3BA83D005FFFBF /* DVIRViewModelUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRViewModelUpload.swift; sourceTree = "<group>"; };
 		AF80FFA82DDF64DE00CC6A3D /* DotInspection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotInspection.swift; sourceTree = "<group>"; };
+		AF82B04C2ED4415900081803 /* all_star_manual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = all_star_manual.pdf; sourceTree = "<group>"; };
+		AF82B04E2ED4417200081803 /* all_star_instruction.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = all_star_instruction.pdf; sourceTree = "<group>"; };
 		AF8717F92DFFF97400544383 /* blueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blueModel.swift; sourceTree = "<group>"; };
 		AF8E3A022DD1D646004AE777 /* SideMenuRowEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuRowEnum.swift; sourceTree = "<group>"; };
 		AF8E3A042DD1D9F8004AE777 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
@@ -1501,6 +1506,8 @@
 			isa = PBXGroup;
 			children = (
 				AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */,
+				AF82B04E2ED4417200081803 /* all_star_instruction.pdf */,
+				AF82B04C2ED4415900081803 /* all_star_manual.pdf */,
 				AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */,
 			);
 			path = ProductGuide;
@@ -1653,6 +1660,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF82B04F2ED4417200081803 /* all_star_instruction.pdf in Resources */,
 				AFB943102E029C5B00AD19D7 /* Main.storyboard in Resources */,
 				AF217C212EC867F800A30C7D /* eld_disclaimer 1.html in Resources */,
 				AFB943192E029C9500AD19D7 /* DashboardReportView.xib in Resources */,
@@ -1663,6 +1671,7 @@
 				AF04B1B12DE9839000A5F3D1 /* LocalizableEng.strings in Resources */,
 				AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */,
 				AFF3666C2E587AA20068AC2D /* excel_Manual_ppt.pdf in Resources */,
+				AF82B04D2ED4415900081803 /* all_star_manual.pdf in Resources */,
 				AFF3666A2E587A8F0068AC2D /* excel_eld_instruction.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1837,6 +1846,7 @@
 				AFA691072E54B04F0035D092 /* RecordUpdateInterface .swift in Sources */,
 				AFD90C8D2E50907800C56528 /* GlobalVariableclass.swift in Sources */,
 				AFB943242E029CB000AD19D7 /* StoredEventsViewController.swift in Sources */,
+				AF941AA72ED1FAF5005B4CFC /* String+Extension.swift in Sources */,
 				AFB943562E02D62E00AD19D7 /* APIEndPoints.swift in Sources */,
 				AFB943252E029CB000AD19D7 /* StoredEventsViewController+UITableView.swift in Sources */,
 				AFDEF7242E4B18AE00BEB2B1 /* Help&SupportViewModel.swift in Sources */,
@@ -2120,10 +2130,10 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.5;
-				PRODUCT_BUNDLE_IDENTIFIER = Inurum.Technology.NextEld;
+				PRODUCT_BUNDLE_IDENTIFIER = Inurum.Technology.EldTruckTrace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "AppStore profile";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "iOS Adhoc Profile";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -2172,10 +2182,10 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.5;
-				PRODUCT_BUNDLE_IDENTIFIER = Inurum.Technology.NextEld;
+				PRODUCT_BUNDLE_IDENTIFIER = Inurum.Technology.EldTruckTrace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "AppStore profile";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "iOS Adhoc Profile";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

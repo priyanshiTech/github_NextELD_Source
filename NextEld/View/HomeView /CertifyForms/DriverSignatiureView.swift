@@ -37,21 +37,39 @@ struct SignatureCertifyView: View {
     @State private var isLoading = false
 
     // MARK: - Derived validations
+//    private var isFormValid: Bool {
+//        let vehOK = !selectedVehicle.isEmpty && selectedVehicle != "None"
+//        let trlOK = !selectedTrailer.isEmpty && selectedTrailer != "None"
+//        let docOK = !selectedShippingDoc.isEmpty && selectedShippingDoc != "None"
+//        let coOK  = {
+//            guard let c = selectedCoDriver?.trimmingCharacters(in: .whitespacesAndNewlines),
+//                  !c.isEmpty else { return false }
+//            return c.lowercased() != "none"
+//        }()
+//        let coIDOK: Bool = {
+//            guard let c = selectedCoDriverID else { return false }
+//            return c != 0   // or replace 0 with the "invalid" value you want to check against
+//        }()
+//
+//    ()
+//        return vehOK && trlOK && docOK && coOK && coIDOK
+//    }
     private var isFormValid: Bool {
         let vehOK = !selectedVehicle.isEmpty && selectedVehicle != "None"
         let trlOK = !selectedTrailer.isEmpty && selectedTrailer != "None"
         let docOK = !selectedShippingDoc.isEmpty && selectedShippingDoc != "None"
-        let coOK  = {
-            guard let c = selectedCoDriver?.trimmingCharacters(in: .whitespacesAndNewlines),
-                  !c.isEmpty else { return false }
-            return c.lowercased() != "none"
-        }()
-        let coIDOK: Bool = {
-            guard let c = selectedCoDriverID else { return false }
-            return c != 0   // or replace 0 with the "invalid" value you want to check against
+
+        // --- Co-driver logic updated ---
+        let coOK: Bool = {
+            if (selectedCoDriver?.lowercased().trimmingCharacters(in: .whitespaces)) != nil {
+                return true    // Always true → “None” allowed
+            }
+            return true
         }()
 
-    ()
+        // ID also allowed to be nil (None case)
+        let coIDOK = true
+
         return vehOK && trlOK && docOK && coOK && coIDOK
     }
 
