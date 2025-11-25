@@ -347,6 +347,7 @@ class HomeViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 Task { @MainActor in
+                    await self?.syncViewModel.getLocation()
                     await self?.syncViewModel.syncOfflineData()
                 }
             }
@@ -452,7 +453,7 @@ class HomeViewModel: ObservableObject {
     
     // MARK: - Delete All App Data
     func deleteAllAppData() {
-        
+        SharedInfoManager.shared.centralManager?.stopScan()
         stopTimers(for: TimerType.allCases)
         UserDefaults.standard.removePersistentDomain(forName: "Inurum.Technology.EldTruckTrace")
         //  Clear SessionManager token

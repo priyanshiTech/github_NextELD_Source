@@ -48,6 +48,7 @@ enum API {
         case dataTransferAPI
         case DriverWorkingtime
         case DisclamerAPI
+        case getLocation(lattitude: Double, Longitude: Double)
 
         
         var url: URL {
@@ -109,6 +110,8 @@ enum API {
                 return API.baseURL.appendingPathComponent("dispatch/add_driver_working_status")
             case .DisclamerAPI:
                 return API.baseURL.appending(components: "master/update_disclaimer_in_driver")
+            case .getLocation(lattitude: let lattitude, Longitude: let Longitude):
+                return URL(string: "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(lattitude),\(Longitude)&key=AIzaSyCMgNXTcHMmdmCDODUgKuWvmCjEscN_geg")!
             }
         }
          
@@ -123,6 +126,8 @@ enum API {
                 return "POST"
 
 
+            case .getLocation:
+                return "GET"
             }
         }
     }
@@ -198,6 +203,37 @@ final class NetworkManager {
 
         return try JSONDecoder().decode(T.self, from: data)
     }
+    
+    func get(_ endpoint: API.Endpoint) async throws -> [String: Any] {
+        var request = URLRequest(url: endpoint.url)
+        request.httpMethod = endpoint.method
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        printCurlCommand(for: request)
+        
+        print("🌍 URL: \(endpoint.url)")
+        print("📝 Method: \(endpoint.method)")
+        print("📤 Content-Type: application/json")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+
+        if let httpResponse = response as? HTTPURLResponse {
+            print("___________ Status Code: \(httpResponse.statusCode)")
+        }
+
+        if let string = String(data: data, encoding: .utf8) {
+            print("📥 Full Response Body: \(string)")
+        }
+        
+        if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+            return json
+        }
+
+        return [:]
+            
+        }
+    
 
 }
 

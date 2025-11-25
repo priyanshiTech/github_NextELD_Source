@@ -135,12 +135,7 @@ struct HomeScreenView: View {
                     }
                 }
                 .scrollIndicators(.hidden)
-//        .onAppear {
-//            //  loadViolationsFromDatabase()
-//          //  initializeViolationFlags()
-//          //  homeVM.resetDailyViolationFlags() // Reset daily flags on app start
-//        }
-                .scrollIndicators(.hidden)
+              .scrollIndicators(.hidden)
             }
             .disabled(presentSideMenu || showLogoutPopup || ShowrefreshPopup )
             
@@ -691,6 +686,7 @@ struct HomeScreenView: View {
                 NT11ConnectionView()
             case .PT30Connection:
                 PT30ConnectionView()
+                    
             }
         }
     }

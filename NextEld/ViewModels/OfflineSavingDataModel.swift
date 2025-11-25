@@ -125,6 +125,22 @@ class SyncViewModel: ObservableObject {
             syncMessage = "Sync Failed!"
         }
     }
+    
+    func getLocation() async {
+        let lattitude = AppStorageHandler.shared.lattitude ?? 0
+        let longitude = AppStorageHandler.shared.longitude ?? 0
+        if lattitude == 0 && longitude == 0 { return }
+        do {
+            let response = try await NetworkManager.shared.get(.getLocation(lattitude: lattitude, Longitude: longitude))
+            
+            if let result = response["results"] as? [[String:Any]], let formattedAddress = result.first?["formatted_address"] as? String {
+                AppStorageHandler.shared.customLocation = formattedAddress
+            }
+        } catch {
+            
+        }
+        
+    }
 }
 
 

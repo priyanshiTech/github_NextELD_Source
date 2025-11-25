@@ -77,4 +77,12 @@ class DeviceStatusViewModel: ObservableObject {
         isLoading = false
         return true
     }
+    
+    func resetDeviceValuesAfterlogin() {
+        AppStorageHandler.shared.customLocation = ""
+        AppStorageHandler.shared.odometer = 0
+        AppStorageHandler.shared.engineHours = 0
+        AppStorageHandler.shared.lattitude = 0
+        AppStorageHandler.shared.longitude = 0
+    }
 }
