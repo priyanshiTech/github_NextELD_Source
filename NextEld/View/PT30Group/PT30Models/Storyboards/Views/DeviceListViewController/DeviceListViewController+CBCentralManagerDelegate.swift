@@ -29,7 +29,6 @@ extension DeviceListViewController: CBCentralManagerDelegate {
         targetPeripheral = nil
         discoveredPeripherals.removeAll()
         state = .idle
-        AppStorageHandler.shared.isDeviceConnected = false
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -37,14 +36,12 @@ extension DeviceListViewController: CBCentralManagerDelegate {
         targetPeripheral = peripheral
         discoveredPeripherals.removeAll()
         
-        AppStorageHandler.shared.isDeviceConnected = true
         performSegue(withIdentifier: "deviceDetails", sender: self)
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         resetVCs()
         state = .idle
-        AppStorageHandler.shared.isDeviceConnected = false
         if error != nil {
             if AppConfig.autoReconnect {
                 reconnectTimeoutTimer?.invalidate()
