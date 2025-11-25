@@ -58,6 +58,7 @@ struct SelectCoDriverPopup: View {
                                 .foregroundColor(Color(uiColor: .wine))
                         }
                         .contentShape(Rectangle())
+                        
                         .onTapGesture {
                             selectedCoDriver = "None"
                             selectedCoDriverEmail = ""

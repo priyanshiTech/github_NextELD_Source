@@ -153,7 +153,9 @@ struct AddDvirScreenView: View  {
                                 DefectsSection(title: "Truck", selection: $trailerVM.truckDefectSelection, onSelectNoDefect: {
                                     alreadycheckAndSetVehicleCondition()
                                 }) {
-                                    trailerVM.truckDefectSelection = "yes"
+                                    if trailerVM.truckDefectSelection == nil || trailerVM.truckDefectSelection?.lowercased() == "no" {
+                                        trailerVM.truckDefectSelection = "yes"
+                                    }
                                     viewModel.popupType = "Truck"
                                     viewModel.showPopup = true
                                 }
@@ -162,7 +164,9 @@ struct AddDvirScreenView: View  {
                                 DefectsSection(title: "Trailer", selection: $trailerVM.trailerDefectSelection, onSelectNoDefect: {
                                     alreadycheckAndSetVehicleCondition()
                                 }) {
-                                    trailerVM.trailerDefectSelection = "yes"
+                                    if trailerVM.trailerDefectSelection == nil || trailerVM.trailerDefectSelection?.lowercased() == "no" {
+                                        trailerVM.trailerDefectSelection = "yes"
+                                    }
                                     viewModel.popupType = "Trailer"
                                     viewModel.showPopup = true
                                 }
@@ -258,7 +262,7 @@ struct AddDvirScreenView: View  {
             Text(buttonText)
                             .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                            .foregroundColor(Color(uiColor:.black))
+                            .foregroundColor(Color(uiColor:.white))
                             .background(Color(UIColor.wine))
                             .cornerRadius(10)
                             .padding(.horizontal, 20)
@@ -334,7 +338,7 @@ struct AddDvirScreenView: View  {
             if viewModel.showSignaturePopup {
                 SignatureAddDvir(
                     isPresented: $viewModel.showSignaturePopup,
-                    points: $viewModel.signaturePoints
+                    strokes: $viewModel.signaturePoints
                 ) { image in
                     self.viewModel.signatureImage = image   //parent me image save ho rahi hai
                 }

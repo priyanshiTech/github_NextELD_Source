@@ -47,7 +47,8 @@ struct DefectPopupView: View {
             } else {
                 UniversalScrollView {
                     ForEach(viewModel.defects.filter { $0.defectType == popupType }) { defect in
-                        let name = defect.defectName ?? "Unknown Defect"
+                        let rawName = defect.defectName ?? "Unknown Defect"
+                        let name = normalizedName(from: rawName)
                         
                         Button(action: {
                             toggle(name)
@@ -91,6 +92,20 @@ struct DefectPopupView: View {
         .cornerRadius(20)
         .shadow(radius: 10)
         .frame(width: 300, height: 400)
+        .onAppear {
+            syncSelectedWithExistingSelection()
+        }
+        .onChange(of: popupType) { _ in
+            syncSelectedWithExistingSelection()
+        }
+        .onChange(of: truckDefectSelection) { _ in
+            guard popupType == "Truck" else { return }
+            syncSelectedWithExistingSelection()
+        }
+        .onChange(of: trailerDefectSelection) { _ in
+            guard popupType == "Trailer" else { return }
+            syncSelectedWithExistingSelection()
+        }
         .task {
             viewModel.appRootManager = appRootManager
             let success = await viewModel.fetchDefects()
@@ -108,11 +123,50 @@ struct DefectPopupView: View {
     }
     
     private func toggle(_ name: String) {
-        if selected.contains(name) {
-            selected.remove(name)
+        let normalized = normalizedName(from: name)
+        if selected.contains(normalized) {
+            selected.remove(normalized)
         } else {
-            selected.insert(name)
+            selected.insert(normalized)
         }
+    }
+    
+    private func syncSelectedWithExistingSelection() {
+        let currentValue: String?
+        if popupType == "Truck" {
+            currentValue = truckDefectSelection
+        } else {
+            currentValue = trailerDefectSelection
+        }
+        
+        guard let currentValue else {
+            selected = []
+            return
+        }
+        
+        let trimmed = currentValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            selected = []
+            return
+        }
+        
+        let normalized = trimmed.lowercased()
+        if normalized == "yes" || normalized == "no" {
+            selected = []
+            return
+        }
+        
+        let names = trimmed
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        
+        selected = Set(names)
+    }
+    
+    private func normalizedName(from value: String) -> String {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? "Unknown Defect" : trimmed
     }
 }
 

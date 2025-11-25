@@ -65,12 +65,17 @@ struct DeviceScannerView: View {
                 VStack(alignment:.leading){
                     
                     Text("Select your Device Type and Enter The ELD Mac address Listed On The Device")
-                        .lineLimit(nil)
                         .font(.system(size: 17))
                         .foregroundColor(.gray)
-                        .padding()
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                        .padding(.top, 20)  
+
+
                     
                     HStack {
+                        
                         CheckboxButton()
                         Text("PT - 30")
                         
@@ -115,6 +120,7 @@ struct DeviceScannerView: View {
                     Button {
                         
                         Task {
+                            
                             await deviceStatusVM.updateDeviceStatus(status: "Disconnected")
                             
                             // Check if session expired - if yes, don't navigate anywhere else

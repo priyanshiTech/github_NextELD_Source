@@ -79,16 +79,15 @@ struct CoDriverLogin: View {
                 // Submit button
                 Button(action: {
                     if dutyManager.dutyStatus == DriverStatusConstants.offDuty {
-                        // Validate that a co-driver is selected and email is available
+
                         guard let selectedDriver = selectionCoDriver, !selectedDriver.isEmpty,
                               !selectedCoDriverEmail.isEmpty else {
                             print(" Co-Driver or email not selected")
                             return
                         }
-                        
-                        print(" Going to NewDriverLogin with email: \(selectedCoDriverEmail)")
-                        print(" Selected Co-Driver: \(selectedDriver)")
-                        
+                        print("Going to NewDriverLogin with email: \(selectedCoDriverEmail)")
+                        print("Selected Co-Driver: \(selectedDriver)")
+
                         // Navigate to NewDriverLogin
                         navmanager.navigate(to: AppRoute.HomeFlow.NewDriverLogin(title: tittle, email: selectedCoDriverEmail))
                     } else {
