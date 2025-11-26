@@ -147,6 +147,7 @@ struct AddDvirScreenView: View  {
                         }
 
     private var defectSection: some View {
+        
                         CardContainer {
                             VStack(spacing: 16) {
                                 Text("Truck Defects").font(.headline)
@@ -271,6 +272,7 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Body
     var body: some View {
+        
         ZStack {
             VStack(spacing: 0) {
                 topStrip
@@ -338,7 +340,7 @@ struct AddDvirScreenView: View  {
             if viewModel.showSignaturePopup {
                 SignatureAddDvir(
                     isPresented: $viewModel.showSignaturePopup,
-                    strokes: $viewModel.signaturePoints
+                    points: $viewModel.signaturePoints
                 ) { image in
                     self.viewModel.signatureImage = image   //parent me image save ho rahi hai
                 }
@@ -346,7 +348,7 @@ struct AddDvirScreenView: View  {
                 .zIndex(1)
             }
 
-
+     
 
             // MARK: - Defect Popup Overlay
             if viewModel.showPopup {
@@ -510,7 +512,7 @@ struct AddDvirScreenView: View  {
         if viewModel.Drivetime.isEmpty {
             viewModel.Drivetime = DateTimeHelper.currentTime()
         }
-        
+
         // Validate form
         if let errorMessage = validateForm() {
             print(" Validation Failed: \(errorMessage)")
@@ -558,7 +560,6 @@ struct AddDvirScreenView: View  {
                 signature: viewModel.signatureImage?.pngData()
             )
         }
-        
         saveDvirRecord(workingRecord: workingRecord)
     }
     
@@ -797,14 +798,10 @@ struct AddDvirScreenView: View  {
         // Priority 3: Default text
         return "Select Vehicle"
     }
-
-
 }
 
 //MARK: -   ADdd a validation  for input fields
 //struct DefectsSection: View  
-
-
 struct DefectsSection: View {
     let title: String
     @Binding var selection: String?

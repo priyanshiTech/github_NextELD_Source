@@ -72,6 +72,7 @@ struct CertifySelectedView: View {
                       //  Button(action: {
                        //     navManager.navigate(to: .DatabaseCertifyView)
                       //  }) {
+                        
                             Text(title)
                                 .font(.headline)
                                 .foregroundColor(Color(uiColor:.white))
@@ -301,9 +302,11 @@ struct CertifySelectedView: View {
                         tittle: AppConstants.trailersTittle,
                         trailers: $trailerVM.trailers
                     )
+                    
                 case .ShippingDocment:
                     ShippingDocView(tittle: AppConstants.shippingTittle)
                         .environmentObject(shippingVM)
+                    
                 case .AddVehicleForDVIR:
                     AddVehicleForDvir(
                         selectedVehicleNumber: $vehiclesc,

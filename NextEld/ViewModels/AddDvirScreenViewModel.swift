@@ -15,8 +15,8 @@ class AddDvirScreenViewModel: ObservableObject {
     // MARK: - Signature
     @Published var showSignaturePopup = false
     @Published var signaturePath = Path()
-   // @Published var signaturePoints: [CGPoint] = []
-    @Published var signaturePoints: [[CGPoint]] = []
+    @Published var signaturePoints: [CGPoint] = []
+   // @Published var signaturePoints: [[CGPoint]] = []
 
     @Published var signatureImage: UIImage? = nil
     @Published var showSignaturePad = false

@@ -29,6 +29,8 @@ struct HomeScreenView: View {
     @State private var hoseEvents: [HOSEvent] = []
     @State private var timer: Timer? = nil
     @State private var driverWorkingTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    @State private var showPendingSyncPopup = false
+    @State private var isManualSyncInProgress = false
   
     //MARK: - Daily violation tracking
     /*
@@ -243,6 +245,34 @@ struct HomeScreenView: View {
                 }
             }
             
+            if showPendingSyncPopup {
+                ZStack {
+                    Color(uiColor:.black).opacity(0.4)
+                        .ignoresSafeArea()
+                        .allowsHitTesting(false)
+                    
+                    CustomPopupAlert(
+                        title: "Refresh Log",
+                        message: "You have some records to update, do you want to update?",
+                        onOK: { triggerManualSync() },
+                        onCancel: {
+                            isManualSyncInProgress = false
+                            showPendingSyncPopup = false
+                        },
+                        okTitle: isManualSyncInProgress ? "Syncing..." : "OK",
+                        cancelTitle: "Cancel",
+                        isLoading: isManualSyncInProgress,
+                        okButtonDisabled: isManualSyncInProgress
+                    )
+                    .padding(.horizontal, 24)
+                    .frame(maxWidth: 340)
+                    .zIndex(1)
+                }
+                .zIndex(11)
+                .transition(.opacity)
+                .animation(.easeInOut, value: showPendingSyncPopup)
+            }
+            
             if showLogoutPopup {
                 Color(uiColor:.black).opacity(0.5)
                     .ignoresSafeArea()
@@ -346,6 +376,7 @@ struct HomeScreenView: View {
                 .animation(.easeInOut, value: showBanner)
             }
         }
+        
         .id(homeVM.refreshView)
         .onChange(of: networkMonitor.isConnected) { newValue in
             if newValue {
@@ -357,12 +388,12 @@ struct HomeScreenView: View {
         
         // Set alert type when sync confirmation is triggered
         .onChange(of: homeVM.showSyncconfirmation) { newValue in
-            if newValue {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    homeVM.alertType = .refresh
-                    homeVM.showAlertOnHomeScreen = true
-                    homeVM.showSyncconfirmation = false
-                }
+            guard newValue else { return }
+            homeVM.showSyncconfirmation = false
+            if hasPendingUnsyncedLogs() {
+                showPendingSyncPopup = true
+            } else {
+                scheduleRefreshAlert()
             }
         }
         
@@ -1249,3 +1280,30 @@ struct HomeScreenView: View {
 
 
 
+
+extension HomeScreenView {
+    private func hasPendingUnsyncedLogs() -> Bool {
+        !DatabaseManager.shared.fetchLogs(filterTypes: [.notSync]).isEmpty
+    }
+    
+    private func scheduleRefreshAlert() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            homeVM.alertType = .refresh
+            homeVM.showAlertOnHomeScreen = true
+        }
+    }
+    
+    private func triggerManualSync() {
+        guard !isManualSyncInProgress else { return }
+        isManualSyncInProgress = true
+        Task.detached(priority: .userInitiated) {
+            await homeVM.syncViewModel.getLocation()
+            await homeVM.syncViewModel.syncOfflineData()
+            await MainActor.run {
+                isManualSyncInProgress = false
+                showPendingSyncPopup = false
+                scheduleRefreshAlert()
+            }
+        }
+    }
+}

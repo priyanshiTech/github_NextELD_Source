@@ -13,6 +13,10 @@ struct CustomPopupAlert: View {
     var message: String
     var onOK: () -> Void
     var onCancel: () -> Void
+    var okTitle: String = "OK"
+    var cancelTitle: String = "Cancel"
+    var isLoading: Bool = false
+    var okButtonDisabled: Bool = false
 
     var body: some View {
         VStack(spacing: 16) {
@@ -21,20 +25,27 @@ struct CustomPopupAlert: View {
 
             Text(message)
                 .multilineTextAlignment(.center)
+            
+            if isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+            }
 
             HStack {
-                Button("Cancel", action: onCancel)
+                Button(cancelTitle, action: onCancel)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.gray.opacity(0.2))
                     .cornerRadius(8)
 
-                Button("OK", action: onOK)
+                Button(okTitle, action: onOK)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background( Color(uiColor: .wine))
                     .foregroundColor(.white)
                     .cornerRadius(8)
+                    .disabled(isLoading || okButtonDisabled)
+                    .opacity((isLoading || okButtonDisabled) ? 0.6 : 1)
             }
         }
         .padding()
