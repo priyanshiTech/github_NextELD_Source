@@ -326,6 +326,9 @@ class HomeViewModel: ObservableObject {
     // SyncViewModel for syncOfflineData API
     let syncViewModel: SyncViewModel = SyncViewModel()
     
+    //Notification when the Engine start
+    static let engineStartNotification = PassthroughSubject<Int, Never>()
+    
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
@@ -352,6 +355,23 @@ class HomeViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellable)
+        
+        HomeViewModel.engineStartNotification
+                        .receive(on: RunLoop.main)
+                        .sink { [weak self] rpm in
+                            if rpm >= 500, AppStorageHandler.shared.isEngineOff  {
+                                AppStorageHandler.shared.isEngineOff = false
+                                AppStorageHandler.shared.isEngineStarted = true
+                                self?.saveTimerStateForStatus(status: "Engine On", originType: .auto)
+                            }
+                            
+                            if rpm < 500, AppStorageHandler.shared.isEngineStarted {
+                                AppStorageHandler.shared.isEngineStarted = false
+                                AppStorageHandler.shared.isEngineOff = true
+                                self?.saveTimerStateForStatus(status: "Engine Off", originType: .auto)
+                            }
+                        }
+                        .store(in: &cancellable)
     }
     
     deinit {
@@ -512,7 +532,7 @@ class HomeViewModel: ObservableObject {
         }
        
         if saveLogsToDatabase {
-            saveTimerStateForStatus(status: status.getName(), note: note)
+            saveTimerStateForStatus(status: status.getName(), originType: .driver, note: note)
         }
         startTimers(for: timerTypes)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {[weak self] in
@@ -814,7 +834,7 @@ class HomeViewModel: ObservableObject {
         self.alertType = .nextDay
         self.showAlertOnHomeScreen = true
         self.resetToInitialState()
-        self.saveTimerStateForStatus(status: AppConstants.nextDayAlertTitle, note: "Next Day Started")
+        self.saveTimerStateForStatus(status: AppConstants.nextDayAlertTitle, originType: .auto, note: "Next Day Started")
         AppStorageHandler.shared.days += 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.nextDayAlert)
         calculateTimeWhenDaysIsGreaterThan8days() // When days greater than 8 days cycle
@@ -825,7 +845,7 @@ class HomeViewModel: ObservableObject {
         self.alertType = .shiftChange
         self.showAlertOnHomeScreen = true
         resetToInitialState(isResetCycleTimer: true)
-        self.saveTimerStateForStatus(status: AppConstants.shiftChangeAlertTitle, note: "New Shift Started")
+        self.saveTimerStateForStatus(status: AppConstants.shiftChangeAlertTitle, originType: .auto, note: "New Shift Started")
         AppStorageHandler.shared.shift += 1
         AppStorageHandler.shared.days = 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.shiftChanged)
@@ -849,12 +869,11 @@ class HomeViewModel: ObservableObject {
         guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day]), lastLog.status == AppConstants.on_Drive else {
             return
         }
-        AppStorageHandler.shared.origin = OriginType.intermediate.description
         let startTime = lastLog.startTime
         let afterOneHourTime = DateTimeHelper.calendar.date(byAdding: .hour, value: 1, to: startTime) ?? DateTimeHelper.currentDateTime()
         let currentTime = DateTimeHelper.currentDateTime()
         if afterOneHourTime <= currentTime && lastLog.odometer != .zero {
-            saveTimerStateForStatus(status: lastLog.status, date: afterOneHourTime)
+            saveTimerStateForStatus(status: lastLog.status, originType: .intermediate, date: afterOneHourTime)
         }
     }
     

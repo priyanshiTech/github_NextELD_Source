@@ -52,10 +52,11 @@ struct DateTimeHelper {
 
     // Helper function to convert time to user's timezone
     static func convertToUserTimezone(_ date: Date, offset: String) -> Date? {
-        let offsetString = offset.replacingOccurrences(of: ":", with: "")
-        let sign = String(offsetString.prefix(1))
-        let hours = Int(offsetString.dropFirst().prefix(2)) ?? 0
-        let minutes = Int(offsetString.dropFirst().dropFirst(2)) ?? 0
+        let timeStrings = offset.split(separator: ":")
+        let sign = timeStrings.first?.first ?? "+"
+        let minutes = Int(timeStrings.last ?? "0") ?? 0
+        let hours = Int(timeStrings.first?.dropFirst() ?? "0") ?? 0
+        
         
         var totalMinutes = hours * 60 + minutes
         if sign == "-" {

@@ -140,10 +140,12 @@ extension DeviceViewController: TrackerServiceDelegate {
         deviceInfoView.engineHoursLabel.text = "\(event.engineHours)"
         deviceInfoView.rpmLabel.text = "\(event.rpm)"
         
+        // Store values in local to evalute later
         AppStorageHandler.shared.lattitude = Double(event.geolocation.latitude)
         AppStorageHandler.shared.longitude = Double(event.geolocation.longitude)
         AppStorageHandler.shared.odometer = Double(event.odometer)
         AppStorageHandler.shared.engineHours = Double(event.engineHours)
+        HomeViewModel.engineStartNotification.send(event.rpm)
         
         // returning true tell tracker that the event was processed so that it
         // doesn't need to store it trakcer's memory

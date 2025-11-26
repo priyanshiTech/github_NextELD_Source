@@ -3,7 +3,7 @@ import Foundation
 
 extension HomeViewModel {
 
-    func saveTimerStateForStatus(status: String, note: String? = nil, date: Date? = nil) {
+    func saveTimerStateForStatus(status: String, originType: OriginType, note: String? = nil, date: Date? = nil) {
         print("Saving timer state for status: \(status)")
         var messge = note ?? ""
         if messge.isEmpty {
@@ -22,7 +22,8 @@ extension HomeViewModel {
             lastSleepTime: Int(breakTimer?.remainingTime ?? 0),
             RemaningRestBreak: "True",
             isruning: true,
-            isVoilations: false
+            isVoilations: false,
+            origin: originType.description
         )
 
         print(" Timer state saved successfully for \(status)")
@@ -76,7 +77,7 @@ extension HomeViewModel {
     }
     
     
-    func saveViolation(for violationData: ViolationData, date: Date? = nil) {
+    func saveViolation(for violationData: ViolationData, originType: OriginType = .auto, date: Date? = nil) {
         DatabaseManager.shared.saveTimerLog(
         status: violationData.getTitle(),
         startTime: date ?? DateTimeHelper.currentDateTime(),
@@ -89,7 +90,8 @@ extension HomeViewModel {
         lastSleepTime: Int(breakTimer?.remainingTime ?? 0),
         RemaningRestBreak: "true",
         isruning: false,
-        isVoilations: violationData.violation
+        isVoilations: violationData.violation,
+        origin: originType.description
         )
     }
     

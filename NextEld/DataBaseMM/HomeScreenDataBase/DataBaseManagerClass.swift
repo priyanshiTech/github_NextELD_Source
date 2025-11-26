@@ -734,17 +734,18 @@ extension DatabaseManager {
         lastSleepTime: Int,
         RemaningRestBreak: String,
         isruning: Bool,
-        isVoilations: Bool = false
+        isVoilations: Bool = false,
+        origin: String
         //isVoilations: String
 
     ) {
-        let storedOrigin = AppStorageHandler.shared.origin?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let originCode = UserDefaults.standard.integer(forKey: "origin")
-        let fallbackOrigin = OriginType(rawValue: originCode)?.description ?? OriginType.driver.description
-        let resolvedOrigin = (storedOrigin?.isEmpty == false) ? storedOrigin! : fallbackOrigin
-        if storedOrigin?.isEmpty ?? true {
-            AppStorageHandler.shared.origin = resolvedOrigin
+        var originType = origin
+        
+        // originType will be `Unidentified` when Odometer or Engine hour value is Zero
+        if AppStorageHandler.shared.odometer == 0 || AppStorageHandler.shared.engineHours == 0 {
+            originType = OriginType.unidentified.description
         }
+        AppStorageHandler.shared.origin = originType
         
         let log = DriverLogModel(
             id: nil,
@@ -758,12 +759,12 @@ extension DatabaseManager {
             vehicle: AppStorageHandler.shared.vehicleNo ?? "",
                 //UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
             isRunning: isruning,
-            odometer: AppStorageHandler.shared.odometer ?? 0.0,
-            engineHours: "\(AppStorageHandler.shared.engineHours ?? 0)",
+            odometer: AppStorageHandler.shared.odometer,
+            engineHours: "\(AppStorageHandler.shared.engineHours)",
             location: AppStorageHandler.shared.customLocation ?? "",
             lat: AppStorageHandler.shared.lattitude ?? 0,
             long: AppStorageHandler.shared.longitude ?? 0,
-            origin: resolvedOrigin,
+            origin: originType,
             isSynced: false,
             vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
                 //UserDefaults.standard.integer(forKey: "vehicleId"),

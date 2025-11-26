@@ -448,7 +448,7 @@ struct HomeScreenView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
             // Save timer states when app is about to terminate
            // homeVM.saveCurrentTimerStatesBeforeSwitch()
-            homeVM.saveTimerStateForStatus(status: homeVM.currentDriverStatus.getName(), note: "")
+            homeVM.saveTimerStateForStatus(status: homeVM.currentDriverStatus.getName(), originType: .driver, note: "")
 
         }
         
