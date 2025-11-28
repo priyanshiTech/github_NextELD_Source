@@ -14,14 +14,15 @@ class SyncViewModel: ObservableObject {
     @Published var isSyncing = false
     @Published var syncMessage: String = ""
     
-    func syncOfflineData() async {
+    @discardableResult
+    func syncOfflineData() async -> Bool {
         
         let unsyncedLogs = DatabaseManager.shared.fetchLogs().filter { !$0.isSynced }
 
         guard !unsyncedLogs.isEmpty else {
             print(" No unsynced logs found. All data already synced!")
             syncMessage = "All data already synced!"
-            return
+            return true
         }
         
         print(" Preparing \(unsyncedLogs.count) logs for syncing...")
@@ -40,8 +41,8 @@ class SyncViewModel: ObservableObject {
                 engineStatus: log.engineStatus,
                 identifier: 0,
                 isSplit: log.isSplit,
-                isVoilation: "\(log.isVoilations)",
-                lastOnSleepTime: log.lastSleepTime,
+                isVoilation: log.isVoilations,
+                lastOnSleepTime: Int(log.lastSleepTime),
                 lattitude: log.lat,
                 localId: "\(log.id ?? 0)",
                 logType: log.dutyType,
@@ -57,12 +58,12 @@ class SyncViewModel: ObservableObject {
                 shift: log.shift,
                 status: log.status,
                 utcDateTime: log.timestamp,
-                vehicleId: AppStorageHandler.shared.vehicleId ?? 3
+                vehicleId: "\(AppStorageHandler.shared.vehicleId ?? 0)"
             )
             
         }
         
-        guard let firstLog = unsyncedLogs.first else { return }
+        guard let firstLog = unsyncedLogs.first else { return false }
         
         let splitLog = SplllitLogss(
             day: firstLog.day,
@@ -84,16 +85,40 @@ class SyncViewModel: ObservableObject {
             let response: SyncResponse = try await NetworkManager.shared.post(.ForSavingOfflineData, body: requestBody)
             
             print(" API Status: \(response.status)")
-            print(" Message: \(response.message)")
+            if let message = response.message {
+                print(" Message: \(message)")
+            }
             
-            response.result.forEach { item in
+            response.result?.forEach { item in
                 print(" Synced localId: \(item.localId) → serverId: \(item.serverId)")
                 DatabaseManager.shared.markLogAsSynced(localId: Int64(item.localId) ?? 0, serverId: item.serverId)
             }
-            syncMessage = response.status == "SUCCESS" ? "Data Synced Successfully!" : "Sync Failed!"
+            let success = response.status == "SUCCESS"
+            if let message = response.message, !message.isEmpty {
+                syncMessage = message
+            } else {
+                syncMessage = success ? "Data Synced Successfully!" : "Sync Failed!"
+            }
+            return success
         } catch {
             print(" Sync Failed: \(error.localizedDescription)")
             syncMessage = "Sync Failed!"
+            return false
+        }
+    }
+    
+    func getLocation() async {
+        let lattitude = AppStorageHandler.shared.lattitude ?? 0
+        let longitude = AppStorageHandler.shared.longitude ?? 0
+        if lattitude == 0 && longitude == 0 { return }
+        do {
+            let response = try await NetworkManager.shared.get(.getLocation(lattitude: lattitude, Longitude: longitude))
+            
+            if let result = response["results"] as? [[String:Any]], let formattedAddress = result.first?["formatted_address"] as? String {
+                AppStorageHandler.shared.customLocation = formattedAddress
+            }
+        } catch {
+            
         }
     }
 }

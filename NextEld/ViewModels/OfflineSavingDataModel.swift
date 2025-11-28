@@ -13,14 +13,15 @@ class SyncViewModel: ObservableObject {
     @Published var isSyncing = false
     @Published var syncMessage: String = ""
     
-    func syncOfflineData() async {
+    @discardableResult
+    func syncOfflineData() async -> Bool {
         
         let unsyncedLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.notSync])
 
         guard !unsyncedLogs.isEmpty else {
             print(" No unsynced logs found. All data already synced!")
             syncMessage = "All data already synced!"
-            return
+            return true
         }
         
         print("📤 Preparing \(unsyncedLogs.count) logs for syncing...")
@@ -91,7 +92,7 @@ class SyncViewModel: ObservableObject {
             )
         }
         
-        guard let firstLog = unsyncedLogs.first else { return }
+        guard let firstLog = unsyncedLogs.first else { return false }
         
         let splitLog = SplllitLogss(
             day: firstLog.day,
@@ -113,16 +114,25 @@ class SyncViewModel: ObservableObject {
             let response: SyncResponse = try await NetworkManager.shared.post(.ForSavingOfflineData, body: requestBody)
             
             print(" API Status: \(response.status)")
-            print(" Message: \(response.message)")
+            if let message = response.message {
+                print(" Message: \(message)")
+            }
             
             response.result?.forEach { item in
                 print(" Synced localId: \(item.localId) → serverId: \(item.serverId)")
                 DatabaseManager.shared.markLogAsSynced(localId: Int64(item.localId) ?? 0, serverId: item.serverId)
             }
-            syncMessage = response.status == "SUCCESS" ? "Data Synced Successfully!" : "Sync Failed!"
+            let success = response.status == "SUCCESS"
+            if let message = response.message, !message.isEmpty {
+                syncMessage = message
+            } else {
+                syncMessage = success ? "Data Synced Successfully!" : "Sync Failed!"
+            }
+            return success
         } catch {
             print(" Sync Failed: \(error.localizedDescription)")
             syncMessage = "Sync Failed!"
+            return false
         }
     }
     

@@ -8,7 +8,6 @@ import Foundation
 import SwiftUI
 
 
-
 struct HoursRecap: View {
     var tittle: String
     @EnvironmentObject var navManager: NavigationManager

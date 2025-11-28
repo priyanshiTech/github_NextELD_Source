@@ -115,6 +115,9 @@ struct NT11ConnectionView: View {
                     isConnected = true
                     isPasswordShowing = true
                     showDeviceList = false
+                } else {
+                    isConnected = false
+                    isPasswordShowing = false
                 }
             }
         }

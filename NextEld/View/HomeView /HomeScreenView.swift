@@ -31,8 +31,11 @@ struct HomeScreenView: View {
     @State private var driverWorkingTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     @State private var showPendingSyncPopup = false
     @State private var isManualSyncInProgress = false
+    @State private var syncPopupContext: SyncPopupContext? = nil
+    @State private var showLogoutStatusAlert = false
   
     //MARK: - Daily violation tracking
+    
     /*
     var emptyDvirRecord: DvirRecord {
         DvirRecord(
@@ -82,8 +85,8 @@ struct HomeScreenView: View {
 
     @StateObject private var logoutVM = APILogoutViewModel()   //logout
     @EnvironmentObject var locationManager: LocationManager
-    
     let times = DateTimeHelperVoilation.getLocalAndGMT()
+    
     @State private var showDvirPopup = false
     @StateObject var deviceLocationManager = DeviceLocationManager()
     
@@ -117,6 +120,7 @@ struct HomeScreenView: View {
                             trailer: trailerVM.getTrailerValue()
                         )
                             StatusView(homeViewModel: homeVM) {  status in
+                            guard status != homeVM.currentDriverStatus else { return }
                                 if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                         homeVM.alertType = .thirtyFourHours
@@ -154,9 +158,9 @@ struct HomeScreenView: View {
                 SideMenuView(
                     selectedSideMenuTab: $selectedSideMenuTab,
                     presentSideMenu: $presentSideMenu,
-                    showLogoutPopup: $showLogoutPopup,
-                    showDeleteConfirm: $showDeleteConfirm, showSyncConfirmation:  $homeVM.showSyncconfirmation,
-                    
+                    showDeleteConfirm: $showDeleteConfirm,
+                    showSyncConfirmation:  $homeVM.showSyncconfirmation,
+                    onLogoutRequested: handleLogoutRequest
                 )
                 .frame(width: 250)
                 .background(Color(uiColor:.white))
@@ -172,10 +176,8 @@ struct HomeScreenView: View {
                     onClose: { homeVM.showDriverStatusAlert.showAlert = false },
                     onSubmit: { note in
                         let status = homeVM.showDriverStatusAlert.status
-                        
                         // Set new status and start timers
                        homeVM.setDriverStatus(status: status, note: note, saveLogsToDatabase: true)
-                    
                         // Close the popup after submit
                         homeVM.showDriverStatusAlert.showAlert = false
                     },
@@ -252,17 +254,20 @@ struct HomeScreenView: View {
                         .allowsHitTesting(false)
                     
                     CustomPopupAlert(
+                        
                         title: "Refresh Log",
                         message: "You have some records to update, do you want to update?",
-                        onOK: { triggerManualSync() },
+                    onOK: { handleSyncPopupConfirmation() },
                         onCancel: {
                             isManualSyncInProgress = false
+                        syncPopupContext = nil
                             showPendingSyncPopup = false
                         },
                         okTitle: isManualSyncInProgress ? "Syncing..." : "OK",
                         cancelTitle: "Cancel",
                         isLoading: isManualSyncInProgress,
                         okButtonDisabled: isManualSyncInProgress
+                    
                     )
                     .padding(.horizontal, 24)
                     .frame(maxWidth: 340)
@@ -391,6 +396,7 @@ struct HomeScreenView: View {
             guard newValue else { return }
             homeVM.showSyncconfirmation = false
             if hasPendingUnsyncedLogs() {
+                syncPopupContext = .manualRefresh
                 showPendingSyncPopup = true
             } else {
                 scheduleRefreshAlert()
@@ -631,6 +637,13 @@ struct HomeScreenView: View {
         } message: {
 
             Text(homeVM.alertType.getMessage())
+        }
+        .alert("Switch to Off Duty", isPresented: $showLogoutStatusAlert) {
+            Button("OK", role: .cancel) {
+                showLogoutStatusAlert = false
+            }
+        } message: {
+            Text("Please change your duty status to Off Duty before logging out.")
         }
       
         //MARK: -  Sync/Refresh Confirmation Alert
@@ -1286,6 +1299,20 @@ extension HomeScreenView {
         !DatabaseManager.shared.fetchLogs(filterTypes: [.notSync]).isEmpty
     }
     
+    private func handleLogoutRequest() {
+        presentSideMenu = false
+        guard homeVM.currentDriverStatus == .offDuty else {
+            showLogoutStatusAlert = true
+            return
+        }
+        if hasPendingUnsyncedLogs() {
+            syncPopupContext = .logout
+            showPendingSyncPopup = true
+        } else {
+            showLogoutPopup = true
+        }
+    }
+    
     private func scheduleRefreshAlert() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             homeVM.alertType = .refresh
@@ -1293,17 +1320,51 @@ extension HomeScreenView {
         }
     }
     
-    private func triggerManualSync() {
+    private func handleSyncPopupConfirmation() {
         guard !isManualSyncInProgress else { return }
+        guard let context = syncPopupContext else { return }
         isManualSyncInProgress = true
-        Task.detached(priority: .userInitiated) {
-            await homeVM.syncViewModel.getLocation()
-            await homeVM.syncViewModel.syncOfflineData()
-            await MainActor.run {
+        Task { @MainActor in
+            var syncSucceeded = false
+            while syncPopupContext == context && !syncSucceeded {
+                await homeVM.syncViewModel.getLocation()
+                syncSucceeded = await homeVM.syncViewModel.syncOfflineData()
+                if !syncSucceeded {
+                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                }
+            }
+            
+            guard syncPopupContext == context, syncSucceeded else {
                 isManualSyncInProgress = false
-                showPendingSyncPopup = false
+                return
+            }
+            
+            isManualSyncInProgress = false
+            showPendingSyncPopup = false
+            syncPopupContext = nil
+            
+            let pendingLogsRemain = hasPendingUnsyncedLogs()
+            
+            switch context {
+            case .manualRefresh:
                 scheduleRefreshAlert()
+            case .logout:
+                if pendingLogsRemain {
+                    syncPopupContext = .logout
+                    showPendingSyncPopup = true
+                } else {
+                    if homeVM.currentDriverStatus == .offDuty {
+                        showLogoutPopup = true
+                    } else {
+                        showLogoutStatusAlert = true
+                    }
+                }
             }
         }
     }
+}
+
+private enum SyncPopupContext {
+    case manualRefresh
+    case logout
 }

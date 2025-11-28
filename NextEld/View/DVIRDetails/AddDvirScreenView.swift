@@ -85,7 +85,9 @@ struct AddDvirScreenView: View  {
     }
     
     private var driverInfoSection: some View {
+        
                         CardContainer {
+                            
                             VStack(alignment: .leading, spacing: 15) {
                                 DvirField(label: "Driver", value: viewModel.driverName)
                                 DvirField(label: "Time", value: viewModel.Drivetime.isEmpty ? DateTimeHelper.currentTime() : viewModel.Drivetime)
@@ -98,9 +100,12 @@ struct AddDvirScreenView: View  {
                         }
                         
     private var vehicleSection: some View {
+        
+        
                         CardContainer {
+                            
                             Button(action: {
-                print(" Navigate to AddVehicleForDvir - Current vehicle: \(vehicleVM.selectedVehicleNumber)")
+                print("Navigate to AddVehicleForDvir - Current vehicle: \(vehicleVM.selectedVehicleNumber)")
                                 navmanager.navigate(to: AppRoute.DvirFlow.AddVehicleForDVIR)
                             }) {
                                 HStack {
@@ -119,10 +124,12 @@ struct AddDvirScreenView: View  {
                                 .background(Color(uiColor:.white))
                             }
                             .buttonStyle(PlainButtonStyle())
-        }
+                          }
+        
                         }
                         
     private var trailerSection: some View {
+        
                         CardContainer {
                             Button(action: {
                                 navmanager.path.append(AppRoute.DvirFlow.trailerScreen)
@@ -536,7 +543,7 @@ struct AddDvirScreenView: View  {
             workingRecord.vechicleID = vehicleId
         } else {
             // Creating new record
-            print("➕ Creating new record")
+            print("➕Creating new record")
             workingRecord = DvirRecord(
                 id: nil,
                 UserID: viewModel.driverID,

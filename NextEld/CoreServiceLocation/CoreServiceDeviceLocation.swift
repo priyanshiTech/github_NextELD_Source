@@ -32,15 +32,20 @@ class DeviceLocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.distanceFilter = 10 // Only update when moved 10 meters
         manager.requestWhenInUseAuthorization()
-        manager.startUpdatingLocation()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleConnectionChange), name: .deviceConnectionChanged, object: nil)
+        updateTrackingState()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard AppStorageHandler.shared.isDeviceConnected else { return }
         guard let location = locations.last else { return }
         
-        // Always update coordinates
-        latitude = location.coordinate.latitude
-        longitude = location.coordinate.longitude
+        // Always update coordinates and persist for log saves
+        let coordinate = location.coordinate
+        latitude = coordinate.latitude
+        longitude = coordinate.longitude
+        AppStorageHandler.shared.lattitude = coordinate.latitude
+        AppStorageHandler.shared.longitude = coordinate.longitude
         
         // Throttled Reverse Geocoding - only geocode if:
         // 1. Enough time has passed since last geocode (30 seconds)
@@ -74,6 +79,23 @@ class DeviceLocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         
         if shouldGeocode {
             performReverseGeocoding(location: location)
+        }
+    }
+
+    @objc private func handleConnectionChange() {
+        updateTrackingState()
+    }
+
+    private func updateTrackingState() {
+        if AppStorageHandler.shared.isDeviceConnected {
+            manager.startUpdatingLocation()
+        } else {
+            manager.stopUpdatingLocation()
+            DispatchQueue.main.async {
+                self.latitude = nil
+                self.longitude = nil
+                self.fullAddress = nil
+            }
         }
     }
     
@@ -110,6 +132,7 @@ class DeviceLocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                     
                     DispatchQueue.main.async {
                         self.fullAddress = address
+                        AppStorageHandler.shared.customLocation = address
                         self.lastGeocodeTime = Date()
                         self.lastGeocodeLocation = location
                     }
@@ -124,6 +147,7 @@ class DeviceLocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
     
     deinit {
+        NotificationCenter.default.removeObserver(self)
         pendingGeocodeWorkItem?.cancel()
         geocoder.cancelGeocode()
     }

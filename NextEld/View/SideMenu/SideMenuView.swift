@@ -12,9 +12,9 @@ struct SideMenuView: View {
     @EnvironmentObject var navmanager: NavigationManager
     @Binding var selectedSideMenuTab: Int
     @Binding var presentSideMenu: Bool
-    @Binding var showLogoutPopup: Bool
     @Binding var showDeleteConfirm: Bool
     @Binding var showSyncConfirmation: Bool
+    var onLogoutRequested: () -> Void
 
     var body: some View {
         
@@ -123,8 +123,7 @@ func handleSelection(_ row: SideMenuRowType) {
        case .FirmWareUpdate:
            navmanager.path.append(AppRoute.HomeFlow.FirmWare_Update)
        case .logout:
-           showLogoutPopup = true
-           presentSideMenu = false
+           onLogoutRequested()
            
        case .version:
            presentSideMenu = false
