@@ -237,6 +237,7 @@
 		CBBC97052EC628DB0049E376 /* DriverLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC97042EC628DB0049E376 /* DriverLogViewModel.swift */; };
 		CBE886042E995A2D00B7D581 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE886032E995A2500B7D581 /* HomeViewModel.swift */; };
 		CBE886072E9969F900B7D581 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE886062E9969F300B7D581 /* AppConstants.swift */; };
+		CBFD7D3F2EDB14AB008353E8 /* HomeViewModel+DeviceOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBFD7D3E2EDB149B008353E8 /* HomeViewModel+DeviceOperation.swift */; };
 		CBFF19D52ED2070B005A4012 /* SharedInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBFF19D42ED206F0005A4012 /* SharedInfoManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -504,6 +505,7 @@
 		CBE886032E995A2500B7D581 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		CBE886062E9969F300B7D581 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		CBEF2F572EAE098900451B22 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		CBFD7D3E2EDB149B008353E8 /* HomeViewModel+DeviceOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+DeviceOperation.swift"; sourceTree = "<group>"; };
 		CBFF19D42ED206F0005A4012 /* SharedInfoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedInfoManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -936,6 +938,7 @@
 		AF72E4302DFD54B400626DC0 /* HomeView  */ = {
 			isa = PBXGroup;
 			children = (
+				CBFD7D3E2EDB149B008353E8 /* HomeViewModel+DeviceOperation.swift */,
 				CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */,
 				CB4D81812ECA86E400590F62 /* HomeViewModel+splitshift.swift */,
 				CB283E712E9D5C4400B431DD /* HomeViewModel+Database.swift */,
@@ -1700,6 +1703,7 @@
 				AF72E4312DFD54B400626DC0 /* DataRow.swift in Sources */,
 				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
 				AFCC4CA52E4A24CC00629DE3 /* CompanyInfo.swift in Sources */,
+				CBFD7D3F2EDB14AB008353E8 /* HomeViewModel+DeviceOperation.swift in Sources */,
 				CB29DA572EC7B44600269C93 /* DataBaseManagerClass+Recap.swift in Sources */,
 				AF2E0D282E8BC5B200172174 /* ContinueDriveView.swift in Sources */,
 				AF7951182E3BA7B5005FFFBF /* DVIRDataTableView.swift in Sources */,

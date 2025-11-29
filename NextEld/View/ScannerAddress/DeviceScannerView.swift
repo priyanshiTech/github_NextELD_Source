@@ -171,7 +171,6 @@ struct DeviceScannerView: View {
                 }
                 Spacer()
                     .onAppear {
-                        deviceStatusVM.resetDeviceValuesAfterlogin()
                         //  Load vehicle from AppStorage
                         if let savedVehicle = AppStorageHandler.shared.vehicleNo{
                             tittle = savedVehicle

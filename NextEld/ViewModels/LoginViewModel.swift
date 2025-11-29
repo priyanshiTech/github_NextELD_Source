@@ -31,7 +31,7 @@ class LoginViewModel: ObservableObject {
         let requestBody = LoginRequestModel(
             username: email,
             password: password,
-            mobileDeviceId: "jay12345",
+            mobileDeviceId: "",
             isCoDriver: true
         )
         saveUserData(requestBody)
@@ -205,21 +205,21 @@ class LoginViewModel: ObservableObject {
                 
                 //Save Location (if available)
                     if let location = response.result?.driverLog?.first?.customLocation {
-                        AppStorageHandler.shared.customLocation = location
+                        SharedInfoManager.shared.customLocation = location
                     print(" Saved location: \(location)")
                     }
                 
                 //Save Latitude
                     if let latitude = response.result?.driverLog?.first?.lattitude {
                     //UserDefaults.standard.set(latitude, forKey: "lattitude")
-                        AppStorageHandler.shared.lattitude = latitude
+                        SharedInfoManager.shared.lattitude = latitude
                     print(" Saved latitude: \(latitude)")
                     }
                 
                 //Save Longitude
                     if let longitude = response.result?.driverLog?.first?.longitude {
                    // UserDefaults.standard.set(longitude, forKey: "longitude")
-                        AppStorageHandler.shared.longitude = longitude
+                        SharedInfoManager.shared.longitude = longitude
                     print(" Saved longitude: \(longitude)")
                     }
                 

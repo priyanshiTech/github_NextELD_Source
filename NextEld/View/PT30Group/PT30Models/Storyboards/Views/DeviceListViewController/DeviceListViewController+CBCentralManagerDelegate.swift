@@ -28,6 +28,7 @@ extension DeviceListViewController: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         targetPeripheral = nil
         discoveredPeripherals.removeAll()
+        SharedInfoManager.shared.isDeviceConnected = false
         state = .idle
     }
     
@@ -35,7 +36,7 @@ extension DeviceListViewController: CBCentralManagerDelegate {
         state = .connected
         targetPeripheral = peripheral
         discoveredPeripherals.removeAll()
-        
+        SharedInfoManager.shared.isDeviceConnected = true
         performSegue(withIdentifier: "deviceDetails", sender: self)
     }
     

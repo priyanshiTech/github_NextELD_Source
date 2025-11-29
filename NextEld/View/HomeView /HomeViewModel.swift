@@ -11,6 +11,7 @@ enum AlertType {
     case shiftChange
     case thirtyFourHours
     case splitShiftEnds
+    case idleState
     
     
     func getTitle() -> String {
@@ -31,6 +32,8 @@ enum AlertType {
         case .thirtyFourHours:
             title = ""
         case .splitShiftEnds:
+            title = ""
+        case .idleState:
             title = ""
         }
         return title
@@ -56,6 +59,8 @@ enum AlertType {
             message = AppConstants.thirtyFourHourAlertMsg
         case .splitShiftEnds:
             message = AppConstants.splitShiftEndsMsg
+        case .idleState:
+            return "you are idle from 10 minutes, Do you want to switch to on duty"
         }
         return message
     }
@@ -293,6 +298,11 @@ struct ViolationBoxData: Identifiable {
     let type: ViolationBoxType
 }
 
+//Notification when the Engine start
+extension Notification.Name {
+    static let engineStartStopNotification = Notification.Name("engineStartStop")
+}
+
 
 class HomeViewModel: ObservableObject {
     
@@ -326,13 +336,10 @@ class HomeViewModel: ObservableObject {
     // SyncViewModel for syncOfflineData API
     let syncViewModel: SyncViewModel = SyncViewModel()
     
-    //Notification when the Engine start
-    static let engineStartNotification = PassthroughSubject<Int, Never>()
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
-    let syncTimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
     init() {
         restoreAllTimersFromLastStatus()
@@ -342,37 +349,22 @@ class HomeViewModel: ObservableObject {
             .sink { [weak self] _ in
                 self?.validateScenarioInEveryMinute()
                 self?.addIntermediateLogs()
-            }
-            .store(in: &cancellable)
-        
-        // Timer to call syncOfflineData every 10 seconds
-        syncTimer
-            .receive(on: RunLoop.main)
-            .sink { [weak self] _ in
+                
                 Task { @MainActor in
-                    await self?.syncViewModel.getLocation()
                     await self?.syncViewModel.syncOfflineData()
                 }
+                
             }
             .store(in: &cancellable)
         
-        HomeViewModel.engineStartNotification
-                        .receive(on: RunLoop.main)
-                        .sink { [weak self] rpm in
-                            if rpm >= 500, AppStorageHandler.shared.isEngineOff  {
-                                AppStorageHandler.shared.isEngineOff = false
-                                AppStorageHandler.shared.isEngineStarted = true
-                                self?.saveTimerStateForStatus(status: "Engine On", originType: .auto)
-                            }
-                            
-                            if rpm < 500, AppStorageHandler.shared.isEngineStarted {
-                                AppStorageHandler.shared.isEngineStarted = false
-                                AppStorageHandler.shared.isEngineOff = true
-                                self?.saveTimerStateForStatus(status: "Engine Off", originType: .auto)
-                            }
-                        }
-                        .store(in: &cancellable)
-    }
+        // Device Values receive here...
+        NotificationCenter.default.publisher(for: .engineStartStopNotification)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] notification in
+                self?.hadleDeviceValues(notification: notification)
+            })
+            .store(in: &cancellable)
+   }
     
     deinit {
         debugPrint("Deinit called...")
@@ -497,7 +489,6 @@ class HomeViewModel: ObservableObject {
             timerTypes = [.onDuty, .cycleTimer]
             if previousStatus == .onDrive {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer, .continueDrive]
-                saveContinueDriveDB(status: AppConstants.onDuty)
             }
 
         case .onDrive:
@@ -506,7 +497,6 @@ class HomeViewModel: ObservableObject {
             if isTimerRunning(.breakTimer) {
                 breakTimer?.reset(startTime: breakTimer?.startDuration ?? 0)
                 breakTimer?.stop()
-                updateContinueDriveDBEndTime()
             }
             timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
             
@@ -516,7 +506,6 @@ class HomeViewModel: ObservableObject {
                 timerTypes.append(.breakTimer)
             }
             timerTypes = [.breakTimer, .sleepTimer]
-            saveContinueDriveDB(status: AppConstants.sleep)
 
         case .offDuty:
             timerTypes = [.breakTimer]
@@ -538,14 +527,6 @@ class HomeViewModel: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {[weak self] in
             self?.loadEventsFromDatabase()
         }
-        
-
-        // Explicitly start break timer if restoring after app relaunch
-//        if restoreBreakTimerRunning, let breakTimer = breakTimer, !breakTimer.isRunning {
-//            breakTimer.start()
-//            print("Break timer auto-started on app launch")
-//        }
-//        
     }
 
     func checkedOffDutyTimeIsLessThan2Hour()  {
@@ -910,4 +891,6 @@ class HomeViewModel: ObservableObject {
             
         }
     }
+    
+    
 }

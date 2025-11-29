@@ -461,6 +461,9 @@
         }
       }
     },
+    "Connected" : {
+
+    },
     "Connected Now" : {
       "localizations" : {
         "pa" : {

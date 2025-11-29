@@ -64,7 +64,7 @@ struct DateTimeHelper {
         }
         
         let offsetSeconds = TimeInterval(totalMinutes * 60)
-        return calendar.date(byAdding: .second, value: Int(offsetSeconds), to: date)//date.addingTimeInterval(offsetSeconds)
+        return calendar.date(byAdding: .second, value: Int(offsetSeconds), to: date)
     }
     
     static func getCurrentDateTimeString() -> String {

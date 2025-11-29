@@ -108,9 +108,9 @@ struct HomeScreenView: View {
                 UniversalScrollView {
                     
                     VStack {
-                        Text("Disconnected")
+                        Text(SharedInfoManager.shared.isDeviceConnected ? "Connected": "Disconnected")
                             .font(.title2)
-                            .foregroundColor(.red)
+                            .foregroundColor(SharedInfoManager.shared.isDeviceConnected ? .green : .red)
                         //UserDefaults.standard.string(forKey: "truckNo"),
                         VehicleInfoView(
                             GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
@@ -624,6 +624,8 @@ struct HomeScreenView: View {
                 break
             case .splitShiftEnds:
                 AppStorageHandler.shared.splitShiftIdentifier = 0
+                break
+            case .idleState:
                 break
             }
         }

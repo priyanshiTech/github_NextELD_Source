@@ -29,7 +29,9 @@ enum FilterType {
     case specificDay(Int)
     case shift
     case notSync
-
+    case engineStatus
+    case notEngineStartStatus
+    case notEngineStopStatus
 }
 
 enum SQLiteQuery {
@@ -281,6 +283,12 @@ class DatabaseManager: DatabaseHandler {
             return shift == AppStorageHandler.shared.shift
         case .notSync:
             return self.isSynced == false
+        case .engineStatus:
+            return status == AppConstants.engineOff || status == AppConstants.engineOn
+        case .notEngineStartStatus:
+            return status != AppConstants.engineOn
+        case .notEngineStopStatus:
+            return status != AppConstants.engineOff
         }
     }
     
@@ -289,7 +297,7 @@ class DatabaseManager: DatabaseHandler {
         var filterExpression: SQLite.Expression<Bool> = getFilter(for: .user) // default filter
         if !addWarningAndViolation {
             // wether we need to add violation or warning in record mainly we will add this record when showing all record
-            filterExpression = filterExpression && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert)
+            filterExpression = filterExpression && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
         }
         for type in filterTypes {
             let filter = getFilter(for: type)
@@ -531,7 +539,7 @@ class DatabaseManager: DatabaseHandler {
         var logs: [DriverLogModel] = []
         do {
             guard let db = self.db else { return nil}
-            var filterExpression = getFilter(for: .user) && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert)
+            var filterExpression = getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
             for type in filterTypes {
                 let filter = getFilter(for: type)
                 filterExpression = filterExpression && filter
@@ -586,7 +594,7 @@ class DatabaseManager: DatabaseHandler {
 
     func fetchLastRecord(before date: Date) -> DriverLogModel? {
         guard let db = self.db else { return nil }
-        let baseFilter = getFilter(for: .user) && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert)
+        let baseFilter = getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
         let filterExpression = baseFilter && startTime < date
         do {
             if let row = try db.pluck(driverLogs.filter(filterExpression).order(startTime.desc).limit(1)) {
@@ -739,10 +747,12 @@ extension DatabaseManager {
         //isVoilations: String
 
     ) {
+        
+        
         var originType = origin
         
         // originType will be `Unidentified` when Odometer or Engine hour value is Zero
-        if AppStorageHandler.shared.odometer == 0 || AppStorageHandler.shared.engineHours == 0 {
+        if SharedInfoManager.shared.odometer == 0 || SharedInfoManager.shared.engineHours == 0 {
             originType = OriginType.unidentified.description
         }
         AppStorageHandler.shared.origin = originType
@@ -759,11 +769,11 @@ extension DatabaseManager {
             vehicle: AppStorageHandler.shared.vehicleNo ?? "",
                 //UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
             isRunning: isruning,
-            odometer: AppStorageHandler.shared.odometer,
-            engineHours: "\(AppStorageHandler.shared.engineHours)",
-            location: AppStorageHandler.shared.customLocation ?? "",
-            lat: AppStorageHandler.shared.lattitude ?? 0,
-            long: AppStorageHandler.shared.longitude ?? 0,
+            odometer: SharedInfoManager.shared.odometer,
+            engineHours: "\(SharedInfoManager.shared.engineHours)",
+            location: SharedInfoManager.shared.customLocation,
+            lat: SharedInfoManager.shared.lattitude,
+            long: SharedInfoManager.shared.longitude,
             origin: originType,
             isSynced: false,
             vehicleId: AppStorageHandler.shared.vehicleId ?? 0,

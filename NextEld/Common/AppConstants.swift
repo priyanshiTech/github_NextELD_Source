@@ -26,6 +26,8 @@ struct AppConstants {
     static let nextDayAlert = "next_day_alert"
     static let shiftChanged = "shift_changed"
     static let nextDayAlertTitle = "Next Day Alert"
+    static let engineOn = "Engine On"
+    static let engineOff = "Engine Off"
     
     
     

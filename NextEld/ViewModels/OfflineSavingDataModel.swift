@@ -50,13 +50,12 @@ class SyncViewModel: ObservableObject {
             let safeStatus = normalizedStatus(log.status)
             let safeLogType = "log"
             
-            let storedLocation = AppStorageHandler.shared.customLocation ??
-            UserDefaults.standard.string(forKey: "customLocation") ?? "Unknown Location"
+            let storedLocation = SharedInfoManager.shared.customLocation
             let trimmedLocation = log.location.trimmingCharacters(in: .whitespacesAndNewlines)
             let safeLocation = trimmedLocation.isEmpty ? storedLocation : trimmedLocation
             
-            let safeLatitude = AppStorageHandler.shared.lattitude ?? 0//log.lat == 0 ? (AppStorageHandler.shared.lattitude ?? 0) : log.lat
-            let safeLongitude = AppStorageHandler.shared.longitude ?? 0//log.long == 0 ? (AppStorageHandler.shared.longitude ?? 0) : log.long
+            let safeLatitude = SharedInfoManager.shared.lattitude//log.lat == 0 ? (AppStorageHandler.shared.lattitude ?? 0) : log.lat
+            let safeLongitude = SharedInfoManager.shared.longitude//log.long == 0 ? (AppStorageHandler.shared.longitude ?? 0) : log.long
 ////
             return DriveringStatusData(
                 appVersion: AppInfo.version,
@@ -127,14 +126,14 @@ class SyncViewModel: ObservableObject {
     }
     
     func getLocation() async {
-        let lattitude = AppStorageHandler.shared.lattitude ?? 0
-        let longitude = AppStorageHandler.shared.longitude ?? 0
+        let lattitude = SharedInfoManager.shared.lattitude
+        let longitude = SharedInfoManager.shared.longitude
         if lattitude == 0 && longitude == 0 { return }
         do {
             let response = try await NetworkManager.shared.get(.getLocation(lattitude: lattitude, Longitude: longitude))
             
             if let result = response["results"] as? [[String:Any]], let formattedAddress = result.first?["formatted_address"] as? String {
-                AppStorageHandler.shared.customLocation = formattedAddress
+                SharedInfoManager.shared.customLocation = formattedAddress
             }
         } catch {
             

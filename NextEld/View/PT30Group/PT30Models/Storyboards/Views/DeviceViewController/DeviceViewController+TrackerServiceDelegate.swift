@@ -58,15 +58,8 @@ extension DeviceViewController: TrackerServiceDelegate {
         dashboardReportView.fuelEconomyLabel.text = virtualDashboardData.averageFuelEconomy != nil ? "\(virtualDashboardData.averageFuelEconomy!.roundTo(numberOfDecimals: 2))" : "-"
         dashboardReportView.ambientTemperatureLabel.text = virtualDashboardData.ambientAirTemperature != nil ? "\(virtualDashboardData.ambientAirTemperature!.roundTo(numberOfDecimals: 2))" : "-"
         dashboardReportView.odometerLabel.text = virtualDashboardData.odometer != nil ? "\(virtualDashboardData.odometer!)" : "-"
-        AppStorageHandler.shared.odometer = virtualDashboardData.odometer ?? 0
-        
         dashboardReportView.engineHoursLabel.text = virtualDashboardData.engineHours != nil ? "\(virtualDashboardData.engineHours!)" : "-"
-        
-        AppStorageHandler.shared.engineHours = virtualDashboardData.engineHours ?? 0
-       
         dashboardReportView.idleHoursLabel.text = virtualDashboardData.idleHours != nil ? "\(virtualDashboardData.speed!)" : "-"
-        
-        
         dashboardReportView.PTOLabel.text = virtualDashboardData.PTOHours != nil ? "\(virtualDashboardData.PTOHours!)" : "-"
         dashboardReportView.totalFuelIdleLabel.text = virtualDashboardData.totalIdleFuel != nil ? "\(virtualDashboardData.totalIdleFuel!)" : "-"
         dashboardReportView.totalFuelUsedLabel.text = virtualDashboardData.totalFuelUsed != nil ? "\(virtualDashboardData.totalFuelUsed!)" : "-"
@@ -141,12 +134,21 @@ extension DeviceViewController: TrackerServiceDelegate {
         deviceInfoView.rpmLabel.text = "\(event.rpm)"
         
         // Store values in local to evalute later
-        AppStorageHandler.shared.lattitude = Double(event.geolocation.latitude)
-        AppStorageHandler.shared.longitude = Double(event.geolocation.longitude)
-        AppStorageHandler.shared.odometer = Double(event.odometer)
-        AppStorageHandler.shared.engineHours = Double(event.engineHours)
-        HomeViewModel.engineStartNotification.send(event.rpm)
-        
+//        AppStorageHandler.shared.lattitude = Double(event.geolocation.latitude)
+//        AppStorageHandler.shared.longitude = Double(event.geolocation.longitude)
+//        AppStorageHandler.shared.odometer = Double(event.odometer)
+//        AppStorageHandler.shared.engineHours = Double(event.engineHours)
+        //HomeViewModel.engineStartNotification.send(event.rpm)
+        let userInfo = [
+            "speed": convertKmToMile(event.velocity),
+            "rpm": event.rpm,
+            "lattitude": Double(event.geolocation.latitude),
+            "longitude": Double(event.geolocation.longitude),
+            "odometer": Double(event.odometer),
+            "engineHours": Double(event.engineHours)
+        ] as [String : Any]
+        NotificationCenter.default.post(name: .engineStartStopNotification, object: nil, userInfo: userInfo)
+
         // returning true tell tracker that the event was processed so that it
         // doesn't need to store it trakcer's memory
         processed(true)
@@ -240,6 +242,10 @@ extension DeviceViewController: TrackerServiceDelegate {
         if #available(iOS 13.0, *) {
             self.firmwareUpdateViewController?.isModalInPresentation = false
         }
+    }
+    
+    func convertKmToMile(_ km: Int) -> Double {
+        return Double(km) * 0.621371
     }
     
    

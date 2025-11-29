@@ -34,11 +34,6 @@ struct AppStorageHandler {
     @AppStorage("onDriveTime") var onDriveTime: Double?
     @AppStorage("onSleepTime") var onSleepTime: Double?
     @AppStorage("continueDriveTime") var continueDriveTime: Double?
-    @AppStorage("customLocation") var customLocation: String?
-    @AppStorage("lattitude") var lattitude: Double?
-    @AppStorage("longitude") var longitude: Double?
-    @AppStorage("odometer") var odometer: Double = 0
-    @AppStorage("engineHours") var engineHours: Double = 0
     @AppStorage("logType") var logType: String?
     @AppStorage("employeeId") var employeeId: Int?
     @AppStorage("clientName")var company: String?
@@ -48,8 +43,7 @@ struct AppStorageHandler {
     @AppStorage("yardMoves") var yardMovesActive: String?
     @AppStorage("exempt") var exempt: String?
     @AppStorage("disclaimerRead") var disclaimerRead:Int?
-    @AppStorage("isEngineStarted") var isEngineStarted: Bool = false
-    @AppStorage("isEngineStarted") var isEngineOff: Bool = true
+    
     @AppStorage("trailer") var TrailerInput:String?
     
     
