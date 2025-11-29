@@ -275,6 +275,7 @@ class DatabaseManager: DatabaseHandler {
             return self.status == AppConstants.on_Drive
         case .betweenDates(let startDate, let endDate):
             return startTime >= startDate && startTime < endDate
+            
         case .specificDay(let currentDay):
             return day == currentDay
         case .shift:
@@ -343,7 +344,45 @@ class DatabaseManager: DatabaseHandler {
         } catch {
             print("Erooorrrooororor-------------- Fetch Error: \(error)")
         }
-        return logs
+        
+        // Remove duplicates: Keep only one entry per status + startTime combination
+        // Since logs are already ordered by startTime.desc, first occurrence is most recent
+        // Use time window (2 seconds) to catch near-duplicates
+        var uniqueLogs: [DriverLogModel] = []
+        
+        for log in logs {
+            var isDuplicate = false
+            
+            // Check if this log is a duplicate of any already added log
+            for existingLog in uniqueLogs {
+                // Same status and userId
+                if existingLog.status == log.status && existingLog.userId == log.userId {
+                    // Check if startTime is within 2 seconds
+                    let timeDifference = abs(existingLog.startTime.timeIntervalSince(log.startTime))
+                    if timeDifference <= 2.0 {
+                        isDuplicate = true
+                        break
+                    }
+                }
+            }
+            
+            // Also check by serverId if available (most reliable)
+            if let serverId = log.serverId, !serverId.isEmpty {
+                for existingLog in uniqueLogs {
+                    if let existingServerId = existingLog.serverId,
+                       existingServerId == serverId && existingLog.userId == log.userId {
+                        isDuplicate = true
+                        break
+                    }
+                }
+            }
+            
+            if !isDuplicate {
+                uniqueLogs.append(log)
+            }
+        }
+        
+        return uniqueLogs
     }
     
     // MARK: - Get Most Recent Trailer from Database
@@ -405,10 +444,41 @@ class DatabaseManager: DatabaseHandler {
             let originCode = UserDefaults.standard.integer(forKey: "origin") // or from API
             let originValue = OriginType(rawValue: originCode)?.description ?? "Driver" // default
 
+            // Parse dateTime from server log, fallback to current time if parsing fails
+            var logStartTime: Date = DateTimeHelper.currentDateTime()
+            if let dateTimeString = log.dateTime, !dateTimeString.isEmpty {
+                // Try to parse the dateTime string
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                formatter.timeZone = TimeZone.current
+                
+                // Try multiple date formats
+                if let parsedDate = formatter.date(from: dateTimeString) {
+                    logStartTime = parsedDate
+                } else {
+                    // Try ISO8601 format
+                    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                    if let parsedDate = formatter.date(from: dateTimeString) {
+                        logStartTime = parsedDate
+                    } else {
+                        // Try with timezone offset
+                        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+                        if let parsedDate = formatter.date(from: dateTimeString) {
+                            logStartTime = parsedDate
+                        } else {
+                            print("Could not parse dateTime: \(dateTimeString), using current time")
+                        }
+                    }
+                }
+            } else if let utcDateTime = log.utcDateTime {
+                // Use UTC timestamp if available
+                logStartTime = Date(timeIntervalSince1970: TimeInterval(utcDateTime) / 1000.0)
+            }
+
             let model = DriverLogModel(
                 id: nil,
                 status: log.status ?? "Unknown",
-                startTime: DateTimeHelper.currentDateTime(),
+                startTime: logStartTime,
                 userId: log.driverId ?? 0,
                 day: log.days ?? 0,
                 isVoilations: log.isVoilation ?? 0,
@@ -461,6 +531,48 @@ class DatabaseManager: DatabaseHandler {
         if skipStatuses.contains(normalizedStatus) {
             print(" Skipping log insert for status: \(model.status)")
             return
+        }
+        
+        // Check for duplicate: First by serverId (most reliable), then by status + startTime + userId
+        // This prevents inserting the same log multiple times
+        do {
+            // First check: If serverId exists, check for duplicate by serverId
+            if let serverId = model.serverId, !serverId.isEmpty {
+                let serverIdCheck = driverLogs.filter(
+                    self.serverId == serverId &&
+                    userId == model.userId
+                )
+                let serverIdCount = try db?.scalar(serverIdCheck.count) ?? 0
+                if serverIdCount > 0 {
+                    print(" Duplicate log found by serverId: \(serverId), skipping insert")
+                    return
+                }
+            }
+            
+            // Second check: Check for same status + startTime (within 2 seconds) + userId
+            // This catches duplicates even if serverId is missing
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let timeString = formatter.string(from: model.startTime)
+            
+            // Check for logs with same status, userId, and startTime within 2 seconds
+            let twoSecondsBefore = model.startTime.addingTimeInterval(-2.0)
+            let twoSecondsAfter = model.startTime.addingTimeInterval(2.0)
+            
+            let duplicateCheck = driverLogs.filter(
+                status == model.status &&
+                userId == model.userId &&
+                startTime >= twoSecondsBefore &&
+                startTime <= twoSecondsAfter
+            )
+            
+            let existingCount = try db?.scalar(duplicateCheck.count) ?? 0
+            if existingCount > 0 {
+                print(" Duplicate log found (status: \(model.status), time: \(timeString)), skipping insert")
+                return
+            }
+        } catch {
+            print(" Error checking for duplicate: \(error), proceeding with insert")
         }
         
         do {

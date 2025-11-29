@@ -363,7 +363,7 @@ struct HOSEventsChart: View {
         case .onDuty: return "ON"
         case .onDrive: return "D"
         case .sleep: return "SB"
-        case .offDuty: return "OF"
+        case .offDuty: return "OFF"
         default: return "OF"
         }
     }

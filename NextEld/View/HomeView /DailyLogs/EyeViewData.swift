@@ -12,12 +12,11 @@ struct EyeViewData: View {
    // @State var tittle: String
     @EnvironmentObject var navManager: NavigationManager
     @StateObject var viewModel = DriverStatusViewModel(networkManager: NetworkManager.shared)
- 
+    @StateObject private var homeVM : HomeViewModel = .init()
     var title: String
     let entry: WorkEntry
     @State private var selectedDate: Date
-    @State private var hoseEvents: [HOSEvent] = []
-    
+  
     init(title: String, entry: WorkEntry) {
         self.title = title
         self.entry = entry
@@ -53,12 +52,7 @@ struct EyeViewData: View {
                         .foregroundColor( Color(uiColor:.white))
                         .fontWeight(.semibold)
                     Spacer()
-                    
-//                    HStack(spacing: 5) {
-//                        CustomIconButton(iconName: "eye_fill_icon", title: "", action: {
-//                            navManager.navigate(to: AppRoute.LogsFlow.EyeViewData(title: "daily Logs", entry: entry))
-//                    })
-//                    }
+
                 }
                 .padding(.horizontal)
                 .frame(height: 50)
@@ -173,7 +167,7 @@ struct EyeViewData: View {
                         )
 
                         VStack {
-                            HOSEventsChartScreen(events: hoseEvents)
+                            HOSEventsChartScreen(events: homeVM.graphEvents)
                         }
 
                         VStack(alignment: .leading) {
@@ -257,11 +251,7 @@ struct EyeViewData: View {
             token: AppStorageHandler.shared.authToken ?? ""
         
         )
-        if let records = viewModel.data?.result, !(records.isEmpty) {
-            hoseEvents = buildEvents(from: records, for: selectedDate)
-        } else {
-            hoseEvents = loadGraphEventsFromDatabase(for: selectedDate)
-        }
+
     }
 
     private func loadGraphEventsFromDatabase(for date: Date) -> [HOSEvent] {

@@ -15,7 +15,8 @@ struct LogsDetails: View {
     @State private var allLogs: [DriverLogModel] = []
     @State private var timerTick: Int = 0
     @State private var timer: Timer?
-    
+    @StateObject private var homeVM : HomeViewModel = .init()
+
     init(title: String, entry: WorkEntry) {
         self.title = title
         self.entry = entry
@@ -78,7 +79,7 @@ struct LogsDetails: View {
             }  .background(Color.white.shadow(radius: 5))
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
-                    HOSEventsChartScreen(events: hoseEventsForSelectedDate)
+                    HOSEventsChartScreen(events: homeVM.graphEvents)
                         .frame(maxWidth: .infinity)
                     
                     Text("Version - OS/02/May")
@@ -90,6 +91,7 @@ struct LogsDetails: View {
                 .padding()
             }
         }.navigationBarBackButtonHidden()
+        
         .onAppear {
             if allLogs.isEmpty {
                 loadLogsFromDatabase()
