@@ -43,6 +43,10 @@ class BluetoothViewModel: NSObject, ObservableObject {
             centralManager.cancelPeripheralConnection(device)
         }
     }
+
+    private func broadcastConnectionChange(_ isConnected: Bool) {
+        DeviceConnectionNotifier.updateConnectionState(isConnected: isConnected)
+    }
     private func parseReceivedLine(_ line: String) {
         let components = line.split(separator: ":", maxSplits: 1).map { String($0) }
         guard components.count == 2 else { return }
@@ -106,15 +110,18 @@ extension BluetoothViewModel: CBCentralManagerDelegate {
         connectedDevice = peripheral
         peripheral.delegate = self
         peripheral.discoverServices(nil)
+        broadcastConnectionChange(true)
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         connectedDevice = nil
         receivedText.removeAll()
+        broadcastConnectionChange(false)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         print("Failed to connect: \(error?.localizedDescription ?? "Unknown error")")
+        broadcastConnectionChange(false)
     }
 }
 

@@ -1615,6 +1615,9 @@
         }
       }
     },
+    "Please change your duty status to Off Duty before logging out." : {
+
+    },
     "Please display required logs as per FMCSA and CCATM" : {
       "localizations" : {
         "pa" : {
@@ -2065,6 +2068,9 @@
           }
         }
       }
+    },
+    "Switch to Off Duty" : {
+
     },
     "Switch to Off-Duty before Co-Driver can login." : {
       "localizations" : {

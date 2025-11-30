@@ -322,8 +322,8 @@ struct HOSEventsChart: View {
     let events: [HOSEvent]
     let rowHeight: CGFloat = 35  // Restored original row height
     
-    private let dutyLabels = ["OF", "SB", "D", "ON"]
-    private let levelMap = ["OF": 0, "SB": 1, "D": 2, "ON": 3]
+    private let dutyLabels = ["OFF", "SB", "D", "ON"]
+    private let levelMap = ["OFF": 0, "SB": 1, "D": 2, "ON": 3]
     
     // Calculate durations for each duty type
     private func calculateDurations() -> [String: TimeInterval] {
@@ -363,7 +363,7 @@ struct HOSEventsChart: View {
         case .onDuty: return "ON"
         case .onDrive: return "D"
         case .sleep: return "SB"
-        case .offDuty: return "OF"
+        case .offDuty: return "OFF"
         default: return "OF"
         }
     }

@@ -7,6 +7,7 @@
 //
 
 import CoreBluetooth
+import SwiftUI
 
 extension DeviceListViewController: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -30,6 +31,7 @@ extension DeviceListViewController: CBCentralManagerDelegate {
         discoveredPeripherals.removeAll()
         SharedInfoManager.shared.isDeviceConnected = false
         state = .idle
+        DeviceConnectionNotifier.updateConnectionState(isConnected: false)
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -37,12 +39,15 @@ extension DeviceListViewController: CBCentralManagerDelegate {
         targetPeripheral = peripheral
         discoveredPeripherals.removeAll()
         SharedInfoManager.shared.isDeviceConnected = true
+        DeviceConnectionNotifier.updateConnectionState(isConnected: true)
         performSegue(withIdentifier: "deviceDetails", sender: self)
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         resetVCs()
         state = .idle
+        SharedInfoManager.shared.isDeviceConnected = false
+        DeviceConnectionNotifier.updateConnectionState(isConnected: false)
         if error != nil {
             if AppConfig.autoReconnect {
                 reconnectTimeoutTimer?.invalidate()

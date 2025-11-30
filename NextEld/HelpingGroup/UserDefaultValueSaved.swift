@@ -43,7 +43,7 @@ struct AppStorageHandler {
     @AppStorage("yardMoves") var yardMovesActive: String?
     @AppStorage("exempt") var exempt: String?
     @AppStorage("disclaimerRead") var disclaimerRead:Int?
-    
+    @AppStorage("isDeviceConnected") var isDeviceConnected: Bool = false
     @AppStorage("trailer") var TrailerInput:String?
     
     
@@ -64,6 +64,17 @@ struct AppStorageHandler {
             UserDefaults.standard.removePersistentDomain(forName: bundleID)
             print("All @AppStorage values for bundle ID '\(bundleID)' have been reset.")
         }
+    }
+}
+
+extension Notification.Name {
+    static let deviceConnectionChanged = Notification.Name("deviceConnectionChanged")
+}
+
+enum DeviceConnectionNotifier {
+    static func updateConnectionState(isConnected: Bool) {
+        AppStorageHandler.shared.isDeviceConnected = isConnected
+        NotificationCenter.default.post(name: .deviceConnectionChanged, object: nil)
     }
 }
 

@@ -176,19 +176,27 @@ struct CertifySelectedView: View {
                             label: "Shipping Docs",
                             value: Binding(
                                 get: {
-                                    let docs = Array(shippingVM.ShippingDoc.prefix(10)) // starting se max 10 values
-                                    return docs.isEmpty ? "None" : docs.joined(separator: ", ")
+                                    if shippingVM.ShippingDoc.isEmpty {
+                                        return "None"
+                                    } else {
+                                        return shippingVM.ShippingDoc.prefix(10).joined(separator: ", ")
+                                    }
                                 },
                                 set: { newValue in
-                                    // Split newValue by comma if user edits it
-                                    let values = newValue.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-                                    shippingVM.ShippingDoc = Array(values.prefix(10))
+                                    let values = newValue
+                                        .split(separator: ",")
+                                        .map { $0.trimmingCharacters(in: .whitespaces) }
+                                    
+                                    if values.isEmpty {
+                                        shippingVM.ShippingDoc = []
+                                    } else {
+                                        shippingVM.ShippingDoc = Array(values.prefix(10))
+                                    }
                                 }
                             ),
                             editable: true
                         )
                         {
-                            hasLoadedInitialData = false
                             navManager.path.append(AppRoute.DvirFlow.ShippingDocment)
                         }
 
@@ -369,27 +377,37 @@ struct CertifySelectedView: View {
                 SelectedVechicle = record.selectedVehicle
             }
 
-            if record.selectedTrailer != "None" {
+            if record.selectedTrailer != "None" && !record.selectedTrailer.isEmpty {
                 trailerVM.trailers = record.selectedTrailer
                     .split(separator: ",")
                     .map { $0.trimmingCharacters(in: .whitespaces) }
+                    .filter { !$0.isEmpty }
                 SelectedTraller = record.selectedTrailer
             } else {
                 trailerVM.trailers = []
             }
 
-            if record.selectedShippingDoc != "None" {
-                shippingVM.ShippingDoc = record.selectedShippingDoc
-                    .split(separator: ",")
-                    .map { $0.trimmingCharacters(in: .whitespaces) }
-                SelectedSheeping = record.selectedShippingDoc
+            // Load shipping docs from database - preserve user's current changes if they exist
+            if shippingVM.ShippingDoc.isEmpty {
+                // Only load from database if shippingVM is empty (preserve user's changes)
+                if record.selectedShippingDoc != "None" && !record.selectedShippingDoc.isEmpty {
+                    shippingVM.ShippingDoc = record.selectedShippingDoc
+                        .split(separator: ",")
+                        .map { $0.trimmingCharacters(in: .whitespaces) }
+                        .filter { !$0.isEmpty }
+                    SelectedSheeping = record.selectedShippingDoc
+                } else {
+                    shippingVM.ShippingDoc = []
+                }
             } else {
-                shippingVM.ShippingDoc = []
+                SelectedSheeping = shippingVM.ShippingDoc.joined(separator: ", ")
             }
-
             selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
             coDriver = record.selectedCoDriver
             selectedCoID = record.coDriverID
+        } else {
+            // If no record found, ensure shipping docs are loaded from current state
+            // Don't clear if user has added docs but not saved yet
         }
 
         hasLoadedInitialData = true

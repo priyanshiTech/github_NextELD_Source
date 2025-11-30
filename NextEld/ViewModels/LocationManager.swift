@@ -7,7 +7,9 @@ import CoreLocation
 import MapKit
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    
     private let locationManager = CLLocationManager()
+    
     @Published var isUpdatingLocation: Bool = false
     @Published var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 22.7196, longitude: 75.8577),

@@ -23,6 +23,7 @@ extension DatabaseManager {
     }
     
     func getLastRecordForSplitShiftLog() -> SplitShiftLog? {
+        
         var splitShiftLogs: [SplitShiftLog] = []
         guard let db else { return nil }
         do {

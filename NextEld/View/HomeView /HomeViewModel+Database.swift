@@ -9,10 +9,27 @@ extension HomeViewModel {
         if messge.isEmpty {
             messge = status
         }
+        
+        let startTime = date ?? DateTimeHelper.currentDateTime()
+        let originDescription = originType.description
+        
+        // Check for duplicate entry: same status, origin, and startTime within 30 seconds
+        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day])
+        let tolerance: TimeInterval = 30 // 30 seconds tolerance
+        let hasDuplicate = allLogs.contains { log in
+            log.status == status &&
+            log.origin == originDescription &&
+            abs(log.startTime.timeIntervalSince(startTime)) <= tolerance
+        }
+        
+        if hasDuplicate {
+            print(" ⚠️ Duplicate log entry detected - skipping save for \(status) at \(startTime)")
+            return
+        }
 
         DatabaseManager.shared.saveTimerLog(
             status: status,
-            startTime: date ?? DateTimeHelper.currentDateTime(),
+            startTime: startTime,
             dutyType: messge,
             remainingWeeklyTime: Int(cycleTimer?.remainingTime ?? 0),
             remainingDriveTime: Int(onDriveTimer?.remainingTime ?? 0),
@@ -23,7 +40,7 @@ extension HomeViewModel {
             RemaningRestBreak: "True",
             isruning: true,
             isVoilations: false,
-            origin: originType.description
+            origin: originDescription
         )
 
         print(" Timer state saved successfully for \(status)")

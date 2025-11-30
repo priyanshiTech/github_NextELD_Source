@@ -853,7 +853,18 @@ class HomeViewModel: ObservableObject {
         let startTime = lastLog.startTime
         let afterOneHourTime = DateTimeHelper.calendar.date(byAdding: .hour, value: 1, to: startTime) ?? DateTimeHelper.currentDateTime()
         let currentTime = DateTimeHelper.currentDateTime()
-        if afterOneHourTime <= currentTime && lastLog.odometer != .zero {
+        
+        // Check if intermediate log already exists for this time (within 5 minutes tolerance)
+        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day])
+        let tolerance: TimeInterval = 5 * 60 // 5 minutes
+        let intermediateOrigin = OriginType.intermediate.description
+        let hasExistingIntermediateLog = allLogs.contains { log in
+            log.status == lastLog.status &&
+            log.origin == intermediateOrigin &&
+            abs(log.startTime.timeIntervalSince(afterOneHourTime)) <= tolerance
+        }
+        
+        if afterOneHourTime <= currentTime && lastLog.odometer != .zero && !hasExistingIntermediateLog {
             saveTimerStateForStatus(status: lastLog.status, originType: .intermediate, date: afterOneHourTime)
         }
     }

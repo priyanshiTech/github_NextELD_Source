@@ -88,17 +88,17 @@ struct LoginScreen: View {
                             .foregroundColor(Color(uiColor: .wine))
                     }
                 }
-                .inputBoxStyle(isValid: password.isEmpty || isValidPassword(password))
+                .inputBoxStyle(isValid: password.isEmpty)
                 
                 // Inline validation message
-                if !password.isEmpty && !isValidPassword(password) {
-                    // Text("Password must be 8+ chars, 1 uppercase, 1 number & 1 symbol")
-                    Text( "Password must be numeric (min 4 digits)")
-                        .foregroundColor(Color(uiColor:.red))
-                        .font(.caption)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 5)
-                }
+//                if !password.isEmpty && !isValidPassword(password) {
+//                    // Text("Password must be 8+ chars, 1 uppercase, 1 number & 1 symbol")
+//                    Text( "Password must be numeric (min 6 digits)")
+//                        .foregroundColor(Color(uiColor:.red))
+//                        .font(.caption)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                        .padding(.horizontal, 5)
+//                }
                 
                 // Forget Password
                 Button {
@@ -137,16 +137,12 @@ struct LoginScreen: View {
                         .foregroundColor(Color(uiColor: .wine))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(
-                            isValidPassword(password)
-                            ? Color(UIColor.systemBackground)
-                            : Color(UIColor.systemGray4)
-                        )
+                        .background(Color(UIColor.systemGray4))
                         .cornerRadius(10)
                 }
                 
                 .frame(width: txtFieldWidth, height: txtFieldHeight)
-                .disabled(!isValidPassword(password))
+               // .disabled(!isValidPassword(password))
 
                 // Loading indicator
                 if loginVM.isLoading {
@@ -275,8 +271,7 @@ func isValidUsername(_ username: String) -> Bool {
 //  Password Validation (Only Numbers, min 4 digits)
 func isValidPassword(_ password: String) -> Bool {
     
-    let passwordRegex =  "^[A-Za-z0-9@#$%^&+=!]{4,}$"
-    return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
+    return password.count >= 6
 }
 
 
