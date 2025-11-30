@@ -204,10 +204,10 @@ class LoginViewModel: ObservableObject {
                 }
                 
                 //Save Location (if available)
-                    if let location = response.result?.driverLog?.first?.customLocation {
-                        SharedInfoManager.shared.customLocation = location
-                    print(" Saved location: \(location)")
-                    }
+//                    if let location = response.result?.driverLog?.first?.customLocation {
+//                        SharedInfoManager.shared.customLocation = location
+//                    print(" Saved location: \(location)")
+//                    }
                 
                 //Save Latitude
                     if let latitude = response.result?.driverLog?.first?.lattitude {

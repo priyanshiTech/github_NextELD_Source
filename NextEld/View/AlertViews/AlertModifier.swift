@@ -61,7 +61,7 @@ struct StatusDetailsPopup: View {
     var statusTitle: String
     var onClose: () -> Void
     var onSubmit: (_ note: String) -> Void
-   @StateObject var DVClocationManager = DeviceLocationManager()
+    @State private var address = ""
 
     @State private var note: String = ""
 
@@ -101,7 +101,7 @@ struct StatusDetailsPopup: View {
                         .font(.subheadline)
                     
                     
-                    if let address = DVClocationManager.fullAddress {
+                    if !address.isEmpty {
                         Text(address)
                             .foregroundColor(Color(uiColor: .wine))
                             .font(.body)
@@ -155,6 +155,11 @@ struct StatusDetailsPopup: View {
             .background(Color.white)
             .cornerRadius(16)
             .shadow(radius: 10)
+            .onAppear {
+                Task { @MainActor in
+                    self.address = await SyncViewModel().getLocation()
+                }
+            }
         }
     }
 }

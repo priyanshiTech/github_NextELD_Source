@@ -747,7 +747,10 @@ extension DatabaseManager {
         //isVoilations: String
 
     ) {
-        
+        var address = ""
+        Task { @MainActor in
+            address = await SyncViewModel().getLocation()
+        }
         
         var originType = origin
         
@@ -771,7 +774,7 @@ extension DatabaseManager {
             isRunning: isruning,
             odometer: SharedInfoManager.shared.odometer,
             engineHours: "\(SharedInfoManager.shared.engineHours)",
-            location: SharedInfoManager.shared.customLocation,
+            location: address,
             lat: SharedInfoManager.shared.lattitude,
             long: SharedInfoManager.shared.longitude,
             origin: originType,

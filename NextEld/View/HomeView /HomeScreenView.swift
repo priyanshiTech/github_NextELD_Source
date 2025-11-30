@@ -85,7 +85,6 @@ struct HomeScreenView: View {
     
     let times = DateTimeHelperVoilation.getLocalAndGMT()
     @State private var showDvirPopup = false
-    @StateObject var deviceLocationManager = DeviceLocationManager()
     
     var body: some View {
         
@@ -178,8 +177,7 @@ struct HomeScreenView: View {
                     
                         // Close the popup after submit
                         homeVM.showDriverStatusAlert.showAlert = false
-                    },
-                    DVClocationManager: deviceLocationManager
+                    }
                 )
             }
             //nitin

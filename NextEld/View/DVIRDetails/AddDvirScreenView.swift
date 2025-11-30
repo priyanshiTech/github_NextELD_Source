@@ -12,7 +12,7 @@ struct AddDvirScreenView: View  {
     @EnvironmentObject var navmanager: NavigationManager
     @StateObject var trailerVM: TrailerViewModel = .init()
     @StateObject var vehicleVM: VehicleConditionViewModel = .init()
-    @StateObject var DVClocationManager: DeviceLocationManager = .init()
+   // @StateObject var DVClocationManager: DeviceLocationManager = .init()
     @StateObject var viewModel = AddDvirScreenViewModel()
     // "Truck" or "Trailer"
     @StateObject var defectVM = DefectAPIViewModel(networkManager: NetworkManager())
@@ -21,6 +21,7 @@ struct AddDvirScreenView: View  {
     @Binding var trailers: [String]
     var isFromHome: Bool = false    //MARK: -  To handle Home Screen flag
     var existingRecord: DvirRecord?
+    @State private var address = ""
     
     // Computed property to determine button text based on whether editing or adding
     private var buttonText: String {
@@ -92,7 +93,7 @@ struct AddDvirScreenView: View  {
                                 DvirField(label: "Date", value: viewModel.StartTime.isEmpty ? DateTimeHelper.currentDate() : viewModel.StartTime)
                                 DvirField(label: "Odometer", value: "0")
                                 DvirField(label: "Company", value: viewModel.companyName)
-                                DvirField(label: "Location", value: DVClocationManager.fullAddress ?? "Not found")
+                                DvirField(label: "Location", value: self.address)
             }
                             }
                         }
@@ -298,9 +299,8 @@ struct AddDvirScreenView: View  {
                 loadRecordData()
                 
                 // Update Location from DVClocationManager if available
-                if let currentLocation = DVClocationManager.fullAddress, !currentLocation.isEmpty {
-                    viewModel.Location = currentLocation
-                    print(" Location updated from DVClocationManager: \(currentLocation)")
+                if !self.address.isEmpty {
+                    viewModel.Location = address
                 }
                 
                 if trailers != trailerVM.trailers {
@@ -387,6 +387,9 @@ struct AddDvirScreenView: View  {
             }
         }
         .onAppear {
+            Task { @MainActor in
+                self.address = await SyncViewModel().getLocation()
+            }
             defectVM.appRootManager = appRootManager
             Task {
                 let success = await defectVM.fetchDefects()
@@ -498,13 +501,10 @@ struct AddDvirScreenView: View  {
         }
         
         // Update Location from DVClocationManager before saving
-        if let currentLocation = DVClocationManager.fullAddress, !currentLocation.isEmpty, currentLocation != "Not found" {
-            viewModel.Location = currentLocation
-            print(" Location updated before save: \(currentLocation)")
-        } else {
-            print(" Location from DVClocationManager is not available, using stored Location: \(viewModel.Location)")
+        if !address.isEmpty {
+            viewModel.Location = address
+            print(" Location updated before save: \(address)")
         }
-        
         // Set date/time if empty
         if viewModel.StartTime.isEmpty {
             viewModel.StartTime = DateTimeHelper.currentDate()
@@ -601,9 +601,7 @@ struct AddDvirScreenView: View  {
         print(" Notes: \(viewModel.notesText)")
         print(" Condition: \(vehicleVM.selectedCondition ?? "None")")
         
-        // Get actual location from DVClocationManager (current location)
-        let actualLocation = DVClocationManager.fullAddress ?? viewModel.Location
-        print(" Location from DVClocationManager: \(DVClocationManager.fullAddress ?? "nil")")
+        let actualLocation = address.isEmpty ? viewModel.Location : address
         print(" Location from UserDefaults: \(viewModel.Location)")
         print(" Using Location: \(actualLocation)")
         
@@ -709,11 +707,11 @@ struct AddDvirScreenView: View  {
     
         //MARK: - load login data into swiftui
     func loadLoginData() {
-        viewModel.driverName = UserDefaults.standard.string(forKey: "driverName") ?? "N/A"
-        viewModel.Location = UserDefaults.standard.string(forKey: "customLocation") ?? "N/A"
+        viewModel.driverName = AppStorageHandler.shared.driverName ?? "N/A"//UserDefaults.standard.string(forKey: "driverName") ?? "N/A"
+        viewModel.Location = ""
         viewModel.companyName = AppStorageHandler.shared.company ?? ""
         //UserDefaults.standard.string(forKey: "companyName") ?? "N/A"
-        viewModel.driverID = UserDefaults.standard.string(forKey: "userId") ?? "n/a"
+        viewModel.driverID = "\(AppStorageHandler.shared.employeeId ?? 0)"
         // Set driverDVIRId from AppStorageHandler or UserDefaults
         viewModel.driverDVIRId = AppStorageHandler.shared.driverId ?? Int(viewModel.driverID) ?? 0
 

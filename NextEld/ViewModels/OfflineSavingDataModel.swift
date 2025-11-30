@@ -49,13 +49,9 @@ class SyncViewModel: ObservableObject {
             
             let safeStatus = normalizedStatus(log.status)
             let safeLogType = "log"
-            
-            let storedLocation = SharedInfoManager.shared.customLocation
-            let trimmedLocation = log.location.trimmingCharacters(in: .whitespacesAndNewlines)
-            let safeLocation = trimmedLocation.isEmpty ? storedLocation : trimmedLocation
-            
-            let safeLatitude = SharedInfoManager.shared.lattitude//log.lat == 0 ? (AppStorageHandler.shared.lattitude ?? 0) : log.lat
-            let safeLongitude = SharedInfoManager.shared.longitude//log.long == 0 ? (AppStorageHandler.shared.longitude ?? 0) : log.long
+            let safeLocation = log.location.trimmingCharacters(in: .whitespacesAndNewlines)
+            let safeLatitude = SharedInfoManager.shared.lattitude
+            let safeLongitude = SharedInfoManager.shared.longitude
 ////
             return DriveringStatusData(
                 appVersion: AppInfo.version,
@@ -67,7 +63,7 @@ class SyncViewModel: ObservableObject {
                 driverId: AppStorageHandler.shared.driverId ?? 0,
                 engineHour: log.engineHours,
                 engineStatus: log.engineStatus,
-                identifier: 0,
+                identifier: log.identifier,
                 isSplit: log.isSplit,
                 isVoilation: log.isVoilations,
                 lastOnSleepTime: Int(log.lastSleepTime),
@@ -86,7 +82,7 @@ class SyncViewModel: ObservableObject {
                 shift: log.shift,
                 status: safeStatus,
                 utcDateTime: Int(log.timestamp),
-                vehicleId: "\(AppStorageHandler.shared.vehicleId ?? 0)"
+                vehicleId: String(log.vehicleId)
             )
         }
         
@@ -125,20 +121,20 @@ class SyncViewModel: ObservableObject {
         }
     }
     
-    func getLocation() async {
+    func getLocation() async -> String {
         let lattitude = SharedInfoManager.shared.lattitude
         let longitude = SharedInfoManager.shared.longitude
-        if lattitude == 0 && longitude == 0 { return }
+        if lattitude == 0 && longitude == 0 { return ""}
         do {
             let response = try await NetworkManager.shared.get(.getLocation(lattitude: lattitude, Longitude: longitude))
             
             if let result = response["results"] as? [[String:Any]], let formattedAddress = result.first?["formatted_address"] as? String {
-                SharedInfoManager.shared.customLocation = formattedAddress
+                return formattedAddress
             }
         } catch {
-            
+            return ""
         }
-        
+        return ""
     }
 }
 

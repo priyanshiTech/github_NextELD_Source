@@ -62,6 +62,8 @@ struct TopBarView: View {
                 Button("Certify Log") {
                     navManager.navigate(to: AppRoute.DatabaseFlow.DatabaseCertifyView)
                 }
+                
+                
             } label: {
                 Text(labelValue)
                     .font(.system(size: 20))

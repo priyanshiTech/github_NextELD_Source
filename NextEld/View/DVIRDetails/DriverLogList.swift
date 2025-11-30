@@ -155,7 +155,6 @@ struct DriverLogHeader: View {
 }
 struct DriverLogRow: View {
     let log: DriverLogModel
-    @StateObject private var locationManager = DeviceLocationManager()
 
     var body: some View {
 
