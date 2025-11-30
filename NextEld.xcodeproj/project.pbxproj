@@ -224,6 +224,7 @@
 		AFF3666A2E587A8F0068AC2D /* excel_eld_instruction.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */; };
 		AFF3666C2E587AA20068AC2D /* excel_Manual_ppt.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */; };
 		AFFC64A22DCE1EE2008D1CC0 /* AlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */; };
+		AFFCF1E52EDCCBEC00D548DF /* BlockAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFCF1E42EDCCBEC00D548DF /* BlockAppView.swift */; };
 		CB283E722E9D5C5100B431DD /* HomeViewModel+Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB283E712E9D5C4400B431DD /* HomeViewModel+Database.swift */; };
 		CB29DA572EC7B44600269C93 /* DataBaseManagerClass+Recap.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB29DA562EC7B44600269C93 /* DataBaseManagerClass+Recap.swift */; };
 		CB4D817E2ECA803A00590F62 /* DisclamerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4D817C2ECA803A00590F62 /* DisclamerView.swift */; };
@@ -491,6 +492,7 @@
 		AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = excel_eld_instruction.pdf; sourceTree = "<group>"; };
 		AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = excel_Manual_ppt.pdf; sourceTree = "<group>"; };
 		AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModifier.swift; sourceTree = "<group>"; };
+		AFFCF1E42EDCCBEC00D548DF /* BlockAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockAppView.swift; sourceTree = "<group>"; };
 		CB283E712E9D5C4400B431DD /* HomeViewModel+Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+Database.swift"; sourceTree = "<group>"; };
 		CB29DA562EC7B44600269C93 /* DataBaseManagerClass+Recap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataBaseManagerClass+Recap.swift"; sourceTree = "<group>"; };
 		CB4D817C2ECA803A00590F62 /* DisclamerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclamerView.swift; sourceTree = "<group>"; };
@@ -661,6 +663,7 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFFCF1E32EDCCADA00D548DF /* AppBlockView */,
 				CB4D817D2ECA803A00590F62 /* Disclamer */,
 				AFBB48F72EBF23F100E88DD5 /* Terms&Condition */,
 				AF45BB792EB8AAC800DDDB4D /* VehicleConditionPopup */,
@@ -1535,6 +1538,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		AFFCF1E32EDCCADA00D548DF /* AppBlockView */ = {
+			isa = PBXGroup;
+			children = (
+				AFFCF1E42EDCCBEC00D548DF /* BlockAppView.swift */,
+			);
+			path = AppBlockView;
+			sourceTree = "<group>";
+		};
 		CB4D817D2ECA803A00590F62 /* Disclamer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1762,6 +1773,7 @@
 				AFE5DFFF2E5349B20069BE27 /* LogOutAPiViewModel.swift in Sources */,
 				CB283E722E9D5C5100B431DD /* HomeViewModel+Database.swift in Sources */,
 				AF910B5F2E14009100BCC9E9 /* VoilationsAlert's.swift in Sources */,
+				AFFCF1E52EDCCBEC00D548DF /* BlockAppView.swift in Sources */,
 				AF66F7A62E4CD00F009A13A0 /* CertifySignatureModel.swift in Sources */,
 				AF72E43D2DFD54B400626DC0 /* EyeViewData.swift in Sources */,
 				AF72E43E2DFD54B400626DC0 /* BluetoothPopup.swift in Sources */,

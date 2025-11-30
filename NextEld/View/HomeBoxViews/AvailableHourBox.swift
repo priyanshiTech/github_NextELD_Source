@@ -64,31 +64,7 @@ struct AvailableHoursView: View {
                         } else if type == .sleepTimer {
                             TimeBox(timer: homeViewModel.sleepTimer!, type: type, title: type.getName())
                         }
-                        
-//                        switch type {
-//                        case .onDuty:
-//                            
-//                        case .cycleTimer:
-//                            TimeBox(
-//                                type: type,
-//                                title: type.getName(),
-//                                time: homeViewModel.onDutyTimer
-//                            )
-//                        case .sleepTimer:
-//                            TimeBox(
-//                                type: type,
-//                                title: type.getName(),
-//                                time: homeViewModel.onDutyTimer
-//                            )
-//                        case .onDrive:
-//                            TimeBox(
-//                                type: type,
-//                                title: type.getName(),
-//                                time: homeViewModel.onDutyTimer
-//                            )
-//                        default:
-//                            break
-//                        }
+
                         
                     }
                    

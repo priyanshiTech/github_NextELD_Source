@@ -45,6 +45,7 @@ enum AppRoute: Hashable {
         case ADDVehicle
         case NewDriverLogin(title: String , email: String)
         case CertifySelectedView(tittle: String)
+        case BlockView
         
     }
     

@@ -253,6 +253,8 @@ struct DeviceScannerView: View {
                         tittle: title,
                         UserName: email
                     )
+                case .BlockView:
+                    BlockAppView()
                 }
             }
             .navigationDestination(for: AppRoute.LogsFlow.self) { route in
