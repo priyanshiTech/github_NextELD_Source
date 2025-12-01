@@ -331,6 +331,18 @@ class HomeViewModel: ObservableObject {
     @Published var breakTime: CountdownTimer? = nil
     @Published var refreshView: UUID = UUID()
     
+    // Block screen management
+    @Published var showBlockScreen: Bool = false
+    
+    // Speed tracking for block/unblock logic (internal access for extension)
+    var highSpeedList: [TimeInterval] = []  // Timestamps for speed > 5
+    var lowSpeedList: [TimeInterval] = []   // Timestamps for speed <= 5
+    let SPEED_WINDOW: TimeInterval = 60.0   // 60 seconds window
+    
+    // Cooldown period after manual dismissal (in seconds)
+    var blockScreenCooldownUntil: TimeInterval? = nil
+    let BLOCK_SCREEN_COOLDOWN: TimeInterval = 5.0  // 5 seconds cooldown
+    
     var alertType: AlertType = .sucessConfimration
     
     // SyncViewModel for syncOfflineData API

@@ -96,11 +96,24 @@ struct DateTimeHelper {
     }
     
     static func getStringFromDate(_ date: Date,
-                                  timeZone: TimeZone? = TimeZone(identifier: AppStorageHandler.shared.timeZone ?? ""),
+                                  timeZone: TimeZone? = nil,
                                   format: DateFormatterConstants = .defaultDateTime) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format.rawValue
-        dateFormatter.timeZone = timeZone
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        // Use provided timezone, or try to get from AppStorageHandler, or fall back to current timezone
+        if let providedTimeZone = timeZone {
+            dateFormatter.timeZone = providedTimeZone
+        } else if let storedTimeZoneString = AppStorageHandler.shared.timeZone,
+                  !storedTimeZoneString.isEmpty,
+                  let storedTimeZone = TimeZone(identifier: storedTimeZoneString) {
+            dateFormatter.timeZone = storedTimeZone
+        } else {
+            // Always use current timezone for display to ensure correct local time
+            dateFormatter.timeZone = TimeZone.current
+        }
+        
         return dateFormatter.string(from: date)
     }
     

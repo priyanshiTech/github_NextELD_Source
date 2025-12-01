@@ -388,6 +388,17 @@ struct HomeScreenView: View {
                 showToast(message: " No Internet Connection", color: .red)
             }
         }
+        .onChange(of: homeVM.showBlockScreen) { shouldBlock in
+            if shouldBlock {
+                // Navigate to BlockView when screen should be blocked
+                navManager.navigate(to: AppRoute.HomeFlow.BlockView)
+            } else {
+                // Pop navigation when screen is unblocked
+                if !navManager.path.isEmpty {
+                    navManager.path.removeLast()
+                }
+            }
+        }
         
         // Set alert type when sync confirmation is triggered
         .onChange(of: homeVM.showSyncconfirmation) { newValue in
@@ -731,6 +742,14 @@ struct HomeScreenView: View {
             case .PT30Connection:
                 PT30ConnectionView()
                     
+            }
+        }
+        .navigationDestination(for: AppRoute.HomeFlow.self) { route in
+            switch route {
+            case .BlockView:
+                BlockAppView(homeViewModel: homeVM)
+            default:
+                EmptyView()
             }
         }
     }

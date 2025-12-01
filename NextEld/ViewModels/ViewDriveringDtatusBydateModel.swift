@@ -44,7 +44,7 @@ class DriverStatusViewModel: ObservableObject {
         )
 
         do {
-            let response: DriverStatusResponse = try await NetworkManager.shared.post(
+            let response: DriverStatusResponse = try await networkManager.post(
                 .viewdriveringstatusbydate,
                 body: requestBody
             )

@@ -254,7 +254,9 @@ struct DeviceScannerView: View {
                         UserName: email
                     )
                 case .BlockView:
-                    BlockAppView()
+                    // Note: Ideally BlockAppView should be shown from HomeScreenView where HomeViewModel is available
+                    // For now, creating a new instance - this should be updated to use the same HomeViewModel instance from HomeScreenView
+                    BlockAppView(homeViewModel: HomeViewModel())
                 }
             }
             .navigationDestination(for: AppRoute.LogsFlow.self) { route in

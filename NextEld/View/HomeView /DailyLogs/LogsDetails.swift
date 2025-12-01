@@ -97,7 +97,8 @@ struct LogsDetails: View {
                 loadLogsFromDatabase()
             }
             // Start timer to update elapsed time for on-duty status
-            startTimer()
+         //   startTimer()
+            DateTimeHelper.currentDateTime()
         }
         .onDisappear {
             stopTimer()
@@ -122,8 +123,8 @@ struct LogsDetails: View {
                 ForEach(Array(logsForSelectedDate.enumerated()), id: \.offset) { index, log in
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            // Show date with start time for all statuses
-                            Text(DateTimeHelper.getStringFromDate(log.startTime, format: .defaultDateTime))
+                            // Show date with start time for all statuses - always use device's current timezone
+                            Text(formatDateToLocalTime(log.startTime))
                                 .font(.body)
                                 .fontWeight(.semibold)
                             
@@ -134,8 +135,8 @@ struct LogsDetails: View {
                                     .foregroundColor(.orange)
                                     .id("\(log.id ?? 0)-\(timerTick)")
                             } else {
-                                // Show date only for other statuses
-                                Text(DateTimeHelper.getStringFromDate(log.startTime, format: .dateForaat))
+                                // Show date only for other statuses - always use device's current timezone
+                                Text(formatDateOnly(log.startTime))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -153,11 +154,25 @@ struct LogsDetails: View {
     
     private var logsForSelectedDate: [DriverLogModel] {
         let calendar = Calendar.current
+        let timeZone = TimeZone.current
+        
+        // Normalize selectedDate to start of day in current timezone
         let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? selectedDate
-        return allLogs
-            .filter { $0.startTime >= startOfDay && $0.startTime < endOfDay }
-            .sorted { $0.startTime < $1.startTime }
+        
+        // Filter logs by comparing dates in the same timezone
+        // Convert log.startTime to local timezone components for accurate date comparison
+        return allLogs.filter { log in
+            // Get date components for both dates in current timezone
+            let logDateComponents = calendar.dateComponents(in: timeZone, from: log.startTime)
+            let selectedDateComponents = calendar.dateComponents(in: timeZone, from: selectedDate)
+            
+            // Compare year, month, and day components
+            return logDateComponents.year == selectedDateComponents.year &&
+                   logDateComponents.month == selectedDateComponents.month &&
+                   logDateComponents.day == selectedDateComponents.day
+        }
+        .sorted { $0.startTime < $1.startTime }
     }
     
     private var hoseEventsForSelectedDate: [HOSEvent] {
@@ -228,12 +243,12 @@ struct LogsDetails: View {
         return String(format: "%d:%02d:%02d", hours, minutes, seconds)
     }
     
-    private func startTimer() {
-        // Update every second to refresh elapsed time
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            timerTick += 1
-        }
-    }
+//    private func startTimer() {
+//        // Update every second to refresh elapsed time
+//        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+//            timerTick += 1
+//        }
+//    }
     
     private func stopTimer() {
         timer?.invalidate()
@@ -264,6 +279,44 @@ struct LogsDetails: View {
         default:
             return .purple
         }
+    }
+    
+    // Helper function to format date to local time with date and time
+    private func formatDateToLocalTime(_ date: Date) -> String {
+        // Ensure we're using the device's current timezone
+        let calendar = Calendar.current
+        let timeZone = TimeZone.current
+        
+        // Create formatter with current timezone
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.timeZone = timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = calendar
+        
+        // Format the date - DateFormatter automatically converts to the specified timezone
+        let localTimeString = formatter.string(from: date)
+        
+        return localTimeString
+    }
+    
+    // Helper function to format date only (without time)
+    private func formatDateOnly(_ date: Date) -> String {
+        // Ensure we're using the device's current timezone
+        let calendar = Calendar.current
+        let timeZone = TimeZone.current
+        
+        // Create formatter with current timezone
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = calendar
+        
+        // Format the date - DateFormatter automatically converts to the specified timezone
+        let localDateString = formatter.string(from: date)
+        
+        return localDateString
     }
     
 }

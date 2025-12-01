@@ -1655,8 +1655,8 @@
 			);
 			mainGroup = 108FF7F52DC895E10051671B;
 			packageReferences = (
-				AFC535522E0D5B8A00AD10C9 /* XCRemoteSwiftPackageReference "SQLite" */,
-				AFC1B55E2E15671300C57620 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				AF29AE602EDDD12800CDE4FA /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				AF29AE612EDDD16200CDE4FA /* XCRemoteSwiftPackageReference "SQLite" */,
 			);
 			productRefGroup = 108FF7FF2DC895E10051671B /* Products */;
 			projectDirPath = "";
@@ -2345,6 +2345,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		AF29AE602EDDD12800CDE4FA /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.0.0;
+			};
+		};
+		AF29AE612EDDD16200CDE4FA /* XCRemoteSwiftPackageReference "SQLite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.15.4;
+			};
+		};
 		AFC1B55E2E15671300C57620 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift";

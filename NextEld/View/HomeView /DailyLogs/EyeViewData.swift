@@ -16,6 +16,7 @@ struct EyeViewData: View {
     var title: String
     let entry: WorkEntry
     @State private var selectedDate: Date
+    @State private var databaseLogs: [DriverLogModel] = []
   
     init(title: String, entry: WorkEntry) {
         self.title = title
@@ -174,19 +175,29 @@ struct EyeViewData: View {
                             Text("Version - \(d.version ?? "NA")")
                         }
 
-                        sectionSmallGrid(
-                            smallheaders: ["Time", "Status","Location","Origin","OdoMeter","Engine Hours","Engine","Notes"],
-                            smallvalues: [
-                                d.dateTime ?? "NA",
-                                d.status ?? "NA",
-                                d.customLocation ?? "NA",
-                                d.origin ?? "NA",
-                                "\(d.odometer ?? 0)",
-                                d.engineHour ?? "0",
-                                d.engineStatus ?? "NA",
-                                d.note ?? ""
-                            ]
+                        // Display header once
+                        sectionSmallGridHeader(
+                            smallheaders: ["Time", "Status","Location","Origin","OdoMeter","Engine Hours","Engine","Notes"]
                         )
+                        
+                        // Display all entries from database
+                        if !databaseLogs.isEmpty {
+                            ForEach(databaseLogs.indices, id: \.self) { index in
+                                let log = databaseLogs[index]
+                                sectionSmallGridRow(
+                                    smallvalues: [
+                                        formatDateTime(log.startTime),
+                                        log.status,
+                                        log.location.isEmpty ? "NA" : log.location,
+                                        log.origin.isEmpty ? "NA" : log.origin,
+                                        "\(log.odometer)",
+                                        log.engineHours.isEmpty ? "0" : log.engineHours,
+                                        log.engineStatus.isEmpty ? "NA" : log.engineStatus,
+                                        log.notes.isEmpty ? "" : log.notes
+                                    ]
+                                )
+                            }
+                        }
                     }
                 } else if let error = viewModel.errorMessage {
                     VStack(spacing: 12) {
@@ -221,6 +232,7 @@ struct EyeViewData: View {
         .task {
             print(" EyeViewData: Starting to fetch driver data...")
             await fetchDriverData()
+            loadDatabaseLogs()
             print(" EyeViewData: Fetch completed")
             print("   isLoading: \(viewModel.isLoading)")
             print("   hasData: \(viewModel.data != nil)")
@@ -229,6 +241,7 @@ struct EyeViewData: View {
                 print("   First record - Driver: \(first.driverName ?? "nil")")
             }
         }
+        
         .onChange(of: selectedDate) { newDate in
             let today = Calendar.current.startOfDay(for: Date())
             let picked = Calendar.current.startOfDay(for: newDate)
@@ -240,6 +253,7 @@ struct EyeViewData: View {
                 Task {
                     await fetchDriverData()
                 }
+                loadDatabaseLogs()
             }
         }
     }
@@ -252,6 +266,28 @@ struct EyeViewData: View {
         
         )
 
+    }
+    
+    private func loadDatabaseLogs() {
+        let startOfDay = Calendar.current.startOfDay(for: selectedDate)
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
+        
+        // Fetch logs from database for the selected date
+        databaseLogs = DatabaseManager.shared.fetchLogs(
+            filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)],
+            addWarningAndViolation: false
+        )
+        
+        // Sort by startTime (oldest first)
+        databaseLogs.sort { $0.startTime < $1.startTime }
+        
+        print("📊 Loaded \(databaseLogs.count) logs from database for date: \(selectedDate)")
+    }
+    
+    private func formatDateTime(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return dateFormatter.string(from: date)
     }
 
     private func loadGraphEventsFromDatabase(for date: Date) -> [HOSEvent] {
@@ -317,8 +353,6 @@ struct EyeViewData: View {
         return events
     }
 
-    }
-
         //MARK: -  Reusable Section Grid
         @ViewBuilder
         func sectionGrid(headers: [String], values: [String]) -> some View {
@@ -376,6 +410,37 @@ struct EyeViewData: View {
         }
         Divider()
     }
+}
+        
+        //MARK: - Small Grid Header Only
+        func sectionSmallGridHeader(smallheaders: [String]) -> some View {
+            VStack(spacing: 0) {
+                HStack {
+                    ForEach(smallheaders, id: \.self) { header in
+                        Text(header)
+                            .font(.caption)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(6)
+                    }
+                }
+                .background(Color.gray.opacity(0.2))
+            }
+        }
+        
+        //MARK: - Small Grid Row Only
+        func sectionSmallGridRow(smallvalues: [String]) -> some View {
+            VStack(spacing: 0) {
+                HStack(alignment: .top) {
+                    ForEach(smallvalues, id: \.self) { value in
+                        Text(value)
+                            .font(.footnote)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(6)
+                    }
+                }
+                Divider()
+            }
+        }
 }
 
 // MARK: - Preview

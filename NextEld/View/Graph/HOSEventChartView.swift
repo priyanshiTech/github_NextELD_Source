@@ -386,7 +386,7 @@ struct HOSEventsChart: View {
                     
                     ForEach(dutyLabels, id: \.self) { label in
                         Text(label)
-                            .font(.system(size: 10, weight: .medium))
+                            .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.blue)
                             .frame(height: rowHeight)
                     }
@@ -395,16 +395,17 @@ struct HOSEventsChart: View {
                 
                 // Main graph area
                 VStack(spacing: 0) {
-                    // Hours row
+           
                     HStack(spacing: 0) {
-                        ForEach(0..<24) { hour in
-                            Text(String(format: "%02d", hour))
+                        ForEach(0...24, id: \.self) { hour in
+                            Text(String(format: "%02d", hour % 24))  // shows 00 again at end
                                 .font(.system(size: 5, weight: .medium))
                                 .foregroundColor(.blue)
                                 .frame(width: hourWidth, alignment: .center)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                     }
+
                     .frame(height: 15)
                     
                     // Grid and events
