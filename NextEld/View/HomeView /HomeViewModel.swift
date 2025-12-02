@@ -317,7 +317,7 @@ class HomeViewModel: ObservableObject {
     @Published var showAlertOnHomeScreen: Bool = false
     // Events
     @Published var graphEvents: [HOSEvent] = []
-    @Published  var showAddDvirPopup = false
+    
 
     @Published var showSyncconfirmation: Bool = false
  
@@ -915,5 +915,49 @@ class HomeViewModel: ObservableObject {
         }
     }
     
+    func checkWhetherTheLogCertifyOrNot(status: DriverStatusType) -> (havingCertifyLog: Bool, isAllLogCerify: Bool) {
+        let lastDriverLog = DatabaseManager.shared.getLastRecordOfDriverLogs()
+        let allCertifylogs = CertifyDatabaseManager.shared.fetchAllRecords()
+        let notCertifyLogs = allCertifylogs.filter({ $0.isCertify == "No"})
+        if lastDriverLog == nil {
+            // verify any entry logs in Driver Log Table
+            // If No Log found then we need to show then normal popup
+            return (havingCertifyLog: false, isAllLogCerify: false)
+        } else {
+            if notCertifyLogs.count > 0 {
+                // if any entry logs in Driver Log Table found
+                // then we need to verify any "isCertify = No" Entry is found
+                // If yes then we need to show the certify popup
+                return (havingCertifyLog: true, isAllLogCerify: false)
+            } else {
+                // if any entry logs in Driver Log Table found
+                // then we need to verify any "isCertify = Yes" Entry is found
+                // If yes then we don't need to show the certify popup
+                // If No then we need to show the certify popup
+                return (havingCertifyLog: true, isAllLogCerify: allCertifylogs.count > 0)
+            }
+        }
+        
+        
+    }
     
+    func checkWhetherTheDVIRAddedOrNot(status: DriverStatusType) -> Bool {
+        if let lastLog = DvirDatabaseManager.shared.fetchAllRecords().last,
+           lastLog.signature != nil,
+          (status == .onDrive)  {
+            return true
+        }
+        return false
+    }
+    
+    func checkWhetherDVIRLastRecordIsInToday(status: DriverStatusType) -> Bool {
+        if let lastLog = DvirDatabaseManager.shared.fetchAllRecords().last,
+           lastLog.signature != nil,
+          (status == .onDrive)  {
+            if DateTimeHelper.calendar.isDateInToday(lastLog.startTime.asDate() ?? DateTimeHelper.currentDateTime()) {
+                return true
+            }
+        }
+        return false
+    }
 }

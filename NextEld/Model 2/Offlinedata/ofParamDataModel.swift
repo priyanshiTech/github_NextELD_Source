@@ -13,9 +13,9 @@ import Foundation
 
 
 struct SyncRequest: Codable {
-    let eldLogData: [String]
-    let driveringStatusData: [DriveringStatusData]
-    let splitLog: SplllitLogss
+    var eldLogData: [String] = []
+    var driveringStatusData: [DriveringStatusData] = []
+    var splitLog: SplllitLogss? = nil
 }
 
 //struct DriveringStatusData: Codable {
