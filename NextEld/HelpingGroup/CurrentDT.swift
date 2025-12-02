@@ -32,8 +32,17 @@ struct DateTimeHelper {
     }
     
     static func currentDateTime() -> Date {
-        return Date()
+        let currentTime = Date()
+        let timezoneOffset = AppStorageHandler.shared.timeZoneOffset ?? ""
+        
+        // Convert current time to user's timezone
+        if let userTime = convertToUserTimezone(currentTime, offset: timezoneOffset) {
+            return userTime // current
+        } else {
+            return currentTime // UTC
+        }
     }
+    
     static func getCurrentUTCDateTimeString() -> String {
         let formatter = ISO8601DateFormatter()
         formatter.timeZone = TimeZone(abbreviation: "UTC")
