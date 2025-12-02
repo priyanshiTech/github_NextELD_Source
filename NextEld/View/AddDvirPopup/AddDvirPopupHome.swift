@@ -47,7 +47,7 @@ struct AddDvirPopup: View {
                     InfoRow(label: "Time", value: DateTimeHelper.currentTime())
                     InfoRow(label: "Date", value: DateTimeHelper.currentDate())
                     InfoRow(label: "Odometer", value: "0")
-                    InfoRow(label: "Company", value: "Indian Eld")
+                    InfoRow(label: "Company", value: "AppStorageHandler.company")
                     InfoRow(label: "Location", value: "389, Vijay Nagar, Scheme 54, Indore")
                 }
                 

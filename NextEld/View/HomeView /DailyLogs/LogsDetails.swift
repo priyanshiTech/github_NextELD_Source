@@ -96,8 +96,6 @@ struct LogsDetails: View {
             if allLogs.isEmpty {
                 loadLogsFromDatabase()
             }
-            // Start timer to update elapsed time for on-duty status
-         //   startTimer()
             DateTimeHelper.currentDateTime()
         }
         .onDisappear {
@@ -155,13 +153,7 @@ struct LogsDetails: View {
     private var logsForSelectedDate: [DriverLogModel] {
         let calendar = Calendar.current
         let timeZone = TimeZone.current
-        
-        // Normalize selectedDate to start of day in current timezone
-        let startOfDay = calendar.startOfDay(for: selectedDate)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? selectedDate
-        
-        // Filter logs by comparing dates in the same timezone
-        // Convert log.startTime to local timezone components for accurate date comparison
+
         return allLogs.filter { log in
             // Get date components for both dates in current timezone
             let logDateComponents = calendar.dateComponents(in: timeZone, from: log.startTime)
@@ -274,9 +266,7 @@ struct LogsDetails: View {
             return .purple
         }
     }
-    
-
-    
+ 
 }
         
 

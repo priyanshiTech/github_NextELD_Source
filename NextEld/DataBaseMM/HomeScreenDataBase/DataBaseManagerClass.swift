@@ -49,7 +49,6 @@ struct DriverLogModel: Identifiable {
     let userId: Int
     let day: Int
     let isVoilations: Int
-   // let isVoilations: String
     let dutyType: String
     let shift: Int
     let vehicle: String
@@ -103,7 +102,6 @@ class DatabaseManager: DatabaseHandler {
     let userId = Expression<Int>("userId")
     let day = Expression<Int>("day")
     let isVoilationColumn = Expression<Int>("isVoilation")
-  //  let isVoilationColumn = Expression<String>("isVoilation")
     let dutyType = Expression<String>("dutyType")
     let shift = Expression<Int>("shift")
     let vehicleName = Expression<String>("vehicleName") //instead of vehicle
@@ -243,7 +241,6 @@ class DatabaseManager: DatabaseHandler {
            } catch {
                print("Raw SQL query failed: \(error)")
            }
-
            return logs
     }
     
@@ -321,7 +318,6 @@ class DatabaseManager: DatabaseHandler {
                     userId: row[userId],
                     day: row[day],
                     isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
-                   // isVoilations: "\(try row.get(isVoilationColumn))",
                     dutyType: row[dutyType],
                     shift: row[shift],
                     vehicle: row[vehicleName] ,
@@ -527,22 +523,19 @@ class DatabaseManager: DatabaseHandler {
     }
     
     func insertLog(from model: DriverLogModel) {
-
         // Normalize status (case insensitive)
-        let normalizedStatus = model.status.lowercased()
+        let normalizedStatus = model.status.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
         let skipStatuses: Set<String> = [
             "cycle", "weeklycycle"
         ]
         
-       
         if skipStatuses.contains(normalizedStatus) {
             print(" Skipping log insert for status: \(model.status)")
             return
         }
         
         // Check for duplicate: First by serverId (most reliable), then by status + startTime + userId
-        // This prevents inserting the same log multiple times
         do {
             // First check: If serverId exists, check for duplicate by serverId
             if let serverId = model.serverId, !serverId.isEmpty {
@@ -557,26 +550,40 @@ class DatabaseManager: DatabaseHandler {
                 }
             }
             
-            // Second check: Check for same status + startTime (within 2 seconds) + userId
-            // This catches duplicates even if serverId is missing
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            let timeString = formatter.string(from: model.startTime)
+            // Second check: Check for same status (case-insensitive) + startTime (within 5 seconds) + userId
+            let fiveSecondsBefore = model.startTime.addingTimeInterval(-5.0)
+            let fiveSecondsAfter = model.startTime.addingTimeInterval(5.0)
             
-            // Check for logs with same status, userId, and startTime within 2 seconds
-            let twoSecondsBefore = model.startTime.addingTimeInterval(-2.0)
-            let twoSecondsAfter = model.startTime.addingTimeInterval(2.0)
+            // Get the most recent log for this user to check if status changed
+            let recentLogsQuery = driverLogs.filter(
+                userId == model.userId
+            ).order(startTime.desc).limit(1)
             
+            if let mostRecentLog = try db?.pluck(recentLogsQuery) {
+                let mostRecentStatus = mostRecentLog[status].lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                let mostRecentTime = mostRecentLog[startTime]
+                
+                // If same status and within 5 seconds, skip insertion
+                if normalizedStatus == mostRecentStatus {
+                    let timeDifference = abs(model.startTime.timeIntervalSince(mostRecentTime))
+                    if timeDifference <= 5.0 {
+                        print(" Duplicate log found (same status '\(model.status)' within 5 seconds), skipping insert")
+                        return
+                    }
+                }
+            }
+            
+            // Third check: Check for logs with same normalized status, userId, and startTime within 5 seconds
             let duplicateCheck = driverLogs.filter(
-                status == model.status &&
+                Expression<String>("lower(trim(status))") == normalizedStatus &&
                 userId == model.userId &&
-                startTime >= twoSecondsBefore &&
-                startTime <= twoSecondsAfter
+                startTime >= fiveSecondsBefore &&
+                startTime <= fiveSecondsAfter
             )
             
             let existingCount = try db?.scalar(duplicateCheck.count) ?? 0
             if existingCount > 0 {
-                print(" Duplicate log found (status: \(model.status), time: \(timeString)), skipping insert")
+                print(" Duplicate log found (status: \(model.status), time: \(model.startTime)), skipping insert")
                 return
             }
         } catch {
@@ -584,10 +591,8 @@ class DatabaseManager: DatabaseHandler {
         }
         
         do {
-            
             let safeDay = model.day == 0 ? 1 : model.day
             let safeShift = model.shift == 0 ? 1 : model.shift
-
             
             let insert = driverLogs.insert(
                 status <- model.status,
@@ -623,12 +628,111 @@ class DatabaseManager: DatabaseHandler {
             
             let rowID = try db?.run(insert) ?? 0
             print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
-
-           
+            
         } catch {
             print(" Insert Log Error: \(error.localizedDescription)")
         }
     }
+    
+//    func insertLog(from model: DriverLogModel) { *******************************************************************
+//
+//        // Normalize status (case insensitive)
+//        let normalizedStatus = model.status.lowercased()
+//        
+//        let skipStatuses: Set<String> = [
+//            "cycle", "weeklycycle"
+//        ]
+//        
+//       
+//        if skipStatuses.contains(normalizedStatus) {
+//            print(" Skipping log insert for status: \(model.status)")
+//            return
+//        }
+//
+//        do {
+//            // First check: If serverId exists, check for duplicate by serverId
+//            if let serverId = model.serverId, !serverId.isEmpty {
+//                let serverIdCheck = driverLogs.filter(
+//                    self.serverId == serverId &&
+//                    userId == model.userId
+//                )
+//                let serverIdCount = try db?.scalar(serverIdCheck.count) ?? 0
+//                if serverIdCount > 0 {
+//                    print(" Duplicate log found by serverId: \(serverId), skipping insert")
+//                    return
+//                }
+//            }
+//
+//            let formatter = DateFormatter()
+//            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//            let timeString = formatter.string(from: model.startTime)
+//            
+//            // Check for logs with same status, userId, and startTime within 2 seconds
+//            let twoSecondsBefore = model.startTime.addingTimeInterval(-2.0)
+//            let twoSecondsAfter = model.startTime.addingTimeInterval(2.0)
+//            
+//            let duplicateCheck = driverLogs.filter(
+//                status == model.status &&
+//                userId == model.userId &&
+//                startTime >= twoSecondsBefore &&
+//                startTime <= twoSecondsAfter
+//            )
+//            
+//            let existingCount = try db?.scalar(duplicateCheck.count) ?? 0
+//            if existingCount > 0 {
+//                print(" Duplicate log found (status: \(model.status), time: \(timeString)), skipping insert")
+//                return
+//            }
+//        } catch {
+//            print(" Error checking for duplicate: \(error), proceeding with insert")
+//        }
+//        
+//        do {
+//            
+//            let safeDay = model.day == 0 ? 1 : model.day
+//            let safeShift = model.shift == 0 ? 1 : model.shift
+//
+//            
+//            let insert = driverLogs.insert(
+//                status <- model.status,
+//                startTime <- model.startTime,
+//                userId <- model.userId,
+//                day <- safeDay,
+//                isVoilationColumn <- model.isVoilations,
+//                dutyType <- model.dutyType,
+//                shift <- safeShift,
+//                vehicleName <- model.vehicle,
+//                odometer <- model.odometer,
+//                engineHours <- model.engineHours,
+//                location <- model.location,
+//                lat <- model.lat,
+//                long <- model.long,
+//                origin <- model.origin,
+//                isSynced <- model.isSynced,
+//                vehicleId <- model.vehicleId,
+//                trailers <- model.trailers,
+//                notes <- model.notes,
+//                serverId <- model.serverId,
+//                timestamp <- model.timestamp,
+//                identifier <- model.identifier,
+//                remainingWeeklyTime <- model.remainingWeeklyTime ?? 0,
+//                remainingDriveTime <- model.remainingDriveTime ?? 0,
+//                remainingDutyTime <- model.remainingDutyTime ?? 0,
+//                remainingSleepTime <- model.remainingSleepTime ?? 0,
+//                breaktimerRemaning <- model.breaktimerRemaning ?? 0,
+//                lastSleepTime <- model.lastSleepTime,
+//                isSplit <- model.isSplit,
+//                engineStatus <- model.engineStatus
+//            )
+//            
+//            let rowID = try db?.run(insert) ?? 0
+//            print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
+//
+//           
+//        } catch {
+//            print(" Insert Log Error: \(error.localizedDescription)")
+//        }
+//    }*******************************
 
     
 

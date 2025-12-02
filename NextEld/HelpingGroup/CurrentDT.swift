@@ -32,6 +32,9 @@ struct DateTimeHelper {
     }
     
     static func currentDateTime() -> Date {
+        // Return the current date and time in the device's local timezone
+        // Date() already represents the current moment in time, which is timezone-independent
+        // When displayed, it will be shown in the device's current timezone
         return Date()
     }
     static func getCurrentUTCDateTimeString() -> String {
@@ -180,8 +183,10 @@ struct DateTimeHelper {
         formatter.timeZone = timeZone
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = calendar
+        
         // Format the date - DateFormatter automatically converts to the specified timezone
         let localDateString = formatter.string(from: date)
+        
         return localDateString
     }
     

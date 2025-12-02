@@ -7,9 +7,8 @@
 
 import SwiftUI
 
-
-
 struct LogOutPopup: View {
+    
     @Binding var isCycleCompleted: Bool
     var currentStatus: String
     var onLogout: () -> Void
@@ -76,7 +75,7 @@ struct LogOut: View {
         ZStack {
             Color(uiColor:.black).opacity(0.1)
                 .ignoresSafeArea()
-
+            
             if isPresented {
                 PopupContainer(isPresented: $isPresented) {
                     LogOutPopup(

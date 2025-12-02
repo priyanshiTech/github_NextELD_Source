@@ -58,8 +58,10 @@ struct BlockAppView: View {
 
                 // Timers - Using TimeBox component (same as home screen)
                 HStack(spacing: 0) {
+                    
                     if let driveTimer = homeViewModel.onDriveTimer {
                         TimeBox(timer: driveTimer, type: .onDrive, title: .init("Drive"))
+                            .padding()
                     } else {
                         // Fallback timer if not available
                         TimeBox(timer: CountdownTimer(startTime: AppStorageHandler.shared.onDriveTime ?? 0), type: .onDrive, title: .init("Drive"))
@@ -67,6 +69,7 @@ struct BlockAppView: View {
                     
                     if let onDutyTimer = homeViewModel.onDutyTimer {
                         TimeBox(timer: onDutyTimer, type: .onDuty, title: .init("On-Duty"))
+                            .padding()
                     } else {
                         // Fallback timer if not available
                         TimeBox(timer: CountdownTimer(startTime: AppStorageHandler.shared.onDutyTime ?? 0), type: .onDuty, title: .init("On-Duty"))

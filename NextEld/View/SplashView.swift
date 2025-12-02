@@ -94,23 +94,19 @@ struct SplashView: View {
                 }
                 
                 let timeoutTask = Task {
-                    try? await Task.sleep(nanoseconds: 5_000_000_000) // 5 seconds
+                    try? await Task.sleep(nanoseconds: 5_000_000_000) //5 seconds
                 }
-                
                 // Race between API call and timeout
                 var apiSuccess: Bool? = nil
-                
                 await withTaskGroup(of: Bool?.self) { group in
                     group.addTask {
                         let result = await apiTask.value
                         return result
                     }
-                    
                     group.addTask {
                         await timeoutTask.value
                         return nil // Timeout signal
                     }
-                    
                     // Get first completed result
                     if let firstResult = await group.next() {
                         if let boolResult = firstResult {
@@ -129,7 +125,6 @@ struct SplashView: View {
                     print(" Session expired detected - staying on SessionExpireUIView")
                     return // Don't proceed with any navigation
                 }
-                
                 // Use result if available, otherwise proceed with existing data
                 let _ = apiSuccess ?? false
                 handlePostSplashNavigation()

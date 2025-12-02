@@ -58,7 +58,7 @@ extension HomeViewModel {
 //    }
     
     private func calculateSpeed(speed: Double) {
-        let currentTime = Date().timeIntervalSince1970   // current timestamp in seconds
+        let currentTime = DateTimeHelper.currentDateTime().timeIntervalSince1970 // current timestamp in seconds
 
         // MARK: - SPEED > 5 : Driving
         if speed > 5.0 {
@@ -83,7 +83,7 @@ extension HomeViewModel {
             if highSpeedList.count >= 5 {
                 if !isCooldownActive && !showBlockScreen {
                     // Only block if not already showing block screen
-                    print("✅ Blocking screen - 5 high-speed events detected")
+                    print(" Blocking screen - 5 high-speed events detected")
                     
                     // DON'T clear the list - keep tracking so it can block again quickly after dismiss
                     // Only remove the oldest events, keep last 4 so we need just 1 more to trigger again
@@ -99,7 +99,7 @@ extension HomeViewModel {
                     
                     // Update driver status to onDrive if not already
                     if currentDriverStatus != .onDrive {
-                        currentDriverStatus = .onDrive
+                        setDriverStatus(status: .onDrive)
                         saveTimerStateForStatus(status: currentDriverStatus.getName(), originType: .auto)
                     }
                 } else if isCooldownActive {
@@ -134,13 +134,13 @@ extension HomeViewModel {
                 unBlockScreen()
             }
 
-            // Additional "idle" dialog when speed == 0
-            if speed == 0 {
-                if currentDriverStatus == .onDrive {
-                    alertType = .idleState
-                    showAlertOnHomeScreen = true
-                }
-            }
+            // Additional "idle" dialog when speed == 0  //MARK: -  currently off
+//            if speed == 0 {
+//                if currentDriverStatus == .onDrive {
+//                    alertType = .idleState
+//                    showAlertOnHomeScreen = true
+//                }
+//            }
         }
     }
     

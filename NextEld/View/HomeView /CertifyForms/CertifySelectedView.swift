@@ -81,7 +81,6 @@ struct CertifySelectedView: View {
 
                         
                         Spacer()
-                        
                         CustomIconButton(
                             iconName: "alarm_icon",
                             title: "Event",
@@ -127,7 +126,6 @@ struct CertifySelectedView: View {
                 )
                 .cornerRadius(5)
                 .padding(.horizontal)
-                
                 Spacer()
                 
                 // MARK: - Form Tab Content"

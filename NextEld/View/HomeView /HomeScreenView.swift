@@ -457,17 +457,14 @@ struct HomeScreenView: View {
 //                    saveCurrentTimerStates()
 //                }
         
-       .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                    // Restore timer states when app becomes active
+                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     homeVM.restoreAllTimersFromLastStatus()
                 }
         
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
-            // Save timer states when app is about to terminate
-           // homeVM.saveCurrentTimerStatesBeforeSwitch()
-            homeVM.saveTimerStateForStatus(status: homeVM.currentDriverStatus.getName(), originType: .driver, note: "")
-
-        }
+                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
+                  homeVM.saveTimerStateForStatus(status: homeVM.currentDriverStatus.getName(), originType: .driver, note: "")
+                     
+                  }
         
         .onReceive(driverWorkingTimer) { _ in
             updateDriverWorkingPayload()
