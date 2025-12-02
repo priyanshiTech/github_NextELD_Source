@@ -86,21 +86,18 @@ class SyncViewModel: ObservableObject {
                 vehicleId: String(log.vehicleId)
             )
         }
+        var requestBody = SyncRequest()
+        requestBody.driveringStatusData = driveringStatusData
+        if let firstLog = DatabaseManager.shared.getLastRecordForSplitShiftLog() {
+            let splitLog = SplllitLogss(
+                day: firstLog.day,
+                dbId: Int(firstLog.id),
+                driverId: firstLog.userId,
+                shift: firstLog.shift
+            )
+            requestBody.splitLog = splitLog
+        }
         
-        guard let firstLog = unsyncedLogs.first else { return false }
-        
-        let splitLog = SplllitLogss(
-            day: firstLog.day,
-            dbId: Int(firstLog.id ?? 0),
-            driverId: firstLog.userId,
-            shift: firstLog.shift
-        )
-        
-        let requestBody = SyncRequest(
-            eldLogData: [],
-            driveringStatusData: driveringStatusData,
-            splitLog: splitLog
-        )
         print("Request data To Offline API ::::::::\(requestBody)")
         isSyncing = true
         defer { isSyncing = false }

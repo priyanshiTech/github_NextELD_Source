@@ -88,6 +88,7 @@ struct HomeScreenView: View {
     let times = DateTimeHelperVoilation.getLocalAndGMT()
     
     @State private var showDvirPopup = false
+    @State  var showAddDvirPopup = false
     
     var body: some View {
         
@@ -118,17 +119,34 @@ struct HomeScreenView: View {
                             GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
                             trailer: trailerVM.getTrailerValue()
                         )
-                            StatusView(homeViewModel: homeVM) {  status in
+                        StatusView(homeViewModel: homeVM) {  status in
                             guard status != homeVM.currentDriverStatus else { return }
-                                if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                        homeVM.alertType = .thirtyFourHours
-                                        homeVM.showAlertOnHomeScreen = true
-                                    }
+                            if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                    homeVM.alertType = .thirtyFourHours
+                                    homeVM.showAlertOnHomeScreen = true
+                                }
+                            } else {
+                                if (status == .onDuty || status == .onDrive), homeVM.checkWhetherTheLogCertifyOrNot(status: status).havingCertifyLog {
+                                    if homeVM.checkWhetherTheLogCertifyOrNot(status: status).isAllLogCerify {
+                                        if homeVM.checkWhetherTheDVIRAddedOrNot(status: status) {
+                                            if homeVM.checkWhetherDVIRLastRecordIsInToday(status: status) {
+                                                homeVM.showDriverStatusAlert = (true, status)
+                                            } else {
+                                                showAddDvirPopup = true
+                                            }
+                                        } else {
+                                            showDvirPopup = true
+                                        }
                                     
+                                    } else {
+                                       showCertifyLogAlert = true
+                                    }
                                 } else {
                                     homeVM.showDriverStatusAlert = (true, status)
                                 }
+                                
+                            }
                         }
                         AvailableHoursView(homeViewModel: homeVM)
                         HOSEventsChartScreen(events: homeVM.graphEvents)
@@ -172,7 +190,9 @@ struct HomeScreenView: View {
                 // Popup content
                 StatusDetailsPopup(
                     statusTitle: homeVM.showDriverStatusAlert.status.getName(),
-                    onClose: { homeVM.showDriverStatusAlert.showAlert = false },
+                    onClose: {
+                        homeVM.showDriverStatusAlert.showAlert = false
+                    },
                     onSubmit: { note in
                         let status = homeVM.showDriverStatusAlert.status
                         // Set new status and start timers
@@ -184,9 +204,9 @@ struct HomeScreenView: View {
             }
             //nitin
             
-            if homeVM.showAddDvirPopup {
+            if showAddDvirPopup {
                 
-                AddDvirPopup(isPresented: $homeVM.showAddDvirPopup)
+                AddDvirPopup(isPresented: $showAddDvirPopup)
                 
                     .frame(maxWidth: 350) // optional, to keep consistent width
                         .padding(.horizontal, 20)

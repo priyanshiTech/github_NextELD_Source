@@ -38,7 +38,11 @@ struct TopBarView: View {
                 
                 // Right: Bluetooth
                 Button(action: {
-                    showDeviceSelector = true
+                    if SharedInfoManager.shared.isDeviceConnected {
+                        navManager.navigate(to: AppRoute.BluetoothDeviceFlow.PT30Connection)
+                    } else {
+                        showDeviceSelector = true
+                    }
                 }) {
                     Image("bluuu")
                         .resizable()
