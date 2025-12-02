@@ -23,8 +23,8 @@ class DutyStatusManager: ObservableObject {
     
     /// Call this whenever duty status changes
     func updateStatus(to newStatus: String) {
-        let now = Date()
         
+        let now = Date()
         // Add elapsed time for the previous status
         if let start = statusStartDate {
             let elapsed = now.timeIntervalSince(start)

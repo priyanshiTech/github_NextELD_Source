@@ -136,6 +136,7 @@ struct GridLinesView: View {
     let hourWidth: CGFloat
     
     var body: some View {
+        
         Canvas { context, size in
             // Draw vertical hour lines
             for hour in 0...24 {
@@ -163,7 +164,7 @@ struct GridLinesView: View {
                 for quarter in 1...3 {
                     let x = hourX + (hourWidth * CGFloat(quarter) / 4.0)
                     let quarterHeight: CGFloat = quarter == 2 ? 10 : 2
-                    
+
                     for row in 0..<4 {
                         let sectionStart = CGFloat(row) * (height / 4.0)
                         let path = Path { path in
@@ -369,6 +370,7 @@ struct HOSEventsChart: View {
     }
     
     var body: some View {
+        
         GeometryReader { geometry in
             let totalWidth = geometry.size.width
             let labelWidth: CGFloat = 25  // Reduced label width
@@ -380,10 +382,9 @@ struct HOSEventsChart: View {
             HStack(spacing: 5) {
                 // Left labels
                 VStack(alignment: .trailing, spacing: 0) {
-                    // Spacer for hours
+                 
                     Color.clear
                         .frame(height: 15)  // Reduced height for hour labels
-                    
                     ForEach(dutyLabels, id: \.self) { label in
                         Text(label)
                             .font(.system(size: 11, weight: .medium))
@@ -392,10 +393,8 @@ struct HOSEventsChart: View {
                     }
                 }
                 .frame(width: labelWidth)
-                
                 // Main graph area
                 VStack(spacing: 0) {
-           
                     HStack(spacing: 0) {
                         ForEach(0...24, id: \.self) { hour in
                             Text(String(format: "%02d", hour % 24))  // shows 00 again at end
@@ -405,9 +404,7 @@ struct HOSEventsChart: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                     }
-
                     .frame(height: 15)
-                    
                     // Grid and events
                     ZStack {
                         Rectangle()
@@ -426,7 +423,6 @@ struct HOSEventsChart: View {
                     )
                 }
                 .frame(width: hourWidth * 24)
-                
                 // Duration labels
                 VStack(alignment: .leading, spacing: 0) {
                     // Spacer for hours

@@ -124,7 +124,7 @@ struct LogsDetails: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             // Show date with start time for all statuses - always use device's current timezone
-                            Text(formatDateToLocalTime(log.startTime))
+                            Text(DateTimeHelper.formatDateToLocalTime(log.startTime))
                                 .font(.body)
                                 .fontWeight(.semibold)
                             
@@ -136,7 +136,7 @@ struct LogsDetails: View {
                                     .id("\(log.id ?? 0)-\(timerTick)")
                             } else {
                                 // Show date only for other statuses - always use device's current timezone
-                                Text(formatDateOnly(log.startTime))
+                                Text(DateTimeHelper.formatDateOnly(log.startTime))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -242,13 +242,7 @@ struct LogsDetails: View {
         // Format: H:MM:SS (e.g., 2:00:00, 2:30:45)
         return String(format: "%d:%02d:%02d", hours, minutes, seconds)
     }
-    
-//    private func startTimer() {
-//        // Update every second to refresh elapsed time
-//        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-//            timerTick += 1
-//        }
-//    }
+
     
     private func stopTimer() {
         timer?.invalidate()
@@ -281,43 +275,7 @@ struct LogsDetails: View {
         }
     }
     
-    // Helper function to format date to local time with date and time
-    private func formatDateToLocalTime(_ date: Date) -> String {
-        // Ensure we're using the device's current timezone
-        let calendar = Calendar.current
-        let timeZone = TimeZone.current
-        
-        // Create formatter with current timezone
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.timeZone = timeZone
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.calendar = calendar
-        
-        // Format the date - DateFormatter automatically converts to the specified timezone
-        let localTimeString = formatter.string(from: date)
-        
-        return localTimeString
-    }
-    
-    // Helper function to format date only (without time)
-    private func formatDateOnly(_ date: Date) -> String {
-        // Ensure we're using the device's current timezone
-        let calendar = Calendar.current
-        let timeZone = TimeZone.current
-        
-        // Create formatter with current timezone
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        formatter.timeZone = timeZone
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.calendar = calendar
-        
-        // Format the date - DateFormatter automatically converts to the specified timezone
-        let localDateString = formatter.string(from: date)
-        
-        return localDateString
-    }
+
     
 }
         

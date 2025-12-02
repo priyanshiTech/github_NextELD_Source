@@ -32,16 +32,7 @@ struct DateTimeHelper {
     }
     
     static func currentDateTime() -> Date {
-        let currentTime = Date()
-        let timezoneOffset = AppStorageHandler.shared.timeZoneOffset ?? ""
-        
-        // Convert current time to user's timezone
-        if let userTime = convertToUserTimezone(currentTime, offset: timezoneOffset) {
-            return userTime // current
-        } else {
-            return currentTime // UTC
-        }
-            
+        return Date()
     }
     static func getCurrentUTCDateTimeString() -> String {
         let formatter = ISO8601DateFormatter()
@@ -158,7 +149,41 @@ struct DateTimeHelper {
         }
         return nil
     }
-
+    // Helper function to format date to local time with date and time
+    static func formatDateToLocalTime(_ date: Date) -> String {
+        // Ensure we're using the device's current timezone
+        let calendar = Calendar.current
+        let timeZone = TimeZone.current
+        
+        // Create formatter with current timezone
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.timeZone = timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = calendar
+        
+        // Format the date - DateFormatter automatically converts to the specified timezone
+        let localTimeString = formatter.string(from: date)
+        
+        return localTimeString
+    }
+    
+    // Helper function to format date only (without time)
+    static func formatDateOnly(_ date: Date) -> String {
+        // Ensure we're using the device's current timezone
+        let calendar = Calendar.current
+        let timeZone = TimeZone.current
+        
+        // Create formatter with current timezone
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = calendar
+        // Format the date - DateFormatter automatically converts to the specified timezone
+        let localDateString = formatter.string(from: date)
+        return localDateString
+    }
     
 }
 

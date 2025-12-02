@@ -456,10 +456,12 @@ struct HomeScreenView: View {
 //                    saveCurrentTimerStatesBeforeSwitch()
 //                    saveCurrentTimerStates()
 //                }
-                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+        
+       .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     // Restore timer states when app becomes active
                     homeVM.restoreAllTimersFromLastStatus()
                 }
+        
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
             // Save timer states when app is about to terminate
            // homeVM.saveCurrentTimerStatesBeforeSwitch()
@@ -1324,12 +1326,12 @@ extension HomeScreenView {
             showLogoutStatusAlert = true
             return
         }
-        if hasPendingUnsyncedLogs() {
-            syncPopupContext = .logout
-            showPendingSyncPopup = true
-        } else {
+     //   if hasPendingUnsyncedLogs() {
+          //  syncPopupContext = .logout
+          //  showPendingSyncPopup = true
+        //} else {
             showLogoutPopup = true
-        }
+        //}
     }
     
     private func scheduleRefreshAlert() {
