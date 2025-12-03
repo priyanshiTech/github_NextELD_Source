@@ -103,8 +103,8 @@ struct HomeScreenView: View {
                             
                             else {
 
-                                if (status == .onDuty /*|| status == .onDrive*/),
-                                   homeVM.checkWhetherTheLogCertifyOrNot(status: status).havingCertifyLog {
+//                                if (status == .onDuty || status == .onDrive),
+//                                   homeVM.checkWhetherTheLogCertifyOrNot(status: status).havingCertifyLog {
 
                                     // CONDITION 1: Today uncertified → NO CERTIFY POPUP
                                     if homeVM.hasUncertifiedLogForToday() {
@@ -120,11 +120,13 @@ struct HomeScreenView: View {
 
                                     //  DVIR logic ONLY when status == .onDrive
                                     if status == .onDrive {
+                                        
                                         if homeVM.checkWhetherTheDVIRAddedOrNot(status: status) {
                                             if homeVM.checkWhetherDVIRLastRecordIsInToday(status: status) {
-                                                homeVM.showDriverStatusAlert = (true, status)
-                                            } else {
                                                 showAddDvirPopup = true
+                                            } else {
+                                               
+                                                homeVM.showDriverStatusAlert = (true, status)
                                             }
                                         } else {
                                             showDvirPopup = true
@@ -134,9 +136,9 @@ struct HomeScreenView: View {
                                         homeVM.showDriverStatusAlert = (true, status)
                                     }
 
-                                } else {
-                                    homeVM.showDriverStatusAlert = (true, status)
-                                }
+//                                } else {
+//                                    homeVM.showDriverStatusAlert = (true, status)
+//                                }
                             }
 
 
