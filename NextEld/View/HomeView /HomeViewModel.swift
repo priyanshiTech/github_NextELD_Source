@@ -937,9 +937,55 @@ class HomeViewModel: ObservableObject {
                 return (havingCertifyLog: true, isAllLogCerify: allCertifylogs.count > 0)
             }
         }
-        
-        
     }
+    //MARK: -  check previous
+    func hasUncertifiedLogForPreviousDates() -> Bool {
+        let logs = CertifyDatabaseManager.shared.fetchAllRecords()
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        formatter.timeZone = DateTimeHelper.calendar.timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        let today = formatter.string(from: Date())
+
+        for log in logs {
+            let logDate = log.date
+            let isCertify = log.isCertify   // "Yes" / "No"
+            
+            // Previous dates only, and uncertified
+            if logDate != today && isCertify == "No" {
+                return true
+            }
+        }
+        return false
+    }
+
+    
+    //MARK:  chcking for today date
+    func hasUncertifiedLogForToday() -> Bool {
+        let logs = CertifyDatabaseManager.shared.fetchAllRecords()
+        
+        // Get current date in the same format as certify logs ("dd-MM-yyyy")
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        formatter.timeZone = DateTimeHelper.calendar.timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        let today = formatter.string(from: Date())
+
+        for log in logs {
+            // log.date is already a String in "dd-MM-yyyy" format, so compare directly
+            let logDate = log.date
+            // Check if log date matches today and is uncertified (isCertify == "No")
+            if logDate == today && log.isCertify == "No" {
+                return true   // today contains uncertified log
+            }
+        }
+        return false
+    }
+
+  
+  
+
     
     func checkWhetherTheDVIRAddedOrNot(status: DriverStatusType) -> Bool {
         if let lastLog = DvirDatabaseManager.shared.fetchAllRecords().last,

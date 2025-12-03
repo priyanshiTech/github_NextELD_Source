@@ -41,8 +41,8 @@ struct DateTimeHelper {
         } else {
             return currentTime // UTC
         }
+            
     }
-    
     static func getCurrentUTCDateTimeString() -> String {
         let formatter = ISO8601DateFormatter()
         formatter.timeZone = TimeZone(abbreviation: "UTC")
@@ -116,7 +116,23 @@ struct DateTimeHelper {
         
         return dateFormatter.string(from: date)
     }
-    
+    //MARK: - to add a Correct Logsdetails time Formate
+    // Format date/time exactly as stored in database (extract components directly without timezone conversion)
+    static func formatDatabaseDateTime(_ date: Date) -> String {
+        // Use DateTimeHelper calendar (GMT+0) to extract components exactly as stored
+        let calendar = DateTimeHelper.calendar
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        
+        let year = components.year ?? 0
+        let month = String(format: "%02d", components.month ?? 0)
+        let day = String(format: "%02d", components.day ?? 0)
+        let hour = String(format: "%02d", components.hour ?? 0)
+        let minute = String(format: "%02d", components.minute ?? 0)
+        let second = String(format: "%02d", components.second ?? 0)
+        
+        return "\(year)-\(month)-\(day) \(hour):\(minute):\(second)"
+    }
+
     static func getDateStringFrom(_ fromString: String, fromDateFormat: DateFormatterConstants, toDateFromat: DateFormatterConstants) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = fromDateFormat.rawValue
@@ -189,8 +205,10 @@ struct DateTimeHelper {
         formatter.timeZone = timeZone
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = calendar
+        
         // Format the date - DateFormatter automatically converts to the specified timezone
         let localDateString = formatter.string(from: date)
+        
         return localDateString
     }
     
