@@ -102,44 +102,41 @@ struct HomeScreenView: View {
                             }
                             
                             else {
-
-//                                if (status == .onDuty || status == .onDrive),
-//                                   homeVM.checkWhetherTheLogCertifyOrNot(status: status).havingCertifyLog {
-
-                                    // CONDITION 1: Today uncertified → NO CERTIFY POPUP
+                                
+                                if (status == .onDuty || status == .onDrive),
+                                   homeVM.checkWhetherTheLogCertifyOrNot(status: status).havingCertifyLog {
+                                    
+                                    // CONDITION 1: Current date uncertified → NO CERTIFY POPUP, show normal status alert
                                     if homeVM.hasUncertifiedLogForToday() {
                                         homeVM.showDriverStatusAlert = (true, status)
                                         return
                                     }
-
-                                    // CONDITION 2: Old uncertified → CERTIFY POPUP
+                                    
+                                    // CONDITION 2: Previous dates uncertified → SHOW CERTIFY POPUP
                                     if homeVM.hasUncertifiedLogForPreviousDates() {
                                         showCertifyLogAlert = true
                                         return
                                     }
-
+                                    
                                     //  DVIR logic ONLY when status == .onDrive
                                     if status == .onDrive {
-                                        
                                         if homeVM.checkWhetherTheDVIRAddedOrNot(status: status) {
                                             if homeVM.checkWhetherDVIRLastRecordIsInToday(status: status) {
                                                 showAddDvirPopup = true
                                             } else {
-                                               
                                                 homeVM.showDriverStatusAlert = (true, status)
                                             }
                                         } else {
                                             showDvirPopup = true
                                         }
                                     } else {
-                                        // On-Duty should NEVER show DVIR popup
                                         homeVM.showDriverStatusAlert = (true, status)
                                     }
+                                } else {
+                                    homeVM.showDriverStatusAlert = (true, status)
+                                }
 
-//                                } else {
-//                                    homeVM.showDriverStatusAlert = (true, status)
-//                                }
-                            }
+                                }
 
 
 
@@ -576,62 +573,7 @@ struct HomeScreenView: View {
 
         }
         
-        
-        //            else {
-        //                DispatchQueue.main.async {
-        //                   // navmanager.navigate(to: AppRoute.loginFlow(.login))
-        //                    navmanager.navigate(to: ApplicationRoot.login)
-        //                    appRootManager.currentRoot = .login
-        //                }
-        //                return
-        //            }
-        //
-        //           //  Check if we have any saved timer data
-        //            let hasSavedData = !DatabaseManager.shared.fetchLogs().isEmpty
-        //                        print(" Has saved data: \(hasSavedData)")
-        //
-        //            if hasSavedData {
-        //                            print(" Found saved data - restoring timers")
-        //             //    Delay restoration to ensure UI is ready
-        //                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        //                    self.restoreAllTimers()
-        //                    hasRestoredTimers = true
-        //                    print(" Timer restoration completed - confirmedStatus: \(self.confirmedStatus ?? "nil"), selectedStatus: \(self.selectedStatus ?? "nil")")
-        //                }
-        //            } else {
-        //
-        //                print(" No saved data - initializing fresh")
-        //                if !hasAppearedBefore {
-        //                    hasAppearedBefore = true
-        //                            }
-        //                         //    Always ensure status is set to Off-Duty if no saved data
-        //            if confirmedStatus == nil {
-        //                selectedStatus = DriverStatusConstants.offDuty
-        //                confirmedStatus = DriverStatusConstants.offDuty
-        //                                print(" Set status to OffDuty (no saved data)")
-        //                            }
-        //                        }
-        //
-        //                       //  Always ensure status is properly set when view appears
-        //                        if confirmedStatus == nil {
-        //                            selectedStatus = DriverStatusConstants.offDuty
-        //                            confirmedStatus = DriverStatusConstants.offDuty
-        //                            print("🔧 Set status to OffDuty (fallback)")
-        //                        }
-        //
-        //                        print(" Final status after onAppear - confirmedStatus: \(confirmedStatus ?? "nil"), selectedStatus: \(selectedStatus ?? "nil")")
-        //
-        //                      //   Check and reset daily violations
-        //                        checkAndResetDailyViolations()
-        //
-        //            checkFor34HourReset()
-        //        }
-        
-        // nitin
-        
-        //***************************+++++++++++++++++++++++++++******************************************************************************************************
 
-        
         //MARK: -  #P for refresh All logs popup
         .alert(homeVM.alertType.getTitle(), isPresented: $homeVM.showAlertOnHomeScreen) {
         Button("Cancel", role: .cancel) {

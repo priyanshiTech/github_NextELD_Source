@@ -15,7 +15,7 @@ extension HomeViewModel {
         
         // Check for duplicate entry: same status, origin, and startTime within 30 seconds
         let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day])
-        let tolerance: TimeInterval = 30 // 30 seconds tolerance
+        let tolerance: TimeInterval = 30 //30 seconds tolerance
         let hasDuplicate = allLogs.contains { log in
             log.status == status &&
             log.origin == originDescription &&
@@ -23,7 +23,7 @@ extension HomeViewModel {
         }
         
         if hasDuplicate {
-            print(" ⚠️ Duplicate log entry detected - skipping save for \(status) at \(startTime)")
+            print("Duplicate log entry detected - skipping save for \(status) at \(startTime)")
             return
         }
 
@@ -42,11 +42,10 @@ extension HomeViewModel {
             isVoilations: false,
             origin: originDescription
         )
-
         print(" Timer state saved successfully for \(status)")
     }
 
-//MARK: -  for Continue Drive DB
+// MARK: -  for Continue Drive DB
 //    func saveContinueDriveDB(status: String){
 //        
 //        // Check if break timer is completed (30 minutes = 1800 seconds)

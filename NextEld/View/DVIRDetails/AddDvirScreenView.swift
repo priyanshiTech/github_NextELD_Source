@@ -10,6 +10,8 @@ import SwiftUI
 struct AddDvirScreenView: View  {
     
     @EnvironmentObject var navmanager: NavigationManager
+    @StateObject var navManager: NavigationManager = NavigationManager()
+
     @StateObject var trailerVM: TrailerViewModel = .init()
     @StateObject var vehicleVM: VehicleConditionViewModel = .init()
    // @StateObject var DVClocationManager: DeviceLocationManager = .init()
@@ -25,11 +27,13 @@ struct AddDvirScreenView: View  {
     
     // Computed property to determine button text based on whether editing or adding
     private var buttonText: String {
+        
         if let record = selectedRecord, record.id != nil {
             return "Update Dvir"
         } else {
             return "Add Dvir"
         }
+        
     }
     
     // MARK: - Computed Views
@@ -267,7 +271,7 @@ struct AddDvirScreenView: View  {
     }
     
     private var addDvirButton: some View {
-        Button(action: handleAddDvirButtonTap) {
+        Button(action: handleAddDvirButtonTap , ) {
             Text(buttonText)
                             .frame(maxWidth: .infinity)
                 .frame(height: 50)

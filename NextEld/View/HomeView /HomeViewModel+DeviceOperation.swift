@@ -78,7 +78,7 @@ extension HomeViewModel {
             let isCooldownActive = blockScreenCooldownUntil != nil && currentTime < blockScreenCooldownUntil!
             
             // Debug: Print tracking info
-            print("🚗 Speed: \(speed) | HighSpeedList Count: \(highSpeedList.count) | Cooldown Active: \(isCooldownActive) | ShowBlockScreen: \(showBlockScreen)")
+            print("Speed: \(speed) | HighSpeedList Count: \(highSpeedList.count) | Cooldown Active: \(isCooldownActive) | ShowBlockScreen: \(showBlockScreen)")
             
             if highSpeedList.count >= 5 {
                 if !isCooldownActive && !showBlockScreen {
@@ -91,36 +91,29 @@ extension HomeViewModel {
                         highSpeedList = Array(highSpeedList.suffix(4))
                     }
                     
-                    // Clear cooldown since we're blocking again
                     blockScreenCooldownUntil = nil
-                    
                     // Block the screen
                     showBlockScreen = true
-                    
                     // Update driver status to onDrive if not already
                     if currentDriverStatus != .onDrive {
                         setDriverStatus(status: .onDrive)
                         saveTimerStateForStatus(status: currentDriverStatus.getName(), originType: .auto)
                     }
                 } else if isCooldownActive {
-                    print("⏳ Cooldown active - waiting before blocking again. Count: \(highSpeedList.count)")
+                    print(" Cooldown active - waiting before blocking again. Count: \(highSpeedList.count)")
                 } else if showBlockScreen {
-                    print("📱 Block screen already showing")
+                    print(" Block screen already showing")
                 }
                 // If cooldown is active, don't block but keep tracking (don't clear the list)
             } else {
-                print("📊 Tracking: \(highSpeedList.count)/5 events collected")
+                print(" Tracking: \(highSpeedList.count)/5 events collected")
             }
         }
         // MARK: - SPEED <= 5 (including 0)
         else {
             // Add current timestamp to low-speed list
             lowSpeedList.append(currentTime)
-            
-            // Clear high-speed list when speed <= 5
             highSpeedList.removeAll()
-
-            // Remove old timestamps older than 60 seconds (keep only last 60 seconds)
             lowSpeedList.removeAll { timestamp in
                 currentTime - timestamp > SPEED_WINDOW
             }
