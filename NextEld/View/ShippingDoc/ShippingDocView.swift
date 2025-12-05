@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct ShippingDocView: View {
+    
     @EnvironmentObject var navmanager: NavigationManager
     @EnvironmentObject var shippingVM: ShippingDocViewModel
     
@@ -42,11 +43,14 @@ struct ShippingDocView: View {
                     TextField("Enter text here", text: $inputText)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
+                        .onChange(of: inputText) { newValue in
+                                  // Allow only alphabets, numbers, space
+                                  let allowed = CharacterSet.alphanumerics.union(.whitespaces)
+                                  inputText = String(newValue.unicodeScalars.filter { allowed.contains($0)})
+                              }
                     
                     Button("Add") {
                         guard !inputText.isEmpty else { return }
-                        
-                        // Just append directly
                         shippingVM.ShippingDoc.append(inputText)
                         inputText = ""
                     }
@@ -56,7 +60,6 @@ struct ShippingDocView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
                 }
-                
                 // List
                 List {
                     ForEach(shippingVM.ShippingDoc, id: \.self) { item in

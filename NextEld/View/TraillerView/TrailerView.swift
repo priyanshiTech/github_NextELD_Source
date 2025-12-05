@@ -56,6 +56,11 @@ struct TrailerView: View {
                     TextField("Enter text here", text: $inputText)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
+                        .onChange(of: inputText) { newValue in
+                                  // Allow only alphabets, numbers, space
+                                  let allowed = CharacterSet.alphanumerics.union(.whitespaces)
+                                  inputText = String(newValue.unicodeScalars.filter { allowed.contains($0) })
+                              }
                     
                     Button(action: {
                         

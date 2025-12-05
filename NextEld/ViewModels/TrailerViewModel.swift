@@ -75,6 +75,8 @@ class TrailerViewModel: ObservableObject {
 
 class ShippingDocViewModel: ObservableObject {
     @Published var ShippingDoc: [String] = []
+    @Published private var inputText = ""
+    @Published  var showError = false
 }
 
 import SwiftUI

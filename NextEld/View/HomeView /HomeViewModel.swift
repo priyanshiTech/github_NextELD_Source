@@ -918,7 +918,32 @@ class HomeViewModel: ObservableObject {
     func checkWhetherTheLogCertifyOrNot(status: DriverStatusType) -> (havingCertifyLog: Bool, isAllLogCerify: Bool) {
         let lastDriverLog = DatabaseManager.shared.getLastRecordOfDriverLogs()
         let allCertifylogs = CertifyDatabaseManager.shared.fetchAllRecords()
-        let notCertifyLogs = allCertifylogs.filter({ $0.isCertify == "No"})
+        
+        // Get current date to exclude it from checking
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        formatter.timeZone = DateTimeHelper.calendar.timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        let todayString = formatter.string(from: Date())
+        
+        // Parse today's date for proper comparison
+        guard let todayDate = formatter.date(from: todayString) else {
+            // If date parsing fails, return default
+            return (havingCertifyLog: false, isAllLogCerify: false)
+        }
+        
+        // Filter out current date logs - only check previous dates (dates before today)
+        let previousDateCertifyLogs = allCertifylogs.filter { log in
+            guard let logDate = formatter.date(from: log.date) else {
+                return false
+            }
+            // Only include logs from dates before today
+            return logDate < todayDate
+        }
+        
+        // Check for uncertified logs in previous dates only
+        let notCertifyLogs = previousDateCertifyLogs.filter({ $0.isCertify == "No"})
+        
         if lastDriverLog == nil {
             // verify any entry logs in Driver Log Table
             // If No Log found then we need to show then normal popup
@@ -926,7 +951,8 @@ class HomeViewModel: ObservableObject {
         } else {
             if notCertifyLogs.count > 0 {
                 // if any entry logs in Driver Log Table found
-                // then we need to verify any "isCertify = No" Entry is found
+                // then we need to verify any "isCertify = No" Entry is found from previous dates only
+                // Current date uncertified logs are excluded
                 // If yes then we need to show the certify popup
                 return (havingCertifyLog: true, isAllLogCerify: false)
             } else {
@@ -934,12 +960,75 @@ class HomeViewModel: ObservableObject {
                 // then we need to verify any "isCertify = Yes" Entry is found
                 // If yes then we don't need to show the certify popup
                 // If No then we need to show the certify popup
-                return (havingCertifyLog: true, isAllLogCerify: allCertifylogs.count > 0)
+                // Note: Only previous dates are checked, current date logs are excluded
+                return (havingCertifyLog: true, isAllLogCerify: previousDateCertifyLogs.count > 0)
             }
         }
-        
-        
     }
+    //MARK: -  check previous
+    func hasUncertifiedLogForPreviousDates() -> Bool {
+        let logs = CertifyDatabaseManager.shared.fetchAllRecords()
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        formatter.timeZone = DateTimeHelper.calendar.timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        let todayString = formatter.string(from: Date())
+        
+        // Parse today's date for comparison
+        guard let todayDate = formatter.date(from: todayString) else {
+            return false
+        }
+
+        for log in logs {
+            let logDateString = log.date
+            let isCertify = log.isCertify   // "Yes" / "No"
+            
+            // Skip if uncertified check fails
+            guard isCertify == "No" else {
+                continue
+            }
+            
+            // Parse log date
+            guard let logDate = formatter.date(from: logDateString) else {
+                continue
+            }
+            
+            // Check if log date is before today (previous date)
+            // This ensures when next day comes, previous dates are properly detected
+            if logDate < todayDate {
+                return true  // Found uncertified log from previous date
+            }
+        }
+        return false
+    }
+
+    
+    //MARK:  chcking for today date
+    func hasUncertifiedLogForToday() -> Bool {
+        let logs = CertifyDatabaseManager.shared.fetchAllRecords()
+        
+        // Get current date in the same format as certify logs ("dd-MM-yyyy")
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        formatter.timeZone = DateTimeHelper.calendar.timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        let today = formatter.string(from: Date())
+
+        for log in logs {
+            // log.date is already a String in "dd-MM-yyyy" format, so compare directly
+            let logDate = log.date
+            // Check if log date matches today and is uncertified (isCertify == "No")
+            if logDate == today && log.isCertify == "No" {
+                return true   // today contains uncertified log
+            }
+        }
+        return false
+    }
+
+  
+  
+
     
     func checkWhetherTheDVIRAddedOrNot(status: DriverStatusType) -> Bool {
         if let lastLog = DvirDatabaseManager.shared.fetchAllRecords().last,
@@ -951,6 +1040,20 @@ class HomeViewModel: ObservableObject {
     }
     
     func checkWhetherDVIRLastRecordIsInToday(status: DriverStatusType) -> Bool {
+        if let lastLog = DvirDatabaseManager.shared.fetchAllRecords().last {
+            //MARK: -  CONDITION: day is empty AND shift is empty AND status == .onDrive
+            if lastLog.DAY.isEmpty && !lastLog.Shift.isEmpty && status == .onDrive {
+                if DateTimeHelper.calendar.isDateInToday(lastLog.startTime.asDate() ?? DateTimeHelper.currentDateTime()) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+
+    
+   /* func checkWhetherDVIRLastRecordIsInToday(status: DriverStatusType) -> Bool {
         if let lastLog = DvirDatabaseManager.shared.fetchAllRecords().last,
            lastLog.signature != nil,
           (status == .onDrive)  {
@@ -959,5 +1062,5 @@ class HomeViewModel: ObservableObject {
             }
         }
         return false
-    }
+    }*/
 }

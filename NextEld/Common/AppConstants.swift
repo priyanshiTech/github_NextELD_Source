@@ -60,7 +60,7 @@ struct AppConstants {
 
     //MARK: -  for vehicle condition
     static let vehicleCondition =  " Vehicle Condition Satisfactory"
-    static let shiftChangeMessage  = "your shift has benn changed changed"
+    static let shiftChangeMessage  = "your shift has been changed changed"
     static let thirtyFourHourAlertMsg = "Your 34 hours not yet completed. You can switch to OffDuty or Sleep"
     static let splitShiftEndsMsg = "Your split shift Ends."
 }

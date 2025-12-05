@@ -10,14 +10,7 @@ import SwiftUI
 
 
 struct StatusView: View {
-    
-//    @Binding var confirmedStatus: String?
-//    @Binding var selectedStatus: String?
-//    @Binding var showAlert: Bool
-//    @Binding var showCertifyLogAlert: Bool
-    //MARK: -  Continue Drive ,  Rest Break
-//    @ObservedObject var ContiueDrive:  CountdownTimer
-//    @ObservedObject var RestBreak: CountdownTimer
+
     @State private var selectedDriverStatus: DriverStatusType = .offDuty
     private var driverStatusTypes: Array<DriverStatusType> = [.onDuty, .onDrive, .offDuty, .sleep]
     let columns = [
@@ -76,71 +69,7 @@ struct StatusView: View {
                 }
                 .padding(.horizontal, 20)
                 .frame(maxWidth: .infinity)
-                
-                /*
-                
-                VStack(alignment: .center, spacing: 0) {
-                    HStack {
-                        
-                        StatusCheckBox(
-                            isClick: confirmedStatus == DriverStatusConstants.onDuty,
-                            labelText: "On-Duty",
-                            onTap: {
-//                                if confirmedStatus != DriverStatusConstants.onDuty {
-//                                    let hasPreviousLogs = CertifyDatabaseManager.shared.hasPreviousDayLogsUncertified()
-//                                    if hasPreviousLogs {
-//                                        //  Trigger popup overlay
-//                                        showCertifyLogAlert = true
-//                                    } else {
-//                                        // Continue normal flow
-//                                        selectedStatus = DriverStatusConstants.onDuty
-//                                        showAlert = true
-//                                    }
-//                                }
-                            }
-                        )
 
-
-                            
-                        Spacer()
-                        StatusCheckBox(
-                            isClick: confirmedStatus == DriverStatusConstants.onDrive,
-                            labelText: "Drive",
-                            onTap: {
-                                // Only show popup if not already selected
-//                                if confirmedStatus != DriverStatusConstants.onDrive {
-//                                selectedStatus = DriverStatusConstants.onDrive
-//                                showAlert = true
-//                                }
-                            })
-                    }
-                    .padding()
-                    HStack {
-                        StatusCheckBox(
-                            isClick: confirmedStatus == DriverStatusConstants.offDuty,
-                            labelText: "Off-Duty",
-                            onTap: {
-                                // Only show popup if not already selected
-//                                if confirmedStatus != DriverStatusConstants.offDuty {
-//                                    selectedStatus = DriverStatusConstants.offDuty
-//                                showAlert = true
-//                                }
-                            })
-                        Spacer()
-                        
-                        StatusCheckBox(
-                            isClick: confirmedStatus == DriverStatusConstants.onSleep,
-                            labelText: "Sleep",
-                            onTap: {
-//                                if confirmedStatus != DriverStatusConstants.onSleep {
-//                                selectedStatus = DriverStatusConstants.onSleep
-//                                showAlert = true
-//                                }
-                            })
-                    }
-                    .padding()
-                }
-            */
 
                 //MARK: -  Personal Use and Yard Move buttons (conditional visibility)
                 if isPersonalUseEnabled || isYardMoveEnabled {
