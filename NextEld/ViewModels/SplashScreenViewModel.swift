@@ -29,7 +29,7 @@ class APITokenUpdateViewModel: ObservableObject {
             driverId: AppStorageHandler.shared.driverId ?? 0,
             tokenNo: AppStorageHandler.shared.authToken ?? ""
         )
-        print("Request For *****TokenUpdateAPI*****: \(request)")
+        // print("Request For *****TokenUpdateAPI*****: \(request)")
 
         do {
             
@@ -37,8 +37,8 @@ class APITokenUpdateViewModel: ObservableObject {
                 .SpalshDataAPI,
                 body: request
             )
-            print("Splash API Response: \(response)")
-            print("Response token value: \(response.token ?? "nil")")
+            // print("Splash API Response: \(response)")
+            // print("Response token value: \(response.token ?? "nil")")
 
             // Check if token is false - session expired
             if let tokenValue = response.token, tokenValue.lowercased() == "false" {
@@ -46,7 +46,7 @@ class APITokenUpdateViewModel: ObservableObject {
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
                 appRootManager?.currentRoot = .SessionExpireUIView
-                print("  Session expired - token is false, navigating to SessionExpireUIView")
+                // print("  Session expired - token is false, navigating to SessionExpireUIView")
                 return false
             }
             
@@ -58,7 +58,7 @@ class APITokenUpdateViewModel: ObservableObject {
                 
                 // Token is true/valid - save data and proceed normally
                 saveToUserDefaults(result: result)
-                print(" Token is valid - proceeding with normal flow")
+                // print(" Token is valid - proceeding with normal flow")
                 return true   //  success
             } else {
                 self.apiMessage = response.message ?? "Failed"
@@ -112,7 +112,7 @@ class APITokenUpdateViewModel: ObservableObject {
         //  Save token
         defaults.set(result.tokenNo, forKey: "KEY_AUTH_TOKEN")
         defaults.synchronize()
-        print(" UserDefaults updated with API response")
+        // print(" UserDefaults updated with API response")
     }
 }
 
@@ -163,7 +163,7 @@ class APITokenUpdateViewModel: ObservableObject {
             tokenNo: AppStorageHandler.shared.authToken
         )
         
-        print("Request For *****TokenUpdateAPI*****: \(request)")
+        // print("Request For *****TokenUpdateAPI*****: \(request)")
         
         do {
             let response: TokenModelLog = try await NetworkManager.shared.post(

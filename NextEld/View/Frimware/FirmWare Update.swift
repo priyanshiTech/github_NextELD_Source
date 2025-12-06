@@ -100,7 +100,7 @@ struct FirmWare_Update: View {
         }
          .onChange(of: viewModel.firmwareInfo)
         { newValue in
-            print("UI saw firmwareInfo update:", newValue as Any)
+            // print("UI saw firmwareInfo update:", newValue as Any)
         }
         Spacer()
     }

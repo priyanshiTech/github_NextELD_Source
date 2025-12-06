@@ -77,14 +77,14 @@ struct ForgetUserName: View {
                                        viewModel.appRootManager = appRootManager
                                        let success = await viewModel.submitForgetUsername()
                                        if viewModel.isSessionExpired {
-                                           print(" Session expired detected in ForgetUserName view - staying on SessionExpireUIView")
+                                           // print(" Session expired detected in ForgetUserName view - staying on SessionExpireUIView")
                                            return
                                        }
                                        if success {
                                            // optional additional flow
                                        }
                                    }
-                                   print("Continue tapped with number: \(mobNumber)")
+                                   // print("Continue tapped with number: \(mobNumber)")
                                }
                                .bold()
                                .padding()

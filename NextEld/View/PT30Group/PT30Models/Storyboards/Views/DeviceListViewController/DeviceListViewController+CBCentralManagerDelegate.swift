@@ -72,8 +72,8 @@ extension DeviceListViewController: CBCentralManagerDelegate {
                 self.targetPeripheral = peripheral
                 // Now you have a CBPeripheral object for the connected device
                 // You can access its name, identifier, etc.
-                print("Connected Peripheral Name: \(peripheral.name ?? "Unnamed")")
-                print("Connected Peripheral Identifier: \(peripheral.identifier.uuidString)")
+                // print("Connected Peripheral Name: \(peripheral.name ?? "Unnamed")")
+                // print("Connected Peripheral Identifier: \(peripheral.identifier.uuidString)")
 
                 // To get more detailed information (services, characteristics),
                 // you need to set the peripheral's delegate and discover its services.

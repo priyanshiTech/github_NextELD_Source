@@ -54,22 +54,22 @@ class DriverStatusViewModel: ObservableObject {
                 // API explicitly returned FAIL status
                 self.data = nil
                 self.errorMessage = response.message ?? "No record found."
-                print("⚠️ API returned FAIL status: \(response.message ?? "No record found.")")
+                // print("⚠️ API returned FAIL status: \(response.message ?? "No record found.")")
             } else if response.result == nil || response.result?.isEmpty == true {
                 // Result is null or empty array
                 self.data = nil
                 self.errorMessage = response.message ?? "No data available for the selected date."
-                print("⚠️ API returned null/empty result: \(response.message ?? "No data available")")
+                // print("⚠️ API returned null/empty result: \(response.message ?? "No data available")")
             } else {
                 // Success case - data is available
                 self.data = response
                 self.errorMessage = nil
-                print("✅ API returned success with \(response.result?.count ?? 0) record(s)")
+                // print("✅ API returned success with \(response.result?.count ?? 0) record(s)")
             }
         } catch {
             self.data = nil
             self.errorMessage = error.localizedDescription
-            print("❌ API call failed with error: \(error.localizedDescription)")
+            // print("❌ API call failed with error: \(error.localizedDescription)")
         }
         
         isLoading = false

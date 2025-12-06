@@ -82,21 +82,9 @@ class BluetoothViewModel: NSObject, ObservableObject {
 
 extension BluetoothViewModel: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-
-
-        switch central.state {
-        case .poweredOn:
-            print("Bluetooth is powered on")
-        case .poweredOff:
-            print("Bluetooth is powered off")
-        case .unauthorized:
-            print("Bluetooth is unauthorized")
-        case .unsupported:
-            print("Bluetooth is unsupported")
-        default:
-            print("Unknown state")
-        }
+        
     }
+    
     
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -120,7 +108,7 @@ extension BluetoothViewModel: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        print("Failed to connect: \(error?.localizedDescription ?? "Unknown error")")
+        // print("Failed to connect: \(error?.localizedDescription ?? "Unknown error")")
         broadcastConnectionChange(false)
     }
 }
@@ -150,7 +138,7 @@ extension BluetoothViewModel: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         guard let value = characteristic.value else { return }
         let stringData = String(decoding: value, as: UTF8.self)
-        print("Received Data: \(stringData)")
+        // print("Received Data: \(stringData)")
         parseReceivedLine(stringData)
     }
 
@@ -164,8 +152,8 @@ extension BluetoothViewModel: CBPeripheralDelegate {
             } else if self.isShubhamActive {
                 self.receivedText.append(stringData)
             }
-            print("Shubham Mode: \(self.isShubhamActive)")
-            print("Received Raw String: \(stringData)")
+            // print("Shubham Mode: \(self.isShubhamActive)")
+            // print("Received Raw String: \(stringData)")
         }
     }
 }

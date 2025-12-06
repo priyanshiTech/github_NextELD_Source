@@ -101,18 +101,18 @@ struct AddVichleMode: View {
                     
                     // Check if session expired - if yes, don't navigate anywhere else
                     if viewModel.isSessionExpired {
-                        print(" Session expired detected - staying on SessionExpireUIView")
+                        // print(" Session expired detected - staying on SessionExpireUIView")
                         return // Don't proceed with any navigation
                     }
           
                     if viewModel.responseMessage != nil {
-                        print(viewModel.responseMessage as Any)
+                        // print(viewModel.responseMessage as Any)
                         // Navigate only on success
                         
                         UserDefaults.standard.set(selectedVehicle, forKey: "vehicleNo")
-                         print("Saved selected vehicle: \(selectedVehicle)")
+                         // print("Saved selected vehicle: \(selectedVehicle)")
                         UserDefaults.standard.set(selectedVehicleId, forKey: "vehicleId")
-                        print(" Saved vehicle: \(selectedVehicle), ID: \(selectedVehicleId)")
+                        // print(" Saved vehicle: \(selectedVehicle), ID: \(selectedVehicleId)")
                         
                         navmanager.reset()
                         appRootManager.currentRoot = .scanner(moveToHome: false)

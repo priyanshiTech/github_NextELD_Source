@@ -151,7 +151,7 @@ struct RulesView: View {
             
             // Check if session expired - if yes, don't proceed with any further processing
             if viewModel.isSessionExpired {
-                print(" Session expired detected - staying on SessionExpireUIView")
+                // print(" Session expired detected - staying on SessionExpireUIView")
                 return
             }
         }

@@ -92,7 +92,7 @@ struct DatabaseCertifyView: View {
        
         .onReceive(NotificationCenter.default.publisher(for: .certifyUpdated)) { notification in
             if let date = notification.object as? String {
-                print(" Certified updated for date: \(date)")
+                // print(" Certified updated for date: \(date)")
             }
             loadRecords() // Refresh table
         }
@@ -102,7 +102,7 @@ struct DatabaseCertifyView: View {
     
     func loadRecords() {
         records = CertifyDatabaseManager.shared.fetchAllRecords()
-        print("All certify Records here :\(records)")
+        // print("All certify Records here :\(records)")
     }
     
   

@@ -118,37 +118,37 @@ struct NewDriverLogin: View {
                 Task {
                     // Step 1: First check if someone is logged in - Logout old user with all data
                     if SessionManagerClass.shared.isLoggedIn() {
-                        print(" Old user logged in, calling logout API...")
+                        // print(" Old user logged in, calling logout API...")
                         // Logout current user before logging in new one
                         logoutVM.appRootManager = appRootManager
                         let logoutSuccess = await logoutVM.callLogoutAPI()
                         if logoutVM.isSessionExpired {
-                            print(" Session expired detected during codriver logout - staying on SessionExpireUIView")
+                            // print(" Session expired detected during codriver logout - staying on SessionExpireUIView")
                             return
                         }
                         
                         // Check if logout was successful
                         if !logoutSuccess || logoutVM.status != "SUCCESS" {
-                            print(" Logout failed: \(logoutVM.apiMessage)")
+                            // print(" Logout failed: \(logoutVM.apiMessage)")
                             DispatchQueue.main.async {
                                 alertVisible = true
                             }
                             return
                         }
-                        print(" Old user logged out successfully with all data")
+                        // print(" Old user logged out successfully with all data")
                     }
                     
                     // Step 2: Now run login API for new codriver
-                    print(" Starting login for new codriver: \(UserText)")
+                    // print(" Starting login for new codriver: \(UserText)")
                     let success = await loginVM.login(email: UserText, password: password)
                     
                     // Step 3: Check if login was successful
                     if success && SessionManagerClass.shared.isLoggedIn() {
-                        print(" Login successful! Calling loginLogUpdate API...")
+                        // print(" Login successful! Calling loginLogUpdate API...")
                         
                         // Step 4: Call loginLogUpdate API
                         await viewModel.callLoginLogUpdateAPI()
-                        print(" LoginLogUpdate API called successfully")
+                        // print(" LoginLogUpdate API called successfully")
                         
                         isLoggedIn = true
                         handlePostNewDriverNavigation()  //forchecking condition
@@ -158,11 +158,11 @@ struct NewDriverLogin: View {
                             appRootManager.currentRoot = .DisclaimerView
                            // appRootManager.currentRoot = .scanner(moveToHome: false)
                         }
-                        print(" Navigation completed - New user data will be displayed")
+                        // print(" Navigation completed - New user data will be displayed")
                     } else {
                         // Login failed - show error message
-                        print(" Login failed. Success: \(success), IsLoggedIn: \(SessionManagerClass.shared.isLoggedIn())")
-                        print(" Error message: \(loginVM.errorMessage ?? "No error message")")
+                        // print(" Login failed. Success: \(success), IsLoggedIn: \(SessionManagerClass.shared.isLoggedIn())")
+                        // print(" Error message: \(loginVM.errorMessage ?? "No error message")")
                         DispatchQueue.main.async {
                             alertVisible = true
                         }
@@ -208,7 +208,7 @@ struct NewDriverLogin: View {
         .onAppear {
             if !UserName.isEmpty {
                 self.UserText = UserName
-                print(" Auto-filled email from co-driver: \(UserName)")
+                // print(" Auto-filled email from co-driver: \(UserName)")
             }
         }
     }

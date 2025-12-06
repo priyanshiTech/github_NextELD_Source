@@ -125,7 +125,7 @@ struct DeviceScannerView: View {
                             
                             // Check if session expired - if yes, don't navigate anywhere else
                             if deviceStatusVM.isSessionExpired {
-                                print(" Session expired detected - staying on SessionExpireUIView")
+                                // print(" Session expired detected - staying on SessionExpireUIView")
                                 return 
                                 // Don't proceed with any navigation
                             }
@@ -174,7 +174,7 @@ struct DeviceScannerView: View {
                         //  Load vehicle from AppStorage
                         if let savedVehicle = AppStorageHandler.shared.vehicleNo{
                             tittle = savedVehicle
-                            print("Loaded vehicle title: \(savedVehicle)")
+                            // print("Loaded vehicle title: \(savedVehicle)")
                         }
                     }
             }
@@ -204,7 +204,7 @@ struct DeviceScannerView: View {
                          tittle: "Email DVIR",
                         updateRecords: DvirDatabaseManager.shared.fetchAllRecords(), // or your source of records
                         onSelect: { selectedRecord in
-                            print(" Selected Record: \(selectedRecord)")
+                            // print(" Selected Record: \(selectedRecord)")
                             // Optional: navigate or update state
                         }
                     )
@@ -253,10 +253,6 @@ struct DeviceScannerView: View {
                         tittle: title,
                         UserName: email
                     )
-                case .BlockView:
-                    // Note: Ideally BlockAppView should be shown from HomeScreenView where HomeViewModel is available
-                    // For now, creating a new instance - this should be updated to use the same HomeViewModel instance from HomeScreenView
-                    BlockAppView(homeViewModel: HomeViewModel())
                 }
             }
             .navigationDestination(for: AppRoute.LogsFlow.self) { route in
@@ -313,6 +309,34 @@ struct DeviceScannerView: View {
                 SessionExpireUIView()
             case .DisclaimerView:
                 DisclamerView()
+            }
+        }
+        .navigationDestination(for: AppRoute.AddDVIRFlow.self) { route in
+            switch route {
+            case .trailerScreen:
+                TrailerView(
+                    trailerVM: trailerVM,
+                    tittle: AppConstants.trailersTittle,
+                    trailers: $trailerVM.trailers
+                )
+                
+            case .ShippingDocment:
+                ShippingDocView(tittle: AppConstants.shippingTittle)
+                    .environmentObject(shippingVM)
+                
+            case .AddVehicleForDVIR:
+                AddVehicleForDvir(
+                    selectedVehicleNumber: $vehiclesc,
+                    VechicleID: Binding(
+                        get: { VechicleID ?? 0 },
+                        set: { newValue in
+                            VechicleID = newValue
+                            AppStorageHandler.shared.vehicleId = newValue
+                        }
+                    )
+                )
+            default:
+                EmptyView()
             }
         }
         .navigationBarHidden(true)

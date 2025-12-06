@@ -43,14 +43,14 @@ class DefectAPIViewModel: ObservableObject {
                 body: requestBody
             )
             
-            print(" DefectAPIViewModel - API Response received")
-            print(" Response token value: \(response.token ?? "nil")")
+            // print(" DefectAPIViewModel - API Response received")
+            // print(" Response token value: \(response.token ?? "nil")")
             
             if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
-                print("  Session expired detected - token is false")
-                print("  appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                // print("  Session expired detected - token is false")
+                // print("  appRootManager is \(appRootManager != nil ? "set" : "nil")")
                 appRootManager?.currentRoot = .SessionExpireUIView
                 isLoading = false
                 return false

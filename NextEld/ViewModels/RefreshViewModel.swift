@@ -27,7 +27,7 @@ class RefreshViewModel: ObservableObject {
             tokenNo: AppStorageHandler.shared.authToken ?? "",
         )
 
-        print("Request Body: \(requestBody)")
+        // print("Request Body: \(requestBody)")
 
         do {
             let response: TokenModelLog = try await NetworkManager.shared.post(
@@ -49,7 +49,7 @@ class RefreshViewModel: ObservableObject {
         } catch {
             self.errorMessage = error.localizedDescription
             isLoading = false
-            print("Network error: \(error.localizedDescription)")
+            // print("Network error: \(error.localizedDescription)")
             
             NotificationCenter.default.post(
                 name: .refreshCompleted,

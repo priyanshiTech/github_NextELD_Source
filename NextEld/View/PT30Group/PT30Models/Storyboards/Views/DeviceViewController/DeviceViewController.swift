@@ -144,7 +144,7 @@ class DeviceViewController: UIViewController {
                 error == .noError,
                 let clearStoredEventsResponse = response
             else {
-                print("STORED EVENTS ERROR")
+                // print("STORED EVENTS ERROR")
                 return
             }
             

@@ -94,8 +94,8 @@ struct ADDVehicle: View {
                         VechicleID = vehicle.vehicleId
                         AppStorageHandler.shared.vehicleNo = vehicle.vehicleNo
                         AppStorageHandler.shared.vehicleId = vehicle.vehicleId
-                        print("Vehicle selected: \(selectedVehicleNumber)")
-                        print("Vehicle ID: \(VechicleID)")
+                        // print("Vehicle selected: \(selectedVehicleNumber)")
+                        // print("Vehicle ID: \(VechicleID)")
                     }
                 }
             }
@@ -124,13 +124,13 @@ struct ADDVehicle: View {
             let success = await vehicleVM.fetchVehicleInfo()
             
             if vehicleVM.isSessionExpired {
-                print(" Session expired detected in ADDVehicle - staying on SessionExpireUIView")
+                // print(" Session expired detected in ADDVehicle - staying on SessionExpireUIView")
                 return
             }
             
             if success {
-                print("API se aaye vehicles: \(vehicleVM.vehicles.map{$0.vehicleNo})")
-                print("API se aaye vehicles ID Number : \(vehicleVM.vehicles.map{$0.vehicleId})")
+                // print("API se aaye vehicles: \(vehicleVM.vehicles.map{$0.vehicleNo})")
+                // print("API se aaye vehicles ID Number : \(vehicleVM.vehicles.map{$0.vehicleId})")
             }
         }
         
@@ -250,7 +250,7 @@ struct ADDVehicle: View {
                         .contentShape(Rectangle())
                         .onTapGesture {
                             selectedVehicleNumber = vehicle
-                            print("vichle selected by user \(String(describing: selectedVehicleNumber))")
+                            // print("vichle selected by user \(String(describing: selectedVehicleNumber))")
                     
                         }
                     }
@@ -262,7 +262,7 @@ struct ADDVehicle: View {
             Button(action: {
                 
                                     navmanager.goBack()
-               // print("Submit tapped with: \(selectedVehicle ?? "None")")
+               // // print("Submit tapped with: \(selectedVehicle ?? "None")")
                 
             }) {
                 Text("Submit")

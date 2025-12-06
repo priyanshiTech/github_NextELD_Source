@@ -31,13 +31,13 @@ class VehicleInfoViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        print(" VehicleInfoViewModel - Starting fetchVehicleInfo API call...")
-        print(" Request Parameters:")
-        print("   - vehicleId: \(AppStorageHandler.shared.vehicleId ?? 0)")
-        print("   - clientId: \(AppStorageHandler.shared.clientId ?? 0)")
-        print("   - driverId: \(AppStorageHandler.shared.driverId ?? 1)")
-        print("   - tokenNo: \(AppStorageHandler.shared.authToken?.prefix(20) ?? "nil")...")
-        print(" API Endpoint: \(API.Endpoint.VchicleList.url)")
+        // print(" VehicleInfoViewModel - Starting fetchVehicleInfo API call...")
+        // print(" Request Parameters:")
+        // print("   - vehicleId: \(AppStorageHandler.shared.vehicleId ?? 0)")
+        // print("   - clientId: \(AppStorageHandler.shared.clientId ?? 0)")
+        // print("   - driverId: \(AppStorageHandler.shared.driverId ?? 1)")
+        // print("   - tokenNo: \(AppStorageHandler.shared.authToken?.prefix(20) ?? "nil")...")
+        // print(" API Endpoint: \(API.Endpoint.VchicleList.url)")
 
         let requestBody = VehicleInfoRequest(
             vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
@@ -47,14 +47,14 @@ class VehicleInfoViewModel: ObservableObject {
         )
 
         do {
-            print(" Calling API...")
+            // print(" Calling API...")
             let response: VehicleInfoResponse = try await networkManager.post(
                 .VchicleList,
                 body: requestBody
             )
             
-            print(" VehicleInfoViewModel - API Response received")
-            print(" Response token value: \(response.token)")
+            // print(" VehicleInfoViewModel - API Response received")
+            // print(" Response token value: \(response.token)")
             
             // Check if token is false - session expired (check FIRST, before any other processing)
             if response.token.lowercased() == "false" {
@@ -62,33 +62,33 @@ class VehicleInfoViewModel: ObservableObject {
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
                 appRootManager?.currentRoot = .SessionExpireUIView
-                print("  Session expired - token is false, navigating to SessionExpireUIView")
+                // print("  Session expired - token is false, navigating to SessionExpireUIView")
                 isLoading = false
                 return false
             }
 
             // If token is true or valid, proceed with normal flow
             if let records = response.result, !records.isEmpty {
-                print(" VehicleInfoViewModel - Vehicles loaded: \(records.count)")
-                print(" Vehicle numbers: \(records.map { $0.vehicleNo })")
+                // print(" VehicleInfoViewModel - Vehicles loaded: \(records.count)")
+                // print(" Vehicle numbers: \(records.map { $0.vehicleNo })")
                 self.vehicles = records
             } else {
                 self.errorMessage = response.message
-                print(" VehicleInfoViewModel - No vehicles found. Message: \(response.message)")
+                // print(" VehicleInfoViewModel - No vehicles found. Message: \(response.message)")
             }
 
         } catch {
             self.errorMessage = error.localizedDescription
-            print(" VehicleInfoViewModel - API Error: \(error.localizedDescription)")
+            // print(" VehicleInfoViewModel - API Error: \(error.localizedDescription)")
             if let nsError = error as NSError? {
-                print(" Error domain: \(nsError.domain), code: \(nsError.code)")
+                // print(" Error domain: \(nsError.domain), code: \(nsError.code)")
             }
             isLoading = false
             return false
         }
 
         isLoading = false
-        print(" VehicleInfoViewModel - fetchVehicleInfo completed")
+        // print(" VehicleInfoViewModel - fetchVehicleInfo completed")
         return true
     }
 }

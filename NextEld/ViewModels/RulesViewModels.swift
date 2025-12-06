@@ -44,15 +44,15 @@ class EmployViewStatusViewModel: ObservableObject {
                 body: requestBody
             )
 
-            print(" EmployViewStatusViewModel - API Response received")
-            print(" Response token value: \(response.token)")
+            // print(" EmployViewStatusViewModel - API Response received")
+            // print(" Response token value: \(response.token)")
             // Check if token is false - session expired (check FIRST, before any other processing)
             if response.token.lowercased() == "false" {
                 // Session expired - token is false
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
                 appRootManager?.currentRoot = .SessionExpireUIView
-                print("  Session expired - token is false, navigating to SessionExpireUIView")
+                // print("  Session expired - token is false, navigating to SessionExpireUIView")
                 isLoading = false
                 return false
             }
@@ -76,14 +76,14 @@ class EmployViewStatusViewModel: ObservableObject {
                     AppStorageHandler.shared.yardMovesActive = employee.yardMoves
                     AppStorageHandler.shared.exempt = employee.exempt
                     
-                    print(" Rules View Flags → Personal: \(employee.personalUse), Yard: \(employee.yardMoves), Exempt: \(employee.exempt)")
+                    // print(" Rules View Flags → Personal: \(employee.personalUse), Yard: \(employee.yardMoves), Exempt: \(employee.exempt)")
                 }
             } else {
                 self.errorMessage = response.message
             }
         } catch {
             self.errorMessage = error.localizedDescription
-            print(" EmployViewStatusViewModel - API Error: \(error.localizedDescription)")
+            // print(" EmployViewStatusViewModel - API Error: \(error.localizedDescription)")
             isLoading = false
             return false
         }

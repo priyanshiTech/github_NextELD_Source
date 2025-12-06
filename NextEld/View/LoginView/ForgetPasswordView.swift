@@ -80,14 +80,14 @@ struct ForgetPasswordView: View {
                 // MARK: - Continue Button
                 if isfocusState {
                     Button("Continue") {
-                        print("Continue tapped with number: \(EntEmail)")
+                        // print("Continue tapped with number: \(EntEmail)")
                         viewModel.username = EntEmail //  pass to ViewModel
 
                         Task {
                             viewModel.appRootManager = appRootManager
                             let success = await viewModel.submitForgetPassword()
                             if viewModel.isSessionExpired {
-                                print(" Session expired detected in ForgetPasswordView - staying on SessionExpireUIView")
+                                // print(" Session expired detected in ForgetPasswordView - staying on SessionExpireUIView")
                                 return
                             }
                             if success {

@@ -23,7 +23,7 @@ class APILoginLogViewModel: ObservableObject {
             loginDateTime: AppStorageHandler.shared.loginDateTime ?? 0,
             timestamps: CurrentTimeHelperStamp.currentTimestamp
         )
-        print("Request For *****LoginLogAPI*****:\(request)")
+        // print("Request For *****LoginLogAPI*****:\(request)")
 
 
         do {

@@ -54,23 +54,23 @@ class DvirDatabaseManager {
             let documentDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             let fileUrl = documentDirectory.appendingPathComponent("dvir.sqlite3")
             db = try Connection(fileUrl.path)
-            print(" Database connection established: \(fileUrl.path)")
+            // print(" Database connection established: \(fileUrl.path)")
         } catch {
-            print(" Database setup error: \(error.localizedDescription)")
+            // print(" Database setup error: \(error.localizedDescription)")
             // Try to create database with alternative path
             do {
                 let fileUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("dvir.sqlite3")
                 db = try Connection(fileUrl.path)
-                print(" Database connection established (alternative path): \(fileUrl.path)")
+                // print(" Database connection established (alternative path): \(fileUrl.path)")
             } catch {
-                print(" Failed to create database connection: \(error.localizedDescription)")
+                // print(" Failed to create database connection: \(error.localizedDescription)")
             }
         }
     }
     
     private func createTable() {
         guard let db = db else {
-            print(" Database connection is nil, cannot create table")
+            // print(" Database connection is nil, cannot create table")
             return
         }
         
@@ -97,17 +97,17 @@ class DvirDatabaseManager {
                 table.column(Trailer)
                 table.column(Signature)// Data? type column for image or file data
             })
-            print(" DVIR table created successfully (if not already present).")
+            // print(" DVIR table created successfully (if not already present).")
         } catch {
-            print(" Error creating DVIR table: \(error.localizedDescription)")
-            print(" Error details: \(error)")
+            // print(" Error creating DVIR table: \(error.localizedDescription)")
+            // print(" Error details: \(error)")
         }
     }
 
 
     func insertRecord(_ record: DvirRecord) {
         guard let db = db else {
-            print(" Database connection is nil, cannot insert record")
+            // print(" Database connection is nil, cannot insert record")
             return
         }
         
@@ -135,13 +135,13 @@ class DvirDatabaseManager {
             )
             
             let rowId = try db.run(insert)
-            print(" DVIR record inserted with ID: \(rowId)")
+            // print(" DVIR record inserted with ID: \(rowId)")
             if let dataSize = record.signature?.count {
-                print("📋 Signature data size: \(dataSize) bytes")
+                // print("📋 Signature data size: \(dataSize) bytes")
             }
         } catch {
-            print(" Database insert error: \(error.localizedDescription)")
-            print(" Error details: \(error)")
+            // print(" Database insert error: \(error.localizedDescription)")
+            // print(" Error details: \(error)")
         }
     }
     
@@ -167,7 +167,7 @@ class DvirDatabaseManager {
         var records: [DvirRecord] = []
         
         guard let db = db else {
-            print(" Database connection is nil, cannot fetch records")
+            // print(" Database connection is nil, cannot fetch records")
             return records
         }
         var query = dvirTable.filter(getFilter(for: filterTypes))
@@ -201,10 +201,10 @@ class DvirDatabaseManager {
                 )
                 records.append(record)
             }
-            print(" Fetched \(records.count) DVIR records from database")
+            // print(" Fetched \(records.count) DVIR records from database")
         } catch {
-            print(" Database fetch error: \(error.localizedDescription)")
-            print(" Error details: \(error)")
+            // print(" Database fetch error: \(error.localizedDescription)")
+            // print(" Error details: \(error)")
         }
         return records
     }
@@ -212,7 +212,7 @@ class DvirDatabaseManager {
     //MARK: -  Fetch today's last log
     func fetchTodaysLastLog() -> DvirRecord? {
         guard let db = db else {
-            print(" Database connection is nil, cannot fetch today's log")
+            // print(" Database connection is nil, cannot fetch today's log")
             return nil
         }
         
@@ -249,7 +249,7 @@ class DvirDatabaseManager {
                 )
             }
         } catch {
-            print(" Error fetching today's last DVIR log: \(error.localizedDescription)")
+            // print(" Error fetching today's last DVIR log: \(error.localizedDescription)")
         }
         
         return nil
@@ -263,7 +263,7 @@ extension DvirDatabaseManager {
     // MARK: - Fetch Record for a Specific Date
     func fetchRecord(for dayValue: String) -> DvirRecord? {
         guard let db = db else {
-            print(" Database connection is nil, cannot fetch record for date: \(dayValue)")
+            // print(" Database connection is nil, cannot fetch record for date: \(dayValue)")
             return nil
         }
         
@@ -294,7 +294,7 @@ extension DvirDatabaseManager {
                 )
             }
         } catch {
-            print(" Database fetch error for date \(dayValue): \(error.localizedDescription)")
+            // print(" Database fetch error for date \(dayValue): \(error.localizedDescription)")
         }
         return nil
     }
@@ -303,12 +303,12 @@ extension DvirDatabaseManager {
     // MARK: - Update Record by ID
     func updateRecord(_ record: DvirRecord) {
         guard let recordId = record.id else {
-            print(" Cannot update record: record ID is nil")
+            // print(" Cannot update record: record ID is nil")
             return
         }
         
         guard let db = db else {
-            print(" Database connection is nil, cannot update record")
+            // print(" Database connection is nil, cannot update record")
             return
         }
         
@@ -336,10 +336,10 @@ extension DvirDatabaseManager {
                 Trailer <- record.Trailer,
                 Signature <- record.signature
             ))
-            print(" DVIR record updated with ID: \(recordId), rows affected: \(updatedRows)")
+            // print(" DVIR record updated with ID: \(recordId), rows affected: \(updatedRows)")
         } catch {
-            print(" Database update error: \(error.localizedDescription)")
-            print(" Error details: \(error)")
+            // print(" Database update error: \(error.localizedDescription)")
+            // print(" Error details: \(error)")
         }
     }
     
@@ -369,9 +369,9 @@ extension DvirDatabaseManager {
                 self.Trailer <- record.Trailer,
                 self.Signature <- record.signature
             ))
-            print(" DVIR record updated for UserID: \(userID) on \(day)")
+            // print(" DVIR record updated for UserID: \(userID) on \(day)")
         } catch {
-            print(" Error updating DVIR record: \(error)")
+            // print(" Error updating DVIR record: \(error)")
         }
     }
     
@@ -391,7 +391,7 @@ extension DvirDatabaseManager {
             // If one or more records found → return true (already exists)
             return count > 0
         } catch {
-            print("Error checking DVIR for day \(day) & shift \(shift): \(error)")
+            // print("Error checking DVIR for day \(day) & shift \(shift): \(error)")
             return false
         }
     }
@@ -401,16 +401,16 @@ extension DvirDatabaseManager {
     func deleteAllRecordsForDvirDataBase() {
         do {
             let deletedCount = try db?.run(dvirTable.delete()) ?? 0
-            print(" Deleted all DVIR records (\(deletedCount) rows removed)")
+            // print(" Deleted all DVIR records (\(deletedCount) rows removed)")
         } catch {
-            print(" Error deleting all DVIR records: \(error)")
+            // print(" Error deleting all DVIR records: \(error)")
         }
     }
     
     // MARK: - Check if record exists by Server_ID
     func recordExists(serverId: String) -> Bool {
         guard let db = db else {
-            print(" Database connection is nil, cannot check record existence")
+            // print(" Database connection is nil, cannot check record existence")
             return false
         }
         
@@ -419,7 +419,7 @@ extension DvirDatabaseManager {
             let count = try db.scalar(query.count)
             return count > 0
         } catch {
-            print(" Error checking record existence: \(error.localizedDescription)")
+            // print(" Error checking record existence: \(error.localizedDescription)")
             return false
         }
     }
@@ -427,7 +427,7 @@ extension DvirDatabaseManager {
     // MARK: - Save Server DVIR Records from Login Response
     func saveServerDvirRecords(from serverDvirLogs: [[String: Any]]) {
         guard let db = db else {
-            print(" Database connection is nil, cannot save server DVIR records")
+            // print(" Database connection is nil, cannot save server DVIR records")
             return
         }
         
@@ -437,7 +437,7 @@ extension DvirDatabaseManager {
         for serverRecord in serverDvirLogs {
             // Extract Server_ID (_id)
             guard let serverId = serverRecord["_id"] as? String, !serverId.isEmpty else {
-                print(" Skipping record: Missing or invalid _id")
+                // print(" Skipping record: Missing or invalid _id")
                 continue
             }
             
@@ -474,14 +474,14 @@ extension DvirDatabaseManager {
                     
                     try db.run(insert)
                     savedCount += 1
-                    print(" Saved server DVIR record with Server_ID: \(serverId)")
+                    // print(" Saved server DVIR record with Server_ID: \(serverId)")
                 } catch {
-                    print(" Error saving server DVIR record: \(error.localizedDescription)")
+                    // print(" Error saving server DVIR record: \(error.localizedDescription)")
                 }
             }
         }
         
-        print(" Server DVIR records saved: \(savedCount), skipped (duplicates): \(skippedCount)")
+        // print(" Server DVIR records saved: \(savedCount), skipped (duplicates): \(skippedCount)")
     }
     
     // MARK: - Convert Server DVIR JSON to DvirRecord
@@ -566,23 +566,23 @@ extension DvirDatabaseManager {
     static func saveServerDvirFromLoginResponse(_ loginResponse: [String: Any]) {
         // Extract result object
         guard let result = loginResponse["result"] as? [String: Any] else {
-            print(" No 'result' object found in login response")
+            // print(" No 'result' object found in login response")
             return
         }
         
         // Extract driverDvirLog array
         guard let driverDvirLog = result["driverDvirLog"] as? [[String: Any]], !driverDvirLog.isEmpty else {
-            print(" No 'driverDvirLog' found in login response or array is empty")
+            // print(" No 'driverDvirLog' found in login response or array is empty")
             return
         }
         
-        print(" Found \(driverDvirLog.count) server DVIR records in login response")
+        // print(" Found \(driverDvirLog.count) server DVIR records in login response")
         
         // Save server DVIR records to database
         DvirDatabaseManager.shared.saveServerDvirRecords(from: driverDvirLog)
         
         // Post notification to refresh EmailDvir list
         NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
-        print(" Posted DVIRRecordUpdated notification after saving server records")
+        // print(" Posted DVIRRecordUpdated notification after saving server records")
     }
 }

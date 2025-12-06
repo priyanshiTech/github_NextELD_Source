@@ -78,12 +78,12 @@ extension HomeViewModel {
             let isCooldownActive = blockScreenCooldownUntil != nil && currentTime < blockScreenCooldownUntil!
             
             // Debug: Print tracking info
-            print("🚗 Speed: \(speed) | HighSpeedList Count: \(highSpeedList.count) | Cooldown Active: \(isCooldownActive) | ShowBlockScreen: \(showBlockScreen)")
+            // print("🚗 Speed: \(speed) | HighSpeedList Count: \(highSpeedList.count) | Cooldown Active: \(isCooldownActive) | ShowBlockScreen: \(showBlockScreen)")
             
             if highSpeedList.count >= 5 {
                 if !isCooldownActive && !showBlockScreen {
                     // Only block if not already showing block screen
-                    print(" Blocking screen - 5 high-speed events detected")
+                    // print(" Blocking screen - 5 high-speed events detected")
                     
                     // DON'T clear the list - keep tracking so it can block again quickly after dismiss
                     // Only remove the oldest events, keep last 4 so we need just 1 more to trigger again
@@ -103,13 +103,13 @@ extension HomeViewModel {
                         saveTimerStateForStatus(status: currentDriverStatus.getName(), originType: .auto)
                     }
                 } else if isCooldownActive {
-                    print("⏳ Cooldown active - waiting before blocking again. Count: \(highSpeedList.count)")
+                    // print("⏳ Cooldown active - waiting before blocking again. Count: \(highSpeedList.count)")
                 } else if showBlockScreen {
-                    print("📱 Block screen already showing")
+                    // print("📱 Block screen already showing")
                 }
                 // If cooldown is active, don't block but keep tracking (don't clear the list)
             } else {
-                print("📊 Tracking: \(highSpeedList.count)/5 events collected")
+                // print("📊 Tracking: \(highSpeedList.count)/5 events collected")
             }
         }
         // MARK: - SPEED <= 5 (including 0)
@@ -152,7 +152,7 @@ extension HomeViewModel {
         let currentTime = Date().timeIntervalSince1970
         blockScreenCooldownUntil = currentTime + BLOCK_SCREEN_COOLDOWN
         
-        print("🔓 Unblocking screen - Cooldown until: \(blockScreenCooldownUntil ?? 0) | HighSpeedList Count: \(highSpeedList.count)")
+        // print("🔓 Unblocking screen - Cooldown until: \(blockScreenCooldownUntil ?? 0) | HighSpeedList Count: \(highSpeedList.count)")
         
         // Don't clear highSpeedList - keep tracking so it can show again after cooldown if condition is still met
         // Clear low-speed list since we're unblocking
@@ -170,11 +170,11 @@ extension HomeViewModel {
         
         if rpm >= 500, isEngineStartEntryRequired {
             self.saveTimerStateForStatus(status: AppConstants.engineOn, originType: .auto)
-            print("Engine On...")
+            // print("Engine On...")
         }
         if rpm < 500, isEngineOffEntryRequired {
             self.saveTimerStateForStatus(status: AppConstants.engineOff, originType: .auto)
-            print("Engine Off...")
+            // print("Engine Off...")
         }
     }
     

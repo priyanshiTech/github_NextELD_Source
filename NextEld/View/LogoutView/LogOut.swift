@@ -82,12 +82,12 @@ struct LogOut: View {
                         isCycleCompleted: $isCycleCompleted,
                         currentStatus: "OffDuty",
                         onLogout: {
-                            print("Logging out…")
+                            // print("Logging out…")
                             Task {
                                 logoutVM.appRootManager = appRootManager
                                 let success = await logoutVM.callLogoutAPI()
                                 if logoutVM.isSessionExpired {
-                                    print(" Session expired detected during standalone logout - staying on SessionExpireUIView")
+                                    // print(" Session expired detected during standalone logout - staying on SessionExpireUIView")
                                     return
                                 }
                                 if success {
@@ -95,12 +95,12 @@ struct LogOut: View {
                                     SessionManagerClass.shared.clearToken()
                                     appRootManager.currentRoot = .splashScreen
                                 } else if !logoutVM.apiMessage.isEmpty {
-                                    print(" Logout API message: \(logoutVM.apiMessage)")
+                                    // print(" Logout API message: \(logoutVM.apiMessage)")
                                 }
                             }
                         },
                         onCancel: {
-                            print("Cancel logout")
+                            // print("Cancel logout")
                             isPresented = false
                         }
                     )

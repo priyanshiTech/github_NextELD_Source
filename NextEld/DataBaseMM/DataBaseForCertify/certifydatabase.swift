@@ -70,13 +70,13 @@ class CertifyDatabaseManager {
                 table.column(isLogcertified, defaultValue: "No")
             })
         } catch {
-            print("Error creating Certify table: \(error)")
+            // print("Error creating Certify table: \(error)")
         }
         do {
             try db?.run(certifyTable.addColumn(isLogcertified, defaultValue: "No"))
-            print("Column isLogCertified added successfully ")
+            // print("Column isLogCertified added successfully ")
         } catch {
-            print("Column may already exist: \(error)")
+            // print("Column may already exist: \(error)")
         }
         
     }
@@ -102,9 +102,9 @@ class CertifyDatabaseManager {
                 
             )
             let rowId = try db?.run(insert)
-            print("@@@@@@@@@@@@ Certify record inserted with ID: \(rowId ?? -1)")
+            // print("@@@@@@@@@@@@ Certify record inserted with ID: \(rowId ?? -1)")
         } catch {
-            print("@@@@@@@@@@@@@@@ Error inserting Certify record: \(error)")
+            // print("@@@@@@@@@@@@@@@ Error inserting Certify record: \(error)")
         }
     }
     
@@ -145,7 +145,7 @@ class CertifyDatabaseManager {
                 }
             }
         } catch {
-            print("Error fetching all records: \(error)")
+            // print("Error fetching all records: \(error)")
         }
         return records.first
     }
@@ -174,7 +174,7 @@ class CertifyDatabaseManager {
                 }
             }
         } catch {
-            print("Error fetching all records: \(error)")
+            // print("Error fetching all records: \(error)")
         }
         return records
     }
@@ -200,7 +200,7 @@ class CertifyDatabaseManager {
                     isSynced <- record.syncStatus,
                     isLogcertified <- record.isCertify,
                 ))
-                print("@@@@@ Record updated successfully for date \(record.date)")
+                // print("@@@@@ Record updated successfully for date \(record.date)")
             } else {
                 // If not exists → insert new
                 let insert = certifyTable.insert(
@@ -219,10 +219,10 @@ class CertifyDatabaseManager {
                     isLogcertified <- record.isCertify
                 )
                 let rowId = try db?.run(insert)
-                print("@@@@@@@@@@@@ Certify record inserted with ID: \(rowId ?? -1)")
+                // print("@@@@@@@@@@@@ Certify record inserted with ID: \(rowId ?? -1)")
             }
         } catch {
-            print("Error saving record: \(error)")
+            // print("Error saving record: \(error)")
         }
     }
     
@@ -234,9 +234,9 @@ class CertifyDatabaseManager {
                 self.isLogcertified <- isCertify,
                 self.isSynced <- syncStatus
             ))
-            print("DB updated for \(date): isCertify=\(isCertify), syncStatus=\(syncStatus)")
+            // print("DB updated for \(date): isCertify=\(isCertify), syncStatus=\(syncStatus)")
         } catch {
-            print("Failed to update certify status: \(error)")
+            // print("Failed to update certify status: \(error)")
         }
         
     }
@@ -245,9 +245,9 @@ class CertifyDatabaseManager {
     func deleteAllCertifyRecords() {
         do {
             try db?.run(certifyTable.delete())
-            print("##### All certify records deleted successfully!")
+            // print("##### All certify records deleted successfully!")
         } catch {
-            print("Error deleting all certify records: \(error)")
+            // print("Error deleting all certify records: \(error)")
         }
     }
     
@@ -255,13 +255,13 @@ class CertifyDatabaseManager {
         do {
             let record = certifyTable.filter(self.date == date && self.userID == userID)
             try db?.run(record.update(self.isLogcertified <- "Yes"))
-            print("Updated certification for date \(date) and user \(userID)")
+            // print("Updated certification for date \(date) and user \(userID)")
         } catch {
-            print("Failed to update certify flag: \(error)")
+            // print("Failed to update certify flag: \(error)")
         }
         
         let updated = fetchAllRecords()
-        print("After update DB record: \(updated)")
+        // print("After update DB record: \(updated)")
     }
     
     
@@ -271,7 +271,7 @@ class CertifyDatabaseManager {
     func hasPreviousDayLogsUncertified() -> Bool {
         let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
         let yesterdayString = DateHelper.shared.formatForDB(yesterday) //  Use common formatter
-        print(" Checking previous date string:", yesterdayString)
+        // print(" Checking previous date string:", yesterdayString)
 
         do {
             let query = certifyTable.filter(self.date == yesterdayString)
@@ -279,19 +279,19 @@ class CertifyDatabaseManager {
                 for row in rows {
                     let shiftValue = row[self.shift]
                     let certifyStatus = row[self.isLogcertified]
-                    print(" Found DB row: date=\(row[self.date]), shift=\(shiftValue), certify=\(certifyStatus)")
+                    // print(" Found DB row: date=\(row[self.date]), shift=\(shiftValue), certify=\(certifyStatus)")
 
                     if certifyStatus == "No" {
-                        print(" Found uncertified previous day log for \(yesterdayString)")
+                        // print(" Found uncertified previous day log for \(yesterdayString)")
                         return true
                     }
                 }
             }
         } catch {
-            print(" Error checking previous day certification: \(error)")
+            // print(" Error checking previous day certification: \(error)")
         }
 
-        print(" No uncertified previous day log found")
+        // print(" No uncertified previous day log found")
         return false
     }
     

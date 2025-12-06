@@ -230,15 +230,15 @@ struct EyeViewData: View {
         .navigationBarBackButtonHidden()
         
         .task {
-            print(" EyeViewData: Starting to fetch driver data...")
+            // print(" EyeViewData: Starting to fetch driver data...")
             await fetchDriverData()
             loadDatabaseLogs()
-            print(" EyeViewData: Fetch completed")
-            print("   isLoading: \(viewModel.isLoading)")
-            print("   hasData: \(viewModel.data != nil)")
-            print("   resultCount: \(viewModel.data?.result?.count ?? 0)")
+            // print(" EyeViewData: Fetch completed")
+            // print("   isLoading: \(viewModel.isLoading)")
+            // print("   hasData: \(viewModel.data != nil)")
+            // print("   resultCount: \(viewModel.data?.result?.count ?? 0)")
             if let first = viewModel.data?.result?.first {
-                print("   First record - Driver: \(first.driverName ?? "nil")")
+                // print("   First record - Driver: \(first.driverName ?? "nil")")
             }
         }
         
@@ -281,7 +281,7 @@ struct EyeViewData: View {
         // Sort by startTime (oldest first)
         databaseLogs.sort { $0.startTime < $1.startTime }
         
-        print("📊 Loaded \(databaseLogs.count) logs from database for date: \(selectedDate)")
+        // print("📊 Loaded \(databaseLogs.count) logs from database for date: \(selectedDate)")
     }
     
     private func formatDateTime(_ date: Date) -> String {

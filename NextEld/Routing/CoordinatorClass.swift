@@ -19,7 +19,7 @@ class NavigationManager: ObservableObject {
     @Published var path = NavigationPath()
 
     func navigate(to route: any Hashable) {
-        print("Navigating to \(route)")
+        // print("Navigating to \(route)")
         path.append(route)
     }
 

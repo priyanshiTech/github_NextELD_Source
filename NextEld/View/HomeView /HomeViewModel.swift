@@ -484,7 +484,7 @@ class HomeViewModel: ObservableObject {
         SessionManagerClass.shared.clearToken()
         DatabaseManager.shared.deleteAllLogs()
         currentDriverStatus = .offDuty
-        print(" All app data deleted successfully")
+        // print(" All app data deleted successfully")
     }
     
     func setDriverStatus(status: DriverStatusType, restoreBreakTimerRunning: Bool = false, note: String? = nil, saveLogsToDatabase: Bool = false) {
@@ -622,7 +622,7 @@ class HomeViewModel: ObservableObject {
         // Time elapsed since last save (both in same timezone)
         let elapsed = currentTime.timeIntervalSince(lastLog.startTime)
         
-        print("Difference in current time and last saved time : \(elapsed)")
+        // print("Difference in current time and last saved time : \(elapsed)")
         
         return elapsed
     }
@@ -848,7 +848,7 @@ class HomeViewModel: ObservableObject {
     func check34HoursSleepOrOffDutyCompleted() -> Bool {
         let shiftChangeSleepTotalSeconds = AppStorageHandler.shared.cycleRestartTime ?? 0 // 34 hours
         let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
-        print("Total sleep taken: \(shiftChangeSleepTotalSeconds) - \(calculatedSleepTaken)")
+        // print("Total sleep taken: \(shiftChangeSleepTotalSeconds) - \(calculatedSleepTaken)")
         return calculatedSleepTaken >= TimeInterval(shiftChangeSleepTotalSeconds)// return true if calculatedSleepTaken > shiftChangeSleepTotalSeconds
     }
     
@@ -979,8 +979,6 @@ class HomeViewModel: ObservableObject {
     }
     
     func checkWhetherTheDVIRAddedOrNot(status: DriverStatusType) -> Bool {
-        let currentDay = AppStorageHandler.shared.days
-        let shift = AppStorageHandler.shared.shift
         if let lastLog = DvirDatabaseManager.shared.fetchAllRecords(filterTypes: [.day, .shift]).first,
           (status == .onDrive)  {
             return true

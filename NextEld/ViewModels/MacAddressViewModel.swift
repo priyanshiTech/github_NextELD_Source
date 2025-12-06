@@ -56,8 +56,8 @@ class AddMacAddressViewModel: ObservableObject {
                 body: requestBody
             )
             
-            print(" AddMacAddressViewModel - API Response received")
-            print(" Response token value: \(response.token)")
+            // print(" AddMacAddressViewModel - API Response received")
+            // print(" Response token value: \(response.token)")
             
             // Check if token is false - session expired (check FIRST, before any other processing)
             if response.token.lowercased() == "false" {
@@ -65,7 +65,7 @@ class AddMacAddressViewModel: ObservableObject {
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
                 appRootManager?.currentRoot = .SessionExpireUIView
-                print("  Session expired - token is false, navigating to SessionExpireUIView")
+                // print("  Session expired - token is false, navigating to SessionExpireUIView")
                 isLoading = false
                 return false
             }
@@ -79,7 +79,7 @@ class AddMacAddressViewModel: ObservableObject {
 
         } catch {
             self.errorMessage = error.localizedDescription
-            print(" AddMacAddressViewModel - API Error: \(error.localizedDescription)")
+            // print(" AddMacAddressViewModel - API Error: \(error.localizedDescription)")
             isLoading = false
             return false
         }

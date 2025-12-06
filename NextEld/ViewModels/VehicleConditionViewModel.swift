@@ -32,11 +32,11 @@ class VConditionViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        print(" VConditionViewModel - Starting vehicleConditionData API call...")
-        print(" Request Parameters:")
-        print("   - clientId: \(clientId)")
-        print("   - vehicleConditionId: \(vehicleConditionId)")
-        print(" API Endpoint: \(API.Endpoint.vehicleConditionApi.url)")
+        // print(" VConditionViewModel - Starting vehicleConditionData API call...")
+        // print(" Request Parameters:")
+        // print("   - clientId: \(clientId)")
+        // print("   - vehicleConditionId: \(vehicleConditionId)")
+        // print(" API Endpoint: \(API.Endpoint.vehicleConditionApi.url)")
 
         let requestBody = vehicleConditionModel(
             clientId: AppStorageHandler.shared.clientId ?? 0,
@@ -44,34 +44,34 @@ class VConditionViewModel: ObservableObject {
         )
 
         do {
-            print(" Calling API...")
+            // print(" Calling API...")
             let response: VehicleModel = try await networkManager.post(
                 .vehicleConditionApi,
                 body: requestBody
             )
             
-            print("VConditionViewModel - API Response received")
-            print("Response status: \(response.status ?? "nil")")
-            print(" Response message: \(response.message ?? "nil")")
+            // print("VConditionViewModel - API Response received")
+            // print("Response status: \(response.status ?? "nil")")
+            // print(" Response message: \(response.message ?? "nil")")
 
             if let records = response.result, !records.isEmpty {
                 self.conitions = records
-                print(" VConditionViewModel - Conditions loaded: \(records.count)")
-                print(" Condition names: \(records.compactMap { $0.vehicleConditionName })")
+                // print(" VConditionViewModel - Conditions loaded: \(records.count)")
+                // print(" Condition names: \(records.compactMap { $0.vehicleConditionName })")
             } else {
                 self.errorMessage = "No vehicle data found."
-                print(" VConditionViewModel - No conditions found")
+                // print(" VConditionViewModel - No conditions found")
             }
         } catch {
             self.errorMessage = error.localizedDescription
-            print(" VConditionViewModel - API Error: \(error.localizedDescription)")
+            // print(" VConditionViewModel - API Error: \(error.localizedDescription)")
             if let nsError = error as NSError? {
-                print(" Error domain: \(nsError.domain), code: \(nsError.code)")
+                // print(" Error domain: \(nsError.domain), code: \(nsError.code)")
             }
         }
 
         isLoading = false
-        print("VConditionViewModel - vehicleConditionData completed")
+        // print("VConditionViewModel - vehicleConditionData completed")
     }
 }
 

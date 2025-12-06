@@ -63,7 +63,7 @@ struct SelectCoDriverPopup: View {
                             selectedCoDriver = "None"
                             selectedCoDriverEmail = ""
                             selectedCodriverID = nil
-                            print("Selected: None")
+                            // print("Selected: None")
                         }
 
                         Divider()
@@ -88,9 +88,9 @@ struct SelectCoDriverPopup: View {
                                 selectedCoDriverEmail = username
                                 selectedCodriverID = driver.employeeId ?? 0
 
-                                print("Selected EmpID: \(driver.employeeId ?? 0)")
-                                print("Selected Email: \(driver.email ?? "nil")")
-                                print("Selected Username: \(username)")
+                                // print("Selected EmpID: \(driver.employeeId ?? 0)")
+                                // print("Selected Email: \(driver.email ?? "nil")")
+                                // print("Selected Username: \(username)")
                             }
 
                             Divider()

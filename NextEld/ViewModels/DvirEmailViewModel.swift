@@ -48,16 +48,16 @@ class DVIRAPIViewModel: ObservableObject {
                 body: requestBody
             )
             
-            print(" DVIRAPIViewModel - API Response received")
-            print(" Response token value: \(response.token)")
+            // print(" DVIRAPIViewModel - API Response received")
+            // print(" Response token value: \(response.token)")
 
             // Check if token is false - session expired (check FIRST, before any other processing)
             if response.token.lowercased() == "false" {
                 // Session expired - token is false
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
-                print("  Session expired detected - token is false")
-                print("  appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                // print("  Session expired detected - token is false")
+                // print("  appRootManager is \(appRootManager != nil ? "set" : "nil")")
                 appRootManager?.currentRoot = .SessionExpireUIView
                 isLoading = false
                 return false
@@ -75,7 +75,7 @@ class DVIRAPIViewModel: ObservableObject {
 
         } catch {
             self.errorMessage = error.localizedDescription
-            print(" DVIRAPIViewModel - API Error: \(error.localizedDescription)")
+            // print(" DVIRAPIViewModel - API Error: \(error.localizedDescription)")
             isLoading = false
             return false
         }

@@ -67,7 +67,7 @@ class DeviceListViewController: UIViewController {
                     infoView.isHidden = true
             }
             
-            print("App State: \(state)")
+            // print("App State: \(state)")
         }
     }
     

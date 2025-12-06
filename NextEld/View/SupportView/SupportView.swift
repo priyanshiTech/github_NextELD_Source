@@ -126,7 +126,7 @@ struct SupportView: View {
                    UIApplication.shared.canOpenURL(url) {
                     UIApplication.shared.open(url)
                 } else {
-                    print("📞 Call not supported on this device")
+                    // print("📞 Call not supported on this device")
                 }
             }
 
@@ -153,7 +153,7 @@ struct SupportView: View {
     private func submit() async {
         await viewModel.sendSupportMessage(userMessage: queryText)
         if viewModel.isSessionExpired {
-            print(" Session expired detected in SupportView - staying on SessionExpireUIView")
+            // print(" Session expired detected in SupportView - staying on SessionExpireUIView")
             return
         }
           //show alert if success or error

@@ -30,7 +30,7 @@ struct TopBarView: View {
                 
                 IconButton(iconName: "line.horizontal.3", action: {
                     presentSideMenu.toggle()
-                    print("Hamburger tapped, presentSideMenu is now: \(presentSideMenu)")
+                    // print("Hamburger tapped, presentSideMenu is now: \(presentSideMenu)")
                 },
                 iconColor:  Color(uiColor:.black), iconSize: 20)
                 .padding(.leading, 8)

@@ -111,13 +111,13 @@ struct DefectPopupView: View {
             let success = await viewModel.fetchDefects()
             
             if viewModel.isSessionExpired {
-                print(" Session expired detected in DefectPopupView - staying on SessionExpireUIView")
+                // print(" Session expired detected in DefectPopupView - staying on SessionExpireUIView")
                 isPresented = false
                 return
             }
             
             if !success, let error = viewModel.errorMessage {
-                print(" Defect API error: \(error)")
+                // print(" Defect API error: \(error)")
             }
         }
     }

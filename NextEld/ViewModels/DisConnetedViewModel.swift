@@ -46,18 +46,18 @@ class DeviceStatusViewModel: ObservableObject {
                 body: requestBody
             )
             
-            print(" DeviceStatusViewModel - API Response received")
-            print(" Response token value: \(response.token)")
+            // print(" DeviceStatusViewModel - API Response received")
+            // print(" Response token value: \(response.token)")
             
             // Check if token is false - session expired
             if response.token.lowercased() == "false" {
                 // Session expired - token is false
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
-                print("  Session expired detected - token is false")
-                print("  appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                // print("  Session expired detected - token is false")
+                // print("  appRootManager is \(appRootManager != nil ? "set" : "nil")")
                 appRootManager?.currentRoot = .SessionExpireUIView
-                print("  Navigating to SessionExpireUIView")
+                // print("  Navigating to SessionExpireUIView")
                 isLoading = false
                 return false
             }

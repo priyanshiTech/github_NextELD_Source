@@ -62,11 +62,11 @@ struct CompanyInformationView: View {
                         //"60ea2fbd-4585-4c27-a47b-8ee8101ffb41"
                 )
                 if viewModel.isSessionExpired {
-                             print(" Session expired detected - staying on SessionExpireUIView")
+                             // print(" Session expired detected - staying on SessionExpireUIView")
                              return // Don't proceed with any further processing
                          }
                 if !success, let error = viewModel.errorMessage {
-                    print(" Employee info error: \(error)")
+                    // print(" Employee info error: \(error)")
                 }
 
             }

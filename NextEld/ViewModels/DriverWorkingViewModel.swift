@@ -23,7 +23,7 @@ final class DriverWorkingViewModel: ObservableObject {
 
     func driverWorkingTiming() async -> Bool {
         isSessionExpired = false
-        print("Sending Forget Username Request with Driver Working : \(status)")
+        // print("Sending Forget Username Request with Driver Working : \(status)")
         let request = ELDStatusRequest(driverId: AppStorageHandler.shared.driverId ?? 0,
                                        shift: AppStorageHandler.shared.shift,
                                        days: AppStorageHandler.shared.days,
@@ -37,13 +37,13 @@ final class DriverWorkingViewModel: ObservableObject {
 
         do {
             let response: ELDStatusResponse = try await NetworkManager.shared.post(.DriverWorkingtime , body: request)
-            print("API Call Succeeded")
-            print(" Message: \(response.message)")
-            print(" Token value: \(response.token ?? "nil")")
+            // print("API Call Succeeded")
+            // print(" Message: \(response.message)")
+            // print(" Token value: \(response.token ?? "nil")")
             if response.token.lowercased() == "false" {
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
-                print(" Session expired detected in ForgetUsernameViewModel")
+                // print(" Session expired detected in ForgetUsernameViewModel")
                 appRootManager?.currentRoot = .SessionExpireUIView
                 return false
             }
@@ -53,7 +53,7 @@ final class DriverWorkingViewModel: ObservableObject {
             showAlert = true
             return true
         } catch {
-            print(" API Call Failed: \(error)")
+            // print(" API Call Failed: \(error)")
             message = "Something went wrong: \(error.localizedDescription)"
             showAlert = true
             return false

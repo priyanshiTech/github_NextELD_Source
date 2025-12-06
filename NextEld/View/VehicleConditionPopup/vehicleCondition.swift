@@ -89,16 +89,16 @@ struct VehicleConditionPopupView: View {
         .shadow(radius: 10)
         // Fetch API Data when popup appears
         .task {
-            print(" VehicleConditionPopupView - Starting vehicle condition API call...")
-            print(" ClientId: \(AppStorageHandler.shared.clientId ?? 0)")
+            // print(" VehicleConditionPopupView - Starting vehicle condition API call...")
+            // print(" ClientId: \(AppStorageHandler.shared.clientId ?? 0)")
             await viewModel.vehicleConditionData(
                 clientId: AppStorageHandler.shared.clientId ?? 0,
                 vehicleConditionId: 0
             )
-            print(" VehicleConditionPopupView - Conditions loaded: \(viewModel.conitions.count)")
-            print(" VehicleConditionPopupView - Conditions: \(viewModel.conitions.map { $0.vehicleConditionName ?? "nil" })")
+            // print(" VehicleConditionPopupView - Conditions loaded: \(viewModel.conitions.count)")
+            // print(" VehicleConditionPopupView - Conditions: \(viewModel.conitions.map { $0.vehicleConditionName ?? "nil" })")
             if let error = viewModel.errorMessage {
-                print(" VehicleConditionPopupView - Error: \(error)")
+                // print(" VehicleConditionPopupView - Error: \(error)")
             }
         }
     }

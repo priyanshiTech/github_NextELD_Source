@@ -56,7 +56,7 @@ struct AddVehicleForDvir: View {
                         AppStorageHandler.shared.vehicleNo = vehicleNo
                         AppStorageHandler.shared.vehicleId = vehicle.vehicleId
                         
-                        print("Selected: \(vehicleNo) [ID: \(vehicle.vehicleId)]")
+                        // print("Selected: \(vehicleNo) [ID: \(vehicle.vehicleId)]")
                         
                     } label: {
                         HStack {
@@ -83,12 +83,12 @@ struct AddVehicleForDvir: View {
             // Submit Button
             Button {
                 if localSelectedVehicle.isEmpty {
-                    print("No vehicle selected")
+                    // print("No vehicle selected")
                 } else {
                     // Sync one more time before navigating back
                     selectedVehicleNumber = localSelectedVehicle
                     VechicleID = localVehicleID
-                    print(" Submitted: \(selectedVehicleNumber) [ID: \(VechicleID)]")
+                    // print(" Submitted: \(selectedVehicleNumber) [ID: \(VechicleID)]")
                     navmanager.goBack()
                 }
             } label: {
@@ -107,26 +107,26 @@ struct AddVehicleForDvir: View {
         .onAppear {
             localSelectedVehicle = selectedVehicleNumber
             localVehicleID = VechicleID
-            print("onAppear → Restored selection: \(localSelectedVehicle), ID: \(localVehicleID)")
+            // print("onAppear → Restored selection: \(localSelectedVehicle), ID: \(localVehicleID)")
             vehicleVM.appRootManager = appRootManager
         }
         .task {
-            print(" AddVehicleForDvir - Starting vehicle list API call...")
+            // print(" AddVehicleForDvir - Starting vehicle list API call...")
             let success = await vehicleVM.fetchVehicleInfo()
             
             // If session expired, do not process further
             if vehicleVM.isSessionExpired {
-                print(" Session expired detected in AddVehicleForDvir - staying on SessionExpireUIView")
+                // print(" Session expired detected in AddVehicleForDvir - staying on SessionExpireUIView")
                 return
             }
             
             if success {
-                print(" AddVehicleForDvir - Vehicles from API: \(vehicleVM.vehicles.map { $0.vehicleNo })")
-                print(" AddVehicleForDvir - Total vehicles: \(vehicleVM.vehicles.count)")
+                // print(" AddVehicleForDvir - Vehicles from API: \(vehicleVM.vehicles.map { $0.vehicleNo })")
+                // print(" AddVehicleForDvir - Total vehicles: \(vehicleVM.vehicles.count)")
             }
             
             if let error = vehicleVM.errorMessage {
-                print(" AddVehicleForDvir - Error: \(error)")
+                // print(" AddVehicleForDvir - Error: \(error)")
             }
         }
     }

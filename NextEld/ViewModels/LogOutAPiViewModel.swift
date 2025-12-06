@@ -28,7 +28,7 @@ class APILogoutViewModel: ObservableObject {
             tokenNo: AppStorageHandler.shared.authToken ?? "" ,
             logoutDateTime: CurrentTimeHelperStamp.currentTimestamp
         )
-        print("Request For *****LogoutAPI*****: \(request)")
+        // print("Request For *****LogoutAPI*****: \(request)")
 
         do {
             // Call API
@@ -37,11 +37,11 @@ class APILogoutViewModel: ObservableObject {
                 body: request
             )
 
-            print(" Logout API Response token: \(response.token ?? "nil")")
+            // print(" Logout API Response token: \(response.token ?? "nil")")
             if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
-                print("  Session expired detected during logout - navigating to SessionExpireUIView")
+                // print("  Session expired detected during logout - navigating to SessionExpireUIView")
                 appRootManager?.currentRoot = .SessionExpireUIView
                 return false
             }

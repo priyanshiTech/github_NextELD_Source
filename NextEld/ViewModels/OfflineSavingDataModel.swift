@@ -19,12 +19,12 @@ class SyncViewModel: ObservableObject {
         let unsyncedLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.notSync])
 
         guard !unsyncedLogs.isEmpty else {
-            print(" No unsynced logs found. All data already synced!")
+            // print(" No unsynced logs found. All data already synced!")
             syncMessage = "All data already synced!"
             return true
         }
         
-        print("📤 Preparing \(unsyncedLogs.count) logs for syncing...")
+        // print("📤 Preparing \(unsyncedLogs.count) logs for syncing...")
         
         func normalizedStatus(_ value: String) -> String {
             let key = value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -49,24 +49,27 @@ class SyncViewModel: ObservableObject {
         let driveringStatusData = unsyncedLogs.map { log in
             
             let safeStatus = normalizedStatus(log.status)
-            let safeLogType = "log"
             let safeLocation = log.location.trimmingCharacters(in: .whitespacesAndNewlines)
             let safeLatitude = SharedInfoManager.shared.lattitude
             let safeLongitude = SharedInfoManager.shared.longitude
+            
+            let voilation = log.isVoilations == "Yes" ? "1" : "0"
+            let safeLogType = voilation == "0" ? "log" : (log.dutyType)
+
 ////
             return DriveringStatusData(
                 appVersion: AppInfo.version,
                 clientId: AppStorageHandler.shared.clientId ?? 1,
                 currentLocation: safeLocation,
                 customLocation: safeLocation,
-                dateTime: DateTimeHelper.getCurrentDateTimeString(),
+                dateTime: log.startTime.toLocalString(),
                 days: log.day,
-                driverId: AppStorageHandler.shared.driverId ?? 0,
+                driverId: log.userId,
                 engineHour: log.engineHours,
                 engineStatus: log.engineStatus,
                 identifier: log.identifier,
                 isSplit: log.isSplit,
-                isVoilation: log.isVoilations,
+                isVoilation: voilation,
                 lastOnSleepTime: Int(log.lastSleepTime),
                 lattitude: safeLatitude,
                 localId: "\(log.id ?? 0)",
@@ -74,7 +77,7 @@ class SyncViewModel: ObservableObject {
                 longitude: safeLongitude,
                 note: log.notes,
                 odometer: Double(log.odometer),
-                origin: AppStorageHandler.shared.origin,
+                origin: log.origin,
                 osVersion: "iOS - \(UIDevice.current.systemVersion)",
                 remainingDriveTime: log.remainingDriveTime ?? 0,
                 remainingDutyTime: log.remainingDutyTime  ?? 0,
@@ -87,42 +90,49 @@ class SyncViewModel: ObservableObject {
             )
         }
         var requestBody = SyncRequest()
+        var splitLogs: SplllitLogss = .init(day: 0, dbId: 0, driverId: 0, shift: 0)
         requestBody.driveringStatusData = driveringStatusData
         if let firstLog = DatabaseManager.shared.getLastRecordForSplitShiftLog() {
-            let splitLog = SplllitLogss(
+            splitLogs = SplllitLogss(
                 day: firstLog.day,
                 dbId: Int(firstLog.id),
                 driverId: firstLog.userId,
                 shift: firstLog.shift
             )
-            requestBody.splitLog = splitLog
+            
         }
+        requestBody.splitLog = splitLogs
         
-        print("Request data To Offline API ::::::::\(requestBody)")
+        // print("Request data To Offline API ::::::::\(requestBody)")
         isSyncing = true
         defer { isSyncing = false }
         
         do {
+            
+            let encoder = try JSONEncoder().encode(requestBody)
+            
             let response: SyncResponse = try await NetworkManager.shared.post(.ForSavingOfflineData, body: requestBody)
             
-            print(" API Status: \(response.status)")
+            // print(" API Status: \(response.status)")
             if let message = response.message {
-                print(" Message: \(message)")
+                // print(" Message: \(message)")
             }
             
             response.result?.forEach { item in
-                print(" Synced localId: \(item.localId) → serverId: \(item.serverId)")
+                // print(" Synced localId: \(item.localId) → serverId: \(item.serverId)")
                 DatabaseManager.shared.markLogAsSynced(localId: Int64(item.localId) ?? 0, serverId: item.serverId)
             }
-            let success = response.status == "SUCCESS"
-            if let message = response.message, !message.isEmpty {
-                syncMessage = message
-            } else {
-                syncMessage = success ? "Data Synced Successfully!" : "Sync Failed!"
-            }
-            return success
+            
+            
+//            let success = response.status == "2"
+//            if let message = response.message, !message.isEmpty {
+//                syncMessage = message
+//            } else {
+//                syncMessage = success ? "Data Synced Successfully!" : "Sync Failed!"
+//            }
+            return true
         } catch {
-            print(" Sync Failed: \(error.localizedDescription)")
+            // print(" Sync Failed: \(error.localizedDescription)")
             syncMessage = "Sync Failed!"
             return false
         }

@@ -48,7 +48,7 @@ class EmployeeViewModel: ObservableObject {
                           SessionManagerClass.shared.clearToken()
                           isSessionExpired = true
                           appRootManager?.currentRoot = .SessionExpireUIView
-                          print("  Session expired - token is false, navigating to SessionExpireUIView")
+                          // print("  Session expired - token is false, navigating to SessionExpireUIView")
                           isLoading = false
                           return false
                       }

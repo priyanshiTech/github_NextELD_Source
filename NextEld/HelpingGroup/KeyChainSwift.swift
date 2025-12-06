@@ -21,12 +21,12 @@ class SessionManagerClass {
     func saveToken(_ token: String) {
         let success = keychain.set(token, forKey: "userToken")
         if success {
-            print(" Token saved to keychain successfully")
+            // print(" Token saved to keychain successfully")
         } else {
-            print(" Failed to save token to keychain")
+            // print(" Failed to save token to keychain")
             // Fallback to UserDefaults if keychain fails
             UserDefaults.standard.set(token, forKey: "userToken")
-            print(" Token saved to UserDefaults as fallback")
+            // print(" Token saved to UserDefaults as fallback")
         }
     }
 
@@ -36,10 +36,10 @@ class SessionManagerClass {
         } else {
             // Fallback to UserDefaults if keychain retrieval fails
             if let token = UserDefaults.standard.string(forKey: "userToken") {
-                print(" Token retrieved from UserDefaults (keychain unavailable)")
+                // print(" Token retrieved from UserDefaults (keychain unavailable)")
                 return token
             }
-            print(" No token found in keychain or UserDefaults")
+            // print(" No token found in keychain or UserDefaults")
             return nil
         }
     }
@@ -47,9 +47,9 @@ class SessionManagerClass {
     func clearToken() {
         let deleted = keychain.delete("userToken")
         if deleted {
-            print("Token removed from keychain")
+            // print("Token removed from keychain")
         } else {
-            print("Failed to delete token from keychain (may not exist)")
+            // print("Failed to delete token from keychain (may not exist)")
         }
         // Also remove from UserDefaults
         UserDefaults.standard.removeObject(forKey: "userToken")

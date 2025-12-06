@@ -62,7 +62,7 @@ struct AppStorageHandler {
     func deleteAll() {
         if let bundleID = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: bundleID)
-            print("All @AppStorage values for bundle ID '\(bundleID)' have been reset.")
+            // print("All @AppStorage values for bundle ID '\(bundleID)' have been reset.")
         }
     }
 }

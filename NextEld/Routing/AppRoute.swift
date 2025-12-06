@@ -28,7 +28,6 @@ enum AppRoute: Hashable {
     }
     
     enum HomeFlow: Hashable {
-        
         case Home
         case DailyLogs(tittle: String)
         case AddDvirPriTrip
@@ -45,17 +44,25 @@ enum AppRoute: Hashable {
         case ADDVehicle
         case NewDriverLogin(title: String , email: String)
         case CertifySelectedView(tittle: String)
+        
+    }
+    
+    enum HomeDashboardFlow: Hashable {
         case BlockView
         
+    }
+    
+    enum AddDVIRFlow: Hashable {
+        case trailerScreen
+        case ShippingDocment
+        case AddVehicleForDVIR
     }
     
     enum DvirFlow: Hashable{
         case AddDvirScreenView
         case emailLogs(tittle: String)
         case DvirHostory(tittle: String)
-        case trailerScreen
-        case ShippingDocment
-        case AddVehicleForDVIR
+        
         case UploadDefectView
         
     }
@@ -81,7 +88,6 @@ enum AppRoute: Hashable {
         case DriverLogListView
         case DvirDataListView
         case ContinueDriveTableView
-        case AddDvirScreenView
         case EyeViewData(tittle: String , entry : WorkEntry )
     }
 

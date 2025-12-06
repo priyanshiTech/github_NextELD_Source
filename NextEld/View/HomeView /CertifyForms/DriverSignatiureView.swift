@@ -198,7 +198,7 @@ struct SignatureCertifyView: View {
                         DispatchQueue.main.async {
                             isLoading = false
                             if certifyVM.isSessionExpired {
-                                print(" Session expired detected in SignatureCertifyView - staying on SessionExpireUIView")
+                                // print(" Session expired detected in SignatureCertifyView - staying on SessionExpireUIView")
                                 return
                             }
                             switch result {

@@ -15,12 +15,12 @@ class StoredEventsViewModel: ObservableObject {
         // Start retrieving and let SDK stream individual events
         TrackerService.sharedInstance.retrieveStoredEvents { response, error in
             guard error == .noError else {
-                print("Error retrieving stored events")
+                // print("Error retrieving stored events")
                 return
             }
 
             // No need to parse `response?.events`, because events come via delegate
-            print("Started retrieving stored events...")
+            // print("Started retrieving stored events...")
         }
     }
 

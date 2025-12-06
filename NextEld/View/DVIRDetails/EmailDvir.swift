@@ -110,9 +110,9 @@ struct EmailDvir: View {
                                 // Try to find updated record by ID first
                                 if let recordId = record.id,
                                    let updatedRecord = allRecords.first(where: { $0.id == recordId }) {
-                                    print("  Using updated record from database - ID: \(recordId)")
-                                    print("   Truck Defect: '\(updatedRecord.truckDefect)'")
-                                    print("   Trailer Defect: '\(updatedRecord.trailerDefect)'")
+                                    // print("  Using updated record from database - ID: \(recordId)")
+                                    // print("   Truck Defect: '\(updatedRecord.truckDefect)'")
+                                    // print("   Trailer Defect: '\(updatedRecord.trailerDefect)'")
                                     selectedDvirRecord = updatedRecord
                                 } else {
                                     // If no ID or record not found, use latest record (highest ID)
@@ -122,9 +122,9 @@ struct EmailDvir: View {
                                         return id1 > id2  // Latest first
                                     }
                                     if let latestRecord = sortedRecords.first {
-                                        print("  Using LATEST record from database - ID: \(latestRecord.id ?? -1)")
-                                        print("   Truck Defect: '\(latestRecord.truckDefect)'")
-                                        print("   Trailer Defect: '\(latestRecord.trailerDefect)'")
+                                        // print("  Using LATEST record from database - ID: \(latestRecord.id ?? -1)")
+                                        // print("   Truck Defect: '\(latestRecord.truckDefect)'")
+                                        // print("   Trailer Defect: '\(latestRecord.trailerDefect)'")
                                         selectedDvirRecord = latestRecord
                                     } else {
                                         // Fallback to original record
@@ -142,17 +142,17 @@ struct EmailDvir: View {
            
             .onAppear {
                 records = DvirDatabaseManager.shared.fetchAllRecords()
-                print(" EmailDvir: Loaded \(records.count) records from database on appear")
+                // print(" EmailDvir: Loaded \(records.count) records from database on appear")
             }
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
                 // Refresh records when DVIR is added/updated
                 records = DvirDatabaseManager.shared.fetchAllRecords()
-                print(" EmailDvir: Records refreshed after DVIR update - Total: \(records.count)")
+                // print(" EmailDvir: Records refreshed after DVIR update - Total: \(records.count)")
             }
             .task {
                 // Also fetch records when view appears (async)
                 records = DvirDatabaseManager.shared.fetchAllRecords()
-                print(" EmailDvir: Task - Loaded \(records.count) records from database")
+                // print(" EmailDvir: Task - Loaded \(records.count) records from database")
             }
         .navigationBarHidden(true)
 
@@ -166,16 +166,7 @@ struct EmailDvir: View {
                 
             case .DvirHostory(tittle: AppConstants.dvirHostoryTittle):
                   DVIRHistory(title: AppConstants.dvirHostoryTittle)
-                
-            case .trailerScreen:
-                TrailerView(trailerVM: trailerVM, tittle: AppConstants.trailersTittle, trailers: $trailerVM.trailers)
-                
-            case .ShippingDocment:
-                ShippingDocView(tittle: AppConstants.shippingTittle)
-                
-            case .AddVehicleForDVIR:
-                AddVehicleForDvir(selectedVehicleNumber: .constant(""), VechicleID: .constant(Int(selectedDvirRecord?.vechicleID ?? "0") ?? 0))
-                
+                                
             case .emailLogs:
                 EmailLogs(title: "Daily Logs")
                 

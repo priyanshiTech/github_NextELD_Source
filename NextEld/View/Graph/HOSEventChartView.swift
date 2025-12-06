@@ -73,7 +73,7 @@ struct HOSEvent: Identifiable {
 //                endDate = nextIndexLog.startTime
 //            }
 //            
-//            print(" Chart Event: \(log.status) -> \(normalizedStatus) (Color: \(normalizedStatus == "OFF_DUTY" ? "Orange" : normalizedStatus == "ON_DUTY" ? "Blue" : normalizedStatus == "DRIVE" ? "Green" : "Gray"))")
+//            // print(" Chart Event: \(log.status) -> \(normalizedStatus) (Color: \(normalizedStatus == "OFF_DUTY" ? "Orange" : normalizedStatus == "ON_DUTY" ? "Blue" : normalizedStatus == "DRIVE" ? "Green" : "Gray"))")
 //            
 //            return HOSEvent(
 //                id: log.id,
@@ -341,12 +341,12 @@ struct HOSEventsChart: View {
             }
             
             durations[label, default: 0] += duration
-            print("***************** Duration for \(event.dutyType) -> \(label): \(formatDuration(duration))")
+            // print("***************** Duration for \(event.dutyType) -> \(label): \(formatDuration(duration))")
         }
         
         // Debug: Print final durations
         for (label, duration) in durations {
-            print(" Total \(label): \(formatDuration(duration))")
+            // print(" Total \(label): \(formatDuration(duration))")
         }
         
         return durations

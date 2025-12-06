@@ -32,39 +32,39 @@ final class ForgetPasswordViewModel: ObservableObject {
         isSessionExpired = false
         let request = ForgetPasswordRequest(username: username)
 
-        print("📤 Sending Forget Password Request with username: \(username)")
+        // print("📤 Sending Forget Password Request with username: \(username)")
 
         do {
 
             let response: ForgetPasswordResponse = try await NetworkManager.shared.post(.ForgetPassword, body: request)
-            print(" API Call Succeeded")
-            print(" Status: \(response.status)")
-            print(" Message: \(response.message)")
-            print(" Token value: \(response.token ?? "nil")")
+            // print(" API Call Succeeded")
+            // print(" Status: \(response.status)")
+            // print(" Message: \(response.message)")
+            // print(" Token value: \(response.token ?? "nil")")
             if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
-                print(" Session expired detected in ForgetPasswordViewModel")
+                // print(" Session expired detected in ForgetPasswordViewModel")
                 appRootManager?.currentRoot = .SessionExpireUIView
                 return false
             }
 
             if let result = response.result {
-                print(" Username: \(result.username)")
-                print(" Email: \(result.email)")
-                print(" Mobile No: \(result.mobileNo)")
-                print(" Employee ID: \(result.employeeId)")
-                print(" Token No: \(result.tokenNo)")
-                print(" Login Time: \(result.loginDateTime)")
-                print(" Logout Time: \(result.logoutDateTime)")
-                print(" Is Co-Driver: \(result.isCoDriver)")
+                // print(" Username: \(result.username)")
+                // print(" Email: \(result.email)")
+                // print(" Mobile No: \(result.mobileNo)")
+                // print(" Employee ID: \(result.employeeId)")
+                // print(" Token No: \(result.tokenNo)")
+                // print(" Login Time: \(result.loginDateTime)")
+                // print(" Logout Time: \(result.logoutDateTime)")
+                // print(" Is Co-Driver: \(result.isCoDriver)")
             }
 
             message = response.message
             showAlert = true
             return true
         } catch {
-            print(" API Call Failed with error: \(error)")
+            // print(" API Call Failed with error: \(error)")
             message = "Something went wrong: \(error.localizedDescription)"
             showAlert = true
             return false

@@ -133,7 +133,7 @@ struct DVIRHistory: View {
                             let success = await viewModel.fetchDVIRData(fromDate: fromStr, toDate: toStr, email: email)
                             
                             if viewModel.isSessionExpired {
-                                print(" Session expired detected in DVIRHistory - staying on SessionExpireUIView")
+                                // print(" Session expired detected in DVIRHistory - staying on SessionExpireUIView")
                                 return
                             }
                             

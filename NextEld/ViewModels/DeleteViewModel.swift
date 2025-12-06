@@ -21,12 +21,12 @@ class DeleteViewModel: ObservableObject {
                 body: DeleteAllDriverStatusRequest(driverId: driverId)
             )
 
-            print(" Delete API Response token: \(response.token ?? "nil")")
+            // print(" Delete API Response token: \(response.token ?? "nil")")
             if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
-                print(" Session expired detected during delete")
-                print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                // print(" Session expired detected during delete")
+                // print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
                 appRootManager?.currentRoot = .SessionExpireUIView
                 return false
             }

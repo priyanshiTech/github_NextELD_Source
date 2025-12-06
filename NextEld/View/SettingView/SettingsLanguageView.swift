@@ -95,7 +95,7 @@ struct SettingsLanguageView: View {
                 HStack {
                     Button(action: {
                         navmanager.path.append(AppRoute.HomeFlow.TermsAndCondition)
-                        print("Terms & Privacy tapped")
+                        // print("Terms & Privacy tapped")
                     }) {
                         HStack(spacing: 4) {
                             Text("terms_privacy_policy")

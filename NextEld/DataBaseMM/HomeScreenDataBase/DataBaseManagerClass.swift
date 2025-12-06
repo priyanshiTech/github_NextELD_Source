@@ -49,11 +49,10 @@ struct DriverLogModel: Identifiable {
     let startTime: Date
     let userId: Int
     let day: Int
-    let isVoilations: Int
+    let isVoilations: String
     let dutyType: String
     let shift: Int
     let vehicle: String
-    let isRunning: Bool
     let odometer: Double
     let engineHours: String
     let location: String
@@ -75,7 +74,7 @@ struct DriverLogModel: Identifiable {
     let lastSleepTime: Int
     let isSplit: Int
     let engineStatus: String
-    let isCertifiedLog: String
+    let isSystemGenerated: Int?
 }
 
 struct DutyLog {
@@ -102,7 +101,7 @@ class DatabaseManager: DatabaseHandler {
     let startTime = Expression<Date>("startTime")
     let userId = Expression<Int>("userId")
     let day = Expression<Int>("day")
-    let isVoilationColumn = Expression<Int>("isVoilation")
+    let isVoilationColumn = Expression<String>("isVoilation")
     let dutyType = Expression<String>("dutyType")
     let shift = Expression<Int>("shift")
     let vehicleName = Expression<String>("vehicleName") //instead of vehicle
@@ -127,6 +126,7 @@ class DatabaseManager: DatabaseHandler {
     let lastSleepTime = Expression<Int>("lastSleepTime")
     let isSplit = Expression<Int>("isSplit")
     let engineStatus = Expression<String>("engineStatus")
+    let isSystemGenerated = Expression<Int>("isSystemGenerated")
     
 
     private init() {
@@ -134,12 +134,12 @@ class DatabaseManager: DatabaseHandler {
             let docDir = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             let path = docDir.appendingPathComponent("local.db").path
             db = try Connection(path)
-            print("*__________ SQLite DB path: \(path)")
+            // print("*__________ SQLite DB path: \(path)")
 
             createTable()
             createSplitShiftTable()
         } catch {
-            print("******DB Init Error: \(error)")
+            // print("******DB Init Error: \(error)")
         }
     }
     
@@ -155,7 +155,7 @@ class DatabaseManager: DatabaseHandler {
                 t.column(splitTime)
             })
         } catch {
-            print("******splitShiftTable creation Error: \(error)")
+            // print("******splitShiftTable creation Error: \(error)")
         }
     }
 
@@ -193,9 +193,10 @@ class DatabaseManager: DatabaseHandler {
                 t.column(lastSleepTime)
                 t.column(isSplit)
                 t.column(engineStatus)
+                t.column(isSystemGenerated, defaultValue: 0)
             })
         } catch {
-            print("****** Table Create Error: \(error)")
+            // print("****** Table Create Error: \(error)")
         }
     }
     
@@ -211,11 +212,10 @@ class DatabaseManager: DatabaseHandler {
                        startTime: row[startTime],
                        userId: row[userId],
                        day: row[day],
-                       isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
+                       isVoilations: row[isVoilationColumn],
                        dutyType: row[dutyType],
                        shift: row[shift],
                        vehicle: row[vehicleName] ,
-                       isRunning: true,
                        odometer: row[odometer],
                        engineHours: row[engineHours],
                        location: row[location],
@@ -236,11 +236,13 @@ class DatabaseManager: DatabaseHandler {
                        breaktimerRemaning: row[breaktimerRemaning],
                        lastSleepTime: row[lastSleepTime],
                        isSplit: row[isSplit],
-                       engineStatus: row[engineStatus], isCertifiedLog: ""
+                       engineStatus: row[engineStatus],
+                       isSystemGenerated: row[isSystemGenerated],
+                       
                    ))
                }
            } catch {
-               print("Raw SQL query failed: \(error)")
+               // print("Raw SQL query failed: \(error)")
            }
            return logs
     }
@@ -320,11 +322,10 @@ class DatabaseManager: DatabaseHandler {
                     startTime: row[startTime],
                     userId: row[userId],
                     day: row[day],
-                    isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
+                    isVoilations: row[isVoilationColumn],
                     dutyType: row[dutyType],
                     shift: row[shift],
                     vehicle: row[vehicleName] ,
-                    isRunning: true,
                     odometer: row[odometer],
                     engineHours: row[engineHours],
                     location: row[location],
@@ -345,11 +346,12 @@ class DatabaseManager: DatabaseHandler {
                     breaktimerRemaning: row[breaktimerRemaning],
                     lastSleepTime: row[lastSleepTime],
                     isSplit: row[isSplit],
-                    engineStatus: row[engineStatus], isCertifiedLog: ""
+                    engineStatus: row[engineStatus],
+                    isSystemGenerated: row[isSystemGenerated],
                 ))
             }
         } catch {
-            print("Erooorrrooororor-------------- Fetch Error: \(error)")
+            // print("Erooorrrooororor-------------- Fetch Error: \(error)")
         }
         
         // Remove duplicates: Keep only one entry per status + startTime combination
@@ -397,21 +399,21 @@ class DatabaseManager: DatabaseHandler {
         // First check DriverLogs database
         let logs = fetchLogs(filterTypes: [.user], addWarningAndViolation: false, order: [startTime.desc], limit: 100)
         
-        print(" Searching for trailer in \(logs.count) driver logs...")
+        // print(" Searching for trailer in \(logs.count) driver logs...")
         
         // Find the most recent log with a non-empty trailer
         for (index, log) in logs.enumerated() {
             let trailer = log.trailers.trimmingCharacters(in: .whitespacesAndNewlines)
-            print(" Log \(index + 1): status=\(log.status), trailer='\(trailer)'")
+            // print(" Log \(index + 1): status=\(log.status), trailer='\(trailer)'")
             
             if !trailer.isEmpty && trailer.lowercased() != "upcoming" {
-                print(" Found trailer in driver logs: \(trailer)")
+                // print(" Found trailer in driver logs: \(trailer)")
                 return trailer
             }
         }
         
         // If not found in DriverLogs, check DVIR database
-        print(" Checking DVIR database for trailer...")
+        // print(" Checking DVIR database for trailer...")
         let dvirRecords = DvirDatabaseManager.shared.fetchAllRecords()
         let sortedDvirRecords = dvirRecords.sorted { record1, record2 in
             // Sort by timestamp descending (most recent first)
@@ -422,10 +424,10 @@ class DatabaseManager: DatabaseHandler {
         
         for (index, record) in sortedDvirRecords.enumerated() {
             let trailer = record.Trailer.trimmingCharacters(in: .whitespacesAndNewlines)
-            print(" DVIR Record \(index + 1): trailer='\(trailer)'")
+            // print(" DVIR Record \(index + 1): trailer='\(trailer)'")
             
             if !trailer.isEmpty && trailer.lowercased() != "upcoming" {
-                print("Found trailer in DVIR database: \(trailer)")
+                // print("Found trailer in DVIR database: \(trailer)")
                 return trailer
             }
         }
@@ -434,72 +436,63 @@ class DatabaseManager: DatabaseHandler {
         if let userDefaultsTrailer = UserDefaults.standard.string(forKey: "trailer"),
            !userDefaultsTrailer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
            userDefaultsTrailer.lowercased() != "upcoming" {
-            print(" Found trailer in UserDefaults: \(userDefaultsTrailer)")
+            // print(" Found trailer in UserDefaults: \(userDefaultsTrailer)")
             return userDefaultsTrailer
         }
         
-        print(" No valid trailer found in any database or UserDefaults")
+        // print(" No valid trailer found in any database or UserDefaults")
         return nil
     }
 
     
     func saveDriverLogsToSQLite(from logs: [ServerDriverLog]) {
-        print("Correct!!!!!!!!!!!!!!!! Saving \(logs.count) logs into SQLite")
-
+        // print("Correct!!!!!!!!!!!!!!!! Saving \(logs.count) logs into SQLite")
+        
         for (index, log) in logs.enumerated() {
-            
-            let originCode = UserDefaults.standard.integer(forKey: "origin") // or from API
-            let originValue = OriginType(rawValue: originCode)?.description ?? "Driver" // default
-
-            // Parse dateTime from server log, fallback to current time if parsing fails
-            var logStartTime: Date = DateTimeHelper.currentDateTime()
-            if let dateTimeString = log.dateTime, !dateTimeString.isEmpty {
-                // Try to parse the dateTime string
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                formatter.timeZone = TimeZone.current
-                
-                // Try multiple date formats
-                if let parsedDate = formatter.date(from: dateTimeString) {
-                    logStartTime = parsedDate
+            var isVoilation: String = ""
+            var driverStatus: DriverStatusType = DriverStatusType(fromName: log.status ?? "") ?? .offDuty
+            var dutyType: String = driverStatus.getName()
+            if driverStatus == .personalUse {
+                isVoilation = "No"
+                dutyType = DriverStatusType.personalUse.getName()
+            } else if driverStatus == .yardMode {
+                isVoilation = "No"
+                dutyType = DriverStatusType.yardMode.getName()
+            } else if log.status == AppConstants.engineOn {
+                isVoilation = "Engine"
+            } else if log.status == AppConstants.engineOff {
+                isVoilation = "Engine"
+            } else{
+                if log.logType == "log" || log.logType == "System Generated" {
+                    isVoilation = "No"
                 } else {
-                    // Try ISO8601 format
-                    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                    if let parsedDate = formatter.date(from: dateTimeString) {
-                        logStartTime = parsedDate
-                    } else {
-                        // Try with timezone offset
-                        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
-                        if let parsedDate = formatter.date(from: dateTimeString) {
-                            logStartTime = parsedDate
-                        } else {
-                            print("Could not parse dateTime: \(dateTimeString), using current time")
-                        }
-                    }
+                    isVoilation = "Yes"
+                    dutyType = log.logType ?? ""
                 }
-            } else if let utcDateTime = log.utcDateTime {
-                // Use UTC timestamp if available
-                logStartTime = Date(timeIntervalSince1970: TimeInterval(utcDateTime) / 1000.0)
             }
-
+//            if driverStatus == .yardMode {
+//                driverStatus = .onDuty
+//            } else if driverStatus == .personalUse {
+//                driverStatus = .offDuty
+//            }
+            
             let model = DriverLogModel(
                 id: nil,
-                status: log.status ?? "Unknown",
-                startTime: logStartTime,
+                status: driverStatus.getName(),
+                startTime: log.dateTime?.asDate() ?? Date(),
                 userId: log.driverId ?? 0,
                 day: log.days ?? 0,
-                isVoilations: log.isVoilation ?? 0,
-                dutyType: log.logType ?? "",
+                isVoilations: isVoilation,
+                dutyType: dutyType,
                 shift: log.shift ?? 0,
                 vehicle: log.truckNo ?? "",
-                isRunning: true,
                 odometer: log.odometer ?? 0.0,
                 engineHours: log.engineHour ?? "0",
                 location: log.customLocation ?? "",
                 lat: log.lattitude ?? 0.0,
                 long: log.longitude ?? 0.0,
-                origin: originValue ,
-                isSynced: false,
+                origin: log.origin ?? "",
+                isSynced: true,
                 vehicleId: log.vehicleId ?? 0,
                 trailers: (log.trailers ?? []).joined(separator: ", "),
                 notes: log.note ?? "",
@@ -511,17 +504,18 @@ class DatabaseManager: DatabaseHandler {
                 remainingDutyTime: Int(log.remainingDutyTime ?? "0") ?? 0,
                 remainingSleepTime: Int(log.remainingSleepTime ?? "0") ?? 0, breaktimerRemaning: log.breaktimerRemaning,
                 lastSleepTime: Int(log.lastOnSleepTime ?? "0") ?? 0,
-                isSplit: 0,
-                engineStatus: "Off", isCertifiedLog: ""
+                isSplit: log.isSplit ?? 0,
+                engineStatus: log.engineStatus ?? "Off",
+                isSystemGenerated: log.isSystemGenerated
             )
 
-            print(" Saving log #\(index + 1): \(model.status), \(model.startTime)")
-            print("isVoilation before insert:", model.isVoilations)
+            // print(" Saving log #\(index + 1): \(model.status), \(model.startTime)")
+            // print("isVoilation before insert:", model.isVoilations)
 
             insertLog(from: model)
         }
         
-        print("Finished saving logs.")
+        // print("Finished saving logs.")
 
     }
     
@@ -534,7 +528,7 @@ class DatabaseManager: DatabaseHandler {
         ]
         
         if skipStatuses.contains(normalizedStatus) {
-            print(" Skipping log insert for status: \(model.status)")
+            // print(" Skipping log insert for status: \(model.status)")
             return
         }
         
@@ -548,7 +542,7 @@ class DatabaseManager: DatabaseHandler {
                 )
                 let serverIdCount = try db?.scalar(serverIdCheck.count) ?? 0
                 if serverIdCount > 0 {
-                    print(" Duplicate log found by serverId: \(serverId), skipping insert")
+                    // print(" Duplicate log found by serverId: \(serverId), skipping insert")
                     return
                 }
             }
@@ -570,7 +564,7 @@ class DatabaseManager: DatabaseHandler {
                 if normalizedStatus == mostRecentStatus {
                     let timeDifference = abs(model.startTime.timeIntervalSince(mostRecentTime))
                     if timeDifference <= 5.0 {
-                        print(" Duplicate log found (same status '\(model.status)' within 5 seconds), skipping insert")
+                        // print(" Duplicate log found (same status '\(model.status)' within 5 seconds), skipping insert")
                         return
                     }
                 }
@@ -586,11 +580,11 @@ class DatabaseManager: DatabaseHandler {
             
             let existingCount = try db?.scalar(duplicateCheck.count) ?? 0
             if existingCount > 0 {
-                print(" Duplicate log found (status: \(model.status), time: \(model.startTime)), skipping insert")
+                // print(" Duplicate log found (status: \(model.status), time: \(model.startTime)), skipping insert")
                 return
             }
         } catch {
-            print(" Error checking for duplicate: \(error), proceeding with insert")
+            // print(" Error checking for duplicate: \(error), proceeding with insert")
         }
         
         do {
@@ -626,14 +620,15 @@ class DatabaseManager: DatabaseHandler {
                 breaktimerRemaning <- model.breaktimerRemaning ?? 0,
                 lastSleepTime <- model.lastSleepTime,
                 isSplit <- model.isSplit,
-                engineStatus <- model.engineStatus
+                engineStatus <- model.engineStatus,
+                isSystemGenerated <- model.isSystemGenerated ?? 0
             )
             
             let rowID = try db?.run(insert) ?? 0
-            print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
+            // print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
             
         } catch {
-            print(" Insert Log Error: \(error.localizedDescription)")
+            // print(" Insert Log Error: \(error.localizedDescription)")
         }
     }
     
@@ -648,7 +643,7 @@ class DatabaseManager: DatabaseHandler {
 //        
 //       
 //        if skipStatuses.contains(normalizedStatus) {
-//            print(" Skipping log insert for status: \(model.status)")
+//            // print(" Skipping log insert for status: \(model.status)")
 //            return
 //        }
 //
@@ -661,7 +656,7 @@ class DatabaseManager: DatabaseHandler {
 //                )
 //                let serverIdCount = try db?.scalar(serverIdCheck.count) ?? 0
 //                if serverIdCount > 0 {
-//                    print(" Duplicate log found by serverId: \(serverId), skipping insert")
+//                    // print(" Duplicate log found by serverId: \(serverId), skipping insert")
 //                    return
 //                }
 //            }
@@ -683,11 +678,11 @@ class DatabaseManager: DatabaseHandler {
 //            
 //            let existingCount = try db?.scalar(duplicateCheck.count) ?? 0
 //            if existingCount > 0 {
-//                print(" Duplicate log found (status: \(model.status), time: \(timeString)), skipping insert")
+//                // print(" Duplicate log found (status: \(model.status), time: \(timeString)), skipping insert")
 //                return
 //            }
 //        } catch {
-//            print(" Error checking for duplicate: \(error), proceeding with insert")
+//            // print(" Error checking for duplicate: \(error), proceeding with insert")
 //        }
 //        
 //        do {
@@ -729,11 +724,11 @@ class DatabaseManager: DatabaseHandler {
 //            )
 //            
 //            let rowID = try db?.run(insert) ?? 0
-//            print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
+//            // print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
 //
 //           
 //        } catch {
-//            print(" Insert Log Error: \(error.localizedDescription)")
+//            // print(" Insert Log Error: \(error.localizedDescription)")
 //        }
 //    }*******************************
 
@@ -748,9 +743,9 @@ class DatabaseManager: DatabaseHandler {
             try db?.run(driverLogs.delete()) //  Uses the same table instance you declared at top
             try db?.run(splitShiftTable.delete())
 
-            print("All logs deleted successfully")
+            // print("All logs deleted successfully")
         } catch {
-            print("Error deleting logs: \(error)")
+            // print("Error deleting logs: \(error)")
         }
     }
     
@@ -775,59 +770,10 @@ class DatabaseManager: DatabaseHandler {
                     startTime: row[startTime],
                     userId: row[userId],
                     day: row[day],
-                    isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
-                   // isVoilations: "\(try row.get(isVoilationColumn))",
+                    isVoilations: row[isVoilationColumn],
                     dutyType: row[dutyType],
                     shift: row[shift],
                     vehicle: row[vehicleName] ,
-                    isRunning: true,
-                    odometer: row[odometer],
-                    engineHours: row[engineHours],
-                    location: row[location],
-                    lat: row[lat],
-                    long: row[long],
-                    origin: row[origin],
-                    isSynced: row[isSynced],
-                    vehicleId: row[vehicleId],
-                    trailers: row[trailers],
-                    notes: row[notes],
-                    serverId: row[serverId],
-                    timestamp: row[timestamp],
-                    identifier: row[identifier],
-                    remainingWeeklyTime: row[remainingWeeklyTime],
-                    remainingDriveTime: row[remainingDriveTime],
-                    remainingDutyTime: row[remainingDutyTime],
-                    remainingSleepTime: row[remainingSleepTime],
-                    breaktimerRemaning: row[breaktimerRemaning],
-                    lastSleepTime: row[lastSleepTime],
-                    isSplit: row[isSplit],
-                    engineStatus: row[engineStatus], isCertifiedLog: ""
-                ))
-            }
-            
-            return logs.first
-        } catch {
-            return nil
-        }
-    }
-
-    func fetchLastRecord(before date: Date) -> DriverLogModel? {
-        guard let db = self.db else { return nil }
-        let baseFilter = getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
-        let filterExpression = baseFilter && startTime < date
-        do {
-            if let row = try db.pluck(driverLogs.filter(filterExpression).order(startTime.desc).limit(1)) {
-                return DriverLogModel(
-                    id: row[id],
-                    status: row[status],
-                    startTime: row[startTime],
-                    userId: row[userId],
-                    day: row[day],
-                    isVoilations: (try? row.get(isVoilationColumn)) ?? 0,
-                    dutyType: row[dutyType],
-                    shift: row[shift],
-                    vehicle: row[vehicleName],
-                    isRunning: true,
                     odometer: row[odometer],
                     engineHours: row[engineHours],
                     location: row[location],
@@ -849,11 +795,58 @@ class DatabaseManager: DatabaseHandler {
                     lastSleepTime: row[lastSleepTime],
                     isSplit: row[isSplit],
                     engineStatus: row[engineStatus],
-                    isCertifiedLog: ""
+                    isSystemGenerated: row[isSystemGenerated],
+                ))
+            }
+            
+            return logs.first
+        } catch {
+            return nil
+        }
+    }
+
+    func fetchLastRecord(before date: Date) -> DriverLogModel? {
+        guard let db = self.db else { return nil }
+        let baseFilter = getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
+        let filterExpression = baseFilter && startTime < date
+        do {
+            if let row = try db.pluck(driverLogs.filter(filterExpression).order(startTime.desc).limit(1)) {
+                return DriverLogModel(
+                    id: row[id],
+                    status: row[status],
+                    startTime: row[startTime],
+                    userId: row[userId],
+                    day: row[day],
+                    isVoilations: row[isVoilationColumn],
+                    dutyType: row[dutyType],
+                    shift: row[shift],
+                    vehicle: row[vehicleName],
+                    odometer: row[odometer],
+                    engineHours: row[engineHours],
+                    location: row[location],
+                    lat: row[lat],
+                    long: row[long],
+                    origin: row[origin],
+                    isSynced: row[isSynced],
+                    vehicleId: row[vehicleId],
+                    trailers: row[trailers],
+                    notes: row[notes],
+                    serverId: row[serverId],
+                    timestamp: row[timestamp],
+                    identifier: row[identifier],
+                    remainingWeeklyTime: row[remainingWeeklyTime],
+                    remainingDriveTime: row[remainingDriveTime],
+                    remainingDutyTime: row[remainingDutyTime],
+                    remainingSleepTime: row[remainingSleepTime],
+                    breaktimerRemaning: row[breaktimerRemaning],
+                    lastSleepTime: row[lastSleepTime],
+                    isSplit: row[isSplit],
+                    engineStatus: row[engineStatus],
+                    isSystemGenerated: row[isSystemGenerated]
                 )
             }
         } catch {
-            print(" Fetch last record before date error: \(error)")
+            // print(" Fetch last record before date error: \(error)")
         }
         return nil
     }
@@ -932,14 +925,14 @@ extension DatabaseManager {
 //                self.lastDay = fetchedDay
 //                self.lastShift = fetchedShift
 //
-//                print(" Last row → Day: \(fetchedDay), Shift: \(fetchedShift)")
+//                // print(" Last row → Day: \(fetchedDay), Shift: \(fetchedShift)")
 //            } else {
-//                print(" No rows found for userId: \(userIdValue)")
+//                // print(" No rows found for userId: \(userIdValue)")
 //                self.lastDay = 1
 //                self.lastShift = 1
 //            }
 //        } catch {
-//            print(" Error fetching last day/shift: \(error)")
+//            // print(" Error fetching last day/shift: \(error)")
 //            self.lastDay = 1
 //            self.lastShift = 1
 //        }
@@ -960,7 +953,6 @@ extension DatabaseManager {
         breakTimeRemaning: Int,
         lastSleepTime: Int,
         RemaningRestBreak: String,
-        isruning: Bool,
         isVoilations: Bool = false,
         origin: String
         //isVoilations: String
@@ -985,12 +977,11 @@ extension DatabaseManager {
             startTime: startTime,
             userId: AppStorageHandler.shared.driverId ?? 0,
             day: AppStorageHandler.shared.days,
-            isVoilations: isVoilations ? 1 : 0,   //  Actual Bool → Int
+            isVoilations: isVoilations ? "YES" : "NO",   //  Actual Bool → Int
             dutyType: dutyType,
             shift: AppStorageHandler.shared.shift,
             vehicle: AppStorageHandler.shared.vehicleNo ?? "",
                 //UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
-            isRunning: isruning,
             odometer: SharedInfoManager.shared.odometer,
             engineHours: "\(SharedInfoManager.shared.engineHours)",
             location: address,
@@ -1014,8 +1005,8 @@ extension DatabaseManager {
             breaktimerRemaning: breakTimeRemaning,
             lastSleepTime: lastSleepTime,
             isSplit: 0,
-            engineStatus: "Off", isCertifiedLog: ""
-            
+            engineStatus: "Off",
+            isSystemGenerated: 0
         )
         
         insertLog(from: log)
@@ -1031,9 +1022,9 @@ extension DatabaseManager {
         do {
             let log = driverLogs.filter(id == uniqueId)
             try db?.run(log.update(self.identifier <- identifier))
-            print("Identifier updated for \(uniqueId) to \(identifier)")
+            // print("Identifier updated for \(uniqueId) to \(identifier)")
         } catch {
-            print("failed to update Identifier: \(error)")
+            // print("failed to update Identifier: \(error)")
         }
     }
     
@@ -1041,9 +1032,9 @@ extension DatabaseManager {
         do {
             let log = driverLogs.filter(id == localId)
             try db?.run(log.update(isSynced <- true, self.serverId <- serverId))
-            print(" Marked localId \(localId) as synced with serverId \(serverId)")
+            // print(" Marked localId \(localId) as synced with serverId \(serverId)")
         } catch {
-            print(" Update Sync Status Error: \(error)")
+            // print(" Update Sync Status Error: \(error)")
         }
     }
     
@@ -1061,7 +1052,7 @@ extension DatabaseManager {
             }
             
         } catch {
-            print(" Update Timer Value Error: \(error)")
+            // print(" Update Timer Value Error: \(error)")
         }
     }
 }
@@ -1070,7 +1061,7 @@ extension DatabaseManager {
 extension DatabaseManager {
     func hasPreviousDayLogsUncertified() -> Bool {
         guard let db = db else {
-            print("Database not available")
+            // print("Database not available")
             return false
         }
         
@@ -1087,7 +1078,7 @@ extension DatabaseManager {
             let startOfYesterdayString = formatter.string(from: startOfYesterday)
             let endOfYesterdayString = formatter.string(from: endOfYesterday)
             
-            print("Checking for logs between: \(startOfYesterdayString) and \(endOfYesterdayString)")
+            // print("Checking for logs between: \(startOfYesterdayString) and \(endOfYesterdayString)")
             
             // Check if there are any logs from previous day
             let query = driverLogs.filter(
@@ -1098,11 +1089,11 @@ extension DatabaseManager {
             
             
             let totalCount = try db.scalar(query.count)
-            print("Found \(totalCount) logs from previous day")
+            // print("Found \(totalCount) logs from previous day")
             
             // If no logs from previous day, return false (normal popup)
             if totalCount == 0 {
-                print("No previous day logs found - showing normal popup")
+                // print("No previous day logs found - showing normal popup")
                 return false
             }
             
@@ -1127,11 +1118,11 @@ extension DatabaseManager {
                     let duration = Date().timeIntervalSince(startTimeString)
                     let hours = duration / 3600
                     
-                    print("Off Duty log started at: \(startTimeString), Duration: \(hours) hours")
+                    // print("Off Duty log started at: \(startTimeString), Duration: \(hours) hours")
                     
                     if hours >= 10 {
                         hasLongOffDuty = true
-                        print("Found Off Duty longer than 10 hours!")
+                        // print("Found Off Duty longer than 10 hours!")
                         break
               //      }
                 }
@@ -1147,7 +1138,7 @@ extension DatabaseManager {
                 notes != ""  // Non-empty notes might indicate certification
             )
             let certifiedCount = try db.scalar(certifiedQuery.count)
-            print("Found \(certifiedCount) logs with notes (possibly certified)")
+            // print("Found \(certifiedCount) logs with notes (possibly certified)")
             
             // Option 2: Check sync status (certified logs should be synced)
             let syncedQuery = driverLogs.filter(
@@ -1156,7 +1147,7 @@ extension DatabaseManager {
                 isSynced == true  // Synced might indicate certification
             )
             let syncedCount = try db.scalar(syncedQuery.count)
-            print("Found \(syncedCount) synced logs from previous day")
+            // print("Found \(syncedCount) synced logs from previous day")
             
             // Determine if certification is needed
             // If less than 50% logs are synced or have notes, consider uncertified
@@ -1166,18 +1157,18 @@ extension DatabaseManager {
             
             if needsCertification {
                 if hasLongOffDuty {
-                    print("Showing CERTIFY popup - Off Duty longer than 10 hours")
+                    // print("Showing CERTIFY popup - Off Duty longer than 10 hours")
                 } else {
-                    print("Showing CERTIFY popup - logs need certification")
+                    // print("Showing CERTIFY popup - logs need certification")
                 }
             } else {
-                print("Showing NORMAL popup - all logs are certified")
+                // print("Showing NORMAL popup - all logs are certified")
             }
             
             return needsCertification
             
         } catch {
-            print("Error checking previous day logs: \(error)")
+            // print("Error checking previous day logs: \(error)")
             // If error, assume normal popup
             return false
         }

@@ -115,7 +115,7 @@ class DeviceLocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 if let error = error {
                     // Don't log throttling errors - they're expected
                     if (error as NSError).domain != "GEOErrorDomain" || (error as NSError).code != -3 {
-                        print(" Reverse geocoding error: \(error.localizedDescription)")
+                        // print(" Reverse geocoding error: \(error.localizedDescription)")
                     }
                     return
                 }

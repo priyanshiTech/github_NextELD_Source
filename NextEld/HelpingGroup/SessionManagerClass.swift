@@ -61,14 +61,14 @@ class SessionManager: ObservableObject {
     func logIn(token: String) {
         self.token = token
         self.isLoggedIn = true
-        print(" Logged in with token: \(token)")
+        // print(" Logged in with token: \(token)")
     }
 
     func logOut() {
         self.token = nil
         self.isLoggedIn = false
-        print("🚪 Logged out")
-        print(" Token removed from UserDefaults")
+        // print("🚪 Logged out")
+        // print(" Token removed from UserDefaults")
     }
 }
 

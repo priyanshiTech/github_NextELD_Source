@@ -50,12 +50,12 @@ class SupportViewModel: ObservableObject {
                 .HelpSupportInfo,
                 body: requestBody
             )
-            print(" Support API Response token: \(response.token ?? "nil")")
+            // print(" Support API Response token: \(response.token ?? "nil")")
             if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
-                print(" Session expired detected in SupportViewModel")
-                print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                // print(" Session expired detected in SupportViewModel")
+                // print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
                 appRootManager?.currentRoot = .SessionExpireUIView
                 isLoading = false
                 return

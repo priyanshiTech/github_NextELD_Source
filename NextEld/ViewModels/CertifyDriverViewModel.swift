@@ -79,8 +79,8 @@ class CertifyDriverViewModel: ObservableObject {
                         if response.token.lowercased() == "false" {
                             SessionManagerClass.shared.clearToken()
                             self.isSessionExpired = true
-                            print(" Session expired detected during certify upload")
-                            print(" appRootManager is \(self.appRootManager != nil ? "set" : "nil")")
+                            // print(" Session expired detected during certify upload")
+                            // print(" appRootManager is \(self.appRootManager != nil ? "set" : "nil")")
                             self.appRootManager?.currentRoot = .SessionExpireUIView
                             completion(.failure(NSError(domain: "SessionExpired", code: 401, userInfo: [NSLocalizedDescriptionKey: "Session expired"])))
                             return

@@ -95,7 +95,7 @@ class FirmwareUpdateViewModel: ObservableObject {
                 body: [String: String]() // empty JSON {}
             )
 
-            print(response)
+            // print(response)
             self.firmwareInfo = response
 
         } catch {

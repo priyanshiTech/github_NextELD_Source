@@ -45,11 +45,11 @@ class ContinueDriveDBManager {
             )
             let path = docDir.appendingPathComponent("local.db").path
             db = try Connection(path)
-            print(" Continue Drive SQLite DB path: \(path)")
+            // print(" Continue Drive SQLite DB path: \(path)")
             
             createTable()
         } catch {
-            print(" Continue Drive DB Init Error: \(error)")
+            // print(" Continue Drive DB Init Error: \(error)")
         }
     }
     
@@ -64,9 +64,9 @@ class ContinueDriveDBManager {
                 t.column(endTime)
                 t.column(breakTime)
             })
-            print(" Continue Drive table created successfully")
+            // print(" Continue Drive table created successfully")
         } catch {
-            print(" Continue Drive Table Create Error: \(error)")
+            // print(" Continue Drive Table Create Error: \(error)")
         }
     }
     
@@ -79,7 +79,7 @@ class ContinueDriveDBManager {
         breakTime: String
     ) {
         guard let db = db else {
-            print(" Database connection not available")
+            // print(" Database connection not available")
             return
         }
         
@@ -93,11 +93,11 @@ class ContinueDriveDBManager {
             )
             
             let rowID = try db.run(insert)
-            print(" Continue Drive data inserted with ID: \(rowID)")
-            print(" Status: \(status), Start: \(startTime), End: \(endTime), Break: \(breakTime)")
+            // print(" Continue Drive data inserted with ID: \(rowID)")
+            // print(" Status: \(status), Start: \(startTime), End: \(endTime), Break: \(breakTime)")
             
         } catch {
-            print(" Insert Continue Drive Data Error: \(error.localizedDescription)")
+            // print(" Insert Continue Drive Data Error: \(error.localizedDescription)")
         }
     }
     
@@ -106,7 +106,7 @@ class ContinueDriveDBManager {
         var data: [ContinueDriveModel] = []
         
         guard let db = db else {
-            print(" Database connection not available")
+            // print(" Database connection not available")
             return data
         }
         
@@ -122,7 +122,7 @@ class ContinueDriveDBManager {
                 ))
             }
         } catch {
-            print(" Fetch Continue Drive Data Error: \(error)")
+            // print(" Fetch Continue Drive Data Error: \(error)")
         }
         
         return data
@@ -131,7 +131,7 @@ class ContinueDriveDBManager {
     // MARK: - Fetch Latest Continue Drive Data
     func fetchLatestContinueDriveData() -> ContinueDriveModel? {
         guard let db = db else {
-            print(" Database connection not available")
+            // print(" Database connection not available")
             return nil
         }
         
@@ -147,7 +147,7 @@ class ContinueDriveDBManager {
                 )
             }
         } catch {
-            print(" Fetch Latest Continue Drive Data Error: \(error)")
+            // print(" Fetch Latest Continue Drive Data Error: \(error)")
         }
         
         return nil
@@ -162,7 +162,7 @@ class ContinueDriveDBManager {
         breakTime: String? = nil
     ) {
         guard let db = db else {
-            print(" Database connection not available")
+            // print(" Database connection not available")
             return
         }
         
@@ -182,23 +182,23 @@ class ContinueDriveDBManager {
                 try db.run(record.update(self.breakTime <- breakTime))
             }
             
-            print(" Continue Drive data updated for ID: \(id)")
+            // print(" Continue Drive data updated for ID: \(id)")
             
         } catch {
-            print(" Update Continue Drive Data Error: \(error)")
+            // print(" Update Continue Drive Data Error: \(error)")
         }
     }
     
     func deleteAllContinueDriveData() {
         guard let db = db else {
-            print(" Database connection not available")
+            // print(" Database connection not available")
             return
         }
         do {
             try db.run(continueDriveTable.delete())
-            print(" All Continue Drive data deleted")
+            // print(" All Continue Drive data deleted")
         } catch {
-            print(" Delete All Continue Drive Data Error: \(error)")
+            // print(" Delete All Continue Drive Data Error: \(error)")
         }
     }
     // MARK: - Update Latest Continue Drive Data
@@ -209,7 +209,7 @@ class ContinueDriveDBManager {
         breakTime: String? = nil
     ) {
         guard let db = db else {
-            print(" Database connection not available")
+            // print(" Database connection not available")
             return
         }
         
@@ -229,10 +229,10 @@ class ContinueDriveDBManager {
                 try db.run(record.update(self.breakTime <- breakTime))
             }
             
-            print(" Latest Continue Drive data updated")
+            // print(" Latest Continue Drive data updated")
             
         } catch {
-            print(" Update Latest Continue Drive Data Error: \(error)")
+            // print(" Update Latest Continue Drive Data Error: \(error)")
         }
     }
     
@@ -245,7 +245,7 @@ class ContinueDriveDBManager {
         breakTime: String? = nil
     ) {
         guard let db = db else {
-            print(" Database connection not available")
+            // print(" Database connection not available")
             return
         }
         
@@ -265,10 +265,10 @@ class ContinueDriveDBManager {
                 try db.run(record.update(self.breakTime <- breakTime))
             }
             
-            print(" Continue Drive data updated for User ID: \(userId)")
+            // print(" Continue Drive data updated for User ID: \(userId)")
             
         } catch {
-            print(" Update Continue Drive Data by User ID Error: \(error)")
+            // print(" Update Continue Drive Data by User ID Error: \(error)")
         }
     }
     
@@ -282,7 +282,7 @@ class ContinueDriveDBManager {
         breakTime: String
     ) {
         guard let db = db else {
-            print(" Database connection not available")
+            // print(" Database connection not available")
             return
         }
         
@@ -297,10 +297,10 @@ class ContinueDriveDBManager {
                 self.breakTime <- breakTime
             ))
             
-            print(" Complete Continue Drive record updated for ID: \(id)")
+            // print(" Complete Continue Drive record updated for ID: \(id)")
             
         } catch {
-            print(" Update Complete Continue Drive Record Error: \(error)")
+            // print(" Update Complete Continue Drive Record Error: \(error)")
         }
     }
 }
@@ -314,7 +314,7 @@ class ContinueDriveViewModel: ObservableObject {
         isLoading = true
         continueDriveData = ContinueDriveDBManager.shared.fetchAllContinueDriveData()
         isLoading = false
-        print(" Loaded \(continueDriveData.count) continue drive records")
+        // print(" Loaded \(continueDriveData.count) continue drive records")
     }
     
     func saveContinueDriveData(

@@ -26,7 +26,7 @@ struct ImagePicker: UIViewControllerRepresentable {
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 availableSourceType = .camera
             } else {
-                print(" Camera not available, falling back to photoLibrary")
+                // print(" Camera not available, falling back to photoLibrary")
                 availableSourceType = .photoLibrary
             }
         } else {
@@ -37,7 +37,7 @@ struct ImagePicker: UIViewControllerRepresentable {
         picker.delegate = context.coordinator
         picker.allowsEditing = false
         picker.modalPresentationStyle = .fullScreen
-        print(" ImagePicker created with sourceType: \(availableSourceType == .camera ? "camera" : "photoLibrary")")
+        // print(" ImagePicker created with sourceType: \(availableSourceType == .camera ? "camera" : "photoLibrary")")
         return picker
     }
     
@@ -49,7 +49,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
                     availableSourceType = .camera
                 } else {
-                    print(" Camera not available in update, falling back to photoLibrary")
+                    // print(" Camera not available in update, falling back to photoLibrary")
                     availableSourceType = .photoLibrary
                 }
             } else {
@@ -57,7 +57,7 @@ struct ImagePicker: UIViewControllerRepresentable {
             }
             
             if uiViewController.sourceType != availableSourceType {
-                print("Updating ImagePicker sourceType from \(uiViewController.sourceType == .camera ? "camera" : "photoLibrary") to \(availableSourceType == .camera ? "camera" : "photoLibrary")")
+                // print("Updating ImagePicker sourceType from \(uiViewController.sourceType == .camera ? "camera" : "photoLibrary") to \(availableSourceType == .camera ? "camera" : "photoLibrary")")
                 uiViewController.sourceType = availableSourceType
             }
         }
@@ -72,20 +72,20 @@ struct ImagePicker: UIViewControllerRepresentable {
         
         init(_ parent: ImagePicker) {
             self.parent = parent
-            print(" ImagePicker Coordinator created")
+            // print(" ImagePicker Coordinator created")
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            print(" ImagePicker: didFinishPickingMediaWithInfo called")
+            // print(" ImagePicker: didFinishPickingMediaWithInfo called")
             if let image = info[.originalImage] as? UIImage {
-                print(" Image extracted successfully, size: \(image.size)")
+                // print(" Image extracted successfully, size: \(image.size)")
                 DispatchQueue.main.async {
                     self.parent.selectedImage = image
-                    print(" Image assigned to binding, calling dismiss")
+                    // print(" Image assigned to binding, calling dismiss")
                     self.parent.dismiss()
                 }
             } else {
-                print(" Failed to extract image from picker info")
+                // print(" Failed to extract image from picker info")
                 DispatchQueue.main.async {
                     self.parent.dismiss()
                 }
@@ -93,7 +93,7 @@ struct ImagePicker: UIViewControllerRepresentable {
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            print(" ImagePicker cancelled by user")
+            // print(" ImagePicker cancelled by user")
             DispatchQueue.main.async {
                 self.parent.selectedImage = nil
                 self.parent.dismiss()

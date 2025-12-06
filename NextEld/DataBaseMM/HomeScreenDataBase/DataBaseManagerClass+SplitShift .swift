@@ -18,7 +18,7 @@ extension DatabaseManager {
             )
             try db.run(insert)
         } catch {
-            print("Error while inserting the value in split shift log table: \(error)")
+            // print("Error while inserting the value in split shift log table: \(error)")
         }
     }
     
@@ -36,7 +36,7 @@ extension DatabaseManager {
             }
             return splitShiftLogs.first
         } catch {
-            print("Error while fetching the value from split shift log table: \(error)")
+            // print("Error while fetching the value from split shift log table: \(error)")
             return nil
         }
     }
@@ -47,7 +47,7 @@ extension DatabaseManager {
             let update = splitShiftTable.filter(self.id == id).update(self.splitTime <- duration)
             try db.run(update)
         } catch {
-            print("Error while updating the split duration: \(error)")
+            // print("Error while updating the split duration: \(error)")
         }
        
     }
@@ -57,7 +57,7 @@ extension DatabaseManager {
         do {
             try db.run(splitShiftTable.delete())
         } catch {
-            print("Error while deleting all split shift logs: \(error)")
+            // print("Error while deleting all split shift logs: \(error)")
         }
     }
 }

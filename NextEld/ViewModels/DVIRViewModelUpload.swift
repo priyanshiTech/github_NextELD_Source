@@ -81,26 +81,26 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
         "trailer": trailerArray.isEmpty ? [] : trailerArray  // Array
     ]
 
-    print(" ========== API REQUEST FIELDS ==========")
-    print(" Request Fields:")
+    // print(" ========== API REQUEST FIELDS ==========")
+    // print(" Request Fields:")
     for (key, value) in fields {
         if let arrayValue = value as? [String] {
-            print("   \(key): [\(arrayValue.joined(separator: ", "))]")
+            // print("   \(key): [\(arrayValue.joined(separator: ", "))]")
         } else {
-            print("   \(key): \(value) (type: \(type(of: value)))")
+            // print("   \(key): \(value) (type: \(type(of: value)))")
         }
     }
-    print("======================================")
+    // print("======================================")
 
     var files: [MultipartFile] = []
     
     // Check if signature data exists
     if let signatureData = record.fileDVir {
-        print(" Signature data found: \(signatureData.count) bytes")
+        // print(" Signature data found: \(signatureData.count) bytes")
         
         if let image = UIImage(data: signatureData) {
-            print(" Signature image created successfully")
-            print(" Image size: \(image.size.width)x\(image.size.height)")
+            // print(" Signature image created successfully")
+            // print(" Image size: \(image.size.width)x\(image.size.height)")
             
             // Check if image is blank (all white/transparent)
             // Create a new image with black signature on white background to ensure visibility
@@ -114,11 +114,11 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
                 image.draw(at: .zero)
             }
             
-            print(" Processed signature image (white background ensured)")
+            // print(" Processed signature image (white background ensured)")
             
             // Convert to JPEG with high quality to preserve signature details
             if let jpegData = processedImage.jpegData(compressionQuality: 1.0) {
-                print(" Signature JPEG data created: \(jpegData.count) bytes")
+                // print(" Signature JPEG data created: \(jpegData.count) bytes")
                 
                 // Verify the image is not blank by checking if it has non-white pixels
                 if let cgImage = processedImage.cgImage {
@@ -153,20 +153,20 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
                     }
                     
                     if hasNonWhitePixels {
-                        print(" Signature verified: Contains non-white pixels (signature exists)")
+                        // print(" Signature verified: Contains non-white pixels (signature exists)")
                     } else {
-                        print(" WARNING: Signature image appears to be blank (all white pixels)")
+                        // print(" WARNING: Signature image appears to be blank (all white pixels)")
                     }
                 }
                 
                 let driverId = AppStorageHandler.shared.driverId ?? 0
                 let filename = "\(driverId)_sign_1.jpg"
                 
-                print(" Creating multipart file:")
-                print("   - name: file")
-                print("   - filename: \(filename)")
-                print("   - mimeType: image/jpeg")
-                print("   - data size: \(jpegData.count) bytes")
+                // print(" Creating multipart file:")
+                // print("   - name: file")
+                // print("   - filename: \(filename)")
+                // print("   - mimeType: image/jpeg")
+                // print("   - data size: \(jpegData.count) bytes")
                 
                 // Use "file" as field name (same as defect images, server will map it to driverSignFile)
                 files.append(MultipartFile(
@@ -176,80 +176,80 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
                     data: jpegData
                 ))
                 
-                print(" Signature file added to multipart request")
+                // print(" Signature file added to multipart request")
             } else {
-                print(" Failed to convert signature image to JPEG data")
+                // print(" Failed to convert signature image to JPEG data")
             }
         } else {
-            print(" Failed to create UIImage from signature data")
+            // print(" Failed to create UIImage from signature data")
         }
     } else {
-        print(" No signature data found in record.fileDVir")
+        // print(" No signature data found in record.fileDVir")
     }
 
-    print("  API Call: dispatchadd_dvir_data")
-    print("  URL: \(url)")
-    print("  Request Fields Count: \(fields.count)")
-    print("  Files Count: \(files.count)")
+    // print("  API Call: dispatchadd_dvir_data")
+    // print("  URL: \(url)")
+    // print("  Request Fields Count: \(fields.count)")
+    // print("  Files Count: \(files.count)")
     
     MultipartAPIService.shared.upload(url: url, fields: fields, files: files) { result in
         DispatchQueue.main.async {
             switch result {
             case .success(let data):
-                print(" ========== dispatchadd_dvir_data API - Upload successful! ==========")
+                // print(" ========== dispatchadd_dvir_data API - Upload successful! ==========")
                 if let responseString = String(data: data, encoding: .utf8) {
-                    print(" Full Response Body:")
-                    print(" \(responseString)")
+                    // print(" Full Response Body:")
+                    // print(" \(responseString)")
                     
                     // Parse response to extract _id and verify all data
                     if let jsonData = responseString.data(using: .utf8),
                        let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
                         if let tokenValue = (json["token"] as? String)?.lowercased(), tokenValue == "false" {
                             SessionManagerClass.shared.clearToken()
-                            print(" Session expired detected during DVIR upload")
-                            print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                            // print(" Session expired detected during DVIR upload")
+                            // print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
                             appRootManager?.currentRoot = .SessionExpireUIView
                             return
                         }
                         
-                        print(" Response Status: \(json["status"] ?? "nil")")
-                        print(" Response Message: \(json["message"] ?? "nil")")
+                        // print(" Response Status: \(json["status"] ?? "nil")")
+                        // print(" Response Message: \(json["message"] ?? "nil")")
                         
                         if let resultDict = json["result"] as? [String: Any] {
-                            print(" Result object found in response")
+                            // print(" Result object found in response")
                             
                             
                             // Extract and save _id
                             if let dvirId = resultDict["_id"] as? String {
                                 AppStorageHandler.shared.dvirLogId = dvirId
-                                print(" Saved dvirLogId: \(dvirId)")
+                                // print(" Saved dvirLogId: \(dvirId)")
                             } else {
-                                print(" Could not extract _id from response")
+                                // print(" Could not extract _id from response")
                             }
                 
                             // Check if signature file was saved
                             if let driverSignFile = resultDict["driverSignFile"] as? String, !driverSignFile.isEmpty {
-                                print(" Signature file saved on server: \(driverSignFile)")
+                                // print(" Signature file saved on server: \(driverSignFile)")
                             } else {
-                                print(" Warning: driverSignFile is empty or nil on server")
+                                // print(" Warning: driverSignFile is empty or nil on server")
                             }
                    
                         } else {
-                            print(" Result object not found in response")
-                            print(" Response structure: \(json)")
+                            // print(" Result object not found in response")
+                            // print(" Response structure: \(json)")
                         }
                     } else {
-                        print(" Could not parse response JSON")
+                        // print(" Could not parse response JSON")
                     }
                 } else {
-                    print(" Response: (Unable to decode)")
+                    // print(" Response: (Unable to decode)")
                 }
-                print(" =================================================")
+                // print(" =================================================")
             case .failure(let error):
-                print("  dispatchadd_dvir_data API - Upload failed: \(error.localizedDescription)")
+                // print("  dispatchadd_dvir_data API - Upload failed: \(error.localizedDescription)")
                 if let nsError = error as NSError? {
-                    print("  Error Code: \(nsError.code)")
-                    print("  Error Domain: \(nsError.domain)")
+                    // print("  Error Code: \(nsError.code)")
+                    // print("  Error Domain: \(nsError.domain)")
                 }
             }
         }
@@ -322,7 +322,7 @@ struct DvirRecordRequestModel {
     let requestField: [String: String] = rawFields.mapValues { "\($0)" }
 
     
-    print("Request sending for Multipart",  requestField)
+    // print("Request sending for Multipart",  requestField)
     
     var files: [MultipartFile] = []
     if let signatureData = record.signature,
@@ -338,16 +338,16 @@ struct DvirRecordRequestModel {
         ))
     }
     
-    print("Request Fields: \(requestField)")
+    // print("Request Fields: \(requestField)")
     
     MultipartAPIService.shared.upload(url: url, fields: requestField, files: files) { result in
         DispatchQueue.main.async {
             switch result {
             case .success(let data):
-                print(" Upload successful!")
-                print("Response: \(String(data: data, encoding: .utf8) ?? "None")")
+                // print(" Upload successful!")
+                // print("Response: \(String(data: data, encoding: .utf8) ?? "None")")
             case .failure(let error):
-                print(" Upload failed: \(error.localizedDescription)")
+                // print(" Upload failed: \(error.localizedDescription)")
             }
         }
     }
@@ -424,11 +424,11 @@ struct DvirRecordRequestModel {
 //        DispatchQueue.main.async {
 //            switch result {
 //            case .success(let data):
-//                print("Upload successful!")
-//                print("Response: \(String(data: data, encoding: .utf8) ?? "None")")
+//                // print("Upload successful!")
+//                // print("Response: \(String(data: data, encoding: .utf8) ?? "None")")
 //                
 //            case .failure(let error):
-//                print("Upload failed: \(error.localizedDescription)")
+//                // print("Upload failed: \(error.localizedDescription)")
 //            }
 //        }
 //    }

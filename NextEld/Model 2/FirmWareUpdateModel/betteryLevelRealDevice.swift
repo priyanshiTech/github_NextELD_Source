@@ -111,7 +111,7 @@ class PhoneBatteryViewModel: ObservableObject {
             let batteryPercent = value.first ?? 0
             DispatchQueue.main.async {
                 self.batteryLevel = Int(batteryPercent)
-                print("Battery Level: \(batteryPercent)%")
+                // print("Battery Level: \(batteryPercent)%")
             }
         }
     }

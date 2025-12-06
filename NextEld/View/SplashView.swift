@@ -113,7 +113,7 @@ struct SplashView: View {
                             apiSuccess = boolResult
                         } else {
                             // Timeout occurred
-                            print("  Splash API timeout - proceeding with existing data")
+                            // print("  Splash API timeout - proceeding with existing data")
                             apiSuccess = false
                         }
                         group.cancelAll()
@@ -122,7 +122,7 @@ struct SplashView: View {
                 
                 // Check if session expired - if yes, don't navigate anywhere else
                 if tokenVM.isSessionExpired {
-                    print(" Session expired detected - staying on SessionExpireUIView")
+                    // print(" Session expired detected - staying on SessionExpireUIView")
                     return // Don't proceed with any navigation
                 }
                 // Use result if available, otherwise proceed with existing data

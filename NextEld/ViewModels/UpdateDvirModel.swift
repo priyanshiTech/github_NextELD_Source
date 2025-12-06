@@ -9,7 +9,7 @@ import Foundation
 
 func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String, appRootManager: AppRootManager?) {
     let url = API.Endpoint.update_dvir_data.url
-
+    
     let requestField: [String: String] = [
         "driverid": record.UserID,
         "dvirLogId": dvirLogId,
@@ -31,112 +31,111 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String, app
         "sync": "\(record.Sync)",
         "server_id": record.Server_ID
     ]
-
-    print(" DVIR Upload Fields:")
-    requestField.forEach { print(" \($0.key): \($0.value)") }
-
-    var files: [MultipartFile] = []
-    if let signatureData = record.signature {
-        files.append(MultipartFile(
-            name: "trailerFile",
-            filename: "trailer_attachment.png",
-            mimeType: "image/png",
-            data: signatureData
-        ))
-        print("Trailer file attached: \(signatureData.count) bytes")
-    }
-
-
-
-    print(" API Call: update_dvir_data")
-    print("  URL: \(url)")
-    print(" Request Fields Count: \(requestField.count)")
     
-    MultipartAPIService.shared.upload(url: url, fields: requestField, files: files) { result in
-        DispatchQueue.main.async {
-            switch result {
-            case .success(let data):
-                print("  update_dvir_data API - Upload successful!")
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print("  Response: \(responseString)")
-                    if let jsonData = responseString.data(using: .utf8),
-                       let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
-                       let tokenValue = (json["token"] as? String)?.lowercased(), tokenValue == "false" {
-                        SessionManagerClass.shared.clearToken()
-                        print(" Session expired detected during DVIR update")
-                        print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
-                        appRootManager?.currentRoot = .SessionExpireUIView
-                        return
+    // print(" DVIR Upload Fields:")
+   // requestField.forEach { // print(" \($0.key): \($0.value)") }
+        
+        var files: [MultipartFile] = []
+        if let signatureData = record.signature {
+            files.append(MultipartFile(
+                name: "trailerFile",
+                filename: "trailer_attachment.png",
+                mimeType: "image/png",
+                data: signatureData
+            ))
+            // print("Trailer file attached: \(signatureData.count) bytes")
+        }
+        
+        
+        
+        // print(" API Call: update_dvir_data")
+        // print("  URL: \(url)")
+        // print(" Request Fields Count: \(requestField.count)")
+        
+        MultipartAPIService.shared.upload(url: url, fields: requestField, files: files) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    // print("  update_dvir_data API - Upload successful!")
+                    if let responseString = String(data: data, encoding: .utf8) {
+                        // print("  Response: \(responseString)")
+                        if let jsonData = responseString.data(using: .utf8),
+                           let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+                           let tokenValue = (json["token"] as? String)?.lowercased(), tokenValue == "false" {
+                            SessionManagerClass.shared.clearToken()
+                            // print(" Session expired detected during DVIR update")
+                            // print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
+                            appRootManager?.currentRoot = .SessionExpireUIView
+                            return
+                        }
+                    } else {
+                        // print("  Response: (Unable to decode)")
                     }
-                } else {
-                    print("  Response: (Unable to decode)")
-                }
-            case .failure(let error):
-                print("  update_dvir_data API - Upload failed: \(error.localizedDescription)")
-                if let nsError = error as NSError? {
-                    print("  Error Code: \(nsError.code)")
-                    print(" Error Domain: \(nsError.domain)")
+                case .failure(let error):
+                    // print("  update_dvir_data API - Upload failed: \(error.localizedDescription)")
+                    if let nsError = error as NSError? {
+                        // print("  Error Code: \(nsError.code)")
+                        // print(" Error Domain: \(nsError.domain)")
+                    }
                 }
             }
         }
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 
 /*func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String) {
 //    guard let url = URL(string: "https://gbt-usa.com/eld_log/dispatch/update_dvir_data") else {
-//        print(" Invalid URL")
+//        // print(" Invalid URL")
 //        return
 //    }
     let url =  API.Endpoint.update_dvir_data.url
@@ -159,8 +158,8 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String, app
         "trailer": record.trailer
     ]
 
-    print("📤 Fields to upload:")
-    requestField.forEach { print(" \($0.key): \($0.value)") }
+    // print("📤 Fields to upload:")
+    requestField.forEach { // print(" \($0.key): \($0.value)") }
 
     var files: [MultipartFile] = []
 
@@ -171,18 +170,18 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String, app
             mimeType: "image/png",
             data: signature
         ))
-        print("📎 Signature attached: \(signature.count) bytes")
+        // print("📎 Signature attached: \(signature.count) bytes")
     }
 
     MultipartAPIService.shared.upload(url: url, fields: requestField, files: files) { result in
         DispatchQueue.main.async {
             switch result {
             case .success(let data):
-                print(" Upload success")
-                print(" Response: \(String(data: data, encoding: .utf8) ?? "None")")
+                // print(" Upload success")
+                // print(" Response: \(String(data: data, encoding: .utf8) ?? "None")")
 
             case .failure(let error):
-                print(" Upload failed: \(error.localizedDescription)")
+                // print(" Upload failed: \(error.localizedDescription)")
             }
         }
     }

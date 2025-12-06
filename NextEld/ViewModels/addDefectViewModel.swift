@@ -20,7 +20,7 @@ class AddDefectViewModel: ObservableObject {
     func uploadDefectImage(image: UIImage, defectType: String,defectName: String, completion: @escaping (Bool) -> Void) {
         guard let imageData = image.prepareForUpload(maxFileSize: 800_000, maxDimension: 1400) else {
             errorMessage = "Failed to convert image to data"
-            print("Failed to convert image to data")
+           // print("Failed to convert image to data")
             completion(false)
             return
         }

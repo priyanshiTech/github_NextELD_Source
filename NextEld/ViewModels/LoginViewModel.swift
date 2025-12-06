@@ -24,7 +24,7 @@ class LoginViewModel: ObservableObject {
     
     //  NOW RETURNS Bool
     func login(email: String, password: String) async -> Bool {
-        print(" Starting login...")
+        // print(" Starting login...")
         isLoading = true
         errorMessage = nil
         
@@ -35,7 +35,7 @@ class LoginViewModel: ObservableObject {
             isCoDriver: true
         )
         saveUserData(requestBody)
-        print("Request Body: \(requestBody)")
+        // print("Request Body: \(requestBody)")
         
         do {
             // Get raw JSON response first to extract driverDvirLog
@@ -53,19 +53,19 @@ class LoginViewModel: ObservableObject {
                let resultDict = jsonDict["result"] as? [String: Any],
                let driverDvirLog = resultDict["driverDvirLog"] as? [[String: Any]] {
                 driverDvirLogArray = driverDvirLog
-                print(" Found \(driverDvirLog.count) server DVIR records in login response")
+                // print(" Found \(driverDvirLog.count) server DVIR records in login response")
             }
             
             // Decode response to TokenModelLog
             let response: TokenModelLog = try JSONDecoder().decode(TokenModelLog.self, from: data)
-            print(" API Response: \(response)")
+            // print(" API Response: \(response)")
             
             //  FIX: Check if status is FAIL or token is nil BEFORE processing
             if response.status == "FAIL" || response.token == nil {
                 // Login failed - set error message and return false
                 self.errorMessage = response.message ?? "Login failed: Invalid credentials"
-                print("  Login failed: \(self.errorMessage ?? "Unknown error")")
-                print(" Response status: \(response.status ?? "No status")")
+                // print("  Login failed: \(self.errorMessage ?? "Unknown error")")
+                // print(" Response status: \(response.status ?? "No status")")
                 isLoading = false
                 return false
             }
@@ -73,7 +73,7 @@ class LoginViewModel: ObservableObject {
             //  Only proceed if we have a valid token
             if let token = response.token {
                 self.token = token
-                print(" Token received: \(token)")
+                // print(" Token received: \(token)")
                 
                 //Save token in Keychain / UserDefaults
                 SessionManagerClass.shared.saveToken(token)
@@ -87,9 +87,9 @@ class LoginViewModel: ObservableObject {
                     response.result?.employeeId {
                     AppStorageHandler.shared.driverId = driverId
                     //UserDefaults.standard.set(driverId, forKey: "driverId")
-                    print(" Saved driverId: \(driverId)")
+                    // print(" Saved driverId: \(driverId)")
                 } else {
-                    print(" No driverId found in any field")
+                    // print(" No driverId found in any field")
                 }
                 
                 if let empId = response.result?.employeeId {
@@ -112,7 +112,7 @@ class LoginViewModel: ObservableObject {
                 
                 if let clientName = response.result?.clientName {
                     AppStorageHandler.shared.company = clientName
-                    print("company Name  : \(clientName)")
+                    // print("company Name  : \(clientName)")
                 }
                 
                 //MARK: -  value get from Rule module in Login Times
@@ -120,7 +120,7 @@ class LoginViewModel: ObservableObject {
                 if let cycleTime =  response.result?.rules?.first?.cycleTime{
                    // UserDefaults.standard.set(cycleTime, forKey: "cycleTime")
                     AppStorageHandler.shared.cycleTime = cycleTime
-                    print(" Saved to cycle Time: \(cycleTime)")
+                    // print(" Saved to cycle Time: \(cycleTime)")
                 }
                 
                 if let cycleDays = response.result?.rules?.first?.cycleDays{
@@ -136,13 +136,13 @@ class LoginViewModel: ObservableObject {
                       
                     AppStorageHandler.shared.onDutyTime = Double(onDutyTime)
                    // UserDefaults.standard.set(onDutyTime, forKey: "onDutyTime")
-                    print(" Saved to onDutyTime: \(onDutyTime)")
+                    // print(" Saved to onDutyTime: \(onDutyTime)")
                 }
                 
                 if let onDriveTime = response.result?.rules?.first?.onDriveTime{
                     //UserDefaults.standard.set(onDriveTime, forKey: "onDriveTime")
                     AppStorageHandler.shared.onDriveTime = Double(onDriveTime)
-                    print(" Saved to conDriveTimee: \(onDriveTime)")
+                    // print(" Saved to conDriveTimee: \(onDriveTime)")
                 }
                 
                 if let onSleepTime = response.result?.rules?.first?.onSleepTime{
@@ -162,7 +162,7 @@ class LoginViewModel: ObservableObject {
                  //UserDefaults.standard.set(driverName, forKey: "driverName")
                     AppStorageHandler.shared.driverName = driverName
                    // UserDefaults.standard.synchronize()
-                    print(" Saved to UserDefaults: \(driverName)")
+                    // print(" Saved to UserDefaults: \(driverName)")
                 }
                 
                 else if let firstName = response.result?.firstName,
@@ -171,7 +171,7 @@ class LoginViewModel: ObservableObject {
                    // UserDefaults.standard.set(fullName, forKey: "driverName")
                    
                 } else {
-                    print("No driverName found anywhere, not saving")
+                    // print("No driverName found anywhere, not saving")
                 }
                 
                 if let loginDateTime = response.result?.loginDateTime {
@@ -190,12 +190,12 @@ class LoginViewModel: ObservableObject {
                 
                 //Save Shift
                 if let shiftValue = response.result?.driverLog?.first?.shift {
-                    print(" Saved shift: \(shiftValue)")
+                    // print(" Saved shift: \(shiftValue)")
                 }
                 
                 if let dateIs =  response.result?.driverLog?.first?.days{
                     AppStorageHandler.shared.days = dateIs
-                    print(" Saved current day: \(dateIs)")
+                    // print(" Saved current day: \(dateIs)")
                 }
                 
                 if let firstLog = response.result?.driverCertifiedLog?.first {
@@ -206,58 +206,58 @@ class LoginViewModel: ObservableObject {
                 //Save Location (if available)
 //                    if let location = response.result?.driverLog?.first?.customLocation {
 //                        SharedInfoManager.shared.customLocation = location
-//                    print(" Saved location: \(location)")
+//                    // print(" Saved location: \(location)")
 //                    }
                 
                 //Save Latitude
                     if let latitude = response.result?.driverLog?.first?.lattitude {
                     //UserDefaults.standard.set(latitude, forKey: "lattitude")
                         SharedInfoManager.shared.lattitude = latitude
-                    print(" Saved latitude: \(latitude)")
+                    // print(" Saved latitude: \(latitude)")
                     }
                 
                 //Save Longitude
                     if let longitude = response.result?.driverLog?.first?.longitude {
                    // UserDefaults.standard.set(longitude, forKey: "longitude")
                         SharedInfoManager.shared.longitude = longitude
-                    print(" Saved longitude: \(longitude)")
+                    // print(" Saved longitude: \(longitude)")
                     }
                 
                     if let DutyType =  response.result?.driverLog?.first?.logType{
                     //UserDefaults.standard.set(DutyType , forKey: "logType")
                         AppStorageHandler.shared.logType = DutyType
                 
-                    print(" Saved Logtype: \(DutyType)")
+                    // print(" Saved Logtype: \(DutyType)")
                     }
                 
                    if let VechicleID = response.result?.vehicleId{
                     //UserDefaults.standard.set(VechicleID , forKey: "vehicleId")// works for Int
                        AppStorageHandler.shared.vehicleId = VechicleID
-                    print(" Saved VechicleID: \(VechicleID)")
+                    // print(" Saved VechicleID: \(VechicleID)")
                     }
                 
                     if let originAddres = response.result?.driverLog?.first?.origin{
                   //  UserDefaults.standard.set(originAddres, forKey: "origin")
                         AppStorageHandler.shared.origin = originAddres
-                    print(" Saved Origin: \(originAddres)")
+                    // print(" Saved Origin: \(originAddres)")
                     }
                 
                     if let vechicle =  response.result?.driverLog?.first?.truckNo{
                   //  UserDefaults.standard.set(vechicle, forKey: "truckNo")
                         AppStorageHandler.shared.vehicleNo = vechicle
-                     print(" Saved vechicle: \(vechicle)")
+                     // print(" Saved vechicle: \(vechicle)")
                     }
                 
                     if let vechicleNo =  response.result?.vehicleNo{
                      //UserDefaults.standard.set(vechicleNo, forKey: "vehicleNo")
                         AppStorageHandler.shared.vehicleNo = vechicleNo
-                     print(" Saved vechicle: \(vechicleNo)")
+                     // print(" Saved vechicle: \(vechicleNo)")
                     }
                 
                     if let voilation = response.result?.driverLog?.first?.isVoilation{
                    UserDefaults.standard.set(voilation , forKey: "isVoilation")
                     
-                    print(" Saved voilation: \(voilation)")
+                    // print(" Saved voilation: \(voilation)")
                     }
                 
                     if let  trailer  =  response.result?.driverLog?.first?.trailers{
@@ -302,17 +302,17 @@ class LoginViewModel: ObservableObject {
                 // MARK: - Personal Use / Yard Move / Exempt flags
                 if let personalUseFlag = response.result?.personalUse {
                     AppStorageHandler.shared.personalUseActive = personalUseFlag
-                    print(" Personal Use Flag: \(personalUseFlag)")
+                    // print(" Personal Use Flag: \(personalUseFlag)")
                 }
                 
                 if let yardMoveFlag = response.result?.yardMoves {
                     AppStorageHandler.shared.yardMovesActive = yardMoveFlag
-                    print(" Yard Move Flag: \(yardMoveFlag)")
+                    // print(" Yard Move Flag: \(yardMoveFlag)")
                 }
                 
                 if let exemptFlag = response.result?.exempt {
                     AppStorageHandler.shared.exempt = exemptFlag
-                    print(" Exempt Flag: \(exemptFlag)")
+                    // print(" Exempt Flag: \(exemptFlag)")
                 }
                    // session.logIn(token: token)
                 }
@@ -325,29 +325,29 @@ class LoginViewModel: ObservableObject {
                 // MARK: - Save Server DVIR Records from Login Response
                 if let driverDvirLog = driverDvirLogArray, !driverDvirLog.isEmpty {
                     
-                    print(" ========== SAVING SERVER DVIR RECORDS ==========")
-                    print(" Found \(driverDvirLog.count) server DVIR records in login response")
+                    // print(" ========== SAVING SERVER DVIR RECORDS ==========")
+                    // print(" Found \(driverDvirLog.count) server DVIR records in login response")
                     
                     // Save to database
                     DvirDatabaseManager.shared.saveServerDvirRecords(from: driverDvirLog)
                     let savedRecords = DvirDatabaseManager.shared.fetchAllRecords()
-                    print(" Total records in database after save: \(savedRecords.count)")
+                    // print(" Total records in database after save: \(savedRecords.count)")
 
                     // Post notification to refresh EmailDvir list
                     NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
-                    print(" Posted DVIRRecordUpdated notification")
+                    // print(" Posted DVIRRecordUpdated notification")
                
                 } else {
-                    print("  No driverDvirLog found in login response or array is empty")
+                    // print("  No driverDvirLog found in login response or array is empty")
                 }
                 
                 isLoading = false
-                print(" Login finished successfully")
+                // print(" Login finished successfully")
                 return true
                 
             } catch {
                 self.errorMessage = error.localizedDescription
-                print(" Network error: \(error.localizedDescription)")
+                // print(" Network error: \(error.localizedDescription)")
                 isLoading = false
                 return false
             }
@@ -356,26 +356,26 @@ class LoginViewModel: ObservableObject {
         func saveUserData(_ user: LoginRequestModel) {
             if let encoded = try? JSONEncoder().encode(user) {
                 UserDefaults.standard.set(encoded, forKey: "userData")
-                print(" User data saved in UserDefaults: \(user)")
+                // print(" User data saved in UserDefaults: \(user)")
             }
         }
         func loadUserData() -> LoginRequestModel? {
             if let data = UserDefaults.standard.data(forKey: "userData"),
                let decoded = try? JSONDecoder().decode(LoginRequestModel.self, from: data) {
-                print(" Loaded user data from UserDefaults: \(decoded)")
+                // print(" Loaded user data from UserDefaults: \(decoded)")
                 return decoded
             }
-            print(" No saved user data found in UserDefaults")
+            // print(" No saved user data found in UserDefaults")
             return nil
         }
         
         func autoLoginIfPossible() async {
             guard let savedUser = loadUserData() else {
-                print("No saved user data found.")
+                // print("No saved user data found.")
                 return
             }
             
-            print(" Auto-login with saved data: \(savedUser.username)")
+            // print(" Auto-login with saved data: \(savedUser.username)")
             await login(email: savedUser.username, password: savedUser.password)
         }
         

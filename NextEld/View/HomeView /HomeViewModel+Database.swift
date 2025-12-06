@@ -4,7 +4,7 @@ import Foundation
 extension HomeViewModel {
 
     func saveTimerStateForStatus(status: String, originType: OriginType, note: String? = nil, date: Date? = nil) {
-        print("Saving timer state for status: \(status)")
+        // print("Saving timer state for status: \(status)")
         var messge = note ?? ""
         if messge.isEmpty {
             messge = status
@@ -13,19 +13,19 @@ extension HomeViewModel {
         let startTime = date ?? DateTimeHelper.currentDateTime()
         let originDescription = originType.description
         
-        // Check for duplicate entry: same status, origin, and startTime within 30 seconds
-        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day])
-        let tolerance: TimeInterval = 30 // 30 seconds tolerance
-        let hasDuplicate = allLogs.contains { log in
-            log.status == status &&
-            log.origin == originDescription &&
-            abs(log.startTime.timeIntervalSince(startTime)) <= tolerance
-        }
-        
-        if hasDuplicate {
-            print(" ⚠️ Duplicate log entry detected - skipping save for \(status) at \(startTime)")
-            return
-        }
+//        // Check for duplicate entry: same status, origin, and startTime within 30 seconds
+//        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day])
+//        let tolerance: TimeInterval = 30 // 30 seconds tolerance
+//        let hasDuplicate = allLogs.contains { log in
+//            log.status == status &&
+//            log.origin == originDescription &&
+//            abs(log.startTime.timeIntervalSince(startTime)) <= tolerance
+//        }
+//        
+//        if hasDuplicate {
+//            // print(" ⚠️ Duplicate log entry detected - skipping save for \(status) at \(startTime)")
+//            return
+//        }
 
         DatabaseManager.shared.saveTimerLog(
             status: status,
@@ -38,12 +38,11 @@ extension HomeViewModel {
             breakTimeRemaning: Int(breakTimer?.remainingTime ?? 0),
             lastSleepTime: Int(breakTimer?.remainingTime ?? 0),
             RemaningRestBreak: "True",
-            isruning: true,
             isVoilations: false,
             origin: originDescription
         )
 
-        print(" Timer state saved successfully for \(status)")
+        // print(" Timer state saved successfully for \(status)")
     }
 
 //MARK: -  for Continue Drive DB
@@ -66,8 +65,8 @@ extension HomeViewModel {
 //                startTime: DateTimeHelper.getCurrentDateTimeString(),
 //                breakTime: breakTimeValue
 //            )
-//            print(" ContinueDrive DB entry UPDATED: \(status) at \(DateTimeHelper.getCurrentDateTimeString())")
-//            print(" Break timer completed: \(breakTimeCompleted), Break time value: '\(breakTimeValue)'")
+//            // print(" ContinueDrive DB entry UPDATED: \(status) at \(DateTimeHelper.getCurrentDateTimeString())")
+//            // print(" Break timer completed: \(breakTimeCompleted), Break time value: '\(breakTimeValue)'")
 //           
 //        } else {
 //            ContinueDriveDBManager.shared.saveContinueDriveData(
@@ -78,8 +77,8 @@ extension HomeViewModel {
 //                breakTime: breakTimeValue
 //                
 //            )
-//            print(" ContinueDrive DB entry INSERTED: \(status) at \(DateTimeHelper.getCurrentDateTimeString())")
-//            print(" Break timer completed: \(breakTimeCompleted), Break time value: '\(breakTimeValue)'")
+//            // print(" ContinueDrive DB entry INSERTED: \(status) at \(DateTimeHelper.getCurrentDateTimeString())")
+//            // print(" Break timer completed: \(breakTimeCompleted), Break time value: '\(breakTimeValue)'")
 //        }
 //    }
 //    
@@ -90,7 +89,7 @@ extension HomeViewModel {
 //            endTime:  DateTimeHelper.getCurrentDateTimeString()
 //        )
 //        
-//        print(" ContinueDrive DB end time updated at \(DateTimeHelper.getCurrentDateTimeString())")
+//        // print(" ContinueDrive DB end time updated at \(DateTimeHelper.getCurrentDateTimeString())")
 //    }
 //    
     
@@ -106,7 +105,6 @@ extension HomeViewModel {
         breakTimeRemaning: Int(breakTimer?.remainingTime ?? 0),
         lastSleepTime: Int(breakTimer?.remainingTime ?? 0),
         RemaningRestBreak: "true",
-        isruning: false,
         isVoilations: violationData.violation,
         origin: originType.description
         )

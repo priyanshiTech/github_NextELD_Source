@@ -78,4 +78,17 @@ enum OriginType: Int {
         case .unidentified: return "Unidentified"
         }
     }
+    
+    init(value: String) {
+        switch value.lowercased() {
+        case "driver":
+            self = .driver
+        case "auto":
+            self = .auto
+        case "intermediate":
+            self = .intermediate
+        default:
+            self = .unidentified
+        }
+    }
 }

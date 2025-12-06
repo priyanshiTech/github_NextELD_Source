@@ -162,8 +162,8 @@ private func printCurlCommand(for request: URLRequest) {
     // URL
     curlCommand += " '\(url.absoluteString)'"
 
-    print("\n Generated cURL Command:")
-    print(curlCommand)
+    // print("\n Generated cURL Command:")
+    // print(curlCommand)
 }
 
 
@@ -179,26 +179,29 @@ final class NetworkManager {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         printCurlCommand(for: request)
-        
-        let encodedBody = try JSONEncoder().encode(body)
+        let encoder = JSONEncoder()
+        let encodedBody = try encoder.encode(body)
         request.httpBody = encodedBody
 
-        print("🌍 URL: \(endpoint.url)")
-        print("📝 Method: \(endpoint.method)")
-        print("📤 Content-Type: application/json")
-        if let bodyString = String(data: encodedBody, encoding: .utf8) {
-            print("**************** JSON Body: \(bodyString)")
+       
+
+         print("🌍 URL: \(endpoint.url)")
+        // print("📝 Method: \(endpoint.method)")
+        // print("📤 Content-Type: application/json")
+        guard let bodyString = String(data: encodedBody, encoding: .utf8) else  {
+            throw NSError(domain: "Invalid JSON Encoding", code: 1000, userInfo: nil)
         }
 
+        debugPrint("**************** JSON Body: \(bodyString)")
         let (data, response) = try await URLSession.shared.data(for: request)
         
 
         if let httpResponse = response as? HTTPURLResponse {
-            print("___________ Status Code: \(httpResponse.statusCode)")
+            // print("___________ Status Code: \(httpResponse.statusCode)")
         }
 
         if let string = String(data: data, encoding: .utf8) {
-            print("📥 Full Response Body: \(string)")
+             print("📥 Full Response Body: \(string)")
         }
 
         return try JSONDecoder().decode(T.self, from: data)
@@ -211,19 +214,19 @@ final class NetworkManager {
         
         printCurlCommand(for: request)
         
-        print("🌍 URL: \(endpoint.url)")
-        print("📝 Method: \(endpoint.method)")
-        print("📤 Content-Type: application/json")
+        // print("🌍 URL: \(endpoint.url)")
+        // print("📝 Method: \(endpoint.method)")
+        // print("📤 Content-Type: application/json")
 
         let (data, response) = try await URLSession.shared.data(for: request)
         
 
         if let httpResponse = response as? HTTPURLResponse {
-            print("___________ Status Code: \(httpResponse.statusCode)")
+            // print("___________ Status Code: \(httpResponse.statusCode)")
         }
 
         if let string = String(data: data, encoding: .utf8) {
-            print("📥 Full Response Body: \(string)")
+            // print("📥 Full Response Body: \(string)")
         }
         
         if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
