@@ -35,9 +35,9 @@ struct HelpSupportResponce  : Codable {
 
 
 struct MessageRequestSupportNew: Codable {
-    let driverId: String
+    let driver_id: String
     let message: String
-    let companyDomainName: String
+    let domain_name: String
 }
 
 // MARK: - Response Model

@@ -331,10 +331,10 @@ struct HomeScreenView: View {
                         onLogout: {
                             Task {
                                 let success = await logoutVM.callLogoutAPI()
-                                if logoutVM.isSessionExpired {
-                                    print(" Session expired detected during logout - staying on SessionExpireUIView")
-                                    return
-                                }
+//                                if logoutVM.isSessionExpired {
+//                                    print(" Session expired detected during logout - staying on SessionExpireUIView")
+//                                    return
+//                                }
                                 if success {
                                     showLogoutPopup = false
                                     presentSideMenu = false
@@ -573,8 +573,15 @@ struct HomeScreenView: View {
 
         }
         
-
-        //MARK: -  #P for refresh All logs popup
+//        .alert("Switch to Off Duty", isPresented: $showLogoutStatusAlert) {
+//            Button("OK", role: .cancel) {
+//                showLogoutStatusAlert = false
+//            }
+//        } message: {
+//            Text("Please change your duty status to Off Duty before logging out.")
+//        }
+        
+//        //MARK: -  #P for refresh All logs popup
         .alert(homeVM.alertType.getTitle(), isPresented: $homeVM.showAlertOnHomeScreen) {
         Button("Cancel", role: .cancel) {
             homeVM.showAlertOnHomeScreen = false
@@ -629,6 +636,8 @@ struct HomeScreenView: View {
                 break
             case .idleState:
                 break
+            case .logoutOFFSleepDuty:
+                break
             }
         }
             
@@ -636,13 +645,7 @@ struct HomeScreenView: View {
 
             Text(homeVM.alertType.getMessage())
         }
-        .alert("Switch to Off Duty", isPresented: $showLogoutStatusAlert) {
-            Button("OK", role: .cancel) {
-                showLogoutStatusAlert = false
-            }
-        } message: {
-            Text("Please change your duty status to Off Duty before logging out.")
-        }
+    
         
         .navigationBarBackButtonHidden()
         .navigationDestination(for: AppRoute.DatabaseFlow.self, destination: { type in
@@ -794,15 +797,18 @@ extension HomeScreenView {
     
     private func handleLogoutRequest() {
         presentSideMenu = false
-        guard homeVM.currentDriverStatus == .offDuty else {
-            showLogoutStatusAlert = true
-            return
+        // Allow logout from Off Duty or Sleep status
+        if homeVM.currentDriverStatus == .offDuty || homeVM.currentDriverStatus == .sleep {
+            showLogoutPopup = true
+        } else {
+            // Show alert popup for other statuses (On Duty, On Drive, etc.)
+            homeVM.alertType = .logoutOFFSleepDuty
+            homeVM.showAlertOnHomeScreen = true
         }
      //   if hasPendingUnsyncedLogs() {   // temperory off
           //  syncPopupContext = .logout
           //  showPendingSyncPopup = true
         //} else {
-            showLogoutPopup = true
         //}
     }
     

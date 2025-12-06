@@ -12,6 +12,7 @@ enum AlertType {
     case thirtyFourHours
     case splitShiftEnds
     case idleState
+    case logoutOFFSleepDuty
     
     
     func getTitle() -> String {
@@ -35,6 +36,8 @@ enum AlertType {
             title = ""
         case .idleState:
             title = ""
+        case .logoutOFFSleepDuty:
+            title = AppConstants.logoutOffDutyAlert
         }
         return title
     }
@@ -61,6 +64,8 @@ enum AlertType {
             message = AppConstants.splitShiftEndsMsg
         case .idleState:
             return "you are idle from 10 minutes, Do you want to switch to on duty"
+        case .logoutOFFSleepDuty:
+            message = "Please change your duty status to Off Duty before logging out."
         }
         return message
     }
