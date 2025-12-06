@@ -915,48 +915,83 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    func checkWhetherTheLogCertifyOrNot(status: DriverStatusType) -> (havingCertifyLog: Bool, isAllLogCerify: Bool) {
-        let lastDriverLog = DatabaseManager.shared.getLastRecordOfDriverLogs()
-        let allCertifylogs = CertifyDatabaseManager.shared.fetchAllRecords()
-        let notCertifyLogs = allCertifylogs.filter({ $0.isCertify == "No"})
-        if lastDriverLog == nil {
-            // verify any entry logs in Driver Log Table
-            // If No Log found then we need to show then normal popup
-            return (havingCertifyLog: false, isAllLogCerify: false)
+    func isLogVerify(dateTime: Date) -> Bool {
+        let startOfDay = DateTimeHelper.calendar.startOfDay(for: dateTime)
+        let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? Date()
+        var currentDay = AppStorageHandler.shared.days
+        
+        if currentDay == 1 {
+            return true
         } else {
-            if notCertifyLogs.count > 0 {
-                // if any entry logs in Driver Log Table found
-                // then we need to verify any "isCertify = No" Entry is found
-                // If yes then we need to show the certify popup
-                return (havingCertifyLog: true, isAllLogCerify: false)
-            } else {
-                // if any entry logs in Driver Log Table found
-                // then we need to verify any "isCertify = Yes" Entry is found
-                // If yes then we don't need to show the certify popup
-                // If No then we need to show the certify popup
-                return (havingCertifyLog: true, isAllLogCerify: allCertifylogs.count > 0)
+            if currentDay != 0 {
+                currentDay -= 1
             }
+            // check whether the certify table have data or not
+            let record = CertifyDatabaseManager.shared.getLastRecordOfCertifyLogs(
+                filterTypes: [.userId, .between(startDate: startOfDay, endDate: endOfDay)]
+            )
+            let recordExist = record != nil
+            if !recordExist {
+                // check whether the driver table have data or not
+                if let lastDriverLog = DatabaseManager.shared.getLastRecordOfDriverLogs(
+                    filterTypes: [.user, .betweenDates(startDate: startOfDay, endDate: endOfDay)]
+                ) {
+                    
+                    // Nothing happened
+                } else {
+                    return true
+                }
+            }
+            return recordExist
         }
+    }
+
+    
+    
+    func checkWhetherTheLogCertifyOrNot(status: DriverStatusType) -> Bool {
+        guard let yesterDayDate = DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) else {
+            return true
+        }
+        return isLogVerify(dateTime: yesterDayDate)
+//        let lastDriverLog = DatabaseManager.shared.getLastRecordOfDriverLogs()
+//        let allCertifylogs = CertifyDatabaseManager.shared.fetchAllRecords()
+//        let notCertifyLogs = allCertifylogs.filter({ $0.isCertify == "No"})
+//        if lastDriverLog == nil {
+//            // verify any entry logs in Driver Log Table
+//            // If No Log found then we need to show then normal popup
+//            return (havingCertifyLog: false, isAllLogCerify: false)
+//        } else {
+//            if notCertifyLogs.count > 0 {
+//                // if any entry logs in Driver Log Table found
+//                // then we need to verify any "isCertify = No" Entry is found
+//                // If yes then we need to show the certify popup
+//                return (havingCertifyLog: true, isAllLogCerify: false)
+//            } else {
+//                // if any entry logs in Driver Log Table found
+//                // then we need to verify any "isCertify = Yes" Entry is found
+//                // If yes then we don't need to show the certify popup
+//                // If No then we need to show the certify popup
+//                return (havingCertifyLog: true, isAllLogCerify: allCertifylogs.count > 0)
+//            }
+//        }
         
         
     }
     
     func checkWhetherTheDVIRAddedOrNot(status: DriverStatusType) -> Bool {
-        if let lastLog = DvirDatabaseManager.shared.fetchAllRecords().last,
-           lastLog.signature != nil,
+        let currentDay = AppStorageHandler.shared.days
+        let shift = AppStorageHandler.shared.shift
+        if let lastLog = DvirDatabaseManager.shared.fetchAllRecords(filterTypes: [.day, .shift]).first,
           (status == .onDrive)  {
             return true
         }
         return false
     }
     
-    func checkWhetherDVIRLastRecordIsInToday(status: DriverStatusType) -> Bool {
-        if let lastLog = DvirDatabaseManager.shared.fetchAllRecords().last,
-           lastLog.signature != nil,
+    func checkWetherLastRecordExistInDVIRTable(status: DriverStatusType) -> Bool {
+        if let lastLog = DvirDatabaseManager.shared.fetchAllRecords(filterTypes: [.user]).first,
           (status == .onDrive)  {
-            if DateTimeHelper.calendar.isDateInToday(lastLog.startTime.asDate() ?? DateTimeHelper.currentDateTime()) {
-                return true
-            }
+            return true
         }
         return false
     }

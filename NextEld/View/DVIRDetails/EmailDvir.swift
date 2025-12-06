@@ -21,9 +21,10 @@ struct EmailDvir: View {
     var filteredRecords: [DvirRecord] {
         // Use records from database (which includes server records) instead of updateRecords parameter
         let allRecords = records.isEmpty ? updateRecords : records
-        return allRecords.filter { record in
-            !(record.DAY == "Current Date" || record.DvirTime == "Current Time")
-        }
+        return []
+//        return allRecords.filter { record in
+//            !(record.DAY == "Current Date" || record.DvirTime == "Current Time")
+//        }
     }
     
     
@@ -191,9 +192,9 @@ struct EmailDvir: View {
                 id: nil,
                 UserID: "",
                 UserName: "",
-                startTime: "\(DateTimeHelper.currentDate()) \(DateTimeHelper.currentTime())",
-                DAY: DateTimeHelper.currentDate(),
-                Shift: "1",
+                startTime: DateTimeHelper.currentDateTime(),
+                DAY: AppStorageHandler.shared.days,
+                Shift: AppStorageHandler.shared.shift,
                 DvirTime: DateTimeHelper.currentTime(),
                 odometer: 0.0,
                 location: "",

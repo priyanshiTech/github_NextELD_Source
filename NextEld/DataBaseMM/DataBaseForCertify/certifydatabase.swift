@@ -8,6 +8,11 @@
 import Foundation
 import SQLite
 
+enum CertifyFilterType {
+    case userId
+    case between(startDate:Date, endDate: Date)
+}
+
 class CertifyDatabaseManager {
     
     static let shared = CertifyDatabaseManager()
@@ -16,7 +21,7 @@ class CertifyDatabaseManager {
     private let id = Expression<Int64>("id")
     private let userID = Expression<String>("userID")
     private let userName = Expression<String>("userName")
-    private let startTime = Expression<String>("startTime")
+    private let startTime = Expression<Date>("startTime")
     private let date = Expression<String>("date")
     private let shift = Expression<Int>("shift")
     private let selectedVehicle = Expression<String>("selectedVehicle")
@@ -101,6 +106,48 @@ class CertifyDatabaseManager {
         } catch {
             print("@@@@@@@@@@@@@@@ Error inserting Certify record: \(error)")
         }
+    }
+    
+    private func getFilter(for types: [CertifyFilterType]) -> SQLite.Expression<Bool> {
+        var filterExpression: SQLite.Expression<Bool> = .init(value: true)
+        for type in types {
+            switch type {
+            case .userId:
+                filterExpression = filterExpression && userID == String(AppStorageHandler.shared.driverId ?? 0)
+            case .between(let startDate, let endDate):
+                filterExpression = filterExpression && startTime > startDate && startTime < endDate
+            }
+        }
+        return filterExpression
+    }
+    
+    func getLastRecordOfCertifyLogs(filterTypes: [CertifyFilterType] = []) -> CertifyRecord? {
+        let query = certifyTable.filter(getFilter(for: filterTypes)).order(startTime.desc).limit(1)
+        var records: [CertifyRecord] = []
+        do {
+            if let rows = try db?.prepare(query) {
+                for row in rows {
+                    records.append(CertifyRecord(
+                        userID: row[userID],
+                        userName: row[userName],
+                        startTime: row[startTime],
+                        date: row[date],
+                        shift: row[shift],
+                        selectedVehicle: row[selectedVehicle],
+                        selectedTrailer: row[selectedTrailer],
+                        selectedShippingDoc: row[selectedShippingDoc],
+                        selectedCoDriver: row[selectedCoDriver],
+                        vehicleID: row[vehicleID],     // Int? now
+                        coDriverID: row[coDriverID],
+                        syncStatus: row[isSynced],
+                        isCertify: row[isLogcertified]
+                    ))
+                }
+            }
+        } catch {
+            print("Error fetching all records: \(error)")
+        }
+        return records.first
     }
     
     func fetchAllRecords() -> [CertifyRecord] {
@@ -247,5 +294,8 @@ class CertifyDatabaseManager {
         print(" No uncertified previous day log found")
         return false
     }
+    
+    
+    
 
 }

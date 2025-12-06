@@ -218,7 +218,7 @@ struct CertifySelectedView: View {
                                 userID: "\(AppStorageHandler.shared.driverId ?? 0)",
                               //  userName: AppStorageHandler.shared.UserName,
                                 userName: AppStorageHandler.shared.driverName ?? "not found",
-                                startTime: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
+                                startTime: DateTimeHelper.currentDate().asDate(format: .dateOnlyFormat) ?? Date(),
                                 date: certifiedDate,
                                 shift: AppStorageHandler.shared.shift ?? 1,
                                 selectedVehicle: vehiclesc,

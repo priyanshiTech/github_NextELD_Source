@@ -32,6 +32,7 @@ enum FilterType {
     case engineStatus
     case notEngineStartStatus
     case notEngineStopStatus
+    case specificDate(date: Date)
 }
 
 enum SQLiteQuery {
@@ -287,6 +288,8 @@ class DatabaseManager: DatabaseHandler {
             return status != AppConstants.engineOn
         case .notEngineStopStatus:
             return status != AppConstants.engineOff
+        case .specificDate(let date):
+            return startTime == date
         }
     }
     

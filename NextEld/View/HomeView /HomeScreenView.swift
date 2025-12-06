@@ -127,18 +127,15 @@ struct HomeScreenView: View {
                                     homeVM.showAlertOnHomeScreen = true
                                 }
                             } else {
-                                if (status == .onDuty || status == .onDrive), homeVM.checkWhetherTheLogCertifyOrNot(status: status).havingCertifyLog {
-                                    if homeVM.checkWhetherTheLogCertifyOrNot(status: status).isAllLogCerify {
+                                if (status == .onDuty || status == .onDrive) {
+                                    if homeVM.checkWhetherTheLogCertifyOrNot(status: status) {
                                         if homeVM.checkWhetherTheDVIRAddedOrNot(status: status) {
-                                            if homeVM.checkWhetherDVIRLastRecordIsInToday(status: status) {
-                                                homeVM.showDriverStatusAlert = (true, status)
-                                            } else {
-                                                showAddDvirPopup = true
-                                            }
+                                            homeVM.showDriverStatusAlert = (true, status)
+                                        } else if homeVM.checkWetherLastRecordExistInDVIRTable(status: status) {
+                                            showAddDvirPopup = true
                                         } else {
                                             showDvirPopup = true
                                         }
-                                    
                                     } else {
                                        showCertifyLogAlert = true
                                     }

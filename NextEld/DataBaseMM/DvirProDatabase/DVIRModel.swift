@@ -32,9 +32,9 @@ struct DvirRecord : Identifiable, Codable, Hashable, Equatable {
     var id: Int64?
     var UserID: String
     var UserName: String
-    var startTime: String
-    var DAY: String
-    var Shift: String
+    var startTime: Date
+    var DAY: Int
+    var Shift: Int
     var DvirTime: String
     var odometer: Double?
     var location: String

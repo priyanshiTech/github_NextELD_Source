@@ -10,6 +10,7 @@ import SwiftUI
 struct AddDvirScreenView: View  {
     
     @EnvironmentObject var navmanager: NavigationManager
+    @StateObject var navManager
     @StateObject var trailerVM: TrailerViewModel = .init()
     @StateObject var vehicleVM: VehicleConditionViewModel = .init()
    // @StateObject var DVClocationManager: DeviceLocationManager = .init()
@@ -444,7 +445,7 @@ struct AddDvirScreenView: View  {
             trailerVM.truckDefectSelection = selectedRecord.truckDefect.isEmpty ? "no" : selectedRecord.truckDefect
             trailerVM.trailerDefectSelection = selectedRecord.trailerDefect.isEmpty ? "no" : selectedRecord.trailerDefect
             // Use DAY for date and DvirTime for time (same as shown in EmailDvir list)
-            viewModel.StartTime = selectedRecord.DAY.isEmpty ? DateTimeHelper.currentDate() : selectedRecord.DAY
+            viewModel.StartTime = selectedRecord.startTime.toLocalString()//selectedRecord.DAY.isEmpty ? DateTimeHelper.currentDate() : selectedRecord.DAY
             viewModel.Drivetime = selectedRecord.DvirTime.isEmpty ? DateTimeHelper.currentTime() : selectedRecord.DvirTime
             
             if vehicleVM.selectedCondition == nil || vehicleVM.selectedCondition == "None" {
@@ -548,9 +549,9 @@ struct AddDvirScreenView: View  {
                 id: nil,
                 UserID: viewModel.driverID,
                 UserName: viewModel.driverName,
-                startTime: "\(viewModel.StartTime) \(viewModel.Drivetime)",
-                DAY: viewModel.StartTime,
-                Shift: "\(AppStorageHandler.shared.shift)",
+                startTime: DateTimeHelper.currentDateTime(),
+                DAY: AppStorageHandler.shared.days,
+                Shift: AppStorageHandler.shared.shift,
                 DvirTime: viewModel.Drivetime,
                 odometer: viewModel.odometer,
                 location: viewModel.Location,
@@ -625,9 +626,9 @@ struct AddDvirScreenView: View  {
             id: workingRecord.id ?? existingRecord?.id,
             UserID: viewModel.driverID,
             UserName: viewModel.driverName,
-            startTime: "\(currentDay) \(currentTime)",
-            DAY: currentDay,
-            Shift: "\(AppStorageHandler.shared.shift)",
+            startTime: DateTimeHelper.currentDateTime(),
+            DAY: AppStorageHandler.shared.days,
+            Shift: AppStorageHandler.shared.shift,
             DvirTime: currentTime,
             odometer: viewModel.odometer,
             location: actualLocation,
@@ -649,7 +650,7 @@ struct AddDvirScreenView: View  {
         
         let dvirRecord = DvirRecordRequestModel(
             driverId: viewModel.driverDVIRId,
-            dateTime: record.startTime,
+            dateTime: record.startTime.toLocalString(),
             locationDvir: actualLocation,
             truckDefect: trailerVM.truckDefectSelection ?? "no",
             trailerDefect: trailerVM.trailerDefectSelection ?? "no",

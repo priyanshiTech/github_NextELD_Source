@@ -142,7 +142,7 @@ struct CertifyTableRow: View {
         HStack(spacing: 5) {
             TableCellCertify(text: record.userID, width: 120)
             TableCellCertify(text: record.userName, width: 150)
-            TableCellCertify(text: record.startTime, width: 150)
+            TableCellCertify(text: record.startTime.toLocalString(), width: 150)
             TableCellCertify(text: record.date, width: 120)
             TableCellCertify(text: String(record.shift), width: 100)
             TableCellCertify(text: String(record.selectedVehicle), width: 150)

@@ -12,7 +12,7 @@ struct CertifyRecord: Codable{
     
     var userID: String
     var userName: String
-    var startTime: String
+    var startTime: Date
     var date: String
     var shift: Int
     var selectedVehicle: String
