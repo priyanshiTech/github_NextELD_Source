@@ -23,24 +23,51 @@ struct DailyLogView: View {
     
     //MARK: -  Database dates from driverLogs (unique, latest first)
     private var logDates: [LogDate] {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy"
-        
-        // Fetch all logs for current user
+        var dailyLogsDates: [LogDate] = []
+        let todayDate = DateTimeHelper.currentDate().asDate(format: .dateOnlyFormat) ?? Date()
         let logs = DatabaseManager.shared.fetchLogs()
-        
-        // Map to date strings, unique, sorted latest first
-        let uniqueDates = Array(
-            Set(
-                logs.map { formatter.string(from: $0.startTime) }
-            )
-        ).sorted { date1, date2 in
-            guard let d1 = formatter.date(from: date1),
-                  let d2 = formatter.date(from: date2) else { return false }
-            return d1 > d2
+        guard let firstLog = logs.first,
+                let lastLog = logs.last else {
+            return dailyLogsDates
         }
         
-        return uniqueDates.map { LogDate(date: $0, isMissing: false) }
+        var numberOfDay = abs(DateTimeHelper.getNoOfDaysBetween(from: firstLog.startTime, to: lastLog.startTime))
+        
+        if numberOfDay == 0 {
+            let currentDate = DateTimeHelper.getStringFromDate(todayDate, format: .dateOnlyFormat)
+            dailyLogsDates.append(LogDate(date: currentDate, isMissing: false))
+        } else {
+            if numberOfDay > 14 {
+                numberOfDay = 14
+            }
+                    
+            for dayValue in 0...numberOfDay {
+                let date = DateTimeHelper.calendar.date(byAdding: .day, value: -(dayValue), to: todayDate) ?? Date()
+                let convertedDate = DateTimeHelper.getStringFromDate(date, format: .dateOnlyFormat)
+                dailyLogsDates.append(LogDate(date: convertedDate, isMissing: false))
+            }
+            
+        }
+        return dailyLogsDates
+        
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "dd-MM-yyyy"
+//        
+//        // Fetch all logs for current user
+//        
+//        
+//        // Map to date strings, unique, sorted latest first
+//        let uniqueDates = Array(
+//            Set(
+//                logs.map { formatter.string(from: $0.startTime) }
+//            )
+//        ).sorted { date1, date2 in
+//            guard let d1 = formatter.date(from: date1),
+//                  let d2 = formatter.date(from: date2) else { return false }
+//            return d1 > d2
+//        }
+//        
+//        return uniqueDates.map { LogDate(date: $0, isMissing: false) }
     }
     //MARK: - Database records for certification check
     private var certifiedRecords: [CertifyRecord] {

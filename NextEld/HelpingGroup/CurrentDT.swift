@@ -11,7 +11,7 @@ enum DateFormatterConstants: String {
     
     case defaultDateTime = "yyyy-MM-dd HH:mm:ss"
     case timeFormat = "HH:mm:ss"
-    case dateForaat = "yyyy-MM-dd"
+    case dateOnlyFormat = "yyyy-MM-dd"
 }
 
 struct DateTimeHelper {
@@ -29,6 +29,12 @@ struct DateTimeHelper {
     
     static func get30MinBeforeDate(date: Date) -> Date? {
         return calendar.date(byAdding: .minute, value: -30, to: date)
+    }
+    
+    static func getNoOfDaysBetween(from date1: Date, to date2: Date) -> Int {
+        let components = calendar.dateComponents([.day], from: date1, to: date2)
+        let dayCount = components.day ?? 0
+        return dayCount
     }
     
     static func currentDateTime() -> Date {
@@ -82,7 +88,7 @@ struct DateTimeHelper {
     static func currentDate() -> String {
         let currentDate = Date()
         let formatter = DateFormatter()
-        formatter.dateFormat = DateFormatterConstants.dateForaat.rawValue
+        formatter.dateFormat = DateFormatterConstants.dateOnlyFormat.rawValue
         formatter.timeZone = TimeZone(identifier: AppStorageHandler.shared.timeZone ?? "")
         return formatter.string(from: currentDate)
     }
