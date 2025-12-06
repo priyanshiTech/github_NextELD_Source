@@ -13,9 +13,9 @@ enum API {
     
     static let baseURL = URL(string: "https://admin.allstarelogs.com/eld_log/")!
   //static let baseURL = URL(string: "https://admin.gbt-usa.com/eld_log/")!
-    static let baseURLTwo = URL(string: "http://165.232.183.179:4002/api/")!
+    static let baseURLTwo = URL(string: "https://superadmin.gbt-usa.com/")!
     static let privacyPolicyURL = "https://allstarelogs.com/privacypolicy/"
-    static let DominName = "https://admin.gbt-usa.com/"
+    static let DominNameNew = "https://allstarelogs.com/"
    //static let AllStarDisclamer = "https://admin.allstarelogs.com/eld_log/"
 
     enum Endpoint {
@@ -75,7 +75,7 @@ enum API {
                 return API.baseURL.appendingPathComponent("master/view_driver_information")
             case .HelpSupportInfo:
                 //return API.baseURL.appendingPathComponent("dispatch/add_eld_support")
-                return API.baseURLTwo.appendingPathComponent("driver/messageToSupport")
+                return API.baseURLTwo.appendingPathComponent("api/support/allStarElogs")
             case .CodriverListInfo:
                 return API.baseURL.appendingPathComponent("master/view_employee_by_client")
             case .certifyDriver:
