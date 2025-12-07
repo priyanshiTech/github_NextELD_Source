@@ -49,26 +49,7 @@ struct DailyLogView: View {
             
         }
         return dailyLogsDates
-        
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "dd-MM-yyyy"
-//        
-//        // Fetch all logs for current user
-//        
-//        
-//        // Map to date strings, unique, sorted latest first
-//        let uniqueDates = Array(
-//            Set(
-//                logs.map { formatter.string(from: $0.startTime) }
-//            )
-//        ).sorted { date1, date2 in
-//            guard let d1 = formatter.date(from: date1),
-//                  let d2 = formatter.date(from: date2) else { return false }
-//            return d1 > d2
-//        }
-//        
-//        return uniqueDates.map { LogDate(date: $0, isMissing: false) }
-    }
+     }
     //MARK: - Database records for certification check
     private var certifiedRecords: [CertifyRecord] {
         return CertifyDatabaseManager.shared.fetchAllRecords()
