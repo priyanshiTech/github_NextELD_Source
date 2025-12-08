@@ -50,7 +50,6 @@ struct LogsDetails: View {
                     //MARK: - previous page click date show
                     // Text(DateUtils.formatDate(entry.date, format: "dd-MM-yyyy"))
                     Text(title)
-                    
                         .font(.headline)
                         .foregroundColor(.white)
                         .fontWeight(.semibold)
@@ -96,7 +95,7 @@ struct LogsDetails: View {
             if allLogs.isEmpty {
                 loadLogsFromDatabase()
             }
-            DateTimeHelper.currentDateTime()
+            //DateTimeHelper.currentDateTime()
         }
         .onDisappear {
             stopTimer()
@@ -121,8 +120,8 @@ struct LogsDetails: View {
                 ForEach(Array(logsForSelectedDate.enumerated()), id: \.offset) { index, log in
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            // Show date with start time for all statuses - always use device's current timezone
-                            Text(DateTimeHelper.formatDateToLocalTime(log.startTime))
+                            // Show exact date and time from database as stored (UTC timezone to match database)
+                            Text( DateTimeHelper.formatDatabaseDateTime(log.startTime))
                                 .font(.body)
                                 .fontWeight(.semibold)
                             
@@ -266,6 +265,7 @@ struct LogsDetails: View {
             return .purple
         }
     }
+    
  
 }
         

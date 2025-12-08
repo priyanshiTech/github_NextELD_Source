@@ -138,11 +138,12 @@ struct SupportView: View {
         }
         .alert(isPresented: $showAlert) {
             Alert(
-                title: Text(viewModel.successMessage != nil ? "Success" : "Error"),
+                title: Text(viewModel.successMessage != nil ? "error" : "Success"),
                 message: Text(viewModel.successMessage ?? viewModel.errorMessage ?? "Unknown error"),
                 dismissButton: .default(Text("OK"), action: {
                     // reset messages when alert dismissed
                     viewModel.successMessage = nil
+                    queryText = ""
                     viewModel.errorMessage = nil
                 })
             )

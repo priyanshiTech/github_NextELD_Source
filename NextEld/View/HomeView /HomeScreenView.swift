@@ -33,7 +33,8 @@ struct HomeScreenView: View {
     @State private var isManualSyncInProgress = false
     @State private var syncPopupContext: SyncPopupContext? = nil
     @State private var showLogoutStatusAlert = false
-  
+
+    //MARK: - Daily violation tracking
     @EnvironmentObject var navManager: NavigationManager
 
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
@@ -276,14 +277,10 @@ struct HomeScreenView: View {
                 PopupContainer(isPresented: $showLogoutPopup) {
                     LogOutPopup(
                         isCycleCompleted: $isCycleCompleted,
-                        currentStatus: DriverStatusConstants.offDuty,
+                        currentStatus: homeVM.currentDriverStatus.getName(),
                         onLogout: {
                             Task {
                                 let success = await logoutVM.callLogoutAPI()
-                                if logoutVM.isSessionExpired {
-                                    // print(" Session expired detected during logout - staying on SessionExpireUIView")
-                                    return
-                                }
                                 if success {
                                     showLogoutPopup = false
                                     presentSideMenu = false
@@ -499,8 +496,6 @@ struct HomeScreenView: View {
             }
         }
         
-         
-        //MARK: -  #P for refresh All logs popup
         .alert(homeVM.alertType.getTitle(), isPresented: $homeVM.showAlertOnHomeScreen) {
         Button("Cancel", role: .cancel) {
             homeVM.showAlertOnHomeScreen = false
@@ -556,6 +551,8 @@ struct HomeScreenView: View {
                 break
             case .idleState:
                 break
+            case .logoutOFFSleepDuty:
+                break
             }
         }
             
@@ -563,14 +560,6 @@ struct HomeScreenView: View {
 
             Text(homeVM.alertType.getMessage())
         }
-        .alert("Switch to Off Duty", isPresented: $showLogoutStatusAlert) {
-            Button("OK", role: .cancel) {
-                showLogoutStatusAlert = false
-            }
-        } message: {
-            Text("Please change your duty status to Off Duty before logging out.")
-        }
-      
         .navigationBarBackButtonHidden()
         .navigationDestination(for: AppRoute.DatabaseFlow.self, destination: { type in
             switch type {
@@ -593,16 +582,7 @@ struct HomeScreenView: View {
             }
             
         })
-//        .navigationDestination(for: AppRoute.BluetoothDeviceFlow.self) { route in
-//            switch route {
-//            case .NT11Connection:
-//                NT11ConnectionView()
-//            case .PT30Connection:
-//                PT30ConnectionView()
-//                    
-//            }
-//        }
-        .navigationDestination(for: AppRoute.HomeDashboardFlow.self) { route in
+       .navigationDestination(for: AppRoute.HomeDashboardFlow.self) { route in
             switch route {
             case .BlockView:
                 BlockAppView(homeViewModel: homeVM)
@@ -643,7 +623,7 @@ struct HomeScreenView: View {
             }
         }
     }
-        
+
     }
 
 
@@ -656,16 +636,14 @@ extension HomeScreenView {
     
     private func handleLogoutRequest() {
         presentSideMenu = false
-        guard homeVM.currentDriverStatus == .offDuty else {
-            showLogoutStatusAlert = true
-            return
-        }
-     //   if hasPendingUnsyncedLogs() {
-          //  syncPopupContext = .logout
-          //  showPendingSyncPopup = true
-        //} else {
+        // Allow logout from Off Duty or Sleep status
+        if homeVM.currentDriverStatus == .offDuty || homeVM.currentDriverStatus == .sleep {
             showLogoutPopup = true
-        //}
+        } else {
+            // Show alert popup for other statuses (On Duty, On Drive, etc.)
+            homeVM.alertType = .logoutOFFSleepDuty
+            homeVM.showAlertOnHomeScreen = true
+        }
     }
     
     private func scheduleRefreshAlert() {

@@ -12,6 +12,7 @@ enum AlertType {
     case thirtyFourHours
     case splitShiftEnds
     case idleState
+    case logoutOFFSleepDuty
     
     
     func getTitle() -> String {
@@ -35,6 +36,8 @@ enum AlertType {
             title = ""
         case .idleState:
             title = ""
+        case .logoutOFFSleepDuty:
+            title = AppConstants.logoutOffDutyAlert
         }
         return title
     }
@@ -61,6 +64,8 @@ enum AlertType {
             message = AppConstants.splitShiftEndsMsg
         case .idleState:
             return "you are idle from 10 minutes, Do you want to switch to on duty"
+        case .logoutOFFSleepDuty:
+            message = "Please change your duty status to Off Duty before logging out."
         }
         return message
     }
@@ -925,6 +930,7 @@ class HomeViewModel: ObservableObject {
         } else {
             if currentDay != 0 {
                 currentDay -= 1
+
             }
             // check whether the certify table have data or not
             let record = CertifyDatabaseManager.shared.getLastRecordOfCertifyLogs(
@@ -953,42 +959,17 @@ class HomeViewModel: ObservableObject {
             return true
         }
         return isLogVerify(dateTime: yesterDayDate)
-//        let lastDriverLog = DatabaseManager.shared.getLastRecordOfDriverLogs()
-//        let allCertifylogs = CertifyDatabaseManager.shared.fetchAllRecords()
-//        let notCertifyLogs = allCertifylogs.filter({ $0.isCertify == "No"})
-//        if lastDriverLog == nil {
-//            // verify any entry logs in Driver Log Table
-//            // If No Log found then we need to show then normal popup
-//            return (havingCertifyLog: false, isAllLogCerify: false)
-//        } else {
-//            if notCertifyLogs.count > 0 {
-//                // if any entry logs in Driver Log Table found
-//                // then we need to verify any "isCertify = No" Entry is found
-//                // If yes then we need to show the certify popup
-//                return (havingCertifyLog: true, isAllLogCerify: false)
-//            } else {
-//                // if any entry logs in Driver Log Table found
-//                // then we need to verify any "isCertify = Yes" Entry is found
-//                // If yes then we don't need to show the certify popup
-//                // If No then we need to show the certify popup
-//                return (havingCertifyLog: true, isAllLogCerify: allCertifylogs.count > 0)
-//            }
-//        }
-        
-        
     }
-    
+  
     func checkWhetherTheDVIRAddedOrNot(status: DriverStatusType) -> Bool {
-        if let lastLog = DvirDatabaseManager.shared.fetchAllRecords(filterTypes: [.day, .shift]).first,
-          (status == .onDrive)  {
+        if let _ = DvirDatabaseManager.shared.fetchAllRecords(filterTypes: [.day, .shift]).first {
             return true
         }
         return false
     }
     
     func checkWetherLastRecordExistInDVIRTable(status: DriverStatusType) -> Bool {
-        if let lastLog = DvirDatabaseManager.shared.fetchAllRecords(filterTypes: [.user]).first,
-          (status == .onDrive)  {
+        if let _ = DvirDatabaseManager.shared.fetchAllRecords(filterTypes: [.user]).first {
             return true
         }
         return false

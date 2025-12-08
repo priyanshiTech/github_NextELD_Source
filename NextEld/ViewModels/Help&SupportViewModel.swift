@@ -39,9 +39,9 @@ class SupportViewModel: ObservableObject {
         }
         
         let requestBody = MessageRequestSupportNew(
-            driverId: String(driverId),
+            driver_id: String(driverId),
             message: trimmedMessage,
-            companyDomainName: API.DominName
+            domain_name: API.DominNameNew
         )
 
 

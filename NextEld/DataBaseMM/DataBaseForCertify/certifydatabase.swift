@@ -11,6 +11,7 @@ import SQLite
 enum CertifyFilterType {
     case userId
     case between(startDate:Date, endDate: Date)
+    case notSync
 }
 
 class CertifyDatabaseManager {
@@ -116,6 +117,8 @@ class CertifyDatabaseManager {
                 filterExpression = filterExpression && userID == String(AppStorageHandler.shared.driverId ?? 0)
             case .between(let startDate, let endDate):
                 filterExpression = filterExpression && startTime > startDate && startTime < endDate
+            case .notSync:
+                filterExpression = filterExpression && isSynced == 0
             }
         }
         return filterExpression
@@ -150,11 +153,11 @@ class CertifyDatabaseManager {
         return records.first
     }
     
-    func fetchAllRecords() -> [CertifyRecord] {
-        
+    func fetchAllRecords(filterTypes: [CertifyFilterType] = []) -> [CertifyRecord] {
+        let query = certifyTable.filter(getFilter(for: filterTypes))
         var records: [CertifyRecord] = []
         do {
-            if let rows = try db?.prepare(certifyTable) {
+            if let rows = try db?.prepare(query) {
                 for row in rows {
                     records.append(CertifyRecord(
                         userID: row[userID],

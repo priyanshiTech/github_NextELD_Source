@@ -14,6 +14,7 @@ enum DVIRFilterType {
     case between(startDate:Date, endDate: Date)
     case day
     case shift
+    case notSync
     
 }
 
@@ -157,6 +158,8 @@ class DvirDatabaseManager {
                 filterExpression = filterExpression && DAY == (AppStorageHandler.shared.days)
             case .shift:
                 filterExpression = filterExpression && Shift == (AppStorageHandler.shared.shift)
+            case .notSync:
+                filterExpression = filterExpression && Sync == 0
             }
         }
         return filterExpression

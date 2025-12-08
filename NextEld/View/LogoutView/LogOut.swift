@@ -65,50 +65,50 @@ struct LogOutPopup: View {
     }
 }
 
-struct LogOut: View {
-    @State private var isPresented: Bool = true
-    @State private var isCycleCompleted: Bool = false
-    @StateObject private var logoutVM = APILogoutViewModel()
-    @EnvironmentObject var appRootManager: AppRootManager
-
-    var body: some View {
-        ZStack {
-            Color(uiColor:.black).opacity(0.1)
-                .ignoresSafeArea()
-            
-            if isPresented {
-                PopupContainer(isPresented: $isPresented) {
-                    LogOutPopup(
-                        isCycleCompleted: $isCycleCompleted,
-                        currentStatus: "OffDuty",
-                        onLogout: {
-                            // print("Logging out…")
-                            Task {
-                                logoutVM.appRootManager = appRootManager
-                                let success = await logoutVM.callLogoutAPI()
-                                if logoutVM.isSessionExpired {
-                                    // print(" Session expired detected during standalone logout - staying on SessionExpireUIView")
-                                    return
-                                }
-                                if success {
-                                    isPresented = false
-                                    SessionManagerClass.shared.clearToken()
-                                    appRootManager.currentRoot = .splashScreen
-                                } else if !logoutVM.apiMessage.isEmpty {
-                                    // print(" Logout API message: \(logoutVM.apiMessage)")
-                                }
-                            }
-                        },
-                        onCancel: {
-                            // print("Cancel logout")
-                            isPresented = false
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
+//struct LogOut: View {
+//    @State private var isPresented: Bool = true
+//    @State private var isCycleCompleted: Bool = false
+//    @StateObject private var logoutVM = APILogoutViewModel()
+//    @EnvironmentObject var appRootManager: AppRootManager
+//
+//    var body: some View {
+//        ZStack {
+//            Color(uiColor:.black).opacity(0.1)
+//                .ignoresSafeArea()
+//            
+//            if isPresented {
+//                PopupContainer(isPresented: $isPresented) {
+//                    LogOutPopup(
+//                        isCycleCompleted: $isCycleCompleted,
+//                        currentStatus: "OffDuty",
+//                        onLogout: {
+//                            // print("Logging out…")
+//                            Task {
+//                                logoutVM.appRootManager = appRootManager
+//                                let success = await logoutVM.callLogoutAPI()
+//                                if logoutVM.isSessionExpired {
+//                                    // print(" Session expired detected during standalone logout - staying on SessionExpireUIView")
+//                                    return
+//                                }
+//                                if success {
+//                                    isPresented = false
+//                                    SessionManagerClass.shared.clearToken()
+//                                    appRootManager.currentRoot = .splashScreen
+//                                } else if !logoutVM.apiMessage.isEmpty {
+//                                    // print(" Logout API message: \(logoutVM.apiMessage)")
+//                                }
+//                            }
+//                        },
+//                        onCancel: {
+//                            // print("Cancel logout")
+//                            isPresented = false
+//                        }
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 //#Preview {
