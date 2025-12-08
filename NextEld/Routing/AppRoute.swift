@@ -22,7 +22,6 @@ enum ApplicationRoot: Hashable {
 enum AppRoute: Hashable {
     
     enum LoginFlow: Hashable {
-        
         case forgetPassword(tittle: String)
         case forgetUser(tittle: String)
     }
@@ -44,54 +43,28 @@ enum AppRoute: Hashable {
         case ADDVehicle
         case NewDriverLogin(title: String , email: String)
         case CertifySelectedView(tittle: String)
-        
-    }
-    
-    enum HomeDashboardFlow: Hashable {
-        case BlockView
-        
-    }
-    
-    enum DvirFlow: Hashable{
-        case AddDvirScreenView
-        case emailLogs(tittle: String)
+        case AddDvirScreenView(vm: TrailerViewModel)
         case DvirHostory(tittle: String)
-        case trailerScreen
-        case ShippingDocment
-        case AddVehicleForDVIR
-        case UploadDefectView
-        
-    }
-    enum LogsFlow: Hashable {
-        case DailyLogs(title: String)
+        case trailerScreen(trailerVM: TrailerViewModel)
+        case ShippingDocment(shippingVM: ShippingDocViewModel)
+        case AddVehicleForDVIR(vehicleID: Int, vehicleNo: String)
+        case UploadDefectView(dvirRecord:DvirRecord)
         case EmailLogs(title: String)
         case RecapHours(title: String)
         case continueDriveTableView
         case DatabaseCertifyView
-        case CertifySelectedView(title: String)
         case LogsDetails(title: String, entry: WorkEntry)
         case EyeViewData(title: String, entry: WorkEntry)
         case driverLogListView
         case DvirDataListView
-        case AddDvirPriTrip
-        case DvirHostory(title: String)
         case DataTransferView
-    }
-   // case scanner
-    
-    enum DatabaseFlow: Hashable {
-        case AddDvirScreenView
-        case DatabaseCertifyView
-        case DriverLogListView
-        case DvirDataListView
-        case ContinueDriveTableView
-        case EyeViewData(tittle: String , entry : WorkEntry )
-    }
-
-    enum BluetoothDeviceFlow: Hashable {
+        case BlockView(homeVM: HomeViewModel)
         case NT11Connection
         case PT30Connection
+        
     }
+    
+
     
     //MARK: -  Cases of Add dvirPri trip
     case scanner

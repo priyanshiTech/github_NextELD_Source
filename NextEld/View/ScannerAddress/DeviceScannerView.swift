@@ -70,9 +70,9 @@ struct DeviceScannerView: View {
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
-                        .padding(.top, 20)  
-
-
+                        .padding(.top, 20)
+                    
+                    
                     
                     HStack {
                         
@@ -126,7 +126,7 @@ struct DeviceScannerView: View {
                             // Check if session expired - if yes, don't navigate anywhere else
                             if deviceStatusVM.isSessionExpired {
                                 // print(" Session expired detected - staying on SessionExpireUIView")
-                                return 
+                                return
                                 // Don't proceed with any navigation
                             }
                             
@@ -199,17 +199,8 @@ struct DeviceScannerView: View {
                     HomeScreenView()
                 case .DailyLogs(let title):
                     DailyLogView(title: title, entry: WorkEntry(date: Date(), hoursWorked: 0))
-                case .AddDvirPriTrip:
-                    EmailDvir(
-                         tittle: "Email DVIR",
-                        updateRecords: DvirDatabaseManager.shared.fetchAllRecords(), // or your source of records
-                        onSelect: { selectedRecord in
-                            // print(" Selected Record: \(selectedRecord)")
-                            // Optional: navigate or update state
-                        }
-                    )
                 case .DotInspection(let title):
-                        DotInspection(title: title)
+                    DotInspection(title: title)
                 case .CoDriverLogin:
                     CoDriverLogin()
                 case .AddVichleMode:
@@ -244,7 +235,7 @@ struct DeviceScannerView: View {
                         VechicleID: $selectedVehicleId,
                         title: title
                     )
-          
+                    
                 case .TermsAndCondition:
                     Terms_ConditionView( tittle: "Terms & Condition")
                 case .NewDriverLogin(title: let title, email: let email):
@@ -253,13 +244,23 @@ struct DeviceScannerView: View {
                         tittle: title,
                         UserName: email
                     )
-                }
-            }
-            .navigationDestination(for: AppRoute.LogsFlow.self) { route in
-                
-                switch route {
-                case .EmailLogs(let title):
-                    EmailLogs(title: title)
+                case .trailerScreen(let trailerVM):
+                    TrailerView(trailerVM: trailerVM, tittle: AppConstants.trailersTittle, trailers: .constant(trailerVM.trailers))
+                case .ShippingDocment(let vm):
+                    ShippingDocView(shippingVM: vm, tittle: AppConstants.shippingTittle)
+                case .AddVehicleForDVIR(let vehicleId, let vehicleNo):
+                    AddVehicleForDvir(
+                        selectedVehicleNumber: .constant(vehicleNo),
+                        VechicleID: .constant(vehicleId)
+                    )
+                case .AddDvirScreenView(vm: let vm):
+                    AddDvirScreenView(selectedRecord: .constant(nil), trailers: .constant(vm.trailers))
+                case .EmailLogs( let tittle):
+                    EmailLogs(title: tittle)
+                case .DvirHostory:
+                    DVIRHistory(title: AppConstants.dvirHostoryTittle)
+                case .UploadDefectView(let record):
+                    UploadDefectView(selectedRecord: record)
                 case .RecapHours(let title):
                     HoursRecap(tittle: title)
                 case .DataTransferView:
@@ -272,44 +273,42 @@ struct DeviceScannerView: View {
                         updateRecords: DvirDatabaseManager.shared.fetchAllRecords(),
                         onSelect: { _ in }
                     )
-                case .DvirHostory(let title):
-                    DVIRHistory(title: title)
                 case .EyeViewData(let title, let entry):
                     EyeViewData(title: title, entry: entry)
-                default:
-                    EmptyView()
-                }
-            }
-            .navigationDestination(for: AppRoute.BluetoothDeviceFlow.self) { route in
-                switch route {
+                case .continueDriveTableView:
+                    ContinueDriveTableView()
+                case .DatabaseCertifyView:
+                    DatabaseCertifyView()
+                case .driverLogListView:
+                    DriverLogListView()
+                case .DvirDataListView:
+                    DvirListView()
+               
+                case .BlockView(homeVM: let homeVM):
+                    BlockAppView(homeViewModel: homeVM)
                 case .NT11Connection:
                     NT11ConnectionView()
                 case .PT30Connection:
                     PT30ConnectionView()
+               
                 }
             }
-        }
-        .navigationDestination(for: AppRoute.self) { route in
-            if route == .scanner {
-                // Scanner is the root view, don't create nested NavigationStack
-                EmptyView()
+            .navigationDestination(for: ApplicationRoot.self) { root in
+                
+                switch root {
+                case .scanner(_):
+                    DeviceScannerView(checkboxClick: false, macaddress: "")
+                case .splashScreen:
+                    EmptyView()
+                case .login:
+                    EmptyView()
+                case .SessionExpireUIView:
+                    SessionExpireUIView()
+                case .DisclaimerView:
+                    DisclamerView()
+                }
             }
-        }
-        .navigationDestination(for: ApplicationRoot.self) { root in
-            
-            switch root {
-            case .scanner(_):
-                DeviceScannerView(checkboxClick: false, macaddress: "")
-            case .splashScreen:
-                EmptyView()
-            case .login:
-                EmptyView()
-            case .SessionExpireUIView:
-                SessionExpireUIView()
-            case .DisclaimerView:
-                DisclamerView()
-            }
-        }
+    }
         .navigationBarHidden(true)
         .environmentObject(navManager)
         .onAppear {

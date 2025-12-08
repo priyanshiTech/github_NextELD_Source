@@ -132,10 +132,10 @@ struct DailyLogView: View {
 
                     HStack(spacing: 5) {
                         
-                        CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: AppRoute.LogsFlow.EmailLogs(title: AppConstants.DailyLogs))})
+                        CustomIconButton(iconName: "email_icon", title: "", action: { navManager.navigate(to: AppRoute.HomeFlow.EmailLogs(title: AppConstants.DailyLogs))})
                             .padding()
                         
-                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: AppRoute.LogsFlow.RecapHours(title: AppConstants.HourRecap))})
+                        CustomIconButton(iconName: "alarm_icon", title: "", action: { navManager.navigate(to: AppRoute.HomeFlow.RecapHours(title: AppConstants.HourRecap))})
                             .foregroundColor(.black)
                     }
                 }
@@ -170,7 +170,7 @@ struct DailyLogView: View {
                                 formatter.dateFormat = "dd-MM-yyyy"
                                 if let logDate = formatter.date(from: log.date) {
                                     let selectedEntry = WorkEntry(date: logDate, hoursWorked: 0)
-                                    navManager.navigate(to: AppRoute.LogsFlow.LogsDetails(title: "Daily Log", entry: selectedEntry))
+                                    navManager.navigate(to: AppRoute.HomeFlow.LogsDetails(title: "Daily Log", entry: selectedEntry))
                                 }
                             }
 

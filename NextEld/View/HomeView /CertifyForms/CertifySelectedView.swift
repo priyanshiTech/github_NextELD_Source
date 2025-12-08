@@ -86,7 +86,7 @@ struct CertifySelectedView: View {
                             title: "Event",
                             action: {
                                 navManager.navigate(
-                                    to: AppRoute.LogsFlow.LogsDetails(
+                                    to: AppRoute.HomeFlow.LogsDetails(
                                         title: "Daily Log",
                                         entry: logsEntry
                                     )
@@ -138,7 +138,7 @@ struct CertifySelectedView: View {
                             editable: true
                         ) {
                             hasLoadedInitialData = false
-                            navManager.path.append(AppRoute.DvirFlow.AddVehicleForDVIR)
+                            navManager.path.append(AppRoute.HomeFlow.AddVehicleForDVIR(vehicleID: self.VechicleID ?? 0, vehicleNo: vehiclesc))
                         }
 
 
@@ -168,7 +168,7 @@ struct CertifySelectedView: View {
                             editable: true
                         )
                          {
-                             navManager.path.append(AppRoute.DvirFlow.trailerScreen)
+                             navManager.path.append(AppRoute.HomeFlow.trailerScreen(trailerVM: self.trailerVM))
                         }
                         FormField(
                             label: "Shipping Docs",
@@ -195,7 +195,7 @@ struct CertifySelectedView: View {
                             editable: true
                         )
                         {
-                            navManager.path.append(AppRoute.DvirFlow.ShippingDocment)
+                            navManager.path.append(AppRoute.HomeFlow.ShippingDocment(shippingVM: shippingVM))
                         }
 
                         FormField(
@@ -299,27 +299,7 @@ struct CertifySelectedView: View {
                 Spacer()
             }
             .navigationBarBackButtonHidden()
-            .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
-                switch type {
-                case .trailerScreen:
-                    TrailerView(trailerVM: trailerVM, tittle: AppConstants.trailersTittle, trailers: $trailerVM.trailers)
-                case .ShippingDocment:
-                    ShippingDocView(tittle: AppConstants.shippingTittle)
-                case .AddVehicleForDVIR:
-                    AddVehicleForDvir(
-                        selectedVehicleNumber: $vehiclesc,
-                        VechicleID: Binding(
-                            get: { VechicleID ?? 0 },
-                            set: { newValue in
-                                VechicleID = newValue
-                                AppStorageHandler.shared.vehicleId = newValue
-                            }
-                        )
-                    )
-                default:
-                    EmptyView()
-                }
-            })
+            
             .edgesIgnoringSafeArea(.top)
             
             // MARK: - CoDriver Popup Overlay (Centered)

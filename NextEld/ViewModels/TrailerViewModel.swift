@@ -13,7 +13,7 @@ import SwiftUI
 //}
 
 
-class TrailerViewModel: ObservableObject {
+class TrailerViewModel: ObservableObject, Hashable, Equatable {
     @Published  var selectedTrailer = ""
     @Published  var truckDefectSelection: String? = nil
     @Published  var trailerDefectSelection: String? = nil
@@ -70,13 +70,29 @@ class TrailerViewModel: ObservableObject {
         // Default fallback
         return "Upcoming"
     }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(trailers)
+    }
+    
+    static func == (lhs: TrailerViewModel, rhs: TrailerViewModel) -> Bool {
+        lhs.trailers == rhs.trailers
+    }
 }
 
 
-class ShippingDocViewModel: ObservableObject {
+class ShippingDocViewModel: ObservableObject, Equatable, Hashable {
     @Published var ShippingDoc: [String] = []
     @Published private var inputText = ""
     @Published  var showError = false
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ShippingDoc)
+    }
+    
+    static func == (lhs: ShippingDocViewModel, rhs: ShippingDocViewModel) -> Bool {
+        return lhs.ShippingDoc == rhs.ShippingDoc
+    }
 }
 
 import SwiftUI

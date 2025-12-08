@@ -78,16 +78,6 @@ struct BlockAppView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 16))
 
                 Spacer()
-
-                // Device/Engine ID
-//                Text("ENG-5412.1")
-//                    .font(.system(size: 16))
-//                    .foregroundColor(Color.white)
-//                    .padding(.vertical, 10)
-//                    .padding(.horizontal, 20)
-//                    .background(Color.gray.opacity(0.3))
-//                    .clipShape(Capsule())
-//                    .padding(.bottom, 40)
             }
         }
         .onDisappear {

@@ -58,7 +58,7 @@ struct LogsDetails: View {
                     HStack(spacing: 5) {
                        // CustomIconButton(iconName: "eye_fill_icon", title: "", action: { navManager.navigate(to: .EyeViewData(tittle: "daily Logs"))})
                         CustomIconButton(iconName: "eye_fill_icon", title: "", action: {
-                            navManager.navigate(to: AppRoute.LogsFlow.EyeViewData(
+                            navManager.navigate(to: AppRoute.HomeFlow.EyeViewData(
                                 title: "Daily Logs",
                                 entry: entry))
 

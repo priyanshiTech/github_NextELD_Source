@@ -245,7 +245,7 @@ enum ViolationType: Hashable {
 
 
 
-struct ViolationData: Equatable {
+struct ViolationData: Equatable, Hashable {
     var id = UUID()
     var violationType: ViolationType = .none
     var thirtyMinWarning: Bool = false
@@ -309,7 +309,15 @@ extension Notification.Name {
 }
 
 
-class HomeViewModel: ObservableObject {
+class HomeViewModel: ObservableObject, Hashable, Equatable {
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(currentDriverStatus)
+    }
+    
+    static func == (lhs: HomeViewModel, rhs: HomeViewModel) -> Bool {
+        return lhs.currentDriverStatus == rhs.currentDriverStatus
+    }
     
     // Driver Status to show selected status on view
     @Published var currentDriverStatus: DriverStatusType = .offDuty

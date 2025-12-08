@@ -11,7 +11,7 @@ import SwiftUI
 struct ShippingDocView: View {
     
     @EnvironmentObject var navmanager: NavigationManager
-    @EnvironmentObject var shippingVM: ShippingDocViewModel
+    @ObservedObject var shippingVM: ShippingDocViewModel
     
     var tittle: String
     @State private var inputText: String = ""

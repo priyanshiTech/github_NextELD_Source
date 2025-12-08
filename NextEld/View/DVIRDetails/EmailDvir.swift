@@ -21,7 +21,7 @@ struct EmailDvir: View {
     var filteredRecords: [DvirRecord] {
         // Use records from database (which includes server records) instead of updateRecords parameter
         let allRecords = records.isEmpty ? updateRecords : records
-        return []
+        return allRecords
 //        return allRecords.filter { record in
 //            !(record.DAY == "Current Date" || record.DvirTime == "Current Time")
 //        }
@@ -57,7 +57,7 @@ struct EmailDvir: View {
                         Button(action: {
                             // Clear selected record to ensure new record with current date/time
                             selectedDvirRecord = nil
-                            navmanager.path.append(AppRoute.DvirFlow.AddDvirScreenView)
+                            navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM))
                         }) {
                             Image(systemName: "plus")
                                 .foregroundColor(.white)
@@ -66,7 +66,7 @@ struct EmailDvir: View {
                         
                         Button(action: {
                
-                            navmanager.path.append(AppRoute.DvirFlow.DvirHostory(tittle: AppConstants.dvirHostoryTittle))
+                            navmanager.path.append(AppRoute.HomeFlow.DvirHostory(tittle: AppConstants.dvirHostoryTittle))
                           
                         }) {
                             Image("email_icon")
@@ -101,7 +101,7 @@ struct EmailDvir: View {
                             record: record,
                             onTap: {
                                 selectedDvirRecord = record
-                                navmanager.path.append(AppRoute.DvirFlow.AddDvirScreenView)
+                                navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM))
                             },
                             onViewDefect: {
                                 // Fetch latest record from database to get updated defects
@@ -131,7 +131,10 @@ struct EmailDvir: View {
                                         selectedDvirRecord = record
                                     }
                                 }
-                                navmanager.path.append(AppRoute.DvirFlow.UploadDefectView)
+                                if let selectedDvirRecord {
+                                    navmanager.path.append(AppRoute.HomeFlow.UploadDefectView(dvirRecord: selectedDvirRecord))
+                                }
+                               
                             }
                         )
                     }
@@ -156,27 +159,24 @@ struct EmailDvir: View {
             }
         .navigationBarHidden(true)
 
-        .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
-            switch type {
-            case .AddDvirScreenView:
-                AddDvirScreenView( selectedRecord:$selectedDvirRecord,trailers: $trailerVM.trailers, isFromHome:false)
-                
-            case .UploadDefectView:
-                UploadDefectView(selectedRecord: selectedDvirRecord)
-                
-            case .DvirHostory(tittle: AppConstants.dvirHostoryTittle):
-                  DVIRHistory(title: AppConstants.dvirHostoryTittle)
-                                
-            case .emailLogs:
-                EmailLogs(title: "Daily Logs")
-                
-          
-                 
-            default:
-                EmptyView()
-            }
-            
-        })
+//        .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
+//            switch type {
+//            case .AddDvirScreenView:
+//                AddDvirScreenView( selectedRecord:$selectedDvirRecord,trailers: $trailerVM.trailers, isFromHome:false)
+//                
+//            case .UploadDefectView:
+//                UploadDefectView(selectedRecord: selectedDvirRecord)
+//                
+//            case .DvirHostory(tittle: AppConstants.dvirHostoryTittle):
+//                  DVIRHistory(title: AppConstants.dvirHostoryTittle)
+//                                
+//            case .emailLogs:
+//                EmailLogs(title: "Daily Logs")
+//            default:
+//                EmptyView()
+//            }
+//            
+//        })
         
         var emptyDvirRecord: DvirRecord {
             DvirRecord(

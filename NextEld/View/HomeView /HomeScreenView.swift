@@ -14,6 +14,10 @@ struct HomeScreenView: View {
     @StateObject private var homeVM : HomeViewModel = .init()
     @StateObject var trailerVM: TrailerViewModel = .init()
     @StateObject private var driverWorkviewModel = DriverWorkingViewModel()
+    @EnvironmentObject var navManager: NavigationManager
+    @StateObject private var viewModel = RefreshViewModel()
+    @StateObject private var syncVM = SyncViewModel()
+    
 
     @State private var labelValue = ""
     @State private var showCertifyLogAlert = false
@@ -35,11 +39,11 @@ struct HomeScreenView: View {
     @State private var showLogoutStatusAlert = false
 
     //MARK: - Daily violation tracking
-    @EnvironmentObject var navManager: NavigationManager
+    
 
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
-    @StateObject private var viewModel = RefreshViewModel()
-    @StateObject private var syncVM = SyncViewModel()
+   
+    
     // ELD Additions
     @State private var pastDutyLog: [Date: TimeInterval] = [:] // key = date, value = seconds
     @State private var offDutyStartTime: Date? = nil
@@ -194,7 +198,7 @@ struct HomeScreenView: View {
                     title: "Add DVIR Log",
                     message: "Please add DVIR before going to On-Drive",
                     onOK: {
-                        navManager.path.append(AppRoute.DatabaseFlow.AddDvirScreenView)
+                        navManager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM))
                         showDvirPopup = false
                     },
                     onCancel: { showDvirPopup = false }
@@ -317,9 +321,9 @@ struct HomeScreenView: View {
                         onConnect: {
                             showDeviceSelector = false
                             if selectedDevice == "NT-11" {
-                                navManager.navigate(to: AppRoute.BluetoothDeviceFlow.NT11Connection)
+                                navManager.navigate(to: AppRoute.HomeFlow.NT11Connection)
                             } else if selectedDevice == "PT30" {
-                                navManager.navigate(to: AppRoute.BluetoothDeviceFlow.PT30Connection)
+                                navManager.navigate(to: AppRoute.HomeFlow.PT30Connection)
                                 
                             }
                         }
@@ -381,7 +385,7 @@ struct HomeScreenView: View {
         .onChange(of: homeVM.showBlockScreen) { shouldBlock in
             if shouldBlock {
                 // Navigate to BlockView when screen should be blocked
-                navManager.navigate(to: AppRoute.HomeDashboardFlow.BlockView)
+                navManager.navigate(to: AppRoute.HomeFlow.BlockView(homeVM: homeVM))
             } else {
                 // Pop navigation when screen is unblocked
                 if !navManager.path.isEmpty {
@@ -562,35 +566,7 @@ struct HomeScreenView: View {
             Text(homeVM.alertType.getMessage())
         }
         .navigationBarBackButtonHidden()
-        .navigationDestination(for: AppRoute.DatabaseFlow.self, destination: { type in
-            switch type {
-                
-            case .ContinueDriveTableView:
-                ContinueDriveTableView()
-                
-            case .DatabaseCertifyView:
-                DatabaseCertifyView()
-                
-            case .DvirDataListView:
-                DvirListView()
-                
-            case  .DriverLogListView:
-                DriverLogListView()
-                
-            
-            case .EyeViewData( let tittle, let entry):
-                EyeViewData(title:tittle , entry: entry)
-            case .AddDvirScreenView:
-                AddDvirScreenView( selectedRecord:.constant(nil), trailers: $trailerVM.trailers )
-            }
-            
-        })
-       .navigationDestination(for: AppRoute.HomeDashboardFlow.self) { route in
-            switch route {
-            case .BlockView:
-                BlockAppView(homeViewModel: homeVM)
-            }
-        }
+        
     }
     
     private func updateDriverWorkingPayload() {

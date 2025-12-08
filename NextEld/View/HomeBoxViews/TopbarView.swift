@@ -39,7 +39,7 @@ struct TopBarView: View {
                 // Right: Bluetooth
                 Button(action: {
                     if SharedInfoManager.shared.isDeviceConnected {
-                        navManager.navigate(to: AppRoute.BluetoothDeviceFlow.PT30Connection)
+                        navManager.navigate(to: AppRoute.HomeFlow.PT30Connection)
                     } else {
                         showDeviceSelector = true
                     }
@@ -54,17 +54,17 @@ struct TopBarView: View {
             Menu {
                 
                 Button("ELD Log") {
-                    navManager.navigate(to: AppRoute.DatabaseFlow.DriverLogListView) // Example
+                    navManager.navigate(to: AppRoute.HomeFlow.driverLogListView) // Example
                 }
                 Button("Continue Drive") {
-                    navManager.navigate(to: AppRoute.DatabaseFlow.ContinueDriveTableView)
+                    navManager.navigate(to: AppRoute.HomeFlow.continueDriveTableView)
                 }
                 Button("Add Dvir List") {
-                    navManager.navigate(to: AppRoute.DatabaseFlow.DvirDataListView)
+                    navManager.navigate(to: AppRoute.HomeFlow.DvirDataListView)
                 }
                 
                 Button("Certify Log") {
-                    navManager.navigate(to: AppRoute.DatabaseFlow.DatabaseCertifyView)
+                    navManager.navigate(to: AppRoute.HomeFlow.DatabaseCertifyView)
                 }
                 
                 

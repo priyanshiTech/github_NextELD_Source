@@ -26,7 +26,7 @@ struct AvailableHoursView: View {
             VStack(spacing: 2) {
                 HStack(spacing: 5) {
                     Button("Recap") {
-                        navmanager.navigate(to: AppRoute.LogsFlow.RecapHours(title: AppConstants.HourRecap))
+                        navmanager.navigate(to: AppRoute.HomeFlow.RecapHours(title: AppConstants.HourRecap))
                     }
                     .buttonStyle(.plain)
                     .foregroundColor(Color(uiColor: .wine))
