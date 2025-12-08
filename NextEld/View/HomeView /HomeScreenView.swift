@@ -194,11 +194,12 @@ struct HomeScreenView: View {
                     title: "Add DVIR Log",
                     message: "Please add DVIR before going to On-Drive",
                     onOK: {
-                        navManager.path.append(AppRoute.DvirFlow.AddDvirScreenView)
+                        navManager.path.append(AppRoute.DatabaseFlow.AddDvirScreenView)
                         showDvirPopup = false
                     },
                     onCancel: { showDvirPopup = false }
                 )
+                
                 .zIndex(3)
                 .frame(maxWidth: 350) // optional, to keep consistent width
                 .padding(.horizontal, 20)
@@ -579,6 +580,8 @@ struct HomeScreenView: View {
             
             case .EyeViewData( let tittle, let entry):
                 EyeViewData(title:tittle , entry: entry)
+            case .AddDvirScreenView:
+                AddDvirScreenView( selectedRecord:.constant(nil), trailers: $trailerVM.trailers )
             }
             
         })

@@ -111,7 +111,7 @@ struct AddDvirScreenView: View  {
                             
                             Button(action: {
                 // print("Navigate to AddVehicleForDvir - Current vehicle: \(vehicleVM.selectedVehicleNumber)")
-                                navmanager.navigate(to: AppRoute.AddDVIRFlow.AddVehicleForDVIR)
+                                navmanager.navigate(to: AppRoute.DvirFlow.AddVehicleForDVIR)
                             }) {
                                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -137,7 +137,7 @@ struct AddDvirScreenView: View  {
         
                         CardContainer {
                             Button(action: {
-                                navmanager.path.append(AppRoute.AddDVIRFlow.trailerScreen)
+                                navmanager.path.append(AppRoute.DvirFlow.trailerScreen)
                             }) {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
@@ -293,7 +293,7 @@ struct AddDvirScreenView: View  {
                 addDvirButton
             }
             .navigationBarBackButtonHidden()
-            .navigationDestination(for: AppRoute.AddDVIRFlow.self, destination: { type in
+            .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
                 switch type {
                 case .trailerScreen:
                     TrailerView(trailerVM: trailerVM, tittle: AppConstants.trailersTittle, trailers: $trailerVM.trailers)

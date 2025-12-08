@@ -891,7 +891,6 @@ class HomeViewModel: ObservableObject {
         AppStorageHandler.shared.days > 8 else {
             return
         }
-        
         let onDutyTime = AppStorageHandler.shared.onDutyTime ?? 0
         let onDriveTime = AppStorageHandler.shared.onDriveTime ?? 0
         var remainingCycleTime: TimeInterval = DatabaseManager.shared.getRemainingCycleTime()

@@ -267,7 +267,6 @@ struct DeviceScannerView: View {
                 case .LogsDetails(let title, let entry):
                     LogsDetails(title: title, entry: entry)
                 case .AddDvirPriTrip:
-                    
                     EmailDvir(
                         tittle: "Email DVIR",
                         updateRecords: DvirDatabaseManager.shared.fetchAllRecords(),
@@ -309,34 +308,6 @@ struct DeviceScannerView: View {
                 SessionExpireUIView()
             case .DisclaimerView:
                 DisclamerView()
-            }
-        }
-        .navigationDestination(for: AppRoute.AddDVIRFlow.self) { route in
-            switch route {
-            case .trailerScreen:
-                TrailerView(
-                    trailerVM: trailerVM,
-                    tittle: AppConstants.trailersTittle,
-                    trailers: $trailerVM.trailers
-                )
-                
-            case .ShippingDocment:
-                ShippingDocView(tittle: AppConstants.shippingTittle)
-                    .environmentObject(shippingVM)
-                
-            case .AddVehicleForDVIR:
-                AddVehicleForDvir(
-                    selectedVehicleNumber: $vehiclesc,
-                    VechicleID: Binding(
-                        get: { VechicleID ?? 0 },
-                        set: { newValue in
-                            VechicleID = newValue
-                            AppStorageHandler.shared.vehicleId = newValue
-                        }
-                    )
-                )
-            default:
-                EmptyView()
             }
         }
         .navigationBarHidden(true)

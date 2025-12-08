@@ -52,17 +52,13 @@ enum AppRoute: Hashable {
         
     }
     
-    enum AddDVIRFlow: Hashable {
-        case trailerScreen
-        case ShippingDocment
-        case AddVehicleForDVIR
-    }
-    
     enum DvirFlow: Hashable{
         case AddDvirScreenView
         case emailLogs(tittle: String)
         case DvirHostory(tittle: String)
-        
+        case trailerScreen
+        case ShippingDocment
+        case AddVehicleForDVIR
         case UploadDefectView
         
     }
@@ -84,6 +80,7 @@ enum AppRoute: Hashable {
    // case scanner
     
     enum DatabaseFlow: Hashable {
+        case AddDvirScreenView
         case DatabaseCertifyView
         case DriverLogListView
         case DvirDataListView
