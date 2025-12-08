@@ -344,6 +344,11 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     @Published var breakTime: CountdownTimer? = nil
     @Published var refreshView: UUID = UUID()
     
+    // Flag used in Home screen
+    @Published var showLogoutPopup: Bool = false
+    @Published var presentSideMenu: Bool = false
+    @Published var displayLoader: Bool = false
+    
     // Block screen management
     @Published var showBlockScreen: Bool = false
     
@@ -980,5 +985,125 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             return true
         }
         return false
+    }
+}
+
+
+extension HomeViewModel {
+    
+    func hasPendingUnsyncedLogs() -> Bool {
+        !DatabaseManager.shared.fetchLogs(filterTypes: [.notSync]).isEmpty
+    }
+    
+    func handleLogoutButtonTapped(completesWith: @escaping (Bool) -> Void) {
+        showLogoutPopup = false
+        presentSideMenu = false
+        displayLoader = true
+        defer { displayLoader = false }
+        if hasPendingUnsyncedLogs() {
+            Task { @MainActor in
+                let syncSuccess = await syncViewModel.syncOfflineData()
+                if syncSuccess {
+                    let isLogoutSuccess = await callLogoutAPI()
+                    completesWith(isLogoutSuccess)
+                }
+            }
+        } else {
+            Task { @MainActor in
+                let isLogoutSuccess = await callLogoutAPI()
+                completesWith(isLogoutSuccess)
+            }
+        }
+    }
+    
+    @MainActor
+    func callLogoutAPI() async -> Bool {
+        let success = await APILogoutViewModel().callLogoutAPI()
+        if success {
+            
+            AppStorageHandler.shared.deleteAll()
+//            UserDefaults.standard.set(false, forKey: "isLoggedIn")
+//            ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
+            SessionManagerClass.shared.clearToken()
+        }
+        return success
+    }
+    
+    func handleLogoutRequest() {
+        presentSideMenu = false
+        // Allow logout from Off Duty or Sleep status
+        if currentDriverStatus == .offDuty || currentDriverStatus == .sleep {
+            showLogoutPopup = true
+        } else {
+            // Show alert popup for other statuses (On Duty, On Drive, etc.)
+            alertType = .logoutOFFSleepDuty
+            showAlertOnHomeScreen = true
+        }
+    }
+    
+    private func scheduleRefreshAlert() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.alertType = .refresh
+            self.showAlertOnHomeScreen = true
+        }
+    }
+    
+    func handleSyncPopupConfirmation() {
+        
+        if hasPendingUnsyncedLogs() {
+            Task {
+                displayLoader = true
+                let syncSuccess = await syncViewModel.syncOfflineData()
+                displayLoader = false
+                if syncSuccess {
+                    scheduleRefreshAlert()
+                }
+            }
+        } else {
+            scheduleRefreshAlert()
+        }
+        
+        
+//
+//        guard !isManualSyncInProgress else { return }
+//        guard let context = syncPopupContext else { return }
+//        isManualSyncInProgress = true
+//        Task { @MainActor in
+//            var syncSucceeded = false
+//            while syncPopupContext == context && !syncSucceeded {
+//                await homeVM.syncViewModel.getLocation()
+//                syncSucceeded = await homeVM.syncViewModel.syncOfflineData()
+//                if !syncSucceeded {
+//                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+//                }
+//            }
+//
+//            guard syncPopupContext == context, syncSucceeded else {
+//                isManualSyncInProgress = false
+//                return
+//            }
+//
+//            isManualSyncInProgress = false
+//            showPendingSyncPopup = false
+//            syncPopupContext = nil
+//
+//            let pendingLogsRemain = hasPendingUnsyncedLogs()
+//
+//            switch context {
+//            case .manualRefresh:
+//                scheduleRefreshAlert()
+//            case .logout:
+//                if pendingLogsRemain {
+//                    syncPopupContext = .logout
+//                    showPendingSyncPopup = true
+//                } else {
+//                    if homeVM.currentDriverStatus == .offDuty {
+//                        showLogoutPopup = true
+//                    } else {
+//                        showLogoutStatusAlert = true
+//                    }
+//                }
+//            }
+//        }
     }
 }

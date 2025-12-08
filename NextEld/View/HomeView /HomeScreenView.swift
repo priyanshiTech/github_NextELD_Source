@@ -16,16 +16,13 @@ struct HomeScreenView: View {
     @StateObject private var driverWorkviewModel = DriverWorkingViewModel()
     @EnvironmentObject var navManager: NavigationManager
     @StateObject private var viewModel = RefreshViewModel()
-    @StateObject private var syncVM = SyncViewModel()
     
 
     @State private var labelValue = ""
     @State private var showCertifyLogAlert = false
     @State private var showStatusalert: Bool = false
-    @State private var showLogoutPopup: Bool = false
     @State private var ShowrefreshPopup: Bool = false
     @State private var isCycleCompleted: Bool = false
-    @State var presentSideMenu: Bool = false
     @State var selectedSideMenuTab: Int = 0
     @State private var showDeviceSelector: Bool = false
     @State private var selectedDevice: String? = nil
@@ -77,7 +74,7 @@ struct HomeScreenView: View {
                         .frame(height: 0)
                     
                     TopBarView(
-                        presentSideMenu: $presentSideMenu,
+                        presentSideMenu: $homeVM.presentSideMenu,
                         labelValue: labelValue,
                         showDeviceSelector: $showDeviceSelector
                     )
@@ -137,24 +134,24 @@ struct HomeScreenView: View {
                 .scrollIndicators(.hidden)
               .scrollIndicators(.hidden)
             }
-            .disabled(presentSideMenu || showLogoutPopup || ShowrefreshPopup )
+            .disabled(homeVM.presentSideMenu || homeVM.showLogoutPopup || ShowrefreshPopup )
             
-            if presentSideMenu {
+            if homeVM.presentSideMenu {
                 Color(uiColor:.black).opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture {
                         withAnimation(.easeOut(duration: 0.2)) {
-                            presentSideMenu = false
+                            homeVM.presentSideMenu = false
                         }
                     }
                     .zIndex(1)
                 
                 SideMenuView(
                     selectedSideMenuTab: $selectedSideMenuTab,
-                    presentSideMenu: $presentSideMenu,
+                    presentSideMenu: $homeVM.presentSideMenu,
                     showDeleteConfirm: $showDeleteConfirm,
                     showSyncConfirmation:  $homeVM.showSyncconfirmation,
-                    onLogoutRequested: handleLogoutRequest
+                    onLogoutRequested: homeVM.handleLogoutRequest
                 )
                 .frame(width: 250)
                 .background(Color(uiColor:.white))
@@ -253,7 +250,7 @@ struct HomeScreenView: View {
                         
                         title: "Refresh Log",
                         message: "You have some records to update, do you want to update?",
-                    onOK: { handleSyncPopupConfirmation() },
+                        onOK: { homeVM.handleSyncPopupConfirmation() },
                         onCancel: {
                             isManualSyncInProgress = false
                         syncPopupContext = nil
@@ -274,32 +271,25 @@ struct HomeScreenView: View {
                 .animation(.easeInOut, value: showPendingSyncPopup)
             }
             
-            if showLogoutPopup {
+            if homeVM.showLogoutPopup {
                 Color(uiColor:.black).opacity(0.5)
                     .ignoresSafeArea()
                     .zIndex(2)
                 
-                PopupContainer(isPresented: $showLogoutPopup) {
+                PopupContainer(isPresented: $homeVM.showLogoutPopup) {
                     LogOutPopup(
                         isCycleCompleted: $isCycleCompleted,
                         currentStatus: homeVM.currentDriverStatus.getName(),
                         onLogout: {
-                            Task {
-                                let success = await logoutVM.callLogoutAPI()
+                            homeVM.handleLogoutButtonTapped { success in
                                 if success {
-                                    showLogoutPopup = false
-                                    presentSideMenu = false
-                                    UserDefaults.standard.set(false, forKey: "isLoggedIn")
-                                    ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
-                                    SessionManagerClass.shared.clearToken()
-                                    appRootManager.currentRoot = .splashScreen
-                                } else if !logoutVM.apiMessage.isEmpty {
-                                    // print(" Logout API message: \(logoutVM.apiMessage)")
+                                    // Move to login button
+                                    appRootManager.currentRoot = .login
                                 }
                             }
                         },
                         onCancel: {
-                            showLogoutPopup = false
+                            homeVM.showLogoutPopup = false
                         }
                     )
                 }
@@ -372,8 +362,19 @@ struct HomeScreenView: View {
                 .transition(.move(edge: .top).combined(with: .opacity))
                 .animation(.easeInOut, value: showBanner)
             }
+            
+            if homeVM.displayLoader {
+                VStack {
+                    ProgressView()
+                        .scaleEffect(2)
+                        .padding(20)
+                        .background(.white)
+                        .cornerRadius(12)
+                        .shadow(radius: 8)
+                }
+            }
         }
-        
+        .allowsHitTesting(!homeVM.displayLoader)
         .id(homeVM.refreshView)
         .onChange(of: networkMonitor.isConnected) { newValue in
             if newValue {
@@ -397,13 +398,14 @@ struct HomeScreenView: View {
         // Set alert type when sync confirmation is triggered
         .onChange(of: homeVM.showSyncconfirmation) { newValue in
             guard newValue else { return }
-            homeVM.showSyncconfirmation = false
-            if hasPendingUnsyncedLogs() {
-                syncPopupContext = .manualRefresh
-                showPendingSyncPopup = true
-            } else {
-                scheduleRefreshAlert()
-            }
+//            homeVM.showSyncconfirmation = false
+//            if hasPendingUnsyncedLogs() {
+//                syncPopupContext = .manualRefresh
+//                showPendingSyncPopup = true
+//            } else {
+//                scheduleRefreshAlert()
+//            }
+                homeVM.handleSyncPopupConfirmation()
         }
         
         // Set alert type when delete confirmation is triggered
@@ -420,8 +422,8 @@ struct HomeScreenView: View {
      
         ZStack(alignment: .top) {
             
-            if !syncVM.syncMessage.isEmpty {
-                Text(syncVM.syncMessage)
+            if !homeVM.syncViewModel.syncMessage.isEmpty {
+                Text(homeVM.syncViewModel.syncMessage)
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(Color(uiColor:.black))
                     .padding(.horizontal, 16)
@@ -434,7 +436,7 @@ struct HomeScreenView: View {
                     .transition(.opacity.combined(with: .scale))
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            syncVM.syncMessage = ""
+                            homeVM.syncViewModel.syncMessage = ""
                         }
                     }
             }
@@ -457,7 +459,7 @@ struct HomeScreenView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .refreshStarted)) { _ in
             withAnimation {
-                syncVM.syncMessage = "Fetching records..."
+                homeVM.syncViewModel.syncMessage = "Fetching records..."
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .refreshCompleted)) { notification in
@@ -467,10 +469,10 @@ struct HomeScreenView: View {
             withAnimation {
                 if status == "success" {
                     let finalMessage = message.isEmpty ? "Data refreshed successfully." : message
-                    syncVM.syncMessage = finalMessage
+                    homeVM.syncViewModel.syncMessage = finalMessage
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         withAnimation {
-                            syncVM.syncMessage = ""
+                            homeVM.syncViewModel.syncMessage = ""
                         }
                         DispatchQueue.main.async {
                             appRootManager.currentRoot = .splashScreen
@@ -478,10 +480,10 @@ struct HomeScreenView: View {
                     }
                 } else {
                     let errorMessage = message.isEmpty ? "Refresh failed." : "Refresh failed: \(message)"
-                    syncVM.syncMessage = errorMessage
+                    homeVM.syncViewModel.syncMessage = errorMessage
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                         withAnimation {
-                            syncVM.syncMessage = ""
+                            homeVM.syncViewModel.syncMessage = ""
                         }
                     }
                 }
@@ -608,73 +610,7 @@ struct HomeScreenView: View {
 
 
 
-extension HomeScreenView {
-    private func hasPendingUnsyncedLogs() -> Bool {
-        !DatabaseManager.shared.fetchLogs(filterTypes: [.notSync]).isEmpty
-    }
-    
-    private func handleLogoutRequest() {
-        presentSideMenu = false
-        // Allow logout from Off Duty or Sleep status
-        if homeVM.currentDriverStatus == .offDuty || homeVM.currentDriverStatus == .sleep {
-            showLogoutPopup = true
-        } else {
-            // Show alert popup for other statuses (On Duty, On Drive, etc.)
-            homeVM.alertType = .logoutOFFSleepDuty
-            homeVM.showAlertOnHomeScreen = true
-        }
-    }
-    
-    private func scheduleRefreshAlert() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            homeVM.alertType = .refresh
-            homeVM.showAlertOnHomeScreen = true
-        }
-    }
-    
-    private func handleSyncPopupConfirmation() {
-        guard !isManualSyncInProgress else { return }
-        guard let context = syncPopupContext else { return }
-        isManualSyncInProgress = true
-        Task { @MainActor in
-            var syncSucceeded = false
-            while syncPopupContext == context && !syncSucceeded {
-                await homeVM.syncViewModel.getLocation()
-                syncSucceeded = await homeVM.syncViewModel.syncOfflineData()
-                if !syncSucceeded {
-                    try? await Task.sleep(nanoseconds: 2_000_000_000)
-                }
-            }
-            
-            guard syncPopupContext == context, syncSucceeded else {
-                isManualSyncInProgress = false
-                return
-            }
-            
-            isManualSyncInProgress = false
-            showPendingSyncPopup = false
-            syncPopupContext = nil
-            
-            let pendingLogsRemain = hasPendingUnsyncedLogs()
-            
-            switch context {
-            case .manualRefresh:
-                scheduleRefreshAlert()
-            case .logout:
-                if pendingLogsRemain {
-                    syncPopupContext = .logout
-                    showPendingSyncPopup = true
-                } else {
-                    if homeVM.currentDriverStatus == .offDuty {
-                        showLogoutPopup = true
-                    } else {
-                        showLogoutStatusAlert = true
-                    }
-                }
-            }
-        }
-    }
-}
+
 
 private enum SyncPopupContext {
     case manualRefresh

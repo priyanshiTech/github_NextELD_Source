@@ -56,46 +56,48 @@ struct DailyLogView: View {
     }
     //MARK: - Check if a date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
     private func isDateFullyCertified(_ logDate: String) -> Bool {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy"
+        return !certifiedRecords.filter( { $0.date == logDate }).isEmpty
         
-        // print(" Checking certification for date: \(logDate)")
-        
-        for record in certifiedRecords {
-            // Convert DB date to same format for comparison
-            if let dbDate = DateTimeHelper.parseDate(record.date) {
-                let dbDateString = formatter.string(from: dbDate)
-                
-                // print("     Comparing with DB record:")
-                // print("    - DB Date: \(record.date) -> Formatted: \(dbDateString)")
-                // print("    - Log Date: \(logDate)")
-                // print("    - Date Match: \(dbDateString == logDate)")
-                // print("    - isSynced: \(record.syncStatus) (needs to be 1)")
-                // print("    - isLogCertified: \(record.isCertify) (needs to be 'Yes')")
-                
-                // Check all three conditions:
-                // 1. Date matches
-                // 2. isSynced = 1
-                // 3. isLogCertified = "Yes"
-                let dateMatches = dbDateString == logDate
-                let isSynced = record.syncStatus == 1
-                let isCertified = record.isCertify == "Yes"
-                
-                // print("    - All conditions met: \(dateMatches && isSynced && isCertified)")
-                
-                if dateMatches && isSynced && isCertified {
-                    // print("     FULLY CERTIFIED - All conditions met!")
-                    return true
-                } else if dateMatches {
-                    // print("      Date exists but NOT fully certified:")
-                    // print("      - isSynced: \(isSynced)")
-                    // print("      - isLogCertified: \(isCertified)")
-                }
-            }
-        }
-        
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "dd-MM-yyyy"
+//        
+//        // print(" Checking certification for date: \(logDate)")
+//        
+//        for record in certifiedRecords {
+//            // Convert DB date to same format for comparison
+//            if let dbDate = DateTimeHelper.parseDate(record.date) {
+//                let dbDateString = formatter.string(from: dbDate)
+//                
+//                // print("     Comparing with DB record:")
+//                // print("    - DB Date: \(record.date) -> Formatted: \(dbDateString)")
+//                // print("    - Log Date: \(logDate)")
+//                // print("    - Date Match: \(dbDateString == logDate)")
+//                // print("    - isSynced: \(record.syncStatus) (needs to be 1)")
+//                // print("    - isLogCertified: \(record.isCertify) (needs to be 'Yes')")
+//                
+//                // Check all three conditions:
+//                // 1. Date matches
+//                // 2. isSynced = 1
+//                // 3. isLogCertified = "Yes"
+//                let dateMatches = dbDateString == logDate
+//                let isSynced = record.syncStatus == 1
+//                let isCertified = record.isCertify == "Yes"
+//                
+//                // print("    - All conditions met: \(dateMatches && isSynced && isCertified)")
+//                
+//                if dateMatches && isSynced && isCertified {
+//                    // print("     FULLY CERTIFIED - All conditions met!")
+//                    return true
+//                } else if dateMatches {
+//                    // print("      Date exists but NOT fully certified:")
+//                    // print("      - isSynced: \(isSynced)")
+//                    // print("      - isLogCertified: \(isCertified)")
+//                }
+//            }
+//        }
+//        
         // print("     NOT CERTIFIED - No matching record or conditions not met")
-        return false
+       // return false
     }
     
 
@@ -160,18 +162,22 @@ struct DailyLogView: View {
             List {
                 ForEach(logDates) { log in
                     HStack {
-                        Text(dateFormattedString(log.date))
+                        Text(log.date)
                             .foregroundColor(.primary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 // Navigate to LogsDetails on cell click
-                                let formatter = DateFormatter()
-                                formatter.dateFormat = "dd-MM-yyyy"
-                                if let logDate = formatter.date(from: log.date) {
+//                                let formatter = DateFormatter()
+//                                formatter.dateFormat = "dd-MM-yyyy"
+//                                if let logDate = formatter.date(from: log.date) {
+//                                    
+//                                }
+                                if let logDate = log.date.asDate(format: .dateOnlyFormat) {
                                     let selectedEntry = WorkEntry(date: logDate, hoursWorked: 0)
                                     navManager.navigate(to: AppRoute.HomeFlow.LogsDetails(title: "Daily Log", entry: selectedEntry))
                                 }
+                                
                             }
 
                         let isCertified = isDateFullyCertified(log.date)

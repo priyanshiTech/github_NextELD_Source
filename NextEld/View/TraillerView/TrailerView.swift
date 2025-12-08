@@ -16,7 +16,6 @@ struct TrailerView: View {
 
     var tittle: String
     @State private var inputText: String = ""
-    @Binding var trailers: [String]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -85,7 +84,7 @@ struct TrailerView: View {
                 
                 // MARK: - List (Clear Background)
                 List {
-                    ForEach(trailers, id: \.self) { item in
+                    ForEach(trailerVM.trailers, id: \.self) { item in
                         HStack {
                             Text(item)
                             Spacer()

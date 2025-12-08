@@ -245,7 +245,7 @@ struct DeviceScannerView: View {
                         UserName: email
                     )
                 case .trailerScreen(let trailerVM):
-                    TrailerView(trailerVM: trailerVM, tittle: AppConstants.trailersTittle, trailers: .constant(trailerVM.trailers))
+                    TrailerView(trailerVM: trailerVM, tittle: AppConstants.trailersTittle)
                 case .ShippingDocment(let vm):
                     ShippingDocView(shippingVM: vm, tittle: AppConstants.shippingTittle)
                 case .AddVehicleForDVIR(let vehicleId, let vehicleNo):

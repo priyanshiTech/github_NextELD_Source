@@ -47,8 +47,6 @@ final class DriverWorkingViewModel: ObservableObject {
                 appRootManager?.currentRoot = .SessionExpireUIView
                 return false
             }
-                                                                        
-
             message = response.message
             showAlert = true
             return true
