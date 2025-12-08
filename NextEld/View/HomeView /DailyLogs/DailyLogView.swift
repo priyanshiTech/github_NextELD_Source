@@ -56,7 +56,7 @@ struct DailyLogView: View {
     }
     //MARK: - Check if a date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
     private func isDateFullyCertified(_ logDate: String) -> Bool {
-        return !certifiedRecords.filter( { $0.date == logDate }).isEmpty
+        return certifiedRecords.filter( { $0.date == logDate }).first?.isCertify == "Yes"
         
 //        let formatter = DateFormatter()
 //        formatter.dateFormat = "dd-MM-yyyy"
@@ -198,35 +198,35 @@ struct DailyLogView: View {
                 }
             }
 
-            .onAppear {
-                // Debug information
-                let allDates = logDates.map { dateFormattedString($0.date) }
-                // print("All Log Dates:", allDates)
-                // print("All Certified DB Records Count:", certifiedRecords.count)
-                
-                // Check if any dates match with full certification criteria
-                for log in logDates {
-                    let isFullyCertified = isDateFullyCertified(log.date)
-                    // print("Date: \(log.date) -> Fully Certified: \(isFullyCertified)")
-                    
-                    // Show detailed certification status for debugging
-                    for record in certifiedRecords {
-                        if let dbDate = DateTimeHelper.parseDate(record.date) {
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "dd-MM-yyyy"
-                            let dbDateString = formatter.string(from: dbDate)
-                            
-                            if dbDateString == log.date {
-                                // print("  - DB Record found:")
-                                // print("    - Date: \(record.date)")
-                                // print("    - isSynced: \(record.syncStatus)")
-                                // print("    - isLogCertified: \(record.isCertify)")
-                                // print("    - All conditions met: \(record.syncStatus == 1 && record.isCertify == "Yes")")
-                            }
-                        }
-                    }
-                }
-            }
+//            .onAppear {
+//                // Debug information
+//                let allDates = logDates.map { dateFormattedString($0.date) }
+//                // print("All Log Dates:", allDates)
+//                // print("All Certified DB Records Count:", certifiedRecords.count)
+//                
+//                // Check if any dates match with full certification criteria
+//                for log in logDates {
+//                    let isFullyCertified = isDateFullyCertified(log.date)
+//                    // print("Date: \(log.date) -> Fully Certified: \(isFullyCertified)")
+//                    
+//                    // Show detailed certification status for debugging
+//                    for record in certifiedRecords {
+//                        if let dbDate = DateTimeHelper.parseDate(record.date) {
+//                            let formatter = DateFormatter()
+//                            formatter.dateFormat = "dd-MM-yyyy"
+//                            let dbDateString = formatter.string(from: dbDate)
+//                            
+//                            if dbDateString == log.date {
+//                                // print("  - DB Record found:")
+//                                // print("    - Date: \(record.date)")
+//                                // print("    - isSynced: \(record.syncStatus)")
+//                                // print("    - isLogCertified: \(record.isCertify)")
+//                                // print("    - All conditions met: \(record.syncStatus == 1 && record.isCertify == "Yes")")
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }.navigationBarBackButtonHidden()
     }
 
