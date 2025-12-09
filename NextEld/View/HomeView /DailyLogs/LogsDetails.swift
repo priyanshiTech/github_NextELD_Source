@@ -78,7 +78,9 @@ struct LogsDetails: View {
             }  .background(Color.white.shadow(radius: 5))
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
-                    HOSEventsChartScreen(events: hoseEventsForSelectedDate)
+                   // HOSEventsChartScreen(events: hoseEventsForSelectedDate)
+                    HOSEventsChartScreen(events: homeVM.graphEvents)
+
                         .frame(maxWidth: .infinity)
                     
                     Text("Version - OS/02/May")
@@ -92,12 +94,17 @@ struct LogsDetails: View {
         }.navigationBarBackButtonHidden()
         
         .onAppear {
-            loadLogsFromDatabase()
+           // loadLogsFromDatabase()
             //DateTimeHelper.currentDateTime()
+            if allLogs.isEmpty {
+                loadLogsFromDatabase()
+            }
+
         }
-        .onChange(of: selectedDate) { oldValue, newValue in
-            loadLogsFromDatabase()
-        }
+//        .onChange(of: selectedDate) { oldValue, newValue in
+//            loadLogsFromDatabase()
+//        }
+        
         .onDisappear {
             stopTimer()
         }
