@@ -91,19 +91,21 @@ enum DriverStatusType: Hashable, CaseIterable {
     func getName() -> String {
         
         var title = ""
+        
         switch self {
+            
         case .onDuty:
-            title = AppConstants.on_Duty
+            title = AppConstants.onDuty
         case .offDuty:
-            title = AppConstants.off_Duty
+            title = AppConstants.offDuty
         case .onDrive:
-            title = AppConstants.on_Drive
-           case .personalUse:
+            title = AppConstants.onDrive
+        case .personalUse: 
             title = AppConstants.personalUse
         case .yardMode:
             title = AppConstants.yardMove
         case .sleep:
-            title = AppConstants.sleep
+            title = AppConstants.onSleep
         case .none:
             return ""
         }
@@ -129,6 +131,7 @@ enum DriverStatusType: Hashable, CaseIterable {
             self = .personalUse
         case "yard_mode", "yardmode", "yard_move", "yardmove":
             self = .yardMode
+            
         default:
             switch name {
             case AppConstants.on_Duty:

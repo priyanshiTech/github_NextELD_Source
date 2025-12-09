@@ -112,8 +112,6 @@ struct SplashView: View {
                         if let boolResult = firstResult {
                             apiSuccess = boolResult
                         } else {
-                            // Timeout occurred
-                            // print("  Splash API timeout - proceeding with existing data")
                             apiSuccess = false
                         }
                         group.cancelAll()

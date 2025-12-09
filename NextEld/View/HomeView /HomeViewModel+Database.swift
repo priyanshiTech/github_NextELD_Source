@@ -4,19 +4,16 @@ import Foundation
 extension HomeViewModel {
 
     func saveTimerStateForStatus(status: String, originType: OriginType, note: String? = nil, date: Date? = nil) {
-        // print("Saving timer state for status: \(status)")
-        var messge = note ?? ""
-        if messge.isEmpty {
-            messge = status
-        }
-        
+
+        let driverStatus = DriverStatusType(fromName: status) ?? .offDuty
+               let dutyTypeValue = driverStatus.getName()
         let startTime = date ?? DateTimeHelper.currentDateTime()
         let originDescription = originType.description
 
         DatabaseManager.shared.saveTimerLog(
             status: status,
             startTime: startTime,
-            dutyType: messge,
+            dutyType: driverStatus.getName(),
             remainingWeeklyTime: Int(cycleTimer?.remainingTime ?? 0),
             remainingDriveTime: Int(onDriveTimer?.remainingTime ?? 0),
             remainingDutyTime: Int(onDutyTimer?.remainingTime ?? 0),
@@ -25,7 +22,8 @@ extension HomeViewModel {
             lastSleepTime: Int(breakTimer?.remainingTime ?? 0),
             RemaningRestBreak: "True",
             isVoilations: false,
-            origin: originDescription
+            origin: originDescription,
+            notes: note ?? ""
         )
     }
 
@@ -43,7 +41,8 @@ extension HomeViewModel {
         lastSleepTime: Int(breakTimer?.remainingTime ?? 0),
         RemaningRestBreak: "true",
         isVoilations: violationData.violation,
-        origin: originType.description
+        origin: originType.description,
+        notes: ""
         )
     }
     

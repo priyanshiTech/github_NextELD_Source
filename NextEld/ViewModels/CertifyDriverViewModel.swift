@@ -42,10 +42,10 @@ class CertifyDriverViewModel: ObservableObject {
             return
         }
 
-        let fields: [String: String] = [
-            "driverId": String(driverId),
-            "vehicleId": String(vehicleId),
-            "coDriverId": String(coDriverId),
+        let fields: [String: Any] = [
+            "driverId": driverId,
+            "vehicleId": vehicleId,
+            "coDriverId": coDriverId,
             "trailers": trailers,
             "shippingDocs": shippingDocs,
             "certifiedDate": certifiedDate,
@@ -53,6 +53,8 @@ class CertifyDriverViewModel: ObservableObject {
             "certifiedDateTime": certifiedDateTime,
             "certifiedAt": certifiedAt
         ]
+        
+        print("fields request############ data : \(fields)")
 
         let file = MultipartFile(
             name: "file",
@@ -75,6 +77,7 @@ class CertifyDriverViewModel: ObservableObject {
                         self.result = response.result
                         self.status = response.status
                         self.token = response.token
+                        
                         
                         if response.token.lowercased() == "false" {
                             SessionManagerClass.shared.clearToken()

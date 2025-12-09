@@ -218,7 +218,7 @@ struct LogsDetails: View {
     
     private func isOnDutyStatus(_ status: String) -> Bool {
         let lowercased = status.lowercased()
-        return lowercased == "onduty" || lowercased == "on duty"
+        return lowercased == "onduty" || lowercased == "onduty"
     }
 
     
@@ -253,7 +253,7 @@ struct LogsDetails: View {
     
     private func statusColor(for status: String) -> Color {
         switch status.lowercased() {
-        case "onduty", "on duty":
+        case "OnDuty":
             return .orange
         case "driving":
             return .green

@@ -192,8 +192,8 @@ struct SignatureCertifyView: View {
                         certifiedDate: certifiedDate,
                         fileURL: fileURL,
                         tokenNo: tokenNo ?? "not Found",
-                        certifiedDateTime: "1755129599000",
-                        certifiedAt: "1755150649"
+                        certifiedDateTime: currentTimestampMillis() ,
+                        certifiedAt: String(CurrentTimeHelperStamp.currentTimestamp / 1000)
                     ) { result in
                         DispatchQueue.main.async {
                             isLoading = false
@@ -231,30 +231,7 @@ struct SignatureCertifyView: View {
                             showAlert = true
                         }
                     }
-                    // 7) Save locally (DVIR)
-//                    let record = DvirRecord(
-//                        id: nil,
-//                        UserID: "\(AppStorageHandler.shared.driverId ?? 0)",        // Driver ID
-//                        UserName: AppStorageHandler.shared.UserName ?? "",                // Driver Name
-//                        startTime: "\(DateTimeHelper.currentDate()) \(DateTimeHelper.currentTime())",
-//                        DAY: DateTimeHelper.currentDate(),
-//                        Shift: "\(AppStorageHandler.shared.shift ?? 1)",               // Default shift
-//                        DvirTime: DateTimeHelper.currentTime(),
-//                        odometer: 0.0,
-//                        location: "",
-//                        truckDefect: "",
-//                        trailerDefect: "",
-//                        vehicleCondition: "",
-//                        notes: "",
-//                        vehicleName: selectedVehicle,                 // Vehicle Name
-//                        vechicleID: "\(selectedVehicle)",             // Vehicle ID as string
-//                        Sync: 0,                                    // Default not synced
-//                        timestamp: DateTimeHelper.currentTime(),
-//                        Server_ID: "",
-//                        Trailer: selectedTrailer                       // Optional trailer data
-//                    )
 
-                   // DvirDatabaseManager.shared.insertRecord(record)
                 }) {
                     Text(isLoading ? "Please wait..." : "Agree")
                 }
