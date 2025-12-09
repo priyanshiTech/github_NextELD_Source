@@ -78,7 +78,7 @@ struct LogsDetails: View {
             }  .background(Color.white.shadow(radius: 5))
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
-                    HOSEventsChartScreen(events: homeVM.graphEvents)
+                    HOSEventsChartScreen(events: hoseEventsForSelectedDate)
                         .frame(maxWidth: .infinity)
                     
                     Text("Version - OS/02/May")
@@ -92,10 +92,11 @@ struct LogsDetails: View {
         }.navigationBarBackButtonHidden()
         
         .onAppear {
-            if allLogs.isEmpty {
-                loadLogsFromDatabase()
-            }
+            loadLogsFromDatabase()
             //DateTimeHelper.currentDateTime()
+        }
+        .onChange(of: selectedDate) { oldValue, newValue in
+            loadLogsFromDatabase()
         }
         .onDisappear {
             stopTimer()
@@ -218,7 +219,7 @@ struct LogsDetails: View {
     
     private func isOnDutyStatus(_ status: String) -> Bool {
         let lowercased = status.lowercased()
-        return lowercased == "onduty" || lowercased == "onduty"
+        return lowercased == "onduty" || lowercased == "on duty"
     }
 
     
@@ -253,7 +254,7 @@ struct LogsDetails: View {
     
     private func statusColor(for status: String) -> Color {
         switch status.lowercased() {
-        case "OnDuty":
+        case "onduty", "on duty":
             return .orange
         case "driving":
             return .green
