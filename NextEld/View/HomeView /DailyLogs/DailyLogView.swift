@@ -26,12 +26,11 @@ struct DailyLogView: View {
         var dailyLogsDates: [LogDate] = []
         let todayDate = DateTimeHelper.currentDate().asDate(format: .dateOnlyFormat) ?? Date()
         let logs = DatabaseManager.shared.fetchLogs()
-        guard let firstLog = logs.first,
-                let lastLog = logs.last else {
+        guard let firstLog = logs.first else {
             return dailyLogsDates
         }
-        
-        var numberOfDay = abs(DateTimeHelper.getNoOfDaysBetween(from: firstLog.startTime, to: lastLog.startTime))
+        let startOfDay = DateTimeHelper.startOfDay(for: firstLog.startTime)
+        var numberOfDay = abs(DateTimeHelper.getNoOfDaysBetween(from: startOfDay, to: todayDate))
         
         if numberOfDay == 0 {
             let currentDate = DateTimeHelper.getStringFromDate(todayDate, format: .dateOnlyFormat)

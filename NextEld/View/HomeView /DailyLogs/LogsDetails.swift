@@ -96,9 +96,7 @@ struct LogsDetails: View {
         .onAppear {
            // loadLogsFromDatabase()
             //DateTimeHelper.currentDateTime()
-            if allLogs.isEmpty {
-                loadLogsFromDatabase()
-            }
+           // loadLogsFromDatabase()
 
         }
 //        .onChange(of: selectedDate) { oldValue, newValue in
@@ -158,20 +156,25 @@ struct LogsDetails: View {
     }
     
     private var logsForSelectedDate: [DriverLogModel] {
-        let calendar = Calendar.current
-        let timeZone = TimeZone.current
-
-        return allLogs.filter { log in
-            // Get date components for both dates in current timezone
-            let logDateComponents = calendar.dateComponents(in: timeZone, from: log.startTime)
-            let selectedDateComponents = calendar.dateComponents(in: timeZone, from: selectedDate)
-            
-            // Compare year, month, and day components
-            return logDateComponents.year == selectedDateComponents.year &&
-                   logDateComponents.month == selectedDateComponents.month &&
-                   logDateComponents.day == selectedDateComponents.day
-        }
-        .sorted { $0.startTime < $1.startTime }
+        let startDate = DateTimeHelper.startOfDay(for: selectedDate)
+        let endDate = DateTimeHelper.endOfDay(for: selectedDate) ?? selectedDate
+        let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startDate, endDate: endDate)],addWarningAndViolation: true).sorted { $0.startTime < $1.startTime }
+        return logs
+        
+//        let calendar = Calendar.current
+//        let timeZone = TimeZone.current
+//
+//        return allLogs.filter { log in
+//            // Get date components for both dates in current timezone
+//            let logDateComponents = calendar.dateComponents(in: timeZone, from: log.startTime)
+//            let selectedDateComponents = calendar.dateComponents(in: timeZone, from: selectedDate)
+//            
+//            // Compare year, month, and day components
+//            return logDateComponents.year == selectedDateComponents.year &&
+//                   logDateComponents.month == selectedDateComponents.month &&
+//                   logDateComponents.day == selectedDateComponents.day
+//        }
+//        .sorted { $0.startTime < $1.startTime }
     }
     
     private var hoseEventsForSelectedDate: [HOSEvent] {
