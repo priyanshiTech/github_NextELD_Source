@@ -448,7 +448,75 @@ class DatabaseManager: DatabaseHandler {
         // print(" No valid trailer found in any database or UserDefaults")
         return nil
     }
+    // MARK: - Save Login/Logout Logs to Database
+    func saveLoginLogoutLogsToSQLite(from logs: [LoginLogoutLog]) {
+        // print("Saving \(logs.count) login/logout logs into SQLite")
+        
+        for log in logs {
+            // Determine status - Login or Logout
+            var statusString = log.status ?? ""
+            var dutyType = log.logType ?? ""
 
+            
+            // If status field contains login/logout info, use that
+            if let status = log.status?.lowercased() {
+                if status.contains("login") {
+                    statusString = "Login"
+                    dutyType = "Login"
+                } else if status.contains("logout") {
+                    statusString = "Logout"
+                    dutyType = "Logout"
+                }
+            }
+            
+            var isVoilation: String = "No"
+            if log.isVoilation == 1 {
+                isVoilation = "Yes"
+            }
+
+            let correctTime = log.dateTime?.asDate() ?? Date()
+            
+            
+            let model = DriverLogModel(
+                id: nil,
+                status: statusString,
+                startTime:   DateTimeHelper.convertToUserTimezone(correctTime, offset: "") ?? Date(),
+                userId: log.driverId ?? 0,
+                day: log.days ?? 0,
+                isVoilations: isVoilation,
+                dutyType: dutyType,
+                shift: log.shift ?? 0,
+                vehicle: "",
+                odometer: log.odometer ?? 0.0,
+                engineHours: log.engineHour ?? "0",
+                location: log.customLocation ?? "",
+                lat: log.lattitude ?? 0.0,
+                long: log.longitude ?? 0.0,
+                origin: log.origin ?? "",
+                isSynced: true,
+                vehicleId: log.vehicleId ?? 0,
+                trailers: "",
+                notes: log.note ?? "",
+                serverId: log._id,
+                timestamp: currentTimestampMillis(),
+                identifier: 0,
+                remainingWeeklyTime: Int(log.remainingWeeklyTime ?? "0") ?? 0,
+                remainingDriveTime: Int(log.remainingDriveTime ?? "0") ?? 0,
+                remainingDutyTime: Int(log.remainingDutyTime ?? "0") ?? 0,
+                remainingSleepTime: Int(log.remainingSleepTime ?? "0") ?? 0,
+                breaktimerRemaning: nil,
+                lastSleepTime: 0,
+                isSplit: 0,
+                engineStatus: "Off",
+                isSystemGenerated: log.isReportGenerated
+            )
+            
+            // print("Saving login/logout log: \(model.status), \(model.startTime)")
+            insertLog(from: model)
+        }
+        
+        // print("Finished saving login/logout logs.")
+    }
     
     func saveDriverLogsToSQLite(from logs: [ServerDriverLog]) {
         // print("Correct!!!!!!!!!!!!!!!! Saving \(logs.count) logs into SQLite")

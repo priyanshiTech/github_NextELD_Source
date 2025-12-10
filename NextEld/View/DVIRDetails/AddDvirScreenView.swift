@@ -11,7 +11,6 @@ struct AddDvirScreenView: View  {
     
     @EnvironmentObject var navmanager: NavigationManager
     @StateObject var navManager: NavigationManager = NavigationManager()
-
     @StateObject var trailerVM: TrailerViewModel = .init()
     @StateObject var vehicleVM: VehicleConditionViewModel = .init()
    // @StateObject var DVClocationManager: DeviceLocationManager = .init()

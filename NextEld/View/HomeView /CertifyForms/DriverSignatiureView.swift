@@ -36,24 +36,6 @@ struct SignatureCertifyView: View {
     @State private var alertMessage = ""
     @State private var isLoading = false
 
-    // MARK: - Derived validations
-//    private var isFormValid: Bool {
-//        let vehOK = !selectedVehicle.isEmpty && selectedVehicle != "None"
-//        let trlOK = !selectedTrailer.isEmpty && selectedTrailer != "None"
-//        let docOK = !selectedShippingDoc.isEmpty && selectedShippingDoc != "None"
-//        let coOK  = {
-//            guard let c = selectedCoDriver?.trimmingCharacters(in: .whitespacesAndNewlines),
-//                  !c.isEmpty else { return false }
-//            return c.lowercased() != "none"
-//        }()
-//        let coIDOK: Bool = {
-//            guard let c = selectedCoDriverID else { return false }
-//            return c != 0   // or replace 0 with the "invalid" value you want to check against
-//        }()
-//
-//    ()
-//        return vehOK && trlOK && docOK && coOK && coIDOK
-//    }
     private var isFormValid: Bool {
         let vehOK = !selectedVehicle.isEmpty && selectedVehicle != "None"
         let trlOK = !selectedTrailer.isEmpty && selectedTrailer != "None"
@@ -180,57 +162,110 @@ struct SignatureCertifyView: View {
                         return
                     }
                     
+
+                    
                     //  6) Call API with completion
                     isLoading = true
                     certifyVM.appRootManager = appRootManager
-                    certifyVM.uploadCertifiedLog(
-                        driverId: driverId,
-                        vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
-                        coDriverId: AppStorageHandler.shared.coDriverId ?? 0,
-                        trailers: trailerVM.trailers.last ?? "None",
-                        shippingDocs: shippingVM.ShippingDoc.last ?? "None",
-                        certifiedDate: certifiedDate,
-                        fileURL: fileURL,
-                        tokenNo: tokenNo ?? "not Found",
-                        certifiedDateTime: currentTimestampMillis() ,
-                        certifiedAt: String(CurrentTimeHelperStamp.currentTimestamp / 1000)
-                    ) { result in
-                        DispatchQueue.main.async {
-                            isLoading = false
-                            if certifyVM.isSessionExpired {
-                                // print(" Session expired detected in SignatureCertifyView - staying on SessionExpireUIView")
-                                return
+
+                    // Check if already certified - shortest inline check
+                    let isAlreadyCertified = CertifyDatabaseManager.shared.fetchAllRecords()
+                        .contains { $0.date == certifiedDate && $0.isCertify == "Yes" }
+
+//                    // Check if already certified - use update API, otherwise use create API
+//                    if isAlreadyCertified {
+//                        // UPDATE existing certification
+//                        certifyVM.updateCertifiedLog(
+//                            driverId: driverId,
+//                            certifiedDate: certifiedDate,
+//                            vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
+//                            coDriverId: AppStorageHandler.shared.coDriverId ?? 0,
+//                            trailers: trailerVM.trailers.last ?? "None",
+//                            shippingDocs: shippingVM.ShippingDoc.last ?? "None",
+//                            fileURL: fileURL,
+//                            tokenNo: tokenNo ?? "not Found",
+//                            certifiedDateTime: currentTimestampMillis(),
+//                            certifiedAt: String(CurrentTimeHelperStamp.currentTimestamp / 1000)
+//                        ) { result in
+//                            DispatchQueue.main.async {
+//                                isLoading = false
+//                                if certifyVM.isSessionExpired {
+//                                    return
+//                                }
+//                                switch result {
+//                                case .success(let apiMessage):
+//                                    alertTitle = "Success"
+//                                    alertMessage = apiMessage.isEmpty ? "Certification Added successfully." : apiMessage
+//                                    CertifyDatabaseManager.shared.updateCertifyStatus(
+//                                        for: certifiedDate,
+//                                        isCertify: "Yes",
+//                                        syncStatus: 1
+//                                    )
+//                                    NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
+//                                    onCertified?()
+//                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+//                                        onDismiss?()
+//                                    }
+//                                case .failure(let err):
+//                                    alertTitle = "Error"
+//                                    alertMessage = err.localizedDescription
+//                                    CertifyDatabaseManager.shared.updateCertifyStatus(
+//                                        for: certifiedDate,
+//                                        isCertify: "Yes",
+//                                        syncStatus: 0
+//                                    )
+//                                }
+//                                showAlert = true
+//                            }
+//                        }
+//                    } else {
+                        // CREATE new certification
+                        certifyVM.addCertifiedLog(
+                            driverId: driverId,
+                            vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
+                            coDriverId: AppStorageHandler.shared.coDriverId ?? 0,
+                            trailers: trailerVM.trailers.last ?? "None",
+                            shippingDocs: shippingVM.ShippingDoc.last ?? "None",
+                            certifiedDate: certifiedDate,
+                            fileURL: fileURL,
+                            tokenNo: tokenNo ?? "not Found",
+                            certifiedDateTime: currentTimestampMillis(),
+                            certifiedAt: String(CurrentTimeHelperStamp.currentTimestamp / 1000)
+                        ) { result in
+                            DispatchQueue.main.async {
+                                isLoading = false
+                                if certifyVM.isSessionExpired {
+                                    return
+                                }
+                                switch result {
+                                case .success(let apiMessage):
+                                    alertTitle = "Success"
+                                    alertMessage = apiMessage.isEmpty ? "Certified successfully." : apiMessage
+                                    CertifyDatabaseManager.shared.updateCertifyStatus(
+                                        for: certifiedDate,
+                                        isCertify: "Yes",
+                                        syncStatus: 1
+                                    )
+                                    NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
+                                    onCertified?()
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                        onDismiss?()
+                                    }
+                                case .failure(let err):
+                                    alertTitle = "Error"
+                                    alertMessage = err.localizedDescription
+                                    CertifyDatabaseManager.shared.updateCertifyStatus(
+                                        for: certifiedDate,
+                                        isCertify: "Yes",
+                                        syncStatus: 0
+                                    )
+                                }
+                                showAlert = true
                             }
-                            switch result {
-                            case .success(let apiMessage):
-                                alertTitle = "Success"
-                                alertMessage = apiMessage.isEmpty ? "Certified successfully." : apiMessage
-                                //  API success → mark syncStatus = 1
-                                CertifyDatabaseManager.shared.updateCertifyStatus(
-                                    for: certifiedDate,
-                                    isCertify: "Yes",
-                                    syncStatus: 1
-                                )
-                                NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
-                                onCertified?()
-                                
-                                // MARK: -  Auto dismiss popup after slight delay
-                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                                                            onDismiss?()
-                                                        }
-                            case .failure(let err):
-                                alertTitle = "Error"
-                                alertMessage = err.localizedDescription
-                                //  API fail → keep syncStatus = 0
-                                CertifyDatabaseManager.shared.updateCertifyStatus(
-                                    for: certifiedDate,
-                                    isCertify: "Yes",
-                                    syncStatus: 0
-                                )
-                            }
-                            showAlert = true
                         }
-                    }
+                   //}
+                    
+                   
 
                 }) {
                     Text(isLoading ? "Please wait..." : "Agree")

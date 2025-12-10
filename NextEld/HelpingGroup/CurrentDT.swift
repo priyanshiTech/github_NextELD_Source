@@ -219,6 +219,43 @@ struct DateTimeHelper {
     }
     
 }
+struct CurrentTimeHelperStamp {
+    static var currentTimestamp: Int {
+        return Int(Date().timeIntervalSince1970 * 1000)
+    }
+}
+func currentTimestampMillis() -> String {
+    let timestamp = Int(Date().timeIntervalSince1970 * 1000)
+    return "\(timestamp)"
+}
+
+// MARK: - Convert Timestamp (milliseconds) to DateTime String
+func convertTimestampToDateTime(_ timestamp: Int) -> String {
+    // Convert milliseconds timestamp to Date (dividing by 1000 to get seconds)
+    // timeIntervalSince1970 always represents UTC time
+    let date = Date(timeIntervalSince1970: TimeInterval(timestamp) / 1000.0)
+    
+    // Create UTC calendar to extract components in UTC timezone
+    var calendar = Calendar(identifier: .gregorian)
+    if let utcTimeZone = TimeZone(secondsFromGMT: 0) {
+        calendar.timeZone = utcTimeZone
+    } else {
+        calendar.timeZone = TimeZone(identifier: "UTC") ?? TimeZone.current
+    }
+    calendar.locale = Locale(identifier: "en_US_POSIX")
+    
+    // Extract components directly from UTC date
+    let components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+    
+    let year = components.year ?? 0
+    let month = String(format: "%02d", components.month ?? 0)
+    let day = String(format: "%02d", components.day ?? 0)
+    let hour = String(format: "%02d", components.hour ?? 0)
+    let minute = String(format: "%02d", components.minute ?? 0)
+    let second = String(format: "%02d", components.second ?? 0)
+    
+    return "\(year)-\(month)-\(day) \(hour):\(minute):\(second)"
+}
 
 
 import Foundation

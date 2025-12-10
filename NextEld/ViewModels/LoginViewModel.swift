@@ -190,6 +190,7 @@ class LoginViewModel: ObservableObject {
                 
                 //Save Shift
                 if let shiftValue = response.result?.driverLog?.first?.shift {
+                    AppStorageHandler.shared.shift = shiftValue
                     // print(" Saved shift: \(shiftValue)")
                 }
                 
@@ -256,7 +257,6 @@ class LoginViewModel: ObservableObject {
                 
                     if let voilation = response.result?.driverLog?.first?.isVoilation{
                    UserDefaults.standard.set(voilation , forKey: "isVoilation")
-                    
                     // print(" Saved voilation: \(voilation)")
                     }
                 
@@ -326,13 +326,14 @@ class LoginViewModel: ObservableObject {
                     DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
                 }
                 
+                // MARK: - Save Login/Logout Logs to Database
+                if let loginLogoutLogs = response.result?.loginLogoutLog, !loginLogoutLogs.isEmpty {
+                    DatabaseManager.shared.saveLoginLogoutLogsToSQLite(from: loginLogoutLogs)
+                    // print("Saved \(loginLogoutLogs.count) login/logout logs to database")
+                }
+                
                 // MARK: - Save Server DVIR Records from Login Response
                 if let driverDvirLog = driverDvirLogArray, !driverDvirLog.isEmpty {
-                    
-                    // print(" ========== SAVING SERVER DVIR RECORDS ==========")
-                    // print(" Found \(driverDvirLog.count) server DVIR records in login response")
-                    
-                    // Save to database
                     DvirDatabaseManager.shared.saveServerDvirRecords(from: driverDvirLog)
                     let savedRecords = DvirDatabaseManager.shared.fetchAllRecords()
                     // print(" Total records in database after save: \(savedRecords.count)")
@@ -342,9 +343,9 @@ class LoginViewModel: ObservableObject {
                     // print(" Posted DVIRRecordUpdated notification")
                
                 } else {
-                    // print("  No driverDvirLog found in login response or array is empty")
+                     print("  No driverDvirLog found in login response or array is empty")
                 }
-                
+            
                 isLoading = false
                 // print(" Login finished successfully")
                 return true

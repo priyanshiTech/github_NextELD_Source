@@ -20,7 +20,7 @@ class CertifyDriverViewModel: ObservableObject {
     var appRootManager: AppRootManager?
     
     
-    func uploadCertifiedLog(
+    func addCertifiedLog(
         driverId: Int,
         vehicleId: Int,
         coDriverId: Int,
@@ -101,33 +101,34 @@ class CertifyDriverViewModel: ObservableObject {
             }
         }
     }
+//MARK: -  update Certify Function 
 
-
-  /*  func uploadCertifiedLog(
+   func updateCertifiedLog(
         driverId: Int,
+        certifiedDate: String,
         vehicleId: Int,
         coDriverId: Int,
         trailers: String,
         shippingDocs: String,
-        certifiedDate: String,
         fileURL: URL,
         tokenNo: String,
         certifiedDateTime: String,
-        certifiedAt: String
+        certifiedAt: String,
+        completion: @escaping (Result<String, Error>) -> Void
     ) {
-
         isLoading = true
 
         guard let fileData = try? Data(contentsOf: fileURL) else {
             self.message = "Cannot read file data"
             self.isLoading = false
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Cannot read file data"])))
             return
         }
 
-        let fields: [String: String] = [
-            "driverId": String(driverId),
-            "vehicleId": String(vehicleId),
-            "coDriverId": String(coDriverId),
+        let fields: [String: Any] = [
+            "driverId": driverId,
+            "vehicleId": vehicleId,
+            "coDriverId": coDriverId,
             "trailers": trailers,
             "shippingDocs": shippingDocs,
             "certifiedDate": certifiedDate,
@@ -136,9 +137,7 @@ class CertifyDriverViewModel: ObservableObject {
             "certifiedAt": certifiedAt
         ]
 
-
-
-        
+        print("fields request updated : \(fields)")
         let file = MultipartFile(
             name: "file",
             filename: fileURL.lastPathComponent,
@@ -146,28 +145,42 @@ class CertifyDriverViewModel: ObservableObject {
             data: fileData
         )
 
-        let url  = API.Endpoint.certifyDriver.url
+        let url  = API.Endpoint.updateCertifyDriver.url
         
         MultipartAPIService.shared.upload(url: url, fields: fields, files: [file]) { [weak self] result in
             DispatchQueue.main.async {
-                self?.isLoading = false
+                guard let self else { return }
+                self.isLoading = false
                 switch result {
                 case .success(let data):
                     do {
                         let response = try JSONDecoder().decode(CertifiedLogResponse.self, from: data)
-                        self?.message = response.message
-                        self?.result = response.result
-                        self?.status = response.status
-                        self?.token = response.token
+                        self.message = response.message
+                        self.result = response.result
+                        self.status = response.status
+                        self.token = response.token
+                        
+                        print("response updated certifyAPI \(response)" )
+                        
+                        if response.token.lowercased() == "false" {
+                            SessionManagerClass.shared.clearToken()
+                            self.isSessionExpired = true
+                            self.appRootManager?.currentRoot = .SessionExpireUIView
+                            completion(.failure(NSError(domain: "SessionExpired", code: 401, userInfo: [NSLocalizedDescriptionKey: "Session expired"])))
+                            return
+                        }
+
+                        completion(.success(response.message ?? "Updated successfully"))
                     } catch {
-                        self?.message = "Decoding error: \(error.localizedDescription)"
+                        self.message = "Decoding error: \(error.localizedDescription)"
+                        completion(.failure(error))
                     }
                 case .failure(let error):
-                    self?.message = "Upload failed: \(error.localizedDescription)"
+                    self.message = "Upload failed: \(error.localizedDescription)"
+                    completion(.failure(error))
                 }
             }
-
         }
-    }*/
+    }
 }
 

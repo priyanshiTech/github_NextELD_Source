@@ -95,7 +95,8 @@ struct EyeViewData: View {
                             headers: ["Exempt Driver Status", "Unidentified Driving Records", "Co-Driver", "Co-Driver ID"],
                             values: [
                                 d.exempt ?? "NA",
-                                "\(d.isSystemGenerated ?? 0)",
+                                //"\(d.isSystemGenerated ?? 0)",
+                                (d.certifiedSignature?.isEmpty == false) ? "Yes" : "No",
                                 d.coDriverName ?? "NA",
                                 d.companyCoDriverId ?? "NA"
                             ]
@@ -120,7 +121,7 @@ struct EyeViewData: View {
                                 selectedDateString, //MARK:  Always the date stepper's selected date
                                 todayString,        //MARK: -  Always today's date
                                 d.customLocation ?? "NA",
-                                d.certifiedSignatureName ?? "No"
+                                (d.certifiedSignature?.isEmpty == false) ? "Yes" : "No"
                             ]
                         )
                         // Section 3: ELD Info
@@ -186,7 +187,7 @@ struct EyeViewData: View {
                                 let log = databaseLogs[index]
                                 sectionSmallGridRow(
                                     smallvalues: [
-                                        formatDateTime(log.startTime),
+                                        DateTimeHelper.formatDatabaseDateTime((log.startTime))   /* formatDateTime*/,
                                         log.status,
                                         log.location.isEmpty ? "NA" : log.location,
                                         log.origin.isEmpty ? "NA" : log.origin,
@@ -223,6 +224,7 @@ struct EyeViewData: View {
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
+           
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -281,14 +283,14 @@ struct EyeViewData: View {
         // Sort by startTime (oldest first)
         databaseLogs.sort { $0.startTime < $1.startTime }
         
-        // print("📊 Loaded \(databaseLogs.count) logs from database for date: \(selectedDate)")
+        // print("Loaded \(databaseLogs.count) logs from database for date: \(selectedDate)")
     }
     
-    private func formatDateTime(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return dateFormatter.string(from: date)
-    }
+//    private func formatDateTime(_ date: Date) -> String {
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        return dateFormatter.string(from: date)
+//    }
 
     private func loadGraphEventsFromDatabase(for date: Date) -> [HOSEvent] {
         let startOfDay = DateTimeHelper.startOfDay(for: date)

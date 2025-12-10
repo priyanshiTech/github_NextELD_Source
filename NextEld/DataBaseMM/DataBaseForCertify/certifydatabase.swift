@@ -254,7 +254,7 @@ class CertifyDatabaseManager {
         }
     }
     
-    func markCertified(for date: String, userID: String) {
+   /* func markCertified(for date: String, userID: String) {
         do {
             let record = certifyTable.filter(self.date == date && self.userID == userID)
             try db?.run(record.update(self.isLogcertified <- "Yes"))
@@ -265,9 +265,28 @@ class CertifyDatabaseManager {
         
         let updated = fetchAllRecords()
         // print("After update DB record: \(updated)")
+    }*/
+    
+    func markCertified(for date: String, userID: String) {
+        let record = certifyTable.filter(self.date == date && self.userID == userID)
+
+        do {
+            if let _ = try db?.pluck(record) {
+                // Row exists -> update
+                try db?.run(record.update(self.isLogcertified <- "Yes"))
+            } else {
+                // Row does NOT exist -> insert new row
+                try db?.run(certifyTable.insert(
+                    self.date <- date,
+                    self.userID <- userID,
+                    self.isLogcertified <- "Yes"
+                ))
+            }
+        } catch {
+            print("Failed to certify: \(error)")
+        }
     }
-    
-    
+
     
     // MARK: - Check if Previous Day Log Needs Certification
     
