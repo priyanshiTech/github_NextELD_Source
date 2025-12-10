@@ -134,17 +134,17 @@ enum DriverStatusType: Hashable, CaseIterable {
             
         default:
             switch name {
-            case AppConstants.on_Duty:
+            case AppConstants.onDuty:
                 self = .onDuty
-            case AppConstants.off_Duty:
+            case AppConstants.offDuty:
                 self = .offDuty
-            case AppConstants.on_Drive:
+            case AppConstants.onDrive:
                 self = .onDrive
             case AppConstants.personalUse:
                 self = .personalUse
             case AppConstants.yardMove:
                 self = .yardMode
-            case AppConstants.sleep:
+            case AppConstants.onSleep:
                 self = .sleep
             default:
                 return nil
@@ -880,7 +880,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     }
     
     func addIntermediateLogs() {
-        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day]), lastLog.status == AppConstants.on_Drive else {
+        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day]), lastLog.status == AppConstants.onDrive else {
             return
         }
         let startTime = lastLog.startTime

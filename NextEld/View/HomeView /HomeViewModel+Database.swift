@@ -63,11 +63,11 @@ extension HomeViewModel {
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
             
-            if status == AppConstants.on_Duty {
+            if status == AppConstants.onDuty {
                 totalOnDutyTime += duration
             }
             
-            if status == AppConstants.on_Drive {
+            if status == AppConstants.onDuty {
                 totalOnDriveTime += duration
             }
         }

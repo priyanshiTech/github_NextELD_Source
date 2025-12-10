@@ -317,8 +317,12 @@ class LoginViewModel: ObservableObject {
                    // session.logIn(token: token)
                 }
                 
+                let loginLogoutLog = response.result?.loginLogoutLog ?? []
+                let logs = response.result?.driverLog ?? []
                 // Save logs to DB
-            if let logs = response.result?.driverLog, !logs.isEmpty {
+
+                
+                if !logs.isEmpty {
                     DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
                 }
                 

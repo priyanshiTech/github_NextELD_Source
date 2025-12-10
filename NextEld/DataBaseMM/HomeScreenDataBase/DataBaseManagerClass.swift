@@ -272,9 +272,9 @@ class DatabaseManager: DatabaseHandler {
         case .splitShiftIdentifier:
             return self.identifier == AppStorageHandler.shared.splitShiftIdentifier
         case .onDuty:
-            return self.status == AppConstants.on_Duty
+            return self.status == AppConstants.onDuty
         case .onDrive:
-            return self.status == AppConstants.on_Drive
+            return self.status == AppConstants.onDrive
         case .betweenDates(let startDate, let endDate):
             return startTime >= startDate && startTime < endDate
             
@@ -298,15 +298,20 @@ class DatabaseManager: DatabaseHandler {
     func fetchLogs(filterTypes: [FilterType] = [], addWarningAndViolation: Bool = false, order: [Expressible]? = [], limit: Int? = nil) -> [DriverLogModel] {
         var logs: [DriverLogModel] = []
         var filterExpression: SQLite.Expression<Bool> = getFilter(for: .user) // default filter
-        if !addWarningAndViolation {
+        
+        if !addWarningAndViolation { //default case
             // wether we need to add violation or warning in record mainly we will add this record when showing all record
-            filterExpression = filterExpression && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
+//            filterExpression = filterExpression && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
+            
+            for status in DriverStatusType.allCases {
+                filterExpression = filterExpression || (self.status == status.getName())
+            }
         }
         for type in filterTypes {
             let filter = getFilter(for: type)
             filterExpression = filterExpression && filter
         }
-        var query = driverLogs.filter(filterExpression).order(startTime.desc)
+        var query = driverLogs.filter(filterExpression).order(startTime.asc)
         if let order = order {
             query = query.order(order)
         }

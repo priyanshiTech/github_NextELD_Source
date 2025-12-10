@@ -195,7 +195,7 @@ struct HomeScreenView: View {
                     title: "Add DVIR Log",
                     message: "Please add DVIR before going to On-Drive",
                     onOK: {
-                        navManager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM))
+                        navManager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: nil))
                         showDvirPopup = false
                     },
                     onCancel: { showDvirPopup = false }

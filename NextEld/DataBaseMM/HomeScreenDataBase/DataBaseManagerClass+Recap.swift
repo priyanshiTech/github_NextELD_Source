@@ -24,10 +24,10 @@ extension DatabaseManager {
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
             
-            if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
+            if status == AppConstants.onDuty || status == AppConstants.onDrive {
                 dutySeconds += duration
             }
-            else if status == AppConstants.off_Duty {
+            else if status == AppConstants.offDuty {
                 // optional split rule: short off-duty counts as duty
                 if duration <= 2 * 3600 {
                     dutySeconds += duration
@@ -62,10 +62,10 @@ extension DatabaseManager {
                 
                 let duration = max(0, endDate.timeIntervalSince(startDate))
                 
-                if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
+                if status == AppConstants.onDuty || status == AppConstants.onDrive {
                     dutySeconds += duration
                 }
-                else if status == AppConstants.off_Duty {
+                else if status == AppConstants.offDuty {
                     // optional split rule: short off-duty counts as duty
                     if duration <= 2 * 3600 {
                         dutySeconds += duration
@@ -105,10 +105,10 @@ extension DatabaseManager {
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
             
-            if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
+            if status == AppConstants.onDuty || status == AppConstants.onDrive {
                 dutySeconds += duration
             }
-            else if status == AppConstants.off_Duty {
+            else if status == AppConstants.offDuty {
                 // optional split rule: short off-duty counts as duty
                 if duration <= 2 * 3600 {
                     dutySeconds += duration
@@ -148,7 +148,7 @@ extension DatabaseManager {
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
             
-            if status == AppConstants.on_Duty || status == AppConstants.on_Drive {
+            if status == AppConstants.onDuty || status == AppConstants.onDrive {
                 dutySeconds += duration
             }
         }

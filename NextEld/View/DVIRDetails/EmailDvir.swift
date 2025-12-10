@@ -57,7 +57,7 @@ struct EmailDvir: View {
                         Button(action: {
                             // Clear selected record to ensure new record with current date/time
                             selectedDvirRecord = nil
-                            navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM))
+                            navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: selectedDvirRecord))
                         }) {
                             Image(systemName: "plus")
                                 .foregroundColor(.white)
@@ -101,7 +101,7 @@ struct EmailDvir: View {
                             record: record,
                             onTap: {
                                 selectedDvirRecord = record
-                                navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM))
+                                navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: selectedDvirRecord))
                             },
                             onViewDefect: {
                                 // Fetch latest record from database to get updated defects

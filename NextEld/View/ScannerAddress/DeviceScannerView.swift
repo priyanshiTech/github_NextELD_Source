@@ -253,8 +253,8 @@ struct DeviceScannerView: View {
                         selectedVehicleNumber: .constant(vehicleNo),
                         VechicleID: .constant(vehicleId)
                     )
-                case .AddDvirScreenView(vm: let vm):
-                    AddDvirScreenView(selectedRecord: .constant(nil), trailers: .constant(vm.trailers))
+                case .AddDvirScreenView(vm: let vm, let selectedRecord):
+                    AddDvirScreenView(selectedRecord: .constant(selectedRecord), trailers: .constant(vm.trailers))
                 case .EmailLogs( let tittle):
                     EmailLogs(title: tittle)
                 case .DvirHostory:
