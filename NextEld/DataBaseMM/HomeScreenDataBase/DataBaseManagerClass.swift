@@ -297,15 +297,11 @@ class DatabaseManager: DatabaseHandler {
     
     func fetchLogs(filterTypes: [FilterType] = [], addWarningAndViolation: Bool = false, order: [Expressible]? = [], limit: Int? = nil) -> [DriverLogModel] {
         var logs: [DriverLogModel] = []
-        var filterExpression: SQLite.Expression<Bool> = getFilter(for: .user) // default filter
+        var filterExpression: SQLite.Expression<Bool> = .init(value: true)
         
         if !addWarningAndViolation { //default case
             // wether we need to add violation or warning in record mainly we will add this record when showing all record
-//            filterExpression = filterExpression && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
-            
-            for status in DriverStatusType.allCases {
-                filterExpression = filterExpression || (self.status == status.getName())
-            }
+            filterExpression = filterExpression && baseFilter()
         }
         for type in filterTypes {
             let filter = getFilter(for: type)
@@ -473,14 +469,19 @@ class DatabaseManager: DatabaseHandler {
             if log.isVoilation == 1 {
                 isVoilation = "Yes"
             }
-
-            let correctTime = log.dateTime?.asDate() ?? Date()
-            
+            var dateTime: Date? = nil
+            if let timeStampString = log.dateTime,
+                let timeStamp = TimeInterval(timeStampString) {
+                let convertToSecond = timeStamp/1000
+                let timeStampDate = Date(timeIntervalSince1970: convertToSecond)
+                let timezone = AppStorageHandler.shared.timeZoneOffset ?? ""
+                dateTime = DateTimeHelper.convertToUserTimezone(timeStampDate, offset: timezone)
+            }
             
             let model = DriverLogModel(
                 id: nil,
                 status: statusString,
-                startTime:   DateTimeHelper.convertToUserTimezone(correctTime, offset: "") ?? Date(),
+                startTime:  dateTime ?? Date() ,
                 userId: log.driverId ?? 0,
                 day: log.days ?? 0,
                 isVoilations: isVoilation,
@@ -724,11 +725,22 @@ class DatabaseManager: DatabaseHandler {
         }
     }
     
+    func baseFilter() -> SQLite.Expression<Bool> {
+        var statusFilter : SQLite.Expression<Bool> = .init(value: false)
+        for status in DriverStatusType.allCases {
+            if status != .none {
+                statusFilter = statusFilter || (self.status == status.getName())
+            }
+        }
+        
+        return statusFilter && getFilter(for: .user)
+    }
+    
     func getLastRecordOfDriverLogs(filterTypes: [FilterType] = []) -> DriverLogModel? {
         var logs: [DriverLogModel] = []
         do {
             guard let db = self.db else { return nil}
-            var filterExpression = getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
+            var filterExpression: SQLite.Expression<Bool> =  baseFilter()// default filter
             for type in filterTypes {
                 let filter = getFilter(for: type)
                 filterExpression = filterExpression && filter
@@ -782,8 +794,8 @@ class DatabaseManager: DatabaseHandler {
 
     func fetchLastRecord(before date: Date) -> DriverLogModel? {
         guard let db = self.db else { return nil }
-        let baseFilter = getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
-        let filterExpression = baseFilter && startTime < date
+        var filterExpression: SQLite.Expression<Bool> = baseFilter() && startTime < date
+        
         do {
             if let row = try db.pluck(driverLogs.filter(filterExpression).order(startTime.desc).limit(1)) {
                 return DriverLogModel(
