@@ -16,6 +16,7 @@ struct CertifySelectedView: View {
     @State private var coDriver = "none"
     @State private var selectedCoDriverName: String? = nil
     @State private var selectedCoID: Int? = nil
+    @State private var syncstatus:Int? = nil
     @State private var SelectedTraller: String? = nil
     @State private var SelectedSheeping: String? = nil
     @State private var SelectedVechicle: String? = nil
@@ -128,6 +129,7 @@ struct CertifySelectedView: View {
                 .padding(.horizontal)
                 Spacer()
                 
+                
                 // MARK: - Form Tab Content"
                 if selectedTab == "Form" {
                     VStack(spacing: 10) {
@@ -233,7 +235,7 @@ struct CertifySelectedView: View {
                                 selectedCoDriver: selectedCoDriverName ?? "None",
                                 vehicleID: VechicleID,
                                 coDriverID: selectedCoID,
-                                syncStatus: 0,
+                                syncStatus: syncstatus ?? 0,
                                 isCertify: "No"
                             )
                             CertifyDatabaseManager.shared.saveRecord(record)
@@ -375,6 +377,8 @@ struct CertifySelectedView: View {
             selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
             coDriver = record.selectedCoDriver
             selectedCoID = record.coDriverID
+            syncstatus = record.syncStatus
+            
         } else {
             // If no record found, ensure shipping docs are loaded from current state
             // Don't clear if user has added docs but not saved yet

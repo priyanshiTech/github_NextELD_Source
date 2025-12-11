@@ -97,7 +97,7 @@ struct SignatureCertifyView: View {
                         .stroke(Color(uiColor: .wine), lineWidth: 1)
                 )
                 Button(action: {
-
+                    
                     // 1) Form validation (skip if flag is true)
                     if !skipFormValidation {
                         guard isFormValid else {
@@ -107,7 +107,7 @@ struct SignatureCertifyView: View {
                             return
                         }
                     }
-
+                    
                     // 2) Signature validation
                     guard !signaturePath.isEmpty else {
                         alertTitle = "Signature Required"
@@ -148,11 +148,11 @@ struct SignatureCertifyView: View {
                     }
                     
                     // --- Mark record as Certified, but syncStatus = 0 initially
-                    CertifyDatabaseManager.shared.updateCertifyStatus(
-                        for: certifiedDate,
-                        isCertify: "Yes",
-                        syncStatus: 0
-                    )
+//                    CertifyDatabaseManager.shared.updateCertifyStatus(
+//                        for: certifiedDate,
+//                        isCertify: "Yes",
+//                        syncStatus: 0
+//                    )
                     
                     //  5) Check Internet before API
                     guard networkMonitor.isConnected else {
@@ -161,75 +161,88 @@ struct SignatureCertifyView: View {
                         showAlert = true
                         return
                     }
-                    
 
-                    
                     //  6) Call API with completion
                     isLoading = true
                     certifyVM.appRootManager = appRootManager
-
-                    // Check if already certified - shortest inline check
-                    let isAlreadyCertified = CertifyDatabaseManager.shared.fetchAllRecords()
-                        .contains { $0.date == certifiedDate && $0.isCertify == "Yes" }
-
-//                    // Check if already certified - use update API, otherwise use create API
-//                    if isAlreadyCertified {
-//                        // UPDATE existing certification
-//                        certifyVM.updateCertifiedLog(
-//                            driverId: driverId,
-//                            certifiedDate: certifiedDate,
-//                            vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
-//                            coDriverId: AppStorageHandler.shared.coDriverId ?? 0,
-//                            trailers: trailerVM.trailers.last ?? "None",
-//                            shippingDocs: shippingVM.ShippingDoc.last ?? "None",
-//                            fileURL: fileURL,
-//                            tokenNo: tokenNo ?? "not Found",
-//                            certifiedDateTime: currentTimestampMillis(),
-//                            certifiedAt: String(CurrentTimeHelperStamp.currentTimestamp / 1000)
-//                        ) { result in
-//                            DispatchQueue.main.async {
-//                                isLoading = false
-//                                if certifyVM.isSessionExpired {
-//                                    return
-//                                }
-//                                switch result {
-//                                case .success(let apiMessage):
-//                                    alertTitle = "Success"
-//                                    alertMessage = apiMessage.isEmpty ? "Certification Added successfully." : apiMessage
-//                                    CertifyDatabaseManager.shared.updateCertifyStatus(
-//                                        for: certifiedDate,
-//                                        isCertify: "Yes",
-//                                        syncStatus: 1
-//                                    )
-//                                    NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
-//                                    onCertified?()
-//                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-//                                        onDismiss?()
-//                                    }
-//                                case .failure(let err):
-//                                    alertTitle = "Error"
-//                                    alertMessage = err.localizedDescription
-//                                    CertifyDatabaseManager.shared.updateCertifyStatus(
-//                                        for: certifiedDate,
-//                                        isCertify: "Yes",
-//                                        syncStatus: 0
-//                                    )
-//                                }
-//                                showAlert = true
-//                            }
-//                        }
-//                    } else {
-                        // CREATE new certification
+                    
+                    // Check if record already exists for this date
+                    // Agar record exist karta hai (same date) → UPDATE API (kyunki update karna hai)
+                    // Agar record exist nahi karta → ADD API (naya record banana hai)
+                    let existingRecord = CertifyDatabaseManager.shared.fetchAllRecords()
+                        .first { $0.date == certifiedDate &&  $0.syncStatus == 1 }
+                    let isAlreadyCertified = existingRecord != nil
+                    
+                    var certifyTimeStamp  = currentTimestampMillis()
+                                        if DateTimeHelper.currentDate() != certifiedDate {
+                                            // time required always in format certifyDate+" 23:59:59"
+                                            let certifiedDateTime = DateTimeHelper.endOfDay(for: certifiedDate.asDate(format: .dateOnlyFormat) ?? Date())?.addingTimeInterval(-1)
+                                            certifyTimeStamp = String((certifiedDateTime?.timeIntervalSince1970 ?? 0) * 1000)
+                                        }
+                    
+                    
+                    if isAlreadyCertified {
+                        // UPDATE API - Agar pehle se green/certified hai
+                        print("UPDATE API called - Already certified (Green)")
+                        certifyVM.updateCertifiedLog(
+                            driverId: "\(driverId)",
+                            certifiedDate: certifiedDate,
+                            vehicleId: "\(AppStorageHandler.shared.vehicleId ?? 0)",
+                            coDriverId: "\(AppStorageHandler.shared.coDriverId ?? 0)",
+                            trailers: trailerVM.trailers,
+                            shippingDocs: shippingVM.ShippingDoc,
+                            fileURL: fileURL,
+                            tokenNo: tokenNo ?? "not Found",
+                            certifiedDateTime: "\(certifyTimeStamp)"
+                        ) { result in
+                            DispatchQueue.main.async {
+                                isLoading = false
+                                if certifyVM.isSessionExpired {
+                                    return
+                                }
+                                switch result {
+                                case .success(let apiMessage):
+                                    alertTitle = "Success"
+                                    alertMessage = apiMessage.isEmpty ? "Certification updated successfully." : apiMessage
+                                    CertifyDatabaseManager.shared.updateCertifyStatus(
+                                        for: certifiedDate,
+                                        isCertify: "Yes",
+                                        syncStatus: 1
+                                    )
+                                    NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
+                                    onCertified?()
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                        onDismiss?()
+                                    }
+                                case .failure(let err):
+                                    alertTitle = "Error"
+                                    alertMessage = err.localizedDescription
+                                    CertifyDatabaseManager.shared.updateCertifyStatus(
+                                        for: certifiedDate,
+                                        isCertify: "Yes",
+                                        syncStatus: 0
+                                    )
+                                }
+                                showAlert = true
+                            }
+                        }
+                    } else {
+                        // ADD API - Agar red/uncertified hai
+                        print("ADD API called - Not certified yet (Red)")
+                        // Convert arrays to comma-separated strings for addCertifiedLog
+                        let trailersString = trailerVM.trailers.isEmpty ? "None" : trailerVM.trailers.joined(separator: ", ")
+                        let shippingDocsString = shippingVM.ShippingDoc.isEmpty ? "None" : shippingVM.ShippingDoc.joined(separator: ", ")
+                        
                         certifyVM.addCertifiedLog(
                             driverId: driverId,
                             vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
                             coDriverId: AppStorageHandler.shared.coDriverId ?? 0,
-                            trailers: trailerVM.trailers.last ?? "None",
-                            shippingDocs: shippingVM.ShippingDoc.last ?? "None",
+                            trailers: trailersString,
+                            shippingDocs: shippingDocsString,
                             certifiedDate: certifiedDate,
                             fileURL: fileURL,
                             tokenNo: tokenNo ?? "not Found",
-                            certifiedDateTime: currentTimestampMillis(),
+                            certifiedDateTime: "\(certifyTimeStamp)",
                             certifiedAt: String(CurrentTimeHelperStamp.currentTimestamp / 1000)
                         ) { result in
                             DispatchQueue.main.async {
@@ -263,7 +276,8 @@ struct SignatureCertifyView: View {
                                 showAlert = true
                             }
                         }
-                   //}
+                    }
+//
                     
                    
 

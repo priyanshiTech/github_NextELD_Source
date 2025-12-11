@@ -244,6 +244,129 @@ class CertifyDatabaseManager {
         
     }
     
+    //MARK: -  Save Server Certify Records from Login Response (same pattern as DVIR)
+    func saveServerCertifyRecords(from serverCertifyLogs: [[String: Any]]) {
+        guard let db = db else {
+            // print(" Database connection is nil, cannot save server Certify records")
+            return
+        }
+        
+        var savedCount = 0
+        var skippedCount = 0
+        
+        for serverRecord in serverCertifyLogs {
+            // Extract certifiedDate to check if record already exists
+            guard let certifiedDate = serverRecord["certifiedDate"] as? String, !certifiedDate.isEmpty else {
+                // print(" Skipping record: Missing or invalid certifiedDate")
+                continue
+            }
+            
+            // Check if record already exists for this date
+            if recordExistsForDate(date: certifiedDate) {
+                skippedCount += 1
+                continue
+            }
+            
+            // Convert server record to CertifyRecord
+            if let certifyRecord = convertServerRecordToCertifyRecord(serverRecord) {
+                do {
+                    let insert = certifyTable.insert(
+                        userID <- certifyRecord.userID,
+                        userName <- certifyRecord.userName,
+                        startTime <- certifyRecord.startTime,
+                        date <- certifyRecord.date,
+                        shift <- certifyRecord.shift,
+                        selectedVehicle <- certifyRecord.selectedVehicle,
+                        selectedTrailer <- certifyRecord.selectedTrailer,
+                        selectedShippingDoc <- certifyRecord.selectedShippingDoc,
+                        selectedCoDriver <- certifyRecord.selectedCoDriver,
+                        vehicleID <- certifyRecord.vehicleID,
+                        coDriverID <- certifyRecord.coDriverID,
+                        isSynced <- certifyRecord.syncStatus,
+                        isLogcertified <- certifyRecord.isCertify
+                    )
+                    
+                    try db.run(insert)
+                    savedCount += 1
+                    // print(" Saved server Certify record with date: \(certifiedDate)")
+                } catch {
+                    // print(" Error saving server Certify record: \(error.localizedDescription)")
+                }
+            }
+        }
+        
+        // print(" Server Certify records saved: \(savedCount), skipped (duplicates): \(skippedCount)")
+    }
+    
+    // MARK: - Check if record exists for date
+    private func recordExistsForDate(date: String) -> Bool {
+        guard let db = db else { return false }
+        do {
+            let query = certifyTable.filter(self.date == date)
+            if let _ = try db.pluck(query) {
+                return true
+            }
+        } catch {
+            // print(" Error checking if record exists: \(error)")
+        }
+        return false
+    }
+    
+    // MARK: - Convert Server Certify JSON to CertifyRecord
+    private func convertServerRecordToCertifyRecord(_ serverRecord: [String: Any]) -> CertifyRecord? {
+        // Extract driver info
+        let driverId = serverRecord["driverId"] as? Int ?? 0
+        let driverName = serverRecord["driverName"] as? String ?? ""
+        
+        // Extract vehicle info
+        let vehicleId = serverRecord["vehicleId"] as? Int ?? 0
+        let vehicleName = serverRecord["vehicleName"] as? String ?? ""
+        
+        // Extract co-driver info
+        let coDriverId = serverRecord["coDriverId"] as? Int ?? 0
+        let coDriverName = serverRecord["coDriverName"] as? String ?? ""
+        
+        // Extract arrays and convert to comma-separated strings
+        let trailersArray = serverRecord["trailers"] as? [String] ?? []
+        let shippingDocsArray = serverRecord["shippingDocs"] as? [String] ?? []
+        let trailersString = trailersArray.joined(separator: ", ")
+        let shippingDocsString = shippingDocsArray.joined(separator: ", ")
+        
+        // Extract date
+        let certifiedDate = serverRecord["certifiedDate"] as? String ?? ""
+        
+        // Extract timestamp and convert to Date
+        // Try certifiedDateTime first (milliseconds), then certifiedAt (seconds)
+        var startTime = Date()
+        if let certifiedDateTime = serverRecord["certifiedDateTime"] as? Int {
+            startTime = Date(timeIntervalSince1970: TimeInterval(certifiedDateTime) / 1000.0)
+        } else if let certifiedAt = serverRecord["certifiedAt"] as? Int {
+            startTime = Date(timeIntervalSince1970: TimeInterval(certifiedAt))
+        } else if let lCertifiedDate = serverRecord["lCertifiedDate"] as? Int64 {
+            startTime = Date(timeIntervalSince1970: TimeInterval(lCertifiedDate) / 1000.0)
+        }
+        
+        // Extract shift (default to 0 if not available)
+        let shift = serverRecord["shift"] as? Int ?? 0
+        
+        return CertifyRecord(
+            userID: String(driverId),
+            userName: driverName,
+            startTime: startTime,
+            date: certifiedDate,
+            shift: shift,
+            selectedVehicle: vehicleName,
+            selectedTrailer: trailersString.isEmpty ? "None" : trailersString,
+            selectedShippingDoc: shippingDocsString.isEmpty ? "None" : shippingDocsString,
+            selectedCoDriver: coDriverName.isEmpty == false ? coDriverName : "None",
+            vehicleID: vehicleId,
+            coDriverID: coDriverId,
+            signature: nil, // Signature is stored separately in API as base64 string
+            syncStatus: 1, // Mark as synced since it came from server
+            isCertify: "Yes" // Already certified data from server
+        )
+    }
+    
     //MARK: -  Delete all records from db
     func deleteAllCertifyRecords() {
         do {
@@ -301,10 +424,7 @@ class CertifyDatabaseManager {
                 for row in rows {
                     let shiftValue = row[self.shift]
                     let certifyStatus = row[self.isLogcertified]
-                    // print(" Found DB row: date=\(row[self.date]), shift=\(shiftValue), certify=\(certifyStatus)")
-
                     if certifyStatus == "No" {
-                        // print(" Found uncertified previous day log for \(yesterdayString)")
                         return true
                     }
                 }

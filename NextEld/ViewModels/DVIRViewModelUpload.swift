@@ -8,10 +8,10 @@
 import Foundation
 import SwiftUI
 
-// Helper function to get current timestamp in milliseconds
-func currentTimestampMillis() -> Int64 {
-    return Int64(Date().timeIntervalSince1970 * 1000)
-}
+//// Helper function to get current timestamp in milliseconds
+//func currentTimestampMillis() -> Int64 {
+//    return Int64(Date().timeIntervalSince1970 * 1000)
+//}
 
 func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootManager: AppRootManager?) {
     let url = API.Endpoint.dispatchadd_dvir_data.url

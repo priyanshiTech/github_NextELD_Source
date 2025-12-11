@@ -221,11 +221,11 @@ struct DateTimeHelper {
 }
 struct CurrentTimeHelperStamp {
     static var currentTimestamp: Int {
-        return Int(Date().timeIntervalSince1970 * 1000)
+        return Int(DateTimeHelper.currentDateTime().timeIntervalSince1970 * 1000)
     }
 }
 func currentTimestampMillis() -> String {
-    let timestamp = Int(Date().timeIntervalSince1970 * 1000)
+    let timestamp = Int(DateTimeHelper.currentDateTime().timeIntervalSince1970 * 1000)
     return "\(timestamp)"
 }
 

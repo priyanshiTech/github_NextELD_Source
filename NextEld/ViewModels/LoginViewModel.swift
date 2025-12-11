@@ -35,7 +35,7 @@ class LoginViewModel: ObservableObject {
             isCoDriver: true
         )
         saveUserData(requestBody)
-        // print("Request Body: \(requestBody)")
+         print("Request Body: \(requestBody)")
         
         do {
             // Get raw JSON response first to extract driverDvirLog
@@ -46,21 +46,25 @@ class LoginViewModel: ObservableObject {
             request.httpBody = encodedBody
             
             let (data, _) = try await URLSession.shared.data(for: request)
-            
-            // Parse raw JSON to get driverDvirLog before decoding
+            // Parse raw JSON to get driverDvirLog and driverCertifiedLog before decoding
             var driverDvirLogArray: [[String: Any]]? = nil
+            var driverCertifiedLogArray: [[String: Any]]? = nil
             if let jsonDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-               let resultDict = jsonDict["result"] as? [String: Any],
-               let driverDvirLog = resultDict["driverDvirLog"] as? [[String: Any]] {
-                driverDvirLogArray = driverDvirLog
-                // print(" Found \(driverDvirLog.count) server DVIR records in login response")
+               let resultDict = jsonDict["result"] as? [String: Any] {
+                // Extract DVIR logs
+                if let driverDvirLog = resultDict["driverDvirLog"] as? [[String: Any]] {
+                    driverDvirLogArray = driverDvirLog
+                    // print(" Found \(driverDvirLog.count) server DVIR records in login response")
+                }
+                // Extract Certify logs
+                if let driverCertifiedLog = resultDict["driverCertifiedLog"] as? [[String: Any]] {
+                    driverCertifiedLogArray = driverCertifiedLog
+                    // print(" Found \(driverCertifiedLog.count) server Certify records in login response")
+                }
             }
-            
             // Decode response to TokenModelLog
             let response: TokenModelLog = try JSONDecoder().decode(TokenModelLog.self, from: data)
             // print(" API Response: \(response)")
-            
-            //  FIX: Check if status is FAIL or token is nil BEFORE processing
             if response.status == "FAIL" || response.token == nil {
                 // Login failed - set error message and return false
                 self.errorMessage = response.message ?? "Login failed: Invalid credentials"
@@ -316,12 +320,11 @@ class LoginViewModel: ObservableObject {
                 }
                    // session.logIn(token: token)
                 }
-                
+            
+            //MARK: - Logout /Login data saved
                 let loginLogoutLog = response.result?.loginLogoutLog ?? []
                 let logs = response.result?.driverLog ?? []
                 // Save logs to DB
-
-                
                 if !logs.isEmpty {
                     DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
                 }
@@ -329,7 +332,7 @@ class LoginViewModel: ObservableObject {
                 // MARK: - Save Login/Logout Logs to Database
                 if let loginLogoutLogs = response.result?.loginLogoutLog, !loginLogoutLogs.isEmpty {
                     DatabaseManager.shared.saveLoginLogoutLogsToSQLite(from: loginLogoutLogs)
-                    // print("Saved \(loginLogoutLogs.count) login/logout logs to database")
+                    //print("Saved \(loginLogoutLogs.count) login/logout logs to database")
                 }
                 
                 // MARK: - Save Server DVIR Records from Login Response
@@ -337,13 +340,20 @@ class LoginViewModel: ObservableObject {
                     DvirDatabaseManager.shared.saveServerDvirRecords(from: driverDvirLog)
                     let savedRecords = DvirDatabaseManager.shared.fetchAllRecords()
                     // print(" Total records in database after save: \(savedRecords.count)")
-
-                    // Post notification to refresh EmailDvir list
+                                                   // Post notification to refresh EmailDvir list
                     NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
                     // print(" Posted DVIRRecordUpdated notification")
                
                 } else {
                      print("  No driverDvirLog found in login response or array is empty")
+                }
+                
+                // MARK: - Save Server Certify Records from Login Response (same pattern as DVIR)
+                if let driverCertifiedLog = driverCertifiedLogArray, !driverCertifiedLog.isEmpty {
+                    CertifyDatabaseManager.shared.saveServerCertifyRecords(from: driverCertifiedLog)
+                    // print(" Saved \(driverCertifiedLog.count) certify records from login API to database")
+                } else {
+                     print("  No driverCertifiedLog found in login response or array is empty")
                 }
             
                 isLoading = false
