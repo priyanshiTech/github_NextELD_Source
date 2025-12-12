@@ -19,12 +19,13 @@ struct EmailDvir: View {
     
     //MARK: - remove placeholder multiple value  filteredRecords
     var filteredRecords: [DvirRecord] {
-        // Use records from database (which includes server records) instead of updateRecords parameter
         let allRecords = records.isEmpty ? updateRecords : records
         return allRecords
 //        return allRecords.filter { record in
-//            !(record.DAY == "Current Date" || record.DvirTime == "Current Time")
+//            !(String(record.date) == "Current Date" ||
+//              String(record.DvirTime) == "Current Time")
 //        }
+
     }
     
     

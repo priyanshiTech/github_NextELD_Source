@@ -174,7 +174,7 @@ struct SignatureCertifyView: View {
                     let isAlreadyCertified = existingRecord != nil
                     
                     var certifyTimeStamp  = currentTimestampMillis()
-                                        if DateTimeHelper.currentDate() != certifiedDate {
+                     if DateTimeHelper.currentDate() != certifiedDate {
                                             // time required always in format certifyDate+" 23:59:59"
                                             let certifiedDateTime = DateTimeHelper.endOfDay(for: certifiedDate.asDate(format: .dateOnlyFormat) ?? Date())?.addingTimeInterval(-1)
                                             certifyTimeStamp = String((certifiedDateTime?.timeIntervalSince1970 ?? 0) * 1000)

@@ -109,7 +109,7 @@ struct AddDvirScreenView: View  {
                         CardContainer {
                             
                             Button(action: {
-                // print("Navigate to AddVehicleForDvir - Current vehicle: \(vehicleVM.selectedVehicleNumber)")
+                              //print("Navigate to AddVehicleForDvir - Current vehicle: \(vehicleVM.selectedVehicleNumber)")
                                 navmanager.navigate(to: AppRoute.HomeFlow.AddVehicleForDVIR(vehicleID: vehicleVM.vehicleID, vehicleNo: vehicleVM.selectedVehicleNumber))
                             }) {
                                 HStack {

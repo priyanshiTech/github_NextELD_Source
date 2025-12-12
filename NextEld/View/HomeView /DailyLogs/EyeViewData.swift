@@ -271,13 +271,13 @@ struct EyeViewData: View {
     }
     
     private func loadDatabaseLogs() {
-        let startOfDay = Calendar.current.startOfDay(for: selectedDate)
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
+        let startOfDay =  DateTimeHelper.startOfDay(for: selectedDate)
+        let endOfDay = DateTimeHelper.endOfDay(for: selectedDate) ?? startOfDay
         
         // Fetch logs from database for the selected date
         databaseLogs = DatabaseManager.shared.fetchLogs(
             filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)],
-            addWarningAndViolation: false
+            addWarningAndViolation: true
         )
         
         // Sort by startTime (oldest first)
