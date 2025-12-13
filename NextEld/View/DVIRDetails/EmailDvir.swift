@@ -19,11 +19,6 @@ struct EmailDvir: View {
     var filteredRecords: [DvirRecord] {
         let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
         return allRecords
-//        return allRecords.filter { record in
-//            !(String(record.date) == "Current Date" ||
-//              String(record.DvirTime) == "Current Time")
-//        }
-
     }
     
     

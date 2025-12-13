@@ -49,6 +49,8 @@ enum API {
         case dataTransferAPI
         case DriverWorkingtime
         case DisclamerAPI
+        case dvirDataOffline
+        case certifyDataOffline
         case getLocation(lattitude: Double, Longitude: Double)
 
         
@@ -115,6 +117,12 @@ enum API {
                 return URL(string: "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(lattitude),\(Longitude)&key=AIzaSyCMgNXTcHMmdmCDODUgKuWvmCjEscN_geg")!
             case .updateCertifyDriver:
                 return API.baseURL.appendingPathComponent("dispatch/update_certified_log")
+                
+            case .dvirDataOffline:
+                return API.baseURL.appendingPathComponent("dispatch/add_dvir_data_offline")
+
+            case .certifyDataOffline:
+                return API.baseURL.appendingPathComponent("dispatch/add_certified_log_offline")
             }
         }
          
@@ -122,7 +130,7 @@ enum API {
             
             switch self {
                 
-            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi , .dataTransferAPI,.DriverWorkingtime ,.DisclamerAPI:
+            case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi , .dataTransferAPI,.DriverWorkingtime ,.DisclamerAPI, .dvirDataOffline, .certifyDataOffline:
                 return "POST"
                 
             case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI , .addDefectData , .updateCertifyDriver:

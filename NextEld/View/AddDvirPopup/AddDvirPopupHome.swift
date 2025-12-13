@@ -12,6 +12,8 @@ import SwiftUI
 struct AddDvirPopup: View {
     
     @Binding var isPresented: Bool
+    var dvirRecord: DvirRecord?
+    @State private var currentRecord: DvirRecord?
     
     var body: some View {
 
@@ -43,12 +45,13 @@ struct AddDvirPopup: View {
                 // Information fields
                 Group {
                     
-                    InfoRow(label: "Driver", value: "John Thomas")
+                    InfoRow(label: "Driver", value: currentRecord?.UserName ?? "")
                     InfoRow(label: "Time", value: DateTimeHelper.currentTime())
                     InfoRow(label: "Date", value: DateTimeHelper.currentDate())
-                    InfoRow(label: "Odometer", value: "0")
-                    InfoRow(label: "Company", value: "AppStorageHandler.company")
-                    InfoRow(label: "Location", value: "389, Vijay Nagar, Scheme 54, Indore")
+                    InfoRow(label: "Odometer", value: currentRecord?.odometer.map { String(format: "%.0f", $0) } ?? "")
+                    InfoRow(label: "Company", value: AppStorageHandler.shared.company ?? "Not Found")
+                    InfoRow(label: "Location", value: currentRecord?.location ?? "")
+                    
                 }
                 
                 Divider()
@@ -56,10 +59,10 @@ struct AddDvirPopup: View {
                 Group {
                     
                     InfoRow(label: "Vehicle", value: AppStorageHandler.shared.vehicleNo ?? "")
-                    InfoRow(label: "Trailer", value: "None")
-                    InfoRow(label: "Truck Defect", value: "None")
-                    InfoRow(label: "Trailer Defect", value: "None")
-                    InfoRow(label: "Notes", value: "Not Available")
+                    InfoRow(label: "Trailer", value: currentRecord?.Trailer ?? "")
+                    InfoRow(label: "Truck Defect", value: currentRecord?.truckDefect ?? "")
+                    InfoRow(label: "Trailer Defect", value: currentRecord?.trailerDefect ?? "")
+                    InfoRow(label: "Notes", value: currentRecord?.notes ?? "")
                 }
                 
                 Divider()
@@ -92,6 +95,16 @@ struct AddDvirPopup: View {
             .frame(width: 300, height: 400)
             .shadow(radius: 10)
         }
+        .onAppear {
+            // If dvirRecord is provided, use it; otherwise fetch the last record from database
+            if let providedRecord = dvirRecord {
+                currentRecord = providedRecord
+            } else {
+                // Fetch the last DVIR record from database
+                let records = DvirDatabaseManager.shared.fetchAllRecords(limit: 1)
+                currentRecord = records.first
+            }
+        }
     }
 }
 
@@ -117,7 +130,35 @@ struct InfoRow: View {
 // MARK: - Preview
 struct AddDvirPopup_Previews: PreviewProvider {
     static var previews: some View {
-        AddDvirPopup(isPresented: .constant(true))
+        Group {
+            AddDvirPopup(
+                isPresented: .constant(true),
+                dvirRecord: DvirRecord(
+                    id: 1,
+                    UserID: "123",
+                    UserName: "John Doe",
+                    startTime: Date(),
+                    DAY: 1,
+                    Shift: 1,
+                    DvirTime: "10:00 AM",
+                    odometer: 12345.0,
+                    location: "New York",
+                    truckDefect: "None",
+                    trailerDefect: "None",
+                    vehicleCondition: "Satisfactory",
+                    notes: "Test notes",
+                    vehicleName: "Vehicle 1",
+                    vechicleID: "V001",
+                    Sync: 0,
+                    timestamp: "1234567890",
+                    Server_ID: "",
+                    Trailer: "Trailer 1",
+                    signature: nil
+                )
+            )
+            // Also test without providing dvirRecord
+            AddDvirPopup(isPresented: .constant(true))
+        }
     }
 }
 

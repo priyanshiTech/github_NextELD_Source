@@ -697,8 +697,7 @@ struct AddDvirScreenView: View  {
             // print(" Update notification posted")
         } else {
             // Inserting new record
-            // print("➕ Inserting new record to database...")
-            
+            // print("➕ Inserting new record to database...")            
             
 //            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
 //            if let savedRecord = allRecords.last {
@@ -708,6 +707,7 @@ struct AddDvirScreenView: View  {
 //            } else {
 //                // print(" Failed to verify record insertion in database")
 //            }
+
             // print(" ========== CALLING dispatchadd_dvir_data API ==========")
             DvirDatabaseManager.shared.insertRecord(record)
             uploadDvirDataUsingCommonService(record: dvirRecord, appRootManager: appRootManager, completion: { success in

@@ -365,10 +365,13 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     let BLOCK_SCREEN_COOLDOWN: TimeInterval = 5.0  // 5 seconds cooldown
     
     var alertType: AlertType = .sucessConfimration
-    
     // SyncViewModel for syncOfflineData API
     let syncViewModel: SyncViewModel = SyncViewModel()
+    let certifySyncViewModel = CertifiedOfflineViewModel()
+    let DVIRDataViewModel = DVIROfflineViewModel()
+
     
+  
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []
@@ -384,7 +387,19 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 self?.addIntermediateLogs()
                 
                 Task { @MainActor in
+                    // Sync offline data
                     await self?.syncViewModel.syncOfflineData()
+                    // Sync certified offline logs with error handling
+                    let certifySuccess = await self?.certifySyncViewModel.syncCertifiedOfflineLogs()
+                    if certifySuccess == false {
+                        print(" Certified offline logs sync failed: \(self?.certifySyncViewModel.syncMessage ?? "Unknown error")")
+                    }
+                    
+                    // Sync DVIR offline logs with error handling
+                    let dvirSuccess = await self?.DVIRDataViewModel.syncDVIROfflineLogs()
+                    if dvirSuccess == false {
+                        print(" DVIR offline logs sync failed: \(self?.DVIRDataViewModel.syncMessage ?? "Unknown error")")
+                    }
                 }
                 
             }

@@ -349,7 +349,7 @@ struct CertifySelectedView: View {
                 vehiclesc = record.selectedVehicle
                 SelectedVechicle = record.selectedVehicle
             }
-
+                      
             if record.selectedTrailer != "None" && !record.selectedTrailer.isEmpty {
                 trailerVM.trailers = record.selectedTrailer
                     .split(separator: ",")
@@ -379,7 +379,7 @@ struct CertifySelectedView: View {
             coDriver = record.selectedCoDriver
             selectedCoID = record.coDriverID
             syncstatus = record.syncStatus
-            
+
         } else {
             // If no record found, ensure shipping docs are loaded from current state
             // Don't clear if user has added docs but not saved yet

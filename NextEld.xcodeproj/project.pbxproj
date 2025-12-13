@@ -26,6 +26,10 @@
 		AF04B1B62DE986F300A5F3D1 /* SupportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04B1B52DE986F300A5F3D1 /* SupportView.swift */; };
 		AF04B1B92DE9873600A5F3D1 /* SettingsLanguageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04B1B82DE9873600A5F3D1 /* SettingsLanguageView.swift */; };
 		AF04B1BB2DE98DA600A5F3D1 /* SelectLanguagepopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */; };
+		AF0EC32E2EEDB06600F21FE2 /* CertifyOfflineDM.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0EC32D2EEDB06600F21FE2 /* CertifyOfflineDM.swift */; };
+		AF0EC3302EEDB09400F21FE2 /* DvirOfflineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0EC32F2EEDB09400F21FE2 /* DvirOfflineViewModel.swift */; };
+		AF0EC3322EEDB0F400F21FE2 /* CertifyOfflineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0EC3312EEDB0F400F21FE2 /* CertifyOfflineData.swift */; };
+		AF0EC3342EEDB10E00F21FE2 /* DvirOfflinedataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0EC3332EEDB10E00F21FE2 /* DvirOfflinedataModel.swift */; };
 		AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */; };
 		AF0F71AF2E34FAA2005F950C /* TrailerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AD2E34FAA2005F950C /* TrailerView.swift */; };
 		AF1073582EB52C0200C3CE0E /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1073572EB52C0200C3CE0E /* ImagePickerController.swift */; };
@@ -297,6 +301,10 @@
 		AF04B1B52DE986F300A5F3D1 /* SupportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportView.swift; sourceTree = "<group>"; };
 		AF04B1B82DE9873600A5F3D1 /* SettingsLanguageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLanguageView.swift; sourceTree = "<group>"; };
 		AF04B1BA2DE98DA600A5F3D1 /* SelectLanguagepopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLanguagepopup.swift; sourceTree = "<group>"; };
+		AF0EC32D2EEDB06600F21FE2 /* CertifyOfflineDM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifyOfflineDM.swift; sourceTree = "<group>"; };
+		AF0EC32F2EEDB09400F21FE2 /* DvirOfflineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirOfflineViewModel.swift; sourceTree = "<group>"; };
+		AF0EC3312EEDB0F400F21FE2 /* CertifyOfflineData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifyOfflineData.swift; sourceTree = "<group>"; };
+		AF0EC3332EEDB10E00F21FE2 /* DvirOfflinedataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirOfflinedataModel.swift; sourceTree = "<group>"; };
 		AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerViewModel.swift; sourceTree = "<group>"; };
 		AF0F71AD2E34FAA2005F950C /* TrailerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerView.swift; sourceTree = "<group>"; };
 		AF1073572EB52C0200C3CE0E /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
@@ -881,6 +889,7 @@
 			isa = PBXGroup;
 			children = (
 				AF66F7A52E4CD00F009A13A0 /* CertifySignatureModel.swift */,
+				AF0EC3312EEDB0F400F21FE2 /* CertifyOfflineData.swift */,
 			);
 			path = CertifySinatureAPI;
 			sourceTree = "<group>";
@@ -888,6 +897,7 @@
 		AF7234FB2E55B21F009EAA9E /* DVIREmailModel */ = {
 			isa = PBXGroup;
 			children = (
+				AF0EC3332EEDB10E00F21FE2 /* DvirOfflinedataModel.swift */,
 				AF7234FC2E55B851009EAA9E /* DvirEmailModel.swift */,
 			);
 			path = DVIREmailModel;
@@ -1228,6 +1238,8 @@
 		AFB943442E02B99D00AD19D7 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				AF0EC32F2EEDB09400F21FE2 /* DvirOfflineViewModel.swift */,
+				AF0EC32D2EEDB06600F21FE2 /* CertifyOfflineDM.swift */,
 				AF72E4472DFD579500626DC0 /* BluetoothViewModel.swift */,
 				AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */,
 				AFCB43682E2F9E2400363BB6 /* DeleteViewModel.swift */,
@@ -1778,6 +1790,7 @@
 				AF72E43D2DFD54B400626DC0 /* EyeViewData.swift in Sources */,
 				AF72E43E2DFD54B400626DC0 /* BluetoothPopup.swift in Sources */,
 				AFC1B5542E15499000C57620 /* ForgetPasswordModel.swift in Sources */,
+				AF0EC3342EEDB10E00F21FE2 /* DvirOfflinedataModel.swift in Sources */,
 				AF72E4632DFD84B100626DC0 /* HelperScaneer.swift in Sources */,
 				AFE5DFFD2E5345AB0069BE27 /* LogOutModel.swift in Sources */,
 				AF72E44A2DFD59E100626DC0 /* DateInfo 2.swift in Sources */,
@@ -1788,6 +1801,7 @@
 				AF72E44C2DFD60EF00626DC0 /* NT11ConnectionView.swift in Sources */,
 				AFB9434A2E02CCF900AD19D7 /* Rules.swift in Sources */,
 				AFA98C912E017A1B00E87802 /* PT30DataViewModel.swift in Sources */,
+				AF0EC32E2EEDB06600F21FE2 /* CertifyOfflineDM.swift in Sources */,
 				AF72E4412DFD54B400626DC0 /* HoursRecap.swift in Sources */,
 				AFBB59F82E4231800056A660 /* UpdateDvirModel.swift in Sources */,
 				AFC381772E29067B006FD4E1 /* OfflineSavingDataModel.swift in Sources */,
@@ -1828,6 +1842,7 @@
 				AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */,
 				AFD7BAA72E53014A001AF76C /* loginLogModel.swift in Sources */,
 				AFB9434C2E02CD0800AD19D7 /* SplitLog.swift in Sources */,
+				AF0EC3322EEDB0F400F21FE2 /* CertifyOfflineData.swift in Sources */,
 				AF04B1BB2DE98DA600A5F3D1 /* SelectLanguagepopup.swift in Sources */,
 				AFB943502E02CD7B00AD19D7 /* TokenModelLog.swift in Sources */,
 				AFD340D92E9CF20C007D88DF /* BluetothPopupView.swift in Sources */,
@@ -1913,6 +1928,7 @@
 				CB4D81822ECA86E400590F62 /* HomeViewModel+splitshift.swift in Sources */,
 				AF72350D2E560567009EAA9E /* MacAddressViewModel.swift in Sources */,
 				AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */,
+				AF0EC3302EEDB09400F21FE2 /* DvirOfflineViewModel.swift in Sources */,
 				AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */,
 				108FF8302DC8A8BA0051671B /* LoginScreen.swift in Sources */,
 				AFCC4CA72E4A29C500629DE3 /* CompanyInformation<odel.swift in Sources */,
