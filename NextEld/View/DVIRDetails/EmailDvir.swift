@@ -11,15 +11,13 @@ import SwiftUI
 struct EmailDvir: View {
     @EnvironmentObject var navmanager: NavigationManager
     @State var tittle: String
-    @State private var records: [DvirRecord] = []
-    let updateRecords: [DvirRecord]
     var onSelect: (DvirRecord) -> Void
     @State private var selectedDvirRecord:DvirRecord?  = nil
     @StateObject var trailerVM: TrailerViewModel = .init()
     
     //MARK: - remove placeholder multiple value  filteredRecords
     var filteredRecords: [DvirRecord] {
-        let allRecords = records.isEmpty ? updateRecords : records
+        let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
         return allRecords
 //        return allRecords.filter { record in
 //            !(String(record.date) == "Current Date" ||
@@ -144,20 +142,13 @@ struct EmailDvir: View {
                 }
             }
            
-            .onAppear {
-                records = DvirDatabaseManager.shared.fetchAllRecords()
-                // print(" EmailDvir: Loaded \(records.count) records from database on appear")
-            }
-            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
-                // Refresh records when DVIR is added/updated
-                records = DvirDatabaseManager.shared.fetchAllRecords()
-                // print(" EmailDvir: Records refreshed after DVIR update - Total: \(records.count)")
-            }
-            .task {
-                // Also fetch records when view appears (async)
-                records = DvirDatabaseManager.shared.fetchAllRecords()
-                // print(" EmailDvir: Task - Loaded \(records.count) records from database")
-            }
+            
+//            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
+//                // Refresh records when DVIR is added/updated
+//                records = DvirDatabaseManager.shared.fetchAllRecords()
+//                // print(" EmailDvir: Records refreshed after DVIR update - Total: \(records.count)")
+//            }
+            
         .navigationBarHidden(true)
 
 //        .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in

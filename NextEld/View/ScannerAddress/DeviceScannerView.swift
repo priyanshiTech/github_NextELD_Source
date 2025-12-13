@@ -270,7 +270,6 @@ struct DeviceScannerView: View {
                 case .AddDvirPriTrip:
                     EmailDvir(
                         tittle: "Email DVIR",
-                        updateRecords: DvirDatabaseManager.shared.fetchAllRecords(),
                         onSelect: { _ in }
                     )
                 case .EyeViewData(let title, let entry):

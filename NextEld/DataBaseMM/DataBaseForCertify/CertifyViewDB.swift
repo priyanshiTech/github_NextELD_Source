@@ -90,12 +90,12 @@ struct DatabaseCertifyView: View {
             loadRecords()
         }
        
-        .onReceive(NotificationCenter.default.publisher(for: .certifyUpdated)) { notification in
-            if let date = notification.object as? String {
-                // print(" Certified updated for date: \(date)")
-            }
-            loadRecords() // Refresh table
-        }
+//        .onReceive(NotificationCenter.default.publisher(for: .certifyUpdated)) { notification in
+//            if let date = notification.object as? String {
+//                // print(" Certified updated for date: \(date)")
+//            }
+//            loadRecords() // Refresh table
+//        }
 
         .padding()
     }

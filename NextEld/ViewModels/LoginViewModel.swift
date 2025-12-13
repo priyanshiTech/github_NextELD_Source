@@ -341,7 +341,7 @@ class LoginViewModel: ObservableObject {
                     let savedRecords = DvirDatabaseManager.shared.fetchAllRecords()
                     // print(" Total records in database after save: \(savedRecords.count)")
                                                    // Post notification to refresh EmailDvir list
-                    NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
+                //    NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
                     // print(" Posted DVIRRecordUpdated notification")
                
                 } else {

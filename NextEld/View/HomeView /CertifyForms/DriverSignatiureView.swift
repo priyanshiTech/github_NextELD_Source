@@ -299,7 +299,7 @@ struct SignatureCertifyView: View {
         .alert(alertTitle, isPresented: $showAlert) {
             Button("OK", role: .cancel) {
                 if navigateToBaCK {
-                    NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
+                   // NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
                     onCertified?()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                         onDismiss?()
