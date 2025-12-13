@@ -694,7 +694,7 @@ struct AddDvirScreenView: View  {
             let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
             if let savedRecord = allRecords.last {
           
-                viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
+                viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DvirTime)"
                 viewModel.showSuccessAlert = true
             } else {
                 // print(" Failed to verify record insertion in database")

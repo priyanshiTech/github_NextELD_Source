@@ -20,11 +20,11 @@ struct EmailDvir: View {
     //MARK: - remove placeholder multiple value  filteredRecords
     var filteredRecords: [DvirRecord] {
         let allRecords = records.isEmpty ? updateRecords : records
-        return allRecords
-//        return allRecords.filter { record in
-//            !(String(record.date) == "Current Date" ||
-//              String(record.DvirTime) == "Current Time")
-//        }
+       // return allRecords
+        return allRecords.filter { record in
+            !(String(record.DvirTime) == "Current Date" ||
+              String(record.DvirTime) == "Current Time")
+        }
 
     }
     

@@ -11,7 +11,7 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String, app
     let url = API.Endpoint.update_dvir_data.url
     
     let requestField: [String: String] = [
-        "driverid": record.UserID,
+        "driverId": record.UserID,
         "dvirLogId": dvirLogId,
         "dateTime": "\(record.DAY) \(record.DvirTime)",
         "location": record.location,
@@ -28,11 +28,11 @@ func updateDvirDataUsingCommonService(record: DvirRecord, dvirLogId: String, app
         "timestamp": record.timestamp,
         "tokenNo": AppStorageHandler.shared.authToken ?? "",
         "clientid": "\(AppStorageHandler.shared.clientId ?? 0)",
-        "sync": "\(record.Sync)",
-        "server_id": record.Server_ID
+        //"sync": "\(record.Sync)",
+       // "server_id": record.Server_ID
     ]
     
-    // print(" DVIR Upload Fields:")
+     print(" DVIR update Fields: \(requestField)")
    // requestField.forEach { // print(" \($0.key): \($0.value)") }
         
         var files: [MultipartFile] = []

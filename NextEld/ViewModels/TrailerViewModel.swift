@@ -68,7 +68,7 @@ class TrailerViewModel: ObservableObject, Hashable, Equatable {
         }
         
         // Default fallback
-        return "Upcoming"
+        return "None"
     }
     
     func hash(into hasher: inout Hasher) {

@@ -84,6 +84,7 @@ struct SelectCoDriverPopup: View {
                             }
                             .contentShape(Rectangle())
                             .onTapGesture {
+                                
                                 selectedCoDriver = fullName
                                 selectedCoDriverEmail = username
                                 selectedCodriverID = driver.employeeId ?? 0

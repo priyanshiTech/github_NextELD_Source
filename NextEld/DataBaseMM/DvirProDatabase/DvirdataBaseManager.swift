@@ -301,7 +301,24 @@ extension DvirDatabaseManager {
         }
         return nil
     }
-    
+    // MARK: - Update Sync Status
+    func updateRecordSyncStatus(localId: Int64, serverId: String?) {
+        guard let db = db else { return }
+
+        let row = dvirTable.filter(id == localId)
+
+        do {
+            try db.run(row.update(
+                Sync <- 1,
+                Server_ID <- (serverId ?? ""),
+               
+            ))
+            print("ServerId in DVIRdatabaseManegr $$$$$$$: \(Server_ID)")
+        } catch {
+            // print("Failed to update DVIR sync status: \(error)")
+        }
+    }
+
     
     // MARK: - Update Record by ID
     func updateRecord(_ record: DvirRecord) {
