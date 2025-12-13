@@ -33,6 +33,7 @@ enum API {
         case HelpSupportInfo
         case CodriverListInfo
         case certifyDriver
+        case updateCertifyDriver
         case LoginLogAPI   //MARK: -  LogLogin
         case LogoutAPI
         case DefectAPIModel
@@ -112,6 +113,8 @@ enum API {
                 return API.baseURL.appending(components: "master/update_disclaimer_in_driver")
             case .getLocation(lattitude: let lattitude, Longitude: let Longitude):
                 return URL(string: "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(lattitude),\(Longitude)&key=AIzaSyCMgNXTcHMmdmCDODUgKuWvmCjEscN_geg")!
+            case .updateCertifyDriver:
+                return API.baseURL.appendingPathComponent("dispatch/update_certified_log")
             }
         }
          
@@ -122,12 +125,13 @@ enum API {
             case .login, .ForgetPassword , .ForgetUserName ,  .update_dvir_data , .viewdriveringstatusbydate , .HelpSupportInfo , .CodriverListInfo, .LoginLogAPI , .ForRulesAPI , .ConnectdDisConnectedAPI , .vehicleConditionApi , .dataTransferAPI,.DriverWorkingtime ,.DisclamerAPI:
                 return "POST"
                 
-            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI , .addDefectData:
+            case .ForSavingOfflineData , .getAllDatadelete , .dispatchadd_dvir_data , .getRefershAlldata , .CompanyDriverInformation, .certifyDriver , .LogoutAPI  , .DefectAPIModel, .EmailDVirAPI , .VchicleList ,  .MacAddress , .FirmWareUPdates ,  .SpalshDataAPI , .addDefectData , .updateCertifyDriver:
                 return "POST"
 
 
             case .getLocation:
                 return "GET"
+            
             }
         }
     }
@@ -237,6 +241,9 @@ final class NetworkManager {
             
         }
     
+    func getImage(_ url: URL) async throws -> Data {
+        return try await URLSession.shared.data(for: URLRequest(url: url)).0
+    }
 
 }
 

@@ -11,7 +11,6 @@ struct AddDvirScreenView: View  {
     
     @EnvironmentObject var navmanager: NavigationManager
     @StateObject var navManager: NavigationManager = NavigationManager()
-
     @StateObject var trailerVM: TrailerViewModel = .init()
     @StateObject var vehicleVM: VehicleConditionViewModel = .init()
    // @StateObject var DVClocationManager: DeviceLocationManager = .init()
@@ -110,7 +109,7 @@ struct AddDvirScreenView: View  {
                         CardContainer {
                             
                             Button(action: {
-                // print("Navigate to AddVehicleForDvir - Current vehicle: \(vehicleVM.selectedVehicleNumber)")
+                              //print("Navigate to AddVehicleForDvir - Current vehicle: \(vehicleVM.selectedVehicleNumber)")
                                 navmanager.navigate(to: AppRoute.HomeFlow.AddVehicleForDVIR(vehicleID: vehicleVM.vehicleID, vehicleNo: vehicleVM.selectedVehicleNumber))
                             }) {
                                 HStack {
@@ -341,6 +340,7 @@ struct AddDvirScreenView: View  {
                             title: Text("Success"),
                             message: Text(viewModel.successMessage),
                             dismissButton: .default(Text("OK")) {
+                                navmanager.goBack()
                                 // print(" User acknowledged success message")
                             }
                         )
@@ -566,7 +566,7 @@ struct AddDvirScreenView: View  {
                 vehicleName: vehicleName,
                 vechicleID: vehicleId,
                 Sync: 1,
-                timestamp: "\(Int(Date().timeIntervalSince1970 * 1000))",
+                timestamp: currentTimestampMillis(),
                 Server_ID: "",
                 Trailer: trailerVM.trailers.joined(separator: ", "),
                 signature: viewModel.signatureImage?.pngData()
@@ -626,11 +626,13 @@ struct AddDvirScreenView: View  {
             ? "\(vehicleVM.vehicleID > 0 ? vehicleVM.vehicleID : (AppStorageHandler.shared.vehicleId ?? 0))"
             : workingRecord.vechicleID
         
+        let isExistingRecord: Bool = workingRecord.id != nil
+        
         var record = DvirRecord(
             id: workingRecord.id ?? existingRecord?.id,
             UserID: viewModel.driverID,
             UserName: viewModel.driverName,
-            startTime: DateTimeHelper.currentDateTime(),
+            startTime: workingRecord.startTime,
             DAY: AppStorageHandler.shared.days,
             Shift: AppStorageHandler.shared.shift,
             DvirTime: currentTime,
@@ -643,14 +645,11 @@ struct AddDvirScreenView: View  {
             vehicleName: finalVehicleName,
             vechicleID: finalVehicleID,
             Sync: 1,
-            timestamp: "\(Int(Date().timeIntervalSince1970 * 1000))",
+            timestamp: isExistingRecord ? workingRecord.timestamp : currentTimestampMillis(),
             Server_ID: existingRecord?.Server_ID ?? "",
             Trailer: trailerVM.trailers.isEmpty ? (existingRecord?.Trailer ?? "") : trailerVM.trailers.joined(separator: ", "),
             signature: signatureData
         )
-        
-        // print(" Final Record - Vehicle: \(record)")
-
         
         let dvirRecord = DvirRecordRequestModel(
             driverId: viewModel.driverDVIRId,
@@ -664,56 +663,74 @@ struct AddDvirScreenView: View  {
             odometer: viewModel.odometer,
             engineHour: 0,
             vehicleId: record.vechicleID,
-            timestampDvir: "\(Int(Date().timeIntervalSince1970 * 1000))",
+            timestampDvir: record.timestamp,
             tokenNo: AppStorageHandler.shared.authToken ?? "",
             clientId: AppStorageHandler.shared.clientId ?? 0,
             trailer: trailerVM.trailers.isEmpty ? "" : trailerVM.trailers.joined(separator: ", "),
             fileDVir: signatureData
         )
         
-        if let existingId = record.id {
+        if let existingId = workingRecord.id {
             // Updating existing record
             // print(" Updating existing record in database with ID: \(existingId)")
-            record.id = existingId
-            DvirDatabaseManager.shared.updateRecord(record)
-            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
-            if allRecords.first(where: { $0.id == existingId }) != nil {
-                // print(" Record updated successfully in database!")
-                viewModel.successMessage = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
-                viewModel.showSuccessAlert = true
-            } else {
-                // print(" Failed to verify record update in database")
-            }
+            
+            
+//            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+//            if allRecords.first(where: { $0.id == existingId }) != nil {
+//                // print(" Record updated successfully in database!")
+//                viewModel.successMessage = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
+//                viewModel.showSuccessAlert = true
+//            } else {
+//                // print(" Failed to verify record update in database")
+//            }
             // print(" Calling update API...")
-            updateDvirDataUsingCommonService(record: record, dvirLogId: viewModel.driverID, appRootManager: appRootManager)
-            NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
+            DvirDatabaseManager.shared.updateRecord(record)
+            updateDvirDataUsingCommonService(record: dvirRecord, dvirLogId: viewModel.driverID, appRootManager: appRootManager, completion: { success in
+                
+                if success {
+                    viewModel.successMessage = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
+                    viewModel.showSuccessAlert = true
+                }
+                
+            })
+         //   NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
             // print(" Update notification posted")
         } else {
             // Inserting new record
             // print("➕ Inserting new record to database...")
-            DvirDatabaseManager.shared.insertRecord(record)
-            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
-            if let savedRecord = allRecords.last {
-          
-                viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
-                viewModel.showSuccessAlert = true
-            } else {
-                // print(" Failed to verify record insertion in database")
-            }
+            
+            
+//            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+//            if let savedRecord = allRecords.last {
+//          
+//                viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
+//                viewModel.showSuccessAlert = true
+//            } else {
+//                // print(" Failed to verify record insertion in database")
+//            }
             // print(" ========== CALLING dispatchadd_dvir_data API ==========")
-            uploadDvirDataUsingCommonService(record: dvirRecord, appRootManager: appRootManager)
+            DvirDatabaseManager.shared.insertRecord(record)
+            uploadDvirDataUsingCommonService(record: dvirRecord, appRootManager: appRootManager, completion: { success in
+                
+                if success {
+    
+                    viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
+                    viewModel.showSuccessAlert = true
+                    
+                }
+            })
             // print(" API call initiated successfully!")
        
-            NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
+     //       NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
             // print("Insert notification posted")
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            if isFromHome {
-                navmanager.navigate(to: AppRoute.HomeFlow.Home)
-            } else {
-                navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
-            }
+//            if isFromHome {
+//                navmanager.navigate(to: AppRoute.HomeFlow.Home)
+//            } else {
+//                navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
+//            }
         }
     }
     

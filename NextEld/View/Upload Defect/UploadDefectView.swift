@@ -72,9 +72,9 @@ struct UploadDefectView: View {
         .onChange(of: selectedRecord) { _ in
             reloadDefectsFromRecord()
         }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
-            reloadDefectsFromRecord()
-        }
+//        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
+//            reloadDefectsFromRecord()
+//        }
     }
 }
 

@@ -29,3 +29,24 @@ struct CertifiedLogResponse: Codable {
     let status: String
     let token: String
 }
+
+//MARK: -  Update Certify Model
+
+
+struct UpdateCertifiedLogRequest: Encodable {
+    let driverId: String
+    let certifiedDate: String
+    let vehicleId: String
+    let coDriverId: String
+    let trailers: [String]
+    let shippingDocs: [String]
+    let tokenNo: String
+    let certifiedDateTime: String
+}
+
+struct updateCertifiedLogResponse: Codable {
+    let message: String?
+    let result: String
+    let status: String
+    let token: String
+}

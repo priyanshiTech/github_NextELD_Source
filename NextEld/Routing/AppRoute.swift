@@ -43,7 +43,7 @@ enum AppRoute: Hashable {
         case ADDVehicle
         case NewDriverLogin(title: String , email: String)
         case CertifySelectedView(tittle: String)
-        case AddDvirScreenView(vm: TrailerViewModel)
+        case AddDvirScreenView(vm: TrailerViewModel, selectedRecord: DvirRecord?)
         case DvirHostory(tittle: String)
         case trailerScreen(trailerVM: TrailerViewModel)
         case ShippingDocment(shippingVM: ShippingDocViewModel)

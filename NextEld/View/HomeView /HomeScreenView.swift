@@ -195,7 +195,7 @@ struct HomeScreenView: View {
                     title: "Add DVIR Log",
                     message: "Please add DVIR before going to On-Drive",
                     onOK: {
-                        navManager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM))
+                        navManager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: nil))
                         showDvirPopup = false
                     },
                     onCancel: { showDvirPopup = false }
@@ -250,7 +250,11 @@ struct HomeScreenView: View {
                         
                         title: "Refresh Log",
                         message: "You have some records to update, do you want to update?",
-                        onOK: { homeVM.handleSyncPopupConfirmation() },
+                        onOK: {    DatabaseManager.shared.deleteAllLogs() // Clears driverLogs and splitShiftTable
+                            ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+                            DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
+                            CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+                            homeVM.handleSyncPopupConfirmation() },
                         onCancel: {
                             isManualSyncInProgress = false
                         syncPopupContext = nil

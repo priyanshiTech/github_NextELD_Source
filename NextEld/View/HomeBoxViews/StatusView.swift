@@ -71,38 +71,40 @@ struct StatusView: View {
                 .frame(maxWidth: .infinity)
 
 
-                //MARK: -  Personal Use and Yard Move buttons (conditional visibility)
+            //    MARK: -  Personal Use and Yard Move buttons (conditional visibility)
                 if isPersonalUseEnabled || isYardMoveEnabled {
                     HStack {
-                        if isPersonalUseEnabled {
-                            StatusButton(
-                                title: DriverStatusType.personalUse.getName(),
-                                action: {
-                                    selectedDriverStatus = .personalUse
-                                    onDriveStatusSelection(selectedDriverStatus)
-                                },
-                                isSelected: selectedDriverStatus == .personalUse
-                            )
-                        }
-                        
+
+                         if isPersonalUseEnabled {
+                StatusButton(
+                    title: DriverStatusType.personalUse.getName(),
+                    action: {
+                        onDriveStatusSelection(.personalUse)
+                    },
+                    isSelected: selectedDriverStatus == .personalUse
+                )
+            }
                         if isPersonalUseEnabled && isYardMoveEnabled {
                             Spacer()
+                            
                         }
-                        
-                        if isYardMoveEnabled {
-                            StatusButton(
-                                title: DriverStatusType.yardMode.getName(),
-                                action: {
-                                    selectedDriverStatus = .yardMode
-                                    onDriveStatusSelection(selectedDriverStatus)
-                                },
-                                isSelected: selectedDriverStatus == .yardMode
-                            )
-                        }
+
+
+                if isYardMoveEnabled {
+                    StatusButton(
+                        title: DriverStatusType.yardMode.getName(),
+                        action: {
+                            onDriveStatusSelection(.yardMode)
+                        },
+                        isSelected: selectedDriverStatus == .yardMode
+                    )
+                }
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
                 }
+                
+             
             }
             .onChange(of: homeViewModel.currentDriverStatus) { newValue in
                 updateSelectedStatusIfNeeded(with: newValue)

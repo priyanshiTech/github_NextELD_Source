@@ -11,20 +11,19 @@ import SwiftUI
 struct EmailDvir: View {
     @EnvironmentObject var navmanager: NavigationManager
     @State var tittle: String
-    @State private var records: [DvirRecord] = []
-    let updateRecords: [DvirRecord]
     var onSelect: (DvirRecord) -> Void
     @State private var selectedDvirRecord:DvirRecord?  = nil
     @StateObject var trailerVM: TrailerViewModel = .init()
     
     //MARK: - remove placeholder multiple value  filteredRecords
     var filteredRecords: [DvirRecord] {
-        // Use records from database (which includes server records) instead of updateRecords parameter
-        let allRecords = records.isEmpty ? updateRecords : records
+        let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
         return allRecords
 //        return allRecords.filter { record in
-//            !(record.DAY == "Current Date" || record.DvirTime == "Current Time")
+//            !(String(record.date) == "Current Date" ||
+//              String(record.DvirTime) == "Current Time")
 //        }
+
     }
     
     
@@ -57,7 +56,7 @@ struct EmailDvir: View {
                         Button(action: {
                             // Clear selected record to ensure new record with current date/time
                             selectedDvirRecord = nil
-                            navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM))
+                            navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: selectedDvirRecord))
                         }) {
                             Image(systemName: "plus")
                                 .foregroundColor(.white)
@@ -101,7 +100,7 @@ struct EmailDvir: View {
                             record: record,
                             onTap: {
                                 selectedDvirRecord = record
-                                navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM))
+                                navmanager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: selectedDvirRecord))
                             },
                             onViewDefect: {
                                 // Fetch latest record from database to get updated defects
@@ -143,20 +142,13 @@ struct EmailDvir: View {
                 }
             }
            
-            .onAppear {
-                records = DvirDatabaseManager.shared.fetchAllRecords()
-                // print(" EmailDvir: Loaded \(records.count) records from database on appear")
-            }
-            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
-                // Refresh records when DVIR is added/updated
-                records = DvirDatabaseManager.shared.fetchAllRecords()
-                // print(" EmailDvir: Records refreshed after DVIR update - Total: \(records.count)")
-            }
-            .task {
-                // Also fetch records when view appears (async)
-                records = DvirDatabaseManager.shared.fetchAllRecords()
-                // print(" EmailDvir: Task - Loaded \(records.count) records from database")
-            }
+            
+//            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DVIRRecordUpdated"))) { _ in
+//                // Refresh records when DVIR is added/updated
+//                records = DvirDatabaseManager.shared.fetchAllRecords()
+//                // print(" EmailDvir: Records refreshed after DVIR update - Total: \(records.count)")
+//            }
+            
         .navigationBarHidden(true)
 
 //        .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in

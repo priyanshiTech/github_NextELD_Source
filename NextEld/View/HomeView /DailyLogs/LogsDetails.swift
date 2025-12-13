@@ -78,7 +78,9 @@ struct LogsDetails: View {
             }  .background(Color.white.shadow(radius: 5))
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
+                   // HOSEventsChartScreen(events: hoseEventsForSelectedDate)
                     HOSEventsChartScreen(events: homeVM.graphEvents)
+
                         .frame(maxWidth: .infinity)
                     
                     Text("Version - OS/02/May")
@@ -92,11 +94,15 @@ struct LogsDetails: View {
         }.navigationBarBackButtonHidden()
         
         .onAppear {
-            if allLogs.isEmpty {
-                loadLogsFromDatabase()
-            }
+           // loadLogsFromDatabase()
             //DateTimeHelper.currentDateTime()
+           // loadLogsFromDatabase()
+
         }
+//        .onChange(of: selectedDate) { oldValue, newValue in
+//            loadLogsFromDatabase()
+//        }
+        
         .onDisappear {
             stopTimer()
         }
@@ -150,20 +156,25 @@ struct LogsDetails: View {
     }
     
     private var logsForSelectedDate: [DriverLogModel] {
-        let calendar = Calendar.current
-        let timeZone = TimeZone.current
-
-        return allLogs.filter { log in
-            // Get date components for both dates in current timezone
-            let logDateComponents = calendar.dateComponents(in: timeZone, from: log.startTime)
-            let selectedDateComponents = calendar.dateComponents(in: timeZone, from: selectedDate)
-            
-            // Compare year, month, and day components
-            return logDateComponents.year == selectedDateComponents.year &&
-                   logDateComponents.month == selectedDateComponents.month &&
-                   logDateComponents.day == selectedDateComponents.day
-        }
-        .sorted { $0.startTime < $1.startTime }
+        let startDate = DateTimeHelper.startOfDay(for: selectedDate)
+        let endDate = DateTimeHelper.endOfDay(for: selectedDate) ?? selectedDate
+        let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startDate, endDate: endDate)],addWarningAndViolation: true).sorted { $0.startTime < $1.startTime }
+        return logs
+        
+//        let calendar = Calendar.current
+//        let timeZone = TimeZone.current
+//
+//        return allLogs.filter { log in
+//            // Get date components for both dates in current timezone
+//            let logDateComponents = calendar.dateComponents(in: timeZone, from: log.startTime)
+//            let selectedDateComponents = calendar.dateComponents(in: timeZone, from: selectedDate)
+//            
+//            // Compare year, month, and day components
+//            return logDateComponents.year == selectedDateComponents.year &&
+//                   logDateComponents.month == selectedDateComponents.month &&
+//                   logDateComponents.day == selectedDateComponents.day
+//        }
+//        .sorted { $0.startTime < $1.startTime }
     }
     
     private var hoseEventsForSelectedDate: [HOSEvent] {

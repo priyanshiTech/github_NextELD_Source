@@ -21,9 +21,12 @@ class APILoginLogViewModel: ObservableObject {
         let request = LoginLogRequestModel(
             driverId: AppStorageHandler.shared.driverId ?? 0,
             loginDateTime: AppStorageHandler.shared.loginDateTime ?? 0,
-            timestamps: CurrentTimeHelperStamp.currentTimestamp
+            timestamp: CurrentTimeHelperStamp.currentTimestamp
         )
-        // print("Request For *****LoginLogAPI*****:\(request)")
+    print("Request For *****LoginLogAPI*****:\(request)")
+        AppStorageHandler.shared.loginDateTime = request.timestamp
+        print("Request For correct time stamp *****: \(AppStorageHandler.shared.loginDateTime)")
+
 
 
         do {
@@ -36,6 +39,10 @@ class APILoginLogViewModel: ObservableObject {
                 self.apiMessage = response.message ?? "Success"
                 self.status = response.status ?? ""
                 self.result = response.result ?? ""
+                
+               
+             
+                
             } else {
                 self.apiMessage = response.message ?? "Failed"
                 self.status = response.status ?? ""

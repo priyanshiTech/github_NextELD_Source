@@ -6,14 +6,11 @@
 //
 
 import Foundation
-//class DutyStatusManager: ObservableObject {
-//    @Published var dutyStatus: String = DriverStatusConstants.offDuty
-//}
+
 
 class DutyStatusManager: ObservableObject {
-    @Published var dutyStatus: String = DriverStatusConstants.offDuty
     
-    // Track total durations (in seconds)
+    @Published var dutyStatus: String = DriverStatusConstants.offDuty
     @Published var totalOffDutyTime: TimeInterval = 0
     @Published var totalSleepTime: TimeInterval = 0
     

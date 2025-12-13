@@ -8,12 +8,12 @@
 import Foundation
 import SwiftUI
 
-// Helper function to get current timestamp in milliseconds
-func currentTimestampMillis() -> Int64 {
-    return Int64(Date().timeIntervalSince1970 * 1000)
-}
+//// Helper function to get current timestamp in milliseconds
+//func currentTimestampMillis() -> Int64 {
+//    return Int64(Date().timeIntervalSince1970 * 1000)
+//}
 
-func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootManager: AppRootManager?) {
+func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootManager: AppRootManager?, completion: @escaping (Bool) ->Void) {
     let url = API.Endpoint.dispatchadd_dvir_data.url
 
     // Convert truckDefect string to array format expected by API
@@ -67,7 +67,7 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
         "driverId": (AppStorageHandler.shared.driverId ?? 17),
         "vehicleId": vehicleIdInt,  // Ensure it's Int, not String
         "clientId": (AppStorageHandler.shared.clientId ?? 0),
-        "timestamp": "\(currentTimestampMillis())", // Milliseconds timestamp as string
+        "timestamp": record.timestampDvir, // Milliseconds timestamp as string
         "dateTime": record.dateTime,  // Keep as string
         "location": record.locationDvir.isEmpty ? "N/A" : record.locationDvir,
         "truckDefect": truckDefectArray.isEmpty ? [] : truckDefectArray,      // Array
@@ -218,7 +218,7 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
                         if let resultDict = json["result"] as? [String: Any] {
                             // print(" Result object found in response")
                             
-                            
+                            completion(true)
                             // Extract and save _id
                             if let dvirId = resultDict["_id"] as? String {
                                 AppStorageHandler.shared.dvirLogId = dvirId
@@ -246,6 +246,7 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
                 }
                 // print(" =================================================")
             case .failure(let error):
+                completion(false)
                 // print("  dispatchadd_dvir_data API - Upload failed: \(error.localizedDescription)")
                 if let nsError = error as NSError? {
                     // print("  Error Code: \(nsError.code)")

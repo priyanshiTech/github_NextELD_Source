@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LogDate: Identifiable {
     let id = UUID()
-    let date: String
+    let date: Date
     let isMissing: Bool
 }
 
@@ -26,16 +26,14 @@ struct DailyLogView: View {
         var dailyLogsDates: [LogDate] = []
         let todayDate = DateTimeHelper.currentDate().asDate(format: .dateOnlyFormat) ?? Date()
         let logs = DatabaseManager.shared.fetchLogs()
-        guard let firstLog = logs.first,
-                let lastLog = logs.last else {
+        guard let firstLog = logs.first else {
             return dailyLogsDates
         }
-        
-        var numberOfDay = abs(DateTimeHelper.getNoOfDaysBetween(from: firstLog.startTime, to: lastLog.startTime))
+        let startOfDay = DateTimeHelper.startOfDay(for: firstLog.startTime)
+        var numberOfDay = abs(DateTimeHelper.getNoOfDaysBetween(from: startOfDay, to: todayDate))
         
         if numberOfDay == 0 {
-            let currentDate = DateTimeHelper.getStringFromDate(todayDate, format: .dateOnlyFormat)
-            dailyLogsDates.append(LogDate(date: currentDate, isMissing: false))
+            dailyLogsDates.append(LogDate(date: todayDate, isMissing: false))
         } else {
             if numberOfDay > 14 {
                 numberOfDay = 14
@@ -43,8 +41,7 @@ struct DailyLogView: View {
                     
             for dayValue in 0...numberOfDay {
                 let date = DateTimeHelper.calendar.date(byAdding: .day, value: -(dayValue), to: todayDate) ?? Date()
-                let convertedDate = DateTimeHelper.getStringFromDate(date, format: .dateOnlyFormat)
-                dailyLogsDates.append(LogDate(date: convertedDate, isMissing: false))
+                dailyLogsDates.append(LogDate(date: date, isMissing: false))
             }
             
         }
@@ -55,7 +52,7 @@ struct DailyLogView: View {
         return CertifyDatabaseManager.shared.fetchAllRecords()
     }
     //MARK: - Check if a date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
-    private func isDateFullyCertified(_ logDate: String) -> Bool {
+    private func isDateFullyCertified(_ logDate: Date) -> Bool {
         return certifiedRecords.filter( { $0.date == logDate }).first?.isCertify == "Yes"
         
 //        let formatter = DateFormatter()
@@ -162,28 +159,19 @@ struct DailyLogView: View {
             List {
                 ForEach(logDates) { log in
                     HStack {
-                        Text(log.date)
+                        Text(log.date.toLocalString(format: .dateOnlyFormat))
                             .foregroundColor(.primary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                // Navigate to LogsDetails on cell click
-//                                let formatter = DateFormatter()
-//                                formatter.dateFormat = "dd-MM-yyyy"
-//                                if let logDate = formatter.date(from: log.date) {
-//                                    
-//                                }
-                                if let logDate = log.date.asDate(format: .dateOnlyFormat) {
-                                    let selectedEntry = WorkEntry(date: logDate, hoursWorked: 0)
+                                let selectedEntry = WorkEntry(date: log.date, hoursWorked: 0)
                                     navManager.navigate(to: AppRoute.HomeFlow.LogsDetails(title: "Daily Log", entry: selectedEntry))
-                                }
-                                
                             }
 
                         let isCertified = isDateFullyCertified(log.date)
                         Button(action: {
                             // Navigate to certify screen on button click
-                            navManager.navigate(to: AppRoute.HomeFlow.CertifySelectedView(tittle: dateFormattedString(log.date)))
+                            navManager.navigate(to: AppRoute.HomeFlow.CertifySelectedView(tittle: log.date.toLocalString(format: .dateOnlyFormat)))
                             // print("Tapped for \(dateFormattedString(log.date)) → Certified: \(isCertified)")
                         }) {
                             Text(isCertified ? "Certified" : "Uncertified")

@@ -272,9 +272,9 @@ class DatabaseManager: DatabaseHandler {
         case .splitShiftIdentifier:
             return self.identifier == AppStorageHandler.shared.splitShiftIdentifier
         case .onDuty:
-            return self.status == AppConstants.on_Duty
+            return self.status == AppConstants.onDuty
         case .onDrive:
-            return self.status == AppConstants.on_Drive
+            return self.status == AppConstants.onDrive
         case .betweenDates(let startDate, let endDate):
             return startTime >= startDate && startTime < endDate
             
@@ -297,16 +297,17 @@ class DatabaseManager: DatabaseHandler {
     
     func fetchLogs(filterTypes: [FilterType] = [], addWarningAndViolation: Bool = false, order: [Expressible]? = [], limit: Int? = nil) -> [DriverLogModel] {
         var logs: [DriverLogModel] = []
-        var filterExpression: SQLite.Expression<Bool> = getFilter(for: .user) // default filter
-        if !addWarningAndViolation {
+        var filterExpression: SQLite.Expression<Bool> = .init(value: true)
+        
+        if !addWarningAndViolation { //default case
             // wether we need to add violation or warning in record mainly we will add this record when showing all record
-            filterExpression = filterExpression && getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
+            filterExpression = filterExpression && baseFilter()
         }
         for type in filterTypes {
             let filter = getFilter(for: type)
             filterExpression = filterExpression && filter
         }
-        var query = driverLogs.filter(filterExpression).order(startTime.desc)
+        var query = driverLogs.filter(filterExpression).order(startTime.asc)
         if let order = order {
             query = query.order(order)
         }
@@ -443,7 +444,80 @@ class DatabaseManager: DatabaseHandler {
         // print(" No valid trailer found in any database or UserDefaults")
         return nil
     }
+    // MARK: - Save Login/Logout Logs to Database
+    func saveLoginLogoutLogsToSQLite(from logs: [LoginLogoutLog]) {
+        // print("Saving \(logs.count) login/logout logs into SQLite")
+        
+        for log in logs {
+            // Determine status - Login or Logout
+            var statusString = log.status ?? ""
+            var dutyType = log.logType ?? ""
 
+            
+            // If status field contains login/logout info, use that
+            if let status = log.status?.lowercased() {
+                if status.contains("login") {
+                    statusString = "Login"
+                    dutyType = "Login"
+                } else if status.contains("logout") {
+                    statusString = "Logout"
+                    dutyType = "Logout"
+                }
+            }
+            
+            var isVoilation: String = "No"
+            if log.isVoilation == 1 {
+                isVoilation = "Yes"
+            }
+            var dateTime: Date? = nil
+            if let timeStampString = log.dateTime,
+                let timeStamp = TimeInterval(timeStampString) {
+                let convertToSecond = timeStamp/1000
+                let timeStampDate = Date(timeIntervalSince1970: convertToSecond)
+                let timezone = AppStorageHandler.shared.timeZoneOffset ?? ""
+                dateTime = DateTimeHelper.convertToUserTimezone(timeStampDate, offset: timezone)
+            }
+            
+            let model = DriverLogModel(
+                id: nil,
+                status: statusString,
+                startTime:  dateTime ?? Date() ,
+                userId: log.driverId ?? 0,
+                day: log.days ?? 0,
+                isVoilations: isVoilation,
+                dutyType: dutyType,
+                shift: log.shift ?? 0,
+                vehicle: "",
+                odometer: log.odometer ?? 0.0,
+                engineHours: log.engineHour ?? "0",
+                location: log.customLocation ?? "",
+                lat: log.lattitude ?? 0.0,
+                long: log.longitude ?? 0.0,
+                origin: log.origin ?? "",
+                isSynced: true,
+                vehicleId: log.vehicleId ?? 0,
+                trailers: "",
+                notes: log.note ?? "",
+                serverId: log._id,
+                timestamp:Int64(CurrentTimeHelperStamp.currentTimestamp),
+                identifier: 0,
+                remainingWeeklyTime: Int(log.remainingWeeklyTime ?? "0") ?? 0,
+                remainingDriveTime: Int(log.remainingDriveTime ?? "0") ?? 0,
+                remainingDutyTime: Int(log.remainingDutyTime ?? "0") ?? 0,
+                remainingSleepTime: Int(log.remainingSleepTime ?? "0") ?? 0,
+                breaktimerRemaning: nil,
+                lastSleepTime: 0,
+                isSplit: 0,
+                engineStatus: "Off",
+                isSystemGenerated: log.isReportGenerated
+            )
+            
+            // print("Saving login/logout log: \(model.status), \(model.startTime)")
+            insertLog(from: model)
+        }
+        
+        // print("Finished saving login/logout logs.")
+    }
     
     func saveDriverLogsToSQLite(from logs: [ServerDriverLog]) {
         // print("Correct!!!!!!!!!!!!!!!! Saving \(logs.count) logs into SQLite")
@@ -497,7 +571,7 @@ class DatabaseManager: DatabaseHandler {
                 trailers: (log.trailers ?? []).joined(separator: ", "),
                 notes: log.note ?? "",
                 serverId: log._id,
-                timestamp: currentTimestampMillis(),
+                timestamp: Int64(CurrentTimeHelperStamp.currentTimestamp),   
                 identifier: log.identifier ?? 0,
                 remainingWeeklyTime: Int(log.remainingWeeklyTime ?? "0") ?? 0,
                 remainingDriveTime: Int(log.remainingDriveTime ?? "0") ?? 0,
@@ -632,105 +706,7 @@ class DatabaseManager: DatabaseHandler {
         }
     }
     
-//    func insertLog(from model: DriverLogModel) { *******************************************************************
-//
-//        // Normalize status (case insensitive)
-//        let normalizedStatus = model.status.lowercased()
-//        
-//        let skipStatuses: Set<String> = [
-//            "cycle", "weeklycycle"
-//        ]
-//        
-//       
-//        if skipStatuses.contains(normalizedStatus) {
-//            // print(" Skipping log insert for status: \(model.status)")
-//            return
-//        }
-//
-//        do {
-//            // First check: If serverId exists, check for duplicate by serverId
-//            if let serverId = model.serverId, !serverId.isEmpty {
-//                let serverIdCheck = driverLogs.filter(
-//                    self.serverId == serverId &&
-//                    userId == model.userId
-//                )
-//                let serverIdCount = try db?.scalar(serverIdCheck.count) ?? 0
-//                if serverIdCount > 0 {
-//                    // print(" Duplicate log found by serverId: \(serverId), skipping insert")
-//                    return
-//                }
-//            }
-//
-//            let formatter = DateFormatter()
-//            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//            let timeString = formatter.string(from: model.startTime)
-//            
-//            // Check for logs with same status, userId, and startTime within 2 seconds
-//            let twoSecondsBefore = model.startTime.addingTimeInterval(-2.0)
-//            let twoSecondsAfter = model.startTime.addingTimeInterval(2.0)
-//            
-//            let duplicateCheck = driverLogs.filter(
-//                status == model.status &&
-//                userId == model.userId &&
-//                startTime >= twoSecondsBefore &&
-//                startTime <= twoSecondsAfter
-//            )
-//            
-//            let existingCount = try db?.scalar(duplicateCheck.count) ?? 0
-//            if existingCount > 0 {
-//                // print(" Duplicate log found (status: \(model.status), time: \(timeString)), skipping insert")
-//                return
-//            }
-//        } catch {
-//            // print(" Error checking for duplicate: \(error), proceeding with insert")
-//        }
-//        
-//        do {
-//            
-//            let safeDay = model.day == 0 ? 1 : model.day
-//            let safeShift = model.shift == 0 ? 1 : model.shift
-//
-//            
-//            let insert = driverLogs.insert(
-//                status <- model.status,
-//                startTime <- model.startTime,
-//                userId <- model.userId,
-//                day <- safeDay,
-//                isVoilationColumn <- model.isVoilations,
-//                dutyType <- model.dutyType,
-//                shift <- safeShift,
-//                vehicleName <- model.vehicle,
-//                odometer <- model.odometer,
-//                engineHours <- model.engineHours,
-//                location <- model.location,
-//                lat <- model.lat,
-//                long <- model.long,
-//                origin <- model.origin,
-//                isSynced <- model.isSynced,
-//                vehicleId <- model.vehicleId,
-//                trailers <- model.trailers,
-//                notes <- model.notes,
-//                serverId <- model.serverId,
-//                timestamp <- model.timestamp,
-//                identifier <- model.identifier,
-//                remainingWeeklyTime <- model.remainingWeeklyTime ?? 0,
-//                remainingDriveTime <- model.remainingDriveTime ?? 0,
-//                remainingDutyTime <- model.remainingDutyTime ?? 0,
-//                remainingSleepTime <- model.remainingSleepTime ?? 0,
-//                breaktimerRemaning <- model.breaktimerRemaning ?? 0,
-//                lastSleepTime <- model.lastSleepTime,
-//                isSplit <- model.isSplit,
-//                engineStatus <- model.engineStatus
-//            )
-//            
-//            let rowID = try db?.run(insert) ?? 0
-//            // print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
-//
-//           
-//        } catch {
-//            // print(" Insert Log Error: \(error.localizedDescription)")
-//        }
-//    }*******************************
+
 
     
 
@@ -749,11 +725,22 @@ class DatabaseManager: DatabaseHandler {
         }
     }
     
+    func baseFilter() -> SQLite.Expression<Bool> {
+        var statusFilter : SQLite.Expression<Bool> = .init(value: false)
+        for status in DriverStatusType.allCases {
+            if status != .none {
+                statusFilter = statusFilter || (self.status == status.getName())
+            }
+        }
+        
+        return statusFilter && getFilter(for: .user)
+    }
+    
     func getLastRecordOfDriverLogs(filterTypes: [FilterType] = []) -> DriverLogModel? {
         var logs: [DriverLogModel] = []
         do {
             guard let db = self.db else { return nil}
-            var filterExpression = getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
+            var filterExpression: SQLite.Expression<Bool> =  baseFilter()// default filter
             for type in filterTypes {
                 let filter = getFilter(for: type)
                 filterExpression = filterExpression && filter
@@ -807,8 +794,8 @@ class DatabaseManager: DatabaseHandler {
 
     func fetchLastRecord(before date: Date) -> DriverLogModel? {
         guard let db = self.db else { return nil }
-        let baseFilter = getFilter(for: .violation) && getFilter(for: .warning) && getFilter(for: .nextDayAlert) && getFilter(for: .notEngineStopStatus) && getFilter(for: .notEngineStartStatus)
-        let filterExpression = baseFilter && startTime < date
+        var filterExpression: SQLite.Expression<Bool> = baseFilter() && startTime < date
+        
         do {
             if let row = try db.pluck(driverLogs.filter(filterExpression).order(startTime.desc).limit(1)) {
                 return DriverLogModel(
@@ -954,7 +941,8 @@ extension DatabaseManager {
         lastSleepTime: Int,
         RemaningRestBreak: String,
         isVoilations: Bool = false,
-        origin: String
+        origin: String,
+        notes: String = ""
         //isVoilations: String
 
     ) {
@@ -992,7 +980,7 @@ extension DatabaseManager {
             vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
                 //UserDefaults.standard.integer(forKey: "vehicleId"),
             trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
-            notes: "",
+            notes: notes,
             serverId: nil,
             timestamp:TimeUtils.currentTimestamp(with: AppStorageHandler.shared.timeZoneOffset ?? ""),
               //CurrentTimeHelperStamp.currentTimestamp,
@@ -1056,123 +1044,4 @@ extension DatabaseManager {
         }
     }
 }
-
-//MARK: - Check for previous day logs that need certification
-extension DatabaseManager {
-    func hasPreviousDayLogsUncertified() -> Bool {
-        guard let db = db else {
-            // print("Database not available")
-            return false
-        }
-        
-        do {
-            let calendar = Calendar.current
-            let yesterday = calendar.date(byAdding: .day, value: -1, to: Date())!
-            let startOfYesterday = calendar.startOfDay(for: yesterday)
-            let endOfYesterday = calendar.date(byAdding: .day, value: 1, to: startOfYesterday)!
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            formatter.timeZone = TimeZone.current
-            
-            let startOfYesterdayString = formatter.string(from: startOfYesterday)
-            let endOfYesterdayString = formatter.string(from: endOfYesterday)
-            
-            // print("Checking for logs between: \(startOfYesterdayString) and \(endOfYesterdayString)")
-            
-            // Check if there are any logs from previous day
-            let query = driverLogs.filter(
-                startTime >= startOfYesterday &&
-                startTime < endOfYesterday
-            )
-            
-            
-            
-            let totalCount = try db.scalar(query.count)
-            // print("Found \(totalCount) logs from previous day")
-            
-            // If no logs from previous day, return false (normal popup)
-            if totalCount == 0 {
-                // print("No previous day logs found - showing normal popup")
-                return false
-            }
-            
-            // Check for Off Duty duration (10+ hours)
-            let offDutyQuery = driverLogs.filter(
-                startTime >= startOfYesterday &&
-                startTime < endOfYesterday &&
-                status == "OffDuty"
-            )
-            
-            var hasLongOffDuty = false
-            let offDutyLogs = try db.prepare(offDutyQuery)
-            
-            for log in offDutyLogs {
-                let startTimeString = log[startTime]
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                formatter.timeZone = TimeZone.current
-                
-              //  if let startDate = formatter.date(from: startTimeString) {
-                    // Calculate duration from start time to now (or next log)
-                    let duration = Date().timeIntervalSince(startTimeString)
-                    let hours = duration / 3600
-                    
-                    // print("Off Duty log started at: \(startTimeString), Duration: \(hours) hours")
-                    
-                    if hours >= 10 {
-                        hasLongOffDuty = true
-                        // print("Found Off Duty longer than 10 hours!")
-                        break
-              //      }
-                }
-            }
-            
-            // Check certification status using existing fields
-            // Since we don't have isCertifiedLog column, we'll use a workaround
-            
-            // Option 1: Check if all previous day logs have notes (assuming certified logs have notes)
-            let certifiedQuery = driverLogs.filter(
-                startTime >= startOfYesterday &&
-                startTime < endOfYesterday &&
-                notes != ""  // Non-empty notes might indicate certification
-            )
-            let certifiedCount = try db.scalar(certifiedQuery.count)
-            // print("Found \(certifiedCount) logs with notes (possibly certified)")
-            
-            // Option 2: Check sync status (certified logs should be synced)
-            let syncedQuery = driverLogs.filter(
-                startTime >= startOfYesterday &&
-                startTime < endOfYesterday &&
-                isSynced == true  // Synced might indicate certification
-            )
-            let syncedCount = try db.scalar(syncedQuery.count)
-            // print("Found \(syncedCount) synced logs from previous day")
-            
-            // Determine if certification is needed
-            // If less than 50% logs are synced or have notes, consider uncertified
-            let certificationThreshold = totalCount / 2
-            let highestIndication = max(certifiedCount, syncedCount)
-            let needsCertification = (highestIndication < certificationThreshold && totalCount > 0) || hasLongOffDuty
-            
-            if needsCertification {
-                if hasLongOffDuty {
-                    // print("Showing CERTIFY popup - Off Duty longer than 10 hours")
-                } else {
-                    // print("Showing CERTIFY popup - logs need certification")
-                }
-            } else {
-                // print("Showing NORMAL popup - all logs are certified")
-            }
-            
-            return needsCertification
-            
-        } catch {
-            // print("Error checking previous day logs: \(error)")
-            // If error, assume normal popup
-            return false
-        }
-    }
-}
-
 

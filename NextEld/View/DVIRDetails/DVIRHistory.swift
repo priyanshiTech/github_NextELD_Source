@@ -67,9 +67,9 @@ struct DVIRHistory: View {
             .padding(.horizontal)
             
             // Date Pickers
-            HStack(spacing: 16) {
+            HStack(spacing: 16){
                 Button(action: { showFromDatePicker = true }) {
-                    Text(isFromDateSelected ? "\(formatDates(fromDate))" : "From Date")
+                    Text(isFromDateSelected ? DateTimeHelper.formatDateOnly(fromDate) : "From Date")
                         .foregroundColor(isFromDateSelected ? Color(uiColor:.black) : Color(uiColor:.gray))
                         .font(.system(size: 18))
                         .frame(maxWidth: .infinity, minHeight: 50)
@@ -84,7 +84,9 @@ struct DVIRHistory: View {
                 }
                 
                 Button(action: { showToDatePicker = true }) {
-                    Text(isToDateSelected ? " \(formatDates(toDate))" : "To Date")
+                  //  Text(isToDateSelected ? " \(formatDates(toDate))" : "To Date")
+                    Text(isToDateSelected ? DateTimeHelper.formatDateOnly(toDate) : "To Date")
+
                         .foregroundColor(isToDateSelected ? Color(uiColor:.black) : Color(uiColor:.gray))
                         .font(.system(size: 18))
                         .frame(maxWidth: .infinity, minHeight: 50)

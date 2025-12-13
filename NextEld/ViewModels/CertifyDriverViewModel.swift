@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 @MainActor
+
 class CertifyDriverViewModel: ObservableObject {
 
     @Published var isLoading = false
@@ -20,7 +21,7 @@ class CertifyDriverViewModel: ObservableObject {
     var appRootManager: AppRootManager?
     
     
-    func uploadCertifiedLog(
+    func addCertifiedLog(
         driverId: Int,
         vehicleId: Int,
         coDriverId: Int,
@@ -42,10 +43,10 @@ class CertifyDriverViewModel: ObservableObject {
             return
         }
 
-        let fields: [String: String] = [
-            "driverId": String(driverId),
-            "vehicleId": String(vehicleId),
-            "coDriverId": String(coDriverId),
+        let fields: [String: Any] = [
+            "driverId": driverId,
+            "vehicleId": vehicleId,
+            "coDriverId": coDriverId,
             "trailers": trailers,
             "shippingDocs": shippingDocs,
             "certifiedDate": certifiedDate,
@@ -53,6 +54,8 @@ class CertifyDriverViewModel: ObservableObject {
             "certifiedDateTime": certifiedDateTime,
             "certifiedAt": certifiedAt
         ]
+        
+        print("fields request############ data : \(fields)")
 
         let file = MultipartFile(
             name: "file",
@@ -76,6 +79,7 @@ class CertifyDriverViewModel: ObservableObject {
                         self.status = response.status
                         self.token = response.token
                         
+                        
                         if response.token.lowercased() == "false" {
                             SessionManagerClass.shared.clearToken()
                             self.isSessionExpired = true
@@ -98,73 +102,73 @@ class CertifyDriverViewModel: ObservableObject {
             }
         }
     }
-
-
-  /*  func uploadCertifiedLog(
-        driverId: Int,
-        vehicleId: Int,
-        coDriverId: Int,
-        trailers: String,
-        shippingDocs: String,
+//MARK: -  update Certify Function (Simple JSON API)
+    func updateCertifiedLog(
+        driverId: String,
         certifiedDate: String,
-        fileURL: URL,
+        vehicleId: String,
+        coDriverId: String,
+        trailers: [String],
+        shippingDocs: [String],
+        fileURL: URL, // Not used in simple JSON API, but kept for compatibility
         tokenNo: String,
         certifiedDateTime: String,
-        certifiedAt: String
+        completion: @escaping (Result<String, Error>) -> Void
     ) {
-
         isLoading = true
-
-        guard let fileData = try? Data(contentsOf: fileURL) else {
-            self.message = "Cannot read file data"
-            self.isLoading = false
-            return
-        }
-
-        let fields: [String: String] = [
-            "driverId": String(driverId),
-            "vehicleId": String(vehicleId),
-            "coDriverId": String(coDriverId),
-            "trailers": trailers,
-            "shippingDocs": shippingDocs,
-            "certifiedDate": certifiedDate,
-            "tokenNo": tokenNo,
-            "certifiedDateTime": certifiedDateTime,
-            "certifiedAt": certifiedAt
-        ]
-
-
-
         
-        let file = MultipartFile(
-            name: "file",
-            filename: fileURL.lastPathComponent,
-            mimeType: "application/octet-stream",
-            data: fileData
+        let requestBody = UpdateCertifiedLogRequest(
+            driverId: driverId,
+            certifiedDate: certifiedDate,
+            vehicleId: vehicleId,
+            coDriverId: coDriverId,
+            trailers: trailers,
+            shippingDocs: shippingDocs,
+            tokenNo: tokenNo,
+            certifiedDateTime: certifiedDateTime
         )
-
-        let url  = API.Endpoint.certifyDriver.url
-        
-        MultipartAPIService.shared.upload(url: url, fields: fields, files: [file]) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let data):
-                    do {
-                        let response = try JSONDecoder().decode(CertifiedLogResponse.self, from: data)
-                        self?.message = response.message
-                        self?.result = response.result
-                        self?.status = response.status
-                        self?.token = response.token
-                    } catch {
-                        self?.message = "Decoding error: \(error.localizedDescription)"
+        print ("updated request****** \(requestBody)" )
+        Task {
+            do {
+                let response: CertifiedLogResponse = try await NetworkManager.shared.post(
+                    .updateCertifyDriver,
+                    body: requestBody
+                )
+                
+                await MainActor.run {
+                    self.isLoading = false
+                    self.message = response.message
+                    self.result = response.result
+                    self.status = response.status
+                    self.token = response.token
+                    
+                    // Session expiration handling
+                    if response.token.lowercased() == "false" {
+                        SessionManagerClass.shared.clearToken()
+                        self.isSessionExpired = true
+                        self.appRootManager?.currentRoot = .SessionExpireUIView
+                        completion(.failure(NSError(domain: "SessionExpired", code: 401, userInfo: [NSLocalizedDescriptionKey: "Session expired"])))
+                        return
                     }
-                case .failure(let error):
-                    self?.message = "Upload failed: \(error.localizedDescription)"
+                    
+                    completion(.success(response.message ?? "Updated successfully"))
+                }
+            } catch {
+                await MainActor.run {
+                    self.isLoading = false
+                    self.message = "Update failed: \(error.localizedDescription)"
+                    completion(.failure(error))
                 }
             }
-
         }
-    }*/
+    }
+
+
+    
+    
+    
+    
+    
+ 
 }
 

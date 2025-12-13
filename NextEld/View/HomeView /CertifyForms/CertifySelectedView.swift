@@ -16,6 +16,7 @@ struct CertifySelectedView: View {
     @State private var coDriver = "none"
     @State private var selectedCoDriverName: String? = nil
     @State private var selectedCoID: Int? = nil
+    @State private var syncstatus:Int? = nil
     @State private var SelectedTraller: String? = nil
     @State private var SelectedSheeping: String? = nil
     @State private var SelectedVechicle: String? = nil
@@ -29,7 +30,7 @@ struct CertifySelectedView: View {
     @StateObject private var trailerVM = TrailerViewModel()
     @StateObject var shippingVM = ShippingDocViewModel()
     @State private var selectedCoDriverEmail: String = "" //Hidden Email
-    @State private var certifiedDate: String = ""
+    @State private var certifiedDate: Date = Date()
     @State private var isCertified: Bool = false
     @State private var isCertify: String = "No" //Default "No"
     @State private var hasLoadedInitialData = false
@@ -128,6 +129,7 @@ struct CertifySelectedView: View {
                 .padding(.horizontal)
                 Spacer()
                 
+                
                 // MARK: - Form Tab Content"
                 if selectedTab == "Form" {
                     VStack(spacing: 10) {
@@ -218,9 +220,8 @@ struct CertifySelectedView: View {
                                 userID: "\(AppStorageHandler.shared.driverId ?? 0)",
                               //  userName: AppStorageHandler.shared.UserName,
                                 userName: AppStorageHandler.shared.driverName ?? "not found",
-                                startTime: DateTimeHelper.currentDate().asDate(format: .dateOnlyFormat) ?? Date(),
                                 date: certifiedDate,
-                                shift: AppStorageHandler.shared.shift ?? 1,
+                                shift: AppStorageHandler.shared.shift,
                                 selectedVehicle: vehiclesc,
                                 selectedTrailer: trailerVM.trailers.isEmpty
                                     ? "None"
@@ -233,7 +234,7 @@ struct CertifySelectedView: View {
                                 selectedCoDriver: selectedCoDriverName ?? "None",
                                 vehicleID: VechicleID,
                                 coDriverID: selectedCoID,
-                                syncStatus: 0,
+                                syncStatus: syncstatus ?? 0,
                                 isCertify: "No"
                             )
                             CertifyDatabaseManager.shared.saveRecord(record)
@@ -280,13 +281,15 @@ struct CertifySelectedView: View {
                     ) {
                         // Callback when certification is done
                         self.isCertify = "Yes"
-
+                        
                         // optional: re-fetch to confirm
                         let all = CertifyDatabaseManager.shared.fetchAllRecords()
                         if let match = all.first(where: { $0.date == certifiedDate }) {
                             self.isCertify = match.isCertify
                             // print(" DB updated: \(match.isCertify)")
                         }
+                        
+                        navManager.goBack()
                     }
 
                     .environmentObject(trailerVM)
@@ -328,7 +331,7 @@ struct CertifySelectedView: View {
 
     private func loadInitialDataIfNeeded(force: Bool = false) {
         if !force && hasLoadedInitialData { return }
-        certifiedDate = title.extractDate()
+        certifiedDate = title.asDate(format: .dateOnlyFormat) ?? Date()
 
         if vehiclesc.isEmpty, let storedVehicle = AppStorageHandler.shared.vehicleNo, !storedVehicle.isEmpty {
             vehiclesc = storedVehicle
@@ -375,6 +378,8 @@ struct CertifySelectedView: View {
             selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
             coDriver = record.selectedCoDriver
             selectedCoID = record.coDriverID
+            syncstatus = record.syncStatus
+            
         } else {
             // If no record found, ensure shipping docs are loaded from current state
             // Don't clear if user has added docs but not saved yet

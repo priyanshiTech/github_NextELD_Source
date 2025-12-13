@@ -91,19 +91,21 @@ enum DriverStatusType: Hashable, CaseIterable {
     func getName() -> String {
         
         var title = ""
+        
         switch self {
+            
         case .onDuty:
-            title = AppConstants.on_Duty
+            title = AppConstants.onDuty
         case .offDuty:
-            title = AppConstants.off_Duty
+            title = AppConstants.offDuty
         case .onDrive:
-            title = AppConstants.on_Drive
-           case .personalUse:
+            title = AppConstants.onDrive
+        case .personalUse: 
             title = AppConstants.personalUse
         case .yardMode:
             title = AppConstants.yardMove
         case .sleep:
-            title = AppConstants.sleep
+            title = AppConstants.onSleep
         case .none:
             return ""
         }
@@ -129,19 +131,20 @@ enum DriverStatusType: Hashable, CaseIterable {
             self = .personalUse
         case "yard_mode", "yardmode", "yard_move", "yardmove":
             self = .yardMode
+            
         default:
             switch name {
-            case AppConstants.on_Duty:
+            case AppConstants.onDuty:
                 self = .onDuty
-            case AppConstants.off_Duty:
+            case AppConstants.offDuty:
                 self = .offDuty
-            case AppConstants.on_Drive:
+            case AppConstants.onDrive:
                 self = .onDrive
             case AppConstants.personalUse:
                 self = .personalUse
             case AppConstants.yardMove:
                 self = .yardMode
-            case AppConstants.sleep:
+            case AppConstants.onSleep:
                 self = .sleep
             default:
                 return nil
@@ -877,7 +880,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     }
     
     func addIntermediateLogs() {
-        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day]), lastLog.status == AppConstants.on_Drive else {
+        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day]), lastLog.status == AppConstants.onDrive else {
             return
         }
         let startTime = lastLog.startTime
@@ -946,9 +949,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             }
             // check whether the certify table have data or not
             let record = CertifyDatabaseManager.shared.getLastRecordOfCertifyLogs(
-                filterTypes: [.userId, .between(startDate: startOfDay, endDate: endOfDay)]
+                filterTypes: [.userId, .specificDate(date: dateTime)]
             )
-            let recordExist = record != nil
+            let recordExist = record != nil && record?.isCertify == "Yes"
             if !recordExist {
                 // check whether the driver table have data or not
                 if let lastDriverLog = DatabaseManager.shared.getLastRecordOfDriverLogs(
@@ -967,7 +970,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     
     func checkWhetherTheLogCertifyOrNot(status: DriverStatusType) -> Bool {
-        guard let yesterDayDate = DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) else {
+        let todayDate = DateTimeHelper.currentDateTime()
+        guard let yesterDayDateString = DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: todayDate)?.toLocalString(format: .dateOnlyFormat),
+                let yesterDayDate = yesterDayDateString.asDate(format: .dateOnlyFormat) else {
             return true
         }
         return isLogVerify(dateTime: yesterDayDate)
