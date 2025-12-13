@@ -688,7 +688,7 @@ struct AddDvirScreenView: View  {
             updateDvirDataUsingCommonService(record: dvirRecord, dvirLogId: viewModel.driverID, appRootManager: appRootManager, completion: { success in
                 
                 if success {
-                    viewModel.successMessage = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
+                    viewModel.successMessage = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
                     viewModel.showSuccessAlert = true
                 }
                 
@@ -714,7 +714,7 @@ struct AddDvirScreenView: View  {
                 
                 if success {
     
-                    viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
+                    viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
                     viewModel.showSuccessAlert = true
                     
                 }
