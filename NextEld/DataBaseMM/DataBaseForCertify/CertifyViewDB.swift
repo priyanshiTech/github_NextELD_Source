@@ -116,7 +116,6 @@ struct CertifyTableHeader: View {
         HStack(spacing: 5) {
             TableCellCertify(text: "User ID", width: 120, isHeader: true)
             TableCellCertify(text: "User Name", width: 150, isHeader: true)
-            TableCellCertify(text: "Start Time", width: 150, isHeader: true)
             TableCellCertify(text: "Date", width: 120, isHeader: true)
             TableCellCertify(text: "Shift", width: 100, isHeader: true)
             TableCellCertify(text: "Vehicle", width: 150, isHeader: true)
@@ -142,8 +141,7 @@ struct CertifyTableRow: View {
         HStack(spacing: 5) {
             TableCellCertify(text: record.userID, width: 120)
             TableCellCertify(text: record.userName, width: 150)
-            TableCellCertify(text: record.startTime.toLocalString(), width: 150)
-            TableCellCertify(text: record.date, width: 120)
+            TableCellCertify(text: record.date.toLocalString(format: .dateOnlyFormat), width: 120)
             TableCellCertify(text: String(record.shift), width: 100)
             TableCellCertify(text: String(record.selectedVehicle), width: 150)
             TableCellCertify(text: record.selectedTrailer, width: 150)

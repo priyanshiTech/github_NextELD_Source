@@ -491,7 +491,6 @@ extension DvirDatabaseManager {
     private func convertServerRecordToDvirRecord(_ serverRecord: [String: Any]) -> DvirRecord? {
         // Extract dateTime and parse it
         let dateTimeString = serverRecord["dateTime"] as? String ?? ""
-        let (day, time) = parseDateTime(dateTimeString)
         
         // Extract driver info
         let driverId = serverRecord["driverId"] as? Int ?? 0
@@ -518,6 +517,16 @@ extension DvirDatabaseManager {
         let odometer = serverRecord["odometer"] as? Double ?? 0.0
         let timestamp = serverRecord["timestamp"] as? String ?? "\(Int(Date().timeIntervalSince1970 * 1000))"
         let serverId = serverRecord["_id"] as? String ?? ""
+        var imageData: Data? = nil
+        Task {
+            let driverSignFile = serverRecord["driverSignFile"] as? String ?? ""
+            if let url = URL(string: driverSignFile),
+                let data = try? await NetworkManager.shared.getImage(url) {
+                imageData = data
+            }
+           
+        }
+        
         
         // Create DvirRecord
         let record = DvirRecord(
@@ -525,9 +534,9 @@ extension DvirDatabaseManager {
             UserID: "\(driverId)",
             UserName: driverName,
             startTime: dateTimeString.asDate() ?? Date(),
-            DAY: Int(day) ?? 0,
-            Shift: 1, // Default shift
-            DvirTime: time,
+            DAY: AppStorageHandler.shared.days,
+            Shift: AppStorageHandler.shared.shift, // Default shift
+            DvirTime: "",
             odometer: odometer,
             location: location,
             truckDefect: truckDefect,
@@ -540,7 +549,7 @@ extension DvirDatabaseManager {
             timestamp: timestamp,
             Server_ID: serverId,
             Trailer: trailer,
-            signature: nil // Server records don't have signature data in JSON
+            signature: imageData
         )
         
         return record

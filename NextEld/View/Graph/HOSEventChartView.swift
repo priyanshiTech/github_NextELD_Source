@@ -377,9 +377,9 @@ struct HOSEventsChartScreen: View {
 }
 
 extension Date {
-    func toLocalString() -> String {
+    func toLocalString(format: DateFormatterConstants = .defaultDateTime) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.dateFormat = format.rawValue
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter.string(from: self)
     }

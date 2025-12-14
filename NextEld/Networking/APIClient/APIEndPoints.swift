@@ -241,6 +241,9 @@ final class NetworkManager {
             
         }
     
+    func getImage(_ url: URL) async throws -> Data {
+        return try await URLSession.shared.data(for: URLRequest(url: url)).0
+    }
 
 }
 

@@ -949,9 +949,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             }
             // check whether the certify table have data or not
             let record = CertifyDatabaseManager.shared.getLastRecordOfCertifyLogs(
-                filterTypes: [.userId, .between(startDate: startOfDay, endDate: endOfDay)]
+                filterTypes: [.userId, .specificDate(date: dateTime)]
             )
-            let recordExist = record != nil
+            let recordExist = record != nil && record?.isCertify == "Yes"
             if !recordExist {
                 // check whether the driver table have data or not
                 if let lastDriverLog = DatabaseManager.shared.getLastRecordOfDriverLogs(
@@ -970,7 +970,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     
     func checkWhetherTheLogCertifyOrNot(status: DriverStatusType) -> Bool {
-        guard let yesterDayDate = DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) else {
+        let todayDate = DateTimeHelper.currentDateTime()
+        guard let yesterDayDateString = DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: todayDate)?.toLocalString(format: .dateOnlyFormat),
+                let yesterDayDate = yesterDayDateString.asDate(format: .dateOnlyFormat) else {
             return true
         }
         return isLogVerify(dateTime: yesterDayDate)

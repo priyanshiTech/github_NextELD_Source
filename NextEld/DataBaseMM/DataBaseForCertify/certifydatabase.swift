@@ -10,7 +10,7 @@ import SQLite
 
 enum CertifyFilterType {
     case userId
-    case between(startDate:Date, endDate: Date)
+    case specificDate(date:Date)
     case notSync
 }
 
@@ -22,8 +22,7 @@ class CertifyDatabaseManager {
     private let id = Expression<Int64>("id")
     private let userID = Expression<String>("userID")
     private let userName = Expression<String>("userName")
-    private let startTime = Expression<Date>("startTime")
-    private let date = Expression<String>("date")
+    private let date = Expression<Date>("date")
     private let shift = Expression<Int>("shift")
     private let selectedVehicle = Expression<String>("selectedVehicle")
     private let selectedTrailer = Expression<String>("selectedTrailer")
@@ -58,7 +57,6 @@ class CertifyDatabaseManager {
                 table.column(id, primaryKey: .autoincrement)
                 table.column(userID)
                 table.column(userName)
-                table.column(startTime)
                 table.column(date)
                 table.column(shift)
                 table.column(selectedVehicle)
@@ -89,7 +87,6 @@ class CertifyDatabaseManager {
             let insert = certifyTable.insert(
                 userID <- record.userID,
                 userName <- record.userName,
-                startTime <- record.startTime,
                 date <- record.date,
                 shift <- record.shift,
                 selectedVehicle <- record.selectedVehicle,
@@ -115,8 +112,8 @@ class CertifyDatabaseManager {
             switch type {
             case .userId:
                 filterExpression = filterExpression && userID == String(AppStorageHandler.shared.driverId ?? 0)
-            case .between(let startDate, let endDate):
-                filterExpression = filterExpression && startTime > startDate && startTime < endDate
+            case .specificDate(let date):
+                filterExpression = filterExpression && self.date == date
             case .notSync:
                 filterExpression = filterExpression && isSynced == 0
             }
@@ -125,7 +122,7 @@ class CertifyDatabaseManager {
     }
     
     func getLastRecordOfCertifyLogs(filterTypes: [CertifyFilterType] = []) -> CertifyRecord? {
-        let query = certifyTable.filter(getFilter(for: filterTypes)).order(startTime.desc).limit(1)
+        let query = certifyTable.filter(getFilter(for: filterTypes)).order(date.desc).limit(1)
         var records: [CertifyRecord] = []
         do {
             if let rows = try db?.prepare(query) {
@@ -133,7 +130,6 @@ class CertifyDatabaseManager {
                     records.append(CertifyRecord(
                         userID: row[userID],
                         userName: row[userName],
-                        startTime: row[startTime],
                         date: row[date],
                         shift: row[shift],
                         selectedVehicle: row[selectedVehicle],
@@ -162,7 +158,6 @@ class CertifyDatabaseManager {
                     records.append(CertifyRecord(
                         userID: row[userID],
                         userName: row[userName],
-                        startTime: row[startTime],
                         date: row[date],
                         shift: row[shift],
                         selectedVehicle: row[selectedVehicle],
@@ -192,7 +187,6 @@ class CertifyDatabaseManager {
                 try db?.run(query.update(
                     userID <- record.userID,
                     userName <- record.userName,
-                    startTime <- record.startTime,
                     shift <- record.shift,
                     selectedVehicle <- record.selectedVehicle,
                     selectedTrailer <- record.selectedTrailer,
@@ -209,7 +203,6 @@ class CertifyDatabaseManager {
                 let insert = certifyTable.insert(
                     userID <- record.userID,
                     userName <- record.userName,
-                    startTime <- record.startTime,
                     date <- record.date,
                     shift <- record.shift,
                     selectedVehicle <- record.selectedVehicle,
@@ -225,11 +218,11 @@ class CertifyDatabaseManager {
                 // print("@@@@@@@@@@@@ Certify record inserted with ID: \(rowId ?? -1)")
             }
         } catch {
-            // print("Error saving record: \(error)")
+            print("Error saving certifcy record: \(error)")
         }
     }
     
-    func updateCertifyStatus(for date: String, isCertify: String, syncStatus: Int) {
+    func updateCertifyStatus(for date: Date, isCertify: String, syncStatus: Int) {
         
         do {
             let query = certifyTable.filter(self.date == date)
@@ -256,7 +249,7 @@ class CertifyDatabaseManager {
         
         for serverRecord in serverCertifyLogs {
             // Extract certifiedDate to check if record already exists
-            guard let certifiedDate = serverRecord["certifiedDate"] as? String, !certifiedDate.isEmpty else {
+            guard let certifiedStringDate = serverRecord["certifiedDate"] as? String, let certifiedDate = certifiedStringDate.asDate(format: .dateOnlyFormat) else {
                 // print(" Skipping record: Missing or invalid certifiedDate")
                 continue
             }
@@ -273,7 +266,6 @@ class CertifyDatabaseManager {
                     let insert = certifyTable.insert(
                         userID <- certifyRecord.userID,
                         userName <- certifyRecord.userName,
-                        startTime <- certifyRecord.startTime,
                         date <- certifyRecord.date,
                         shift <- certifyRecord.shift,
                         selectedVehicle <- certifyRecord.selectedVehicle,
@@ -299,7 +291,7 @@ class CertifyDatabaseManager {
     }
     
     // MARK: - Check if record exists for date
-    private func recordExistsForDate(date: String) -> Bool {
+    private func recordExistsForDate(date: Date) -> Bool {
         guard let db = db else { return false }
         do {
             let query = certifyTable.filter(self.date == date)
@@ -352,8 +344,7 @@ class CertifyDatabaseManager {
         return CertifyRecord(
             userID: String(driverId),
             userName: driverName,
-            startTime: startTime,
-            date: certifiedDate,
+            date: certifiedDate.asDate(format: .dateOnlyFormat) ?? Date(),
             shift: shift,
             selectedVehicle: vehicleName,
             selectedTrailer: trailersString.isEmpty ? "None" : trailersString,
@@ -390,7 +381,7 @@ class CertifyDatabaseManager {
         // print("After update DB record: \(updated)")
     }*/
     
-    func markCertified(for date: String, userID: String) {
+    func markCertified(for date: Date, userID: String) {
         let record = certifyTable.filter(self.date == date && self.userID == userID)
 
         do {
@@ -409,35 +400,5 @@ class CertifyDatabaseManager {
             print("Failed to certify: \(error)")
         }
     }
-
-    
-    // MARK: - Check if Previous Day Log Needs Certification
-    
-    func hasPreviousDayLogsUncertified() -> Bool {
-        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
-        let yesterdayString = DateHelper.shared.formatForDB(yesterday) //  Use common formatter
-        // print(" Checking previous date string:", yesterdayString)
-
-        do {
-            let query = certifyTable.filter(self.date == yesterdayString)
-            if let rows = try db?.prepare(query) {
-                for row in rows {
-                    let shiftValue = row[self.shift]
-                    let certifyStatus = row[self.isLogcertified]
-                    if certifyStatus == "No" {
-                        return true
-                    }
-                }
-            }
-        } catch {
-            // print(" Error checking previous day certification: \(error)")
-        }
-
-        // print(" No uncertified previous day log found")
-        return false
-    }
-    
-    
-    
 
 }

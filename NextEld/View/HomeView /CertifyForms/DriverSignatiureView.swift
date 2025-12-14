@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 
+
 struct SignatureCertifyView: View {
     // Inputs
     @Binding var signaturePath: Path
@@ -19,7 +20,7 @@ struct SignatureCertifyView: View {
        var selectedShippingDoc: String = "None"
        var selectedCoDriver: String? = nil
        var selectedCoDriverID: Int? = nil
-       var certifiedDate: String = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none)
+        var certifiedDate: Date = Date()
        var onCertified: (() -> Void)? = nil
         var onDismiss: (() -> Void)? = nil
 
@@ -35,6 +36,8 @@ struct SignatureCertifyView: View {
     @State private var alertTitle = "Alert"
     @State private var alertMessage = ""
     @State private var isLoading = false
+    
+    @State private var navigateToBaCK: Bool = false
 
     private var isFormValid: Bool {
         let vehOK = !selectedVehicle.isEmpty && selectedVehicle != "None"
@@ -174,11 +177,14 @@ struct SignatureCertifyView: View {
                     let isAlreadyCertified = existingRecord != nil
                     
                     var certifyTimeStamp  = currentTimestampMillis()
-                     if DateTimeHelper.currentDate() != certifiedDate {
-                                            // time required always in format certifyDate+" 23:59:59"
-                                            let certifiedDateTime = DateTimeHelper.endOfDay(for: certifiedDate.asDate(format: .dateOnlyFormat) ?? Date())?.addingTimeInterval(-1)
-                                            certifyTimeStamp = String((certifiedDateTime?.timeIntervalSince1970 ?? 0) * 1000)
-                                        }
+                    if DateTimeHelper.calendar.isDateInToday(certifiedDate) {
+                        
+                        // time required always in format certifyDate+" 23:59:59"
+                        let requiredDateInString = certifiedDate.toLocalString(format: .dateOnlyFormat) + " 23:59:59"
+                        let requiredDate = requiredDateInString.asDate()
+                        let certifiedDateTime = DateTimeHelper.endOfDay(for: certifiedDate)?.addingTimeInterval(-1)
+                        certifyTimeStamp = String(Int(certifiedDateTime?.timeIntervalSince1970 ?? 0) * 1000)
+                    }
                     
                     
                     if isAlreadyCertified {
@@ -186,7 +192,7 @@ struct SignatureCertifyView: View {
                         print("UPDATE API called - Already certified (Green)")
                         certifyVM.updateCertifiedLog(
                             driverId: "\(driverId)",
-                            certifiedDate: certifiedDate,
+                            certifiedDate: certifiedDate.toLocalString(format: .dateOnlyFormat),
                             vehicleId: "\(AppStorageHandler.shared.vehicleId ?? 0)",
                             coDriverId: "\(AppStorageHandler.shared.coDriverId ?? 0)",
                             trailers: trailerVM.trailers,
@@ -209,11 +215,7 @@ struct SignatureCertifyView: View {
                                         isCertify: "Yes",
                                         syncStatus: 1
                                     )
-                                    NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
-                                    onCertified?()
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                                        onDismiss?()
-                                    }
+                                    navigateToBaCK = true
                                 case .failure(let err):
                                     alertTitle = "Error"
                                     alertMessage = err.localizedDescription
@@ -239,7 +241,7 @@ struct SignatureCertifyView: View {
                             coDriverId: AppStorageHandler.shared.coDriverId ?? 0,
                             trailers: trailersString,
                             shippingDocs: shippingDocsString,
-                            certifiedDate: certifiedDate,
+                            certifiedDate: certifiedDate.toLocalString(format: .dateOnlyFormat),
                             fileURL: fileURL,
                             tokenNo: tokenNo ?? "not Found",
                             certifiedDateTime: "\(certifyTimeStamp)",
@@ -259,17 +261,13 @@ struct SignatureCertifyView: View {
                                         isCertify: "Yes",
                                         syncStatus: 1
                                     )
-                                    NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
-                                    onCertified?()
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                                        onDismiss?()
-                                    }
+                                    navigateToBaCK = true
                                 case .failure(let err):
                                     alertTitle = "Error"
                                     alertMessage = err.localizedDescription
                                     CertifyDatabaseManager.shared.updateCertifyStatus(
                                         for: certifiedDate,
-                                        isCertify: "Yes",
+                                        isCertify: "No",
                                         syncStatus: 0
                                     )
                                 }
@@ -299,7 +297,15 @@ struct SignatureCertifyView: View {
         }
         .transition(.slide)
         .alert(alertTitle, isPresented: $showAlert) {
-            Button("OK", role: .cancel) { }
+            Button("OK", role: .cancel) {
+                if navigateToBaCK {
+                    NotificationCenter.default.post(name: .certifyUpdated, object: certifiedDate)
+                    onCertified?()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        onDismiss?()
+                    }
+                }
+            }
         } message: {
             Text(alertMessage)
         }

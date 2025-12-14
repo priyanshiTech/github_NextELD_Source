@@ -140,7 +140,7 @@ struct DvirTableRow: View {
             TableCellDvirList(text: record.truckDefect, width: 200)
             TableCellDvirList(text: record.trailerDefect, width: 200)
             TableCellDvirList(text: record.vehicleCondition, width: 350)
-            TableCellDvirList(text: "\(DateTimeHelper.currentDate()) \(DateTimeHelper.currentTime())", width: 200)
+            TableCellDvirList(text: record.startTime.toLocalString(), width: 200)
             TableCellDvirList(text: "\(AppStorageHandler.shared.days)", width: 100)
             TableCellDvirList(text: "\(AppStorageHandler.shared.shift)", width: 60)
             TableCellDvirList(text: record.notes, width: 250)
