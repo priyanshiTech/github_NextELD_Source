@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 struct AddDvirScreenView: View  {
     
     @EnvironmentObject var navmanager: NavigationManager
@@ -291,20 +293,8 @@ struct AddDvirScreenView: View  {
                 mainContent
                 addDvirButton
             }
-            .navigationBarBackButtonHidden()
-//            .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
-//                switch type {
-//                case .trailerScreen:
-//                    TrailerView(trailerVM: trailerVM, tittle: AppConstants.trailersTittle, trailers: $trailerVM.trailers)
-//                case .ShippingDocment:
-//                    ShippingDocView(tittle: AppConstants.shippingTittle)
-//                case .AddVehicleForDVIR:
-//                    AddVehicleForDvir(selectedVehicleNumber: $vehicleVM.selectedVehicleNumber, VechicleID: $vehicleVM.vehicleID)
-//                default:
-//                    EmptyView()
-//                }
-//            })
-            
+        
+
             .onAppear {
                 // print(" AddDvirScreenView - onAppear called")
                 loadRecordData()
@@ -328,23 +318,7 @@ struct AddDvirScreenView: View  {
                     trailerVM.trailers = newValue
                 }
             }
-                    .alert(isPresented: $viewModel.showValidationAlert) {
-                        Alert(
-                            title: Text("Missing Information"),
-                            message: Text(viewModel.validationMessage),
-                            dismissButton: .default(Text("OK"))
-                        )
-                   }
-                    .alert(isPresented: $viewModel.showSuccessAlert) {
-                        Alert(
-                            title: Text("Success"),
-                            message: Text(viewModel.successMessage),
-                            dismissButton: .default(Text("OK")) {
-                                navmanager.goBack()
-                                // print(" User acknowledged success message")
-                            }
-                        )
-                   }
+                   
             
             
             // MARK: - Signature Popup Overlay
@@ -398,6 +372,27 @@ struct AddDvirScreenView: View  {
                     .transition(.scale)
             }
         }
+        .navigationBarBackButtonHidden()
+  
+        .alert(item: $viewModel.alertType) { alertType in
+            switch alertType {
+            case .validation(let message):
+                return Alert(
+                    title: Text("Missing Information"),
+                    message: Text(message),
+                    dismissButton: .default(Text("OK"))
+                )
+            case .success(let message):
+                return Alert(
+                    title: Text("Success"),
+                    message: Text(message),
+                    dismissButton: .default(Text("OK")) {
+                        navmanager.goBack()
+                    }
+                )
+            }
+        }
+        
         .onAppear {
             Task { @MainActor in
                 self.address = await SyncViewModel().getLocation()
@@ -529,10 +524,14 @@ struct AddDvirScreenView: View  {
         if let errorMessage = validateForm() {
             // print(" Validation Failed: \(errorMessage)")
             viewModel.validationMessage = errorMessage
-            viewModel.showValidationAlert = true
+            // Set to nil first to ensure alert triggers even if same error message
+            viewModel.alertType = nil
+            // Small delay to ensure SwiftUI processes the nil assignment
+            DispatchQueue.main.async {
+                viewModel.alertType = .validation(errorMessage)
+            }
             return
         }
-        
         // print(" Validation Passed - Proceeding to save")
         
         // Create working record with current form values
@@ -688,8 +687,11 @@ struct AddDvirScreenView: View  {
             updateDvirDataUsingCommonService(record: dvirRecord, dvirLogId: viewModel.driverID, appRootManager: appRootManager, completion: { success in
                 
                 if success {
-                    viewModel.successMessage = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
-                    viewModel.showSuccessAlert = true
+                    DispatchQueue.main.async {
+                        let successMsg = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
+                        viewModel.successMessage = successMsg
+                        viewModel.alertType = .success(successMsg)
+                    }
                 }
                 
             })
@@ -713,10 +715,11 @@ struct AddDvirScreenView: View  {
             uploadDvirDataUsingCommonService(record: dvirRecord, appRootManager: appRootManager, completion: { success in
                 
                 if success {
-    
-                    viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
-                    viewModel.showSuccessAlert = true
-                    
+                    DispatchQueue.main.async {
+                        let successMsg = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
+                        viewModel.successMessage = successMsg
+                        viewModel.alertType = .success(successMsg)
+                    }
                 }
             })
             // print(" API call initiated successfully!")
@@ -766,7 +769,7 @@ struct AddDvirScreenView: View  {
             return "Please select a Vehicle"
         }
         
-        if (trailerVM.trailers.first ?? "").isEmpty { return "Please select a Trailer" }
+
         if trailerVM.truckDefectSelection == nil { return "Please select Truck Defect status" }
         if trailerVM.trailerDefectSelection == nil { return "Please select Trailer Defect status" }
         if viewModel.notesText.isEmpty { return "Please enter Notes" }
@@ -827,39 +830,3 @@ struct AddDvirScreenView: View  {
     }
 }
 
-//MARK: -   ADdd a validation  for input fields
-//struct DefectsSection: View  
-struct DefectsSection: View {
-    let title: String
-    @Binding var selection: String?
-    var onSelectNoDefect: (() -> Void)? = nil
-    let onSelectDefect: () -> Void
-    
-    var body: some View {
-        VStack(spacing: 10) {
-            Button(action: {
-                selection = "no"
-                onSelectNoDefect?()
-            }) {
-                defectButton(label: "No Defects", isSelected: selection == "no")
-            }
-            
-            Button(action: onSelectDefect) {
-                defectButton(
-                    label: "Has Defects",
-                    isSelected: selection != nil && selection != "no"
-                )
-            }
-        }
-    }
-    
-    private func defectButton(label: String, isSelected: Bool) -> some View {
-        Text(label)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(isSelected ? Color(UIColor.wine) : Color.white)
-            .foregroundColor(isSelected ? .white : Color(UIColor.wine))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(UIColor.wine), lineWidth: 1))
-            .cornerRadius(8)
-    }
-}

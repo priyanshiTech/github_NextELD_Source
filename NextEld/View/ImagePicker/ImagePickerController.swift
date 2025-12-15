@@ -110,6 +110,7 @@ struct DefectRowView: View {
     let defectText: String
     var isUploaded: Bool = false
     var isUploading: Bool = false
+    var showUploadButton: Bool = true
     let onUpload: () -> Void
     
     var body: some View {
@@ -119,14 +120,16 @@ struct DefectRowView: View {
                 .font(.subheadline)
                 .lineLimit(1)
             Spacer()
-            Button(isUploaded ? "Uploaded" : (isUploading ? "Uploading..." : "Upload")) {
-                if !isUploaded && !isUploading {
-                    onUpload()
+            if showUploadButton {
+                Button(isUploaded ? "Uploaded" : (isUploading ? "Uploading..." : "Upload")) {
+                    if !isUploaded && !isUploading {
+                        onUpload()
+                    }
                 }
+                .foregroundColor(isUploaded ? .green : (isUploading ? .gray : .red))
+                .font(.subheadline)
+                .disabled(isUploaded || isUploading)
             }
-            .foregroundColor(isUploaded ? .green : (isUploading ? .gray : .red))
-            .font(.subheadline)
-            .disabled(isUploaded || isUploading)
         }
         .padding(.vertical, 4)
     }

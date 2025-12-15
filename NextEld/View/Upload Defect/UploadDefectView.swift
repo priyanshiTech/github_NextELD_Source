@@ -17,6 +17,7 @@ struct DefectItem: Identifiable {
     let type: String // "Truck" or "Trailer"
     var isUploaded: Bool = false
     var isUploading: Bool = false
+    var onUpload: (() -> Void)?
 }
 
 // MARK: - UploadDefectView
@@ -121,14 +122,19 @@ extension UploadDefectView {
                 .foregroundColor(Color(uiColor:.black))
             
             if defects.isEmpty {
-                DefectRowView(defectText: "None", isUploaded: false, onUpload: {})
+                // Check if this defect type is "none" or "no" - if yes, hide upload button
+                let shouldShow = shouldShowUploadButtonForDefectType(title: title)
+                DefectRowView(defectText: "None", isUploaded: false, showUploadButton: shouldShow, onUpload: {})
             } else {
                 ForEach(defects) { defect in
                     if let index = defectItems.firstIndex(where: { $0.id == defect.id }) {
+                        // Check if this defect type is "none" or "no" - if yes, hide upload button
+                        let shouldShow = shouldShowUploadButtonForDefectType(title: title)
                         DefectRowView(
                             defectText: defect.name,
                             isUploaded: defectItems[index].isUploaded,
                             isUploading: defectItems[index].isUploading,
+                            showUploadButton: shouldShow,
                             onUpload: {
                                 selectedDefectItem = defectItems[index]
                                 selectedDefectType = defectItems[index].type
@@ -139,6 +145,33 @@ extension UploadDefectView {
                 }
             }
         }
+    }
+    
+    // Helper function to check if upload button should be shown for a specific defect type
+    private func shouldShowUploadButtonForDefectType(title: String) -> Bool {
+        let recordToUse = currentRecord ?? selectedRecord
+        guard let record = recordToUse else { return true }
+        
+        let truckDefect = record.truckDefect.trimmingCharacters(in: .whitespaces).lowercased()
+        let trailerDefect = record.trailerDefect.trimmingCharacters(in: .whitespaces).lowercased()
+        
+        // If title is "Truck Defect", check truck defect value
+        if title.lowercased().contains("truck") {
+            // Hide upload button if truck defect is "none" or "no"
+            if truckDefect == "none" || truckDefect == "no" {
+                return false
+            }
+        }
+        
+        // If title is "Trailer Defect", check trailer defect value
+        if title.lowercased().contains("trailer") {
+            // Hide upload button if trailer defect is "none" or "no"
+            if trailerDefect == "none" || trailerDefect == "no" {
+                return false
+            }
+        }
+        
+        return true
     }
 }
 
@@ -217,16 +250,19 @@ extension UploadDefectView {
             }
             .background(Color.gray.opacity(0.1))
             
-            Button(action: { uploadSelectedImage(image) }) {
-                Text(viewModel.isUploading ? "Uploading..." : "Upload")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, minHeight: 50)
-                    .background(viewModel.isUploading ? Color.gray : Color(UIColor.wine))
-                    .cornerRadius(8)
-                    .padding()
+            // Only show upload button if truck defect is not "none" AND trailer defect is not "none"
+            if shouldShowUploadButton {
+                Button(action: { uploadSelectedImage(image) }) {
+                    Text(viewModel.isUploading ? "Uploading..." : "Upload")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(viewModel.isUploading ? Color.gray : Color(UIColor.wine))
+                        .cornerRadius(8)
+                        .padding()
+                }
+                .disabled(viewModel.isUploading)
             }
-            .disabled(viewModel.isUploading)
         }
         .frame(width: UIScreen.main.bounds.width * 0.9,
                height: UIScreen.main.bounds.height * 0.7)
@@ -243,6 +279,22 @@ extension UploadDefectView {
     }
     private var trailerDefects: [DefectItem] {
         defectItems.filter { $0.type == "Trailer" }
+    }
+    
+    // Check if upload button should be shown (hide if truck or trailer defect is "none" or "no")
+    private var shouldShowUploadButton: Bool {
+        let recordToUse = currentRecord ?? selectedRecord
+        guard let record = recordToUse else { return false }
+        
+        let truckDefect = record.truckDefect.trimmingCharacters(in: .whitespaces).lowercased()
+        let trailerDefect = record.trailerDefect.trimmingCharacters(in: .whitespaces).lowercased()
+        
+        // Hide upload button if truck defect is "none"/"no" OR trailer defect is "none"/"no"
+        if truckDefect == "none" || truckDefect == "no" || trailerDefect == "none" || trailerDefect == "no" {
+            return false
+        }
+        
+        return true
     }
     
     private func initializeData() {

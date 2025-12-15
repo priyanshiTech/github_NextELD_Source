@@ -20,7 +20,8 @@ class AddDvirScreenViewModel: ObservableObject {
 
     @Published var signatureImage: UIImage? = nil
     @Published var showSignaturePad = false
-    
+    @Published var alertType: DvirAlertType? = nil
+
     // MARK: - Popups & Alerts
     @Published var Showpopup: Bool = false
     @Published var selectedTab = ""
@@ -50,3 +51,17 @@ class AddDvirScreenViewModel: ObservableObject {
     @Published var selectedCoDriver: String? = nil
 }
 
+
+
+// Add this enum to your ViewModel or at the top of your view file
+enum DvirAlertType: Identifiable {
+    case validation(String)
+    case success(String)
+    
+    var id: String {
+        switch self {
+        case .validation(let message): return "validation-\(message.hashValue)"
+        case .success(let message): return "success-\(message.hashValue)"
+        }
+    }
+}

@@ -13,6 +13,10 @@ enum AlertType {
     case splitShiftEnds
     case idleState
     case logoutOFFSleepDuty
+    //MARK: DVIR Alert
+    
+    
+    
     
     
     func getTitle() -> String {
@@ -38,6 +42,7 @@ enum AlertType {
             title = ""
         case .logoutOFFSleepDuty:
             title = AppConstants.logoutOffDutyAlert
+  
         }
         return title
     }

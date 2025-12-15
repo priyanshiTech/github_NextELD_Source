@@ -115,7 +115,7 @@ struct LogsDetails: View {
             
             if logsForSelectedDate.isEmpty {
                 Text("No logs available for this date.")
-                    .font(.subheadline)
+                    .font(.subheadline) 
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()

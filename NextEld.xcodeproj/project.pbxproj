@@ -142,6 +142,7 @@
 		AFA98C952E017C1F00E87802 /* DeviceManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C942E017C1F00E87802 /* DeviceManagerView.swift */; };
 		AFA98C972E017F6700E87802 /* StoreEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C962E017F6700E87802 /* StoreEventView.swift */; };
 		AFA98C992E01826100E87802 /* FrimWareUpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */; };
+		AFB6A25F2EF0191A004D3C82 /* DefectSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB6A25E2EF0191A004D3C82 /* DefectSection.swift */; };
 		AFB7511B2E97C20900A4B65F /* Extension + View.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB7511A2E97C20900A4B65F /* Extension + View.swift */; };
 		AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943082E029A7900AD19D7 /* TrackerPeripheral.swift */; };
 		AFB943102E029C5B00AD19D7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AFB9430C2E029C5B00AD19D7 /* Main.storyboard */; };
@@ -416,6 +417,7 @@
 		AFA98C942E017C1F00E87802 /* DeviceManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManagerView.swift; sourceTree = "<group>"; };
 		AFA98C962E017F6700E87802 /* StoreEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreEventView.swift; sourceTree = "<group>"; };
 		AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrimWareUpdateModel.swift; sourceTree = "<group>"; };
+		AFB6A25E2EF0191A004D3C82 /* DefectSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefectSection.swift; sourceTree = "<group>"; };
 		AFB7511A2E97C20900A4B65F /* Extension + View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + View.swift"; sourceTree = "<group>"; };
 		AFB943082E029A7900AD19D7 /* TrackerPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerPeripheral.swift; sourceTree = "<group>"; };
 		AFB9430B2E029C5B00AD19D7 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -823,6 +825,7 @@
 			isa = PBXGroup;
 			children = (
 				AF3A59352EB4F48F007A438F /* UploadDefectView.swift */,
+				AFB6A25E2EF0191A004D3C82 /* DefectSection.swift */,
 			);
 			path = "Upload Defect";
 			sourceTree = "<group>";
@@ -1854,6 +1857,7 @@
 				10CA6EC02DCC9103003B265C /* ScrollViewUniversal.swift in Sources */,
 				AFA98C8F2E01748000E87802 /* VariablesView.swift in Sources */,
 				AF3A59362EB4F48F007A438F /* UploadDefectView.swift in Sources */,
+				AFB6A25F2EF0191A004D3C82 /* DefectSection.swift in Sources */,
 				AFCC4CA02E49E8CF00629DE3 /* MultipartAPI.swift in Sources */,
 				CBE886072E9969F900B7D581 /* AppConstants.swift in Sources */,
 				AF45BB712EB61A8600DDDB4D /* addDefectViewModel.swift in Sources */,
