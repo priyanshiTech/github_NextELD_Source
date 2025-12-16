@@ -156,6 +156,7 @@ class CertifyDatabaseManager {
             if let rows = try db?.prepare(query) {
                 for row in rows {
                     records.append(CertifyRecord(
+                        localID: row[id],
                         userID: row[userID],
                         userName: row[userName],
                         date: row[date],
@@ -185,6 +186,7 @@ class CertifyDatabaseManager {
             let query = certifyTable.filter(date == record.date)
             if let existing = try db?.pluck(query) {
                 try db?.run(query.update(
+                    id <- record.localID ?? existing[id],
                     userID <- record.userID,
                     userName <- record.userName,
                     shift <- record.shift,
@@ -226,6 +228,22 @@ class CertifyDatabaseManager {
         
         do {
             let query = certifyTable.filter(self.date == date)
+            try db?.run(query.update(
+                self.isLogcertified <- isCertify,
+                self.isSynced <- syncStatus
+            ))
+            // print("DB updated for \(date): isCertify=\(isCertify), syncStatus=\(syncStatus)")
+        } catch {
+            // print("Failed to update certify status: \(error)")
+        }
+        
+    }
+    
+    
+    func updateCertifyStatus(for id: Int64, isCertify: String, syncStatus: Int) {
+        
+        do {
+            let query = certifyTable.filter(self.id == id)
             try db?.run(query.update(
                 self.isLogcertified <- isCertify,
                 self.isSynced <- syncStatus

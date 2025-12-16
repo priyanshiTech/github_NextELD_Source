@@ -9,7 +9,7 @@ import Foundation
 
 struct CertifyRecord: Codable{
     
-    
+    var localID: Int64?
     var userID: String
     var userName: String
     var date: Date
@@ -23,4 +23,5 @@ struct CertifyRecord: Codable{
     var signature: Data?
     var syncStatus: Int
     var isCertify: String
+    
 }
