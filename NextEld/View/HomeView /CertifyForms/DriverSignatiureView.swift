@@ -41,13 +41,14 @@ struct SignatureCertifyView: View {
 
     private var isFormValid: Bool {
         let vehOK = !selectedVehicle.isEmpty && selectedVehicle != "None"
-        let trlOK = !selectedTrailer.isEmpty && selectedTrailer != "None"
+        // Removed trailer condition - trailer can be empty/None and form will still be valid
+        // let trlOK = !selectedTrailer.isEmpty && selectedTrailer != "None"
         let docOK = !selectedShippingDoc.isEmpty && selectedShippingDoc != "None"
 
         // --- Co-driver logic updated ---
         let coOK: Bool = {
             if (selectedCoDriver?.lowercased().trimmingCharacters(in: .whitespaces)) != nil {
-                return true    // Always true → “None” allowed
+                return true    // Always true → "None" allowed
             }
             return true
         }()
@@ -55,7 +56,8 @@ struct SignatureCertifyView: View {
         // ID also allowed to be nil (None case)
         let coIDOK = true
 
-        return vehOK && trlOK && docOK && coOK && coIDOK
+        // Removed trlOK from validation - trailer condition removed
+        return vehOK && docOK && coOK && coIDOK
     }
 
     var body: some View {

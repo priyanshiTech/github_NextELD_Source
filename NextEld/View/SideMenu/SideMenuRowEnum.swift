@@ -12,13 +12,47 @@ import UIKit
 struct AppInfo {
     
     static var version: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        // Try multiple methods to get version reliably
+        if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
+           !version.isEmpty, version != "$(MARKETING_VERSION)" {
+            return version
+        }
+        
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
+           !version.isEmpty, version != "$(MARKETING_VERSION)" {
+            return version
+        }
+        
+        if let version = Bundle.main.localizedInfoDictionary?["CFBundleShortVersionString"] as? String,
+           !version.isEmpty {
+            return version
+        }
+        
+        // Fallback: If MARKETING_VERSION wasn't substituted, return default
+        return "1.5"
     }
     
     static var build: String {
-        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
+        // Try multiple methods to get build number reliably
+        if let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String,
+           !build.isEmpty, build != "$(CURRENT_PROJECT_VERSION)" {
+            return build
+        }
+        
+        if let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String,
+           !build.isEmpty, build != "$(CURRENT_PROJECT_VERSION)" {
+            return build
+        }
+        
+        if let build = Bundle.main.localizedInfoDictionary?["CFBundleVersion"] as? String,
+           !build.isEmpty {
+            return build
+        }
+        
+        return "Unknown"
     }
 }
+
 
 
 enum SideMenuRowType: Int, CaseIterable{

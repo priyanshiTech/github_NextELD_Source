@@ -226,6 +226,7 @@ extension UploadDefectView {
     }
     
     private func imagePreviewPopup(_ image: UIImage) -> some View {
+        
         VStack(spacing: 0) {
             HStack {
                 Text("Document")

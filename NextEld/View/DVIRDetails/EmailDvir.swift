@@ -146,24 +146,7 @@ struct EmailDvir: View {
             
         .navigationBarHidden(true)
 
-//        .navigationDestination(for: AppRoute.DvirFlow.self, destination: { type in
-//            switch type {
-//            case .AddDvirScreenView:
-//                AddDvirScreenView( selectedRecord:$selectedDvirRecord,trailers: $trailerVM.trailers, isFromHome:false)
-//                
-//            case .UploadDefectView:
-//                UploadDefectView(selectedRecord: selectedDvirRecord)
-//                
-//            case .DvirHostory(tittle: AppConstants.dvirHostoryTittle):
-//                  DVIRHistory(title: AppConstants.dvirHostoryTittle)
-//                                
-//            case .emailLogs:
-//                EmailLogs(title: "Daily Logs")
-//            default:
-//                EmptyView()
-//            }
-//            
-//        })
+
         
         var emptyDvirRecord: DvirRecord {
             DvirRecord(
@@ -287,7 +270,7 @@ struct DvirListItemView: View {
                 
                 VStack(alignment: .leading, spacing: 6) {
                     // Date and Time
-                    Text("\(record.DAY) \(record.DvirTime)")
+                   Text("\(record.startTime.toLocalString(format: .dateOnlyFormat)) \(record.DvirTime)")
                         .fontWeight(.semibold)
                         .font(.headline)
                         .foregroundColor(Color(uiColor:.black))
@@ -342,7 +325,7 @@ struct DvirListItemView: View {
                             .foregroundColor(.red)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
-                           // .background(Color.red)
+                           //.background(Color.red)
                             .cornerRadius(8)
                     }
                     .buttonStyle(PlainButtonStyle())

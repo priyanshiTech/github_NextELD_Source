@@ -45,7 +45,13 @@ class LoginViewModel: ObservableObject {
             let encodedBody = try JSONEncoder().encode(requestBody)
             request.httpBody = encodedBody
             
-            let (data, _) = try await URLSession.shared.data(for: request)
+            let (data, responseData) = try await URLSession.shared.data(for: request)
+            
+            // Print raw response for debugging
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("📄 Raw Response JSON: \(jsonString.prefix(1000))...") // Print first 1000 chars
+            }
+            
             // Parse raw JSON to get driverDvirLog and driverCertifiedLog before decoding
             var driverDvirLogArray: [[String: Any]]? = nil
             var driverCertifiedLogArray: [[String: Any]]? = nil
@@ -54,14 +60,15 @@ class LoginViewModel: ObservableObject {
                 // Extract DVIR logs
                 if let driverDvirLog = resultDict["driverDvirLog"] as? [[String: Any]] {
                     driverDvirLogArray = driverDvirLog
-                    // print(" Found \(driverDvirLog.count) server DVIR records in login response")
+                    print("Found \(driverDvirLog.count) server DVIR records in login response")
                 }
                 // Extract Certify logs
                 if let driverCertifiedLog = resultDict["driverCertifiedLog"] as? [[String: Any]] {
                     driverCertifiedLogArray = driverCertifiedLog
-                    // print(" Found \(driverCertifiedLog.count) server Certify records in login response")
+                    print(" Found \(driverCertifiedLog.count) server Certify records in login response")
                 }
             }
+            
             // Decode response to TokenModelLog
             let response: TokenModelLog = try JSONDecoder().decode(TokenModelLog.self, from: data)
             // print(" API Response: \(response)")
@@ -203,9 +210,9 @@ class LoginViewModel: ObservableObject {
                     // print(" Saved current day: \(dateIs)")
                 }
                 
-                if let firstLog = response.result?.driverCertifiedLog?.first {
-                    AppStorageHandler.shared.coDriverId = firstLog.coDriverId
-                    
+                if let firstLog = response.result?.driverCertifiedLog?.first,
+                   let coDriverId = firstLog.coDriverId {
+                    AppStorageHandler.shared.coDriverId = coDriverId
                 }
                 
                 //Save Location (if available)
@@ -361,8 +368,34 @@ class LoginViewModel: ObservableObject {
                 return true
                 
             } catch {
-                self.errorMessage = error.localizedDescription
-                // print(" Network error: \(error.localizedDescription)")
+                // Better error handling for decoding errors
+                if let decodingError = error as? DecodingError {
+                    switch decodingError {
+                    case .keyNotFound(let key, let context):
+                        self.errorMessage = "Missing field: \(key.stringValue). \(context.debugDescription)"
+                        print("Decoding Error - Missing key: \(key.stringValue)")
+                        print("   Context: \(context.debugDescription)")
+                    case .typeMismatch(let type, let context):
+                        self.errorMessage = "Type mismatch for \(type). \(context.debugDescription)"
+                        print(" Decoding Error - Type mismatch: \(type)")
+                        print("   Context: \(context.debugDescription)")
+                    case .valueNotFound(let type, let context):
+                        self.errorMessage = "Value not found for \(type). \(context.debugDescription)"
+                        print(" Decoding Error - Value not found: \(type)")
+                        print("   Context: \(context.debugDescription)")
+                    case .dataCorrupted(let context):
+                        self.errorMessage = "Data corrupted: \(context.debugDescription)"
+                        print(" Decoding Error - Data corrupted")
+                        print("   Context: \(context.debugDescription)")
+                    @unknown default:
+                        self.errorMessage = "Decoding error: \(error.localizedDescription)"
+                        print(" Decoding Error - Unknown: \(error.localizedDescription)")
+                    }
+                } else {
+                    self.errorMessage = error.localizedDescription
+                    print(" Network/Other Error: \(error.localizedDescription)")
+                }
+                
                 isLoading = false
                 return false
             }

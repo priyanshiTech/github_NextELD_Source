@@ -33,6 +33,9 @@ struct LoginLogoutLog : Codable {
     let shift : Int?
     let days : Int?
     let isReportGenerated : Int?
+    let isPreviousLog : Int?  // Missing field from API
+    let isLogDelete : Int?    // Missing field from API
+    let isDvirShift : String? // Missing field from API (can be null)
     let totalSeconds : Int?
 
 }

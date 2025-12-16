@@ -18,37 +18,6 @@ struct SyncRequest: Codable {
     var splitLog: SplllitLogss? = nil
 }
 
-//struct DriveringStatusData: Codable {
-//    let appVersion: String
-//    let clientId: Int
-//    let currentLocation: String
-//    let customLocation: String
-//    let dateTime: String
-//    let days: Int
-//    let driverId: Int
-//    let engineHour: String
-//    let engineStatus: String
-//    let identifier: Int
-//    let isSplit: Int
-//    let isVoilation: Int
-//    let lastOnSleepTime: Int
-//    let lattitude: Double
-//    let localId: String
-//    let logType: String
-//    let longitude: Double
-//    let note: String
-//    let odometer: Double
-//    let origin: String
-//    let osVersion: String
-//    let remainingDriveTime: Int
-//    let remainingDutyTime: Int
-//    let remainingSleepTime: Int
-//    let remainingWeeklyTime: Int
-//    let shift: Int
-//    let status: String
-//    let utcDateTime: Int64
-//    let vehicleId: String
-//}
 
 struct DriveringStatusData : Codable {
     let appVersion : String?
@@ -101,20 +70,20 @@ struct SplllitLogss: Codable {
 struct DriverCertifiedLog: Codable, Identifiable {
     let id = UUID()   // local unique id for SwiftUI List
     let _id: String?          // null in JSON, keep as optional String
-    let driverId: Int
-    let driverName: String
-    let vehicleId: Int
-    let vehicleName: String
-    let trailers: [String]
-    let shippingDocs: [String]
-    let coDriverId: Int
+    let driverId: Int?
+    let driverName: String?   // Can be null in API response
+    let vehicleId: Int?
+    let vehicleName: String?  // Can be null in API response
+    let trailers: [String]?
+    let shippingDocs: [String]?
+    let coDriverId: Int?
     let coDriverName: String?
-    let certifiedSignature: String
-    let certifiedDate: String
-    let lCertifiedDate: Int64
-    let certifiedDateTime: Int
-    let certifiedAt: Int
-    let addedTimestamp: Int64
+    let certifiedSignature: String?  // Can be null in API response
+    let certifiedDate: String?
+    let lCertifiedDate: Int64?
+    let certifiedDateTime: Int?
+    let certifiedAt: Int64?  // Changed to Int64? as API can have Int or null
+    let addedTimestamp: Int64?
 
     enum CodingKeys: String, CodingKey {
         case _id
@@ -124,3 +93,89 @@ struct DriverCertifiedLog: Codable, Identifiable {
     }
 }
 
+//MARK: -  DriverDVirLog Model Login API
+
+struct DriverDvirLogResponse: Codable {
+    let driverDvirLog: [DriverDvirLog]
+}
+
+
+
+struct DriverDvirLog: Codable, Identifiable {
+
+    let id: String
+    let tokenNo: String?
+    let fromDate: String?
+    let toDate: String?
+    let email: String?
+    let clientId: Int?
+    let dvirLogId: Int?
+
+    let driverId: Int
+    let driverName: String
+
+    let dateTime: String
+    let lDateTime: Int64
+
+    let location: String?
+
+    let truckDefect: String?
+    let trailerDefect: String?
+    let trailer: String?
+
+    let truckDefectImage: String?
+    let trailerDefectImage: String?
+
+    let notes: String?
+    let vehicleCondition: String?
+
+    let driverSignFile: String?
+
+    let companyName: String?
+
+    let odometer: Double?
+    let engineHour: String?
+
+    let vehicleId: Int?
+    let vehicleNo: String?
+    let vin: String?
+
+    let timezoneName: String?
+    let timezoneOffSet: String?
+
+    let timestamp: String?
+    let receivedTimestamp: Int64?
+
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case tokenNo
+        case fromDate
+        case toDate
+        case email
+        case clientId
+        case dvirLogId
+        case driverId
+        case driverName
+        case dateTime
+        case lDateTime
+        case location
+        case truckDefect
+        case trailerDefect
+        case trailer
+        case truckDefectImage
+        case trailerDefectImage
+        case notes
+        case vehicleCondition
+        case driverSignFile
+        case companyName
+        case odometer
+        case engineHour
+        case vehicleId
+        case vehicleNo
+        case vin
+        case timezoneName
+        case timezoneOffSet
+        case timestamp
+        case receivedTimestamp
+    }
+}

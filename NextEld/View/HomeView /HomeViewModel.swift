@@ -374,9 +374,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     let syncViewModel: SyncViewModel = SyncViewModel()
     let certifySyncViewModel = CertifiedOfflineViewModel()
     let DVIRDataViewModel = DVIROfflineViewModel()
-
     
-  
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []

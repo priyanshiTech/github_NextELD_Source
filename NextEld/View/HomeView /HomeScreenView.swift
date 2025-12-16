@@ -127,7 +127,9 @@ struct HomeScreenView: View {
                         //MARK: - Violation Boxes (Part of Main Scroll) - Removed, now using alerts
                         
                         VStack(alignment: .leading) {
-                            Text("Version - OS/02/May")
+                            Text(" Version: \(AppInfo.version)(\(AppInfo.build))")
+                                .font(.caption)
+                                .foregroundColor(.black)
                         }
                     }
                 }

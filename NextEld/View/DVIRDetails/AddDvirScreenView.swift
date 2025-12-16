@@ -750,6 +750,7 @@ struct AddDvirScreenView: View  {
    }
 
     // MARK: - Validation that returns custom error message
+    
     func validateForm() -> String? {
         if viewModel.driverName.isEmpty { return "Please enter Driver Name" }
         if viewModel.StartTime.isEmpty { return "Please enter Time" }

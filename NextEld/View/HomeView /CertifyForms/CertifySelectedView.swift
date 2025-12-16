@@ -34,6 +34,11 @@ struct CertifySelectedView: View {
     @State private var isCertified: Bool = false
     @State private var isCertify: String = "No" //Default "No"
     @State private var hasLoadedInitialData = false
+    
+    // MARK: - Toast/Banner States
+    @State private var showBanner: Bool = false
+    @State private var bannerMessage: String = ""
+    @State private var bannerColor: Color = .green
 
 
     var title: String
@@ -215,7 +220,11 @@ struct CertifySelectedView: View {
                         }
  
                         Button(action: {
-                
+                            // Allow save even if trailer is "None"
+                            let trailerValue = trailerVM.trailers.isEmpty || trailerVM.trailers.contains(where: { $0.trimmingCharacters(in: .whitespaces).lowercased() == "none" })
+                                ? "None"
+                                : trailerVM.trailers.prefix(10).joined(separator: ",")
+                            
                             let record = CertifyRecord(
                                 userID: "\(AppStorageHandler.shared.driverId ?? 0)",
                               //  userName: AppStorageHandler.shared.UserName,
@@ -223,12 +232,10 @@ struct CertifySelectedView: View {
                                 date: certifiedDate,
                                 shift: AppStorageHandler.shared.shift,
                                 selectedVehicle: vehiclesc,
-                                selectedTrailer: trailerVM.trailers.isEmpty
-                                    ? "None"
-                                    : trailerVM.trailers.prefix(10).joined(separator: ", "),
+                                selectedTrailer: trailerValue,
                                 selectedShippingDoc: shippingVM.ShippingDoc.isEmpty
                                      ? "None"
-                                     : shippingVM.ShippingDoc.prefix(10).joined(separator: ", "),
+                                     : shippingVM.ShippingDoc.prefix(10).joined(separator: ","),
                                 
                                // selectedTrailer: SelectedTraller,
                                 selectedCoDriver: selectedCoDriverName ?? "None",
@@ -238,15 +245,14 @@ struct CertifySelectedView: View {
                                 isCertify: "No"
                             )
                             CertifyDatabaseManager.shared.saveRecord(record)
-
                             // Persist latest selections
                             AppStorageHandler.shared.vehicleNo = vehiclesc.isEmpty ? nil : vehiclesc
                             AppStorageHandler.shared.vehicleId = VechicleID ?? AppStorageHandler.shared.vehicleId
-
                             hasLoadedInitialData = false
                             loadInitialDataIfNeeded(force: true)
-
-                                
+                            
+                            // Show success toast
+                            showToast(message: "Data Saved", color: .green)
                         }) {
                             Text("Save")
                                 .frame(maxWidth: .infinity)
@@ -325,6 +331,40 @@ struct CertifySelectedView: View {
                     y: UIScreen.main.bounds.height / 2
                 )
                 .zIndex(1)
+            }
+            
+            // MARK: - Toast/Banner Overlay (Centered)
+            if showBanner {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Text(bannerMessage)
+                            .foregroundColor(.white)
+                            .font(.system(size: 14))
+                            .multilineTextAlignment(.center)
+                            .frame(width: 150, height: 40)
+                            .background(bannerColor)
+                            .cornerRadius(8)
+                        Spacer()
+                    }
+                    Spacer()
+                }
+                .transition(.opacity.combined(with: .scale))
+                .animation(.easeInOut, value: showBanner)
+            }
+        }
+    }
+    
+    // MARK: - Toast Function
+    private func showToast(message: String, color: Color) {
+        bannerMessage = message
+        bannerColor = color
+        showBanner = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            withAnimation {
+                showBanner = false
             }
         }
     }

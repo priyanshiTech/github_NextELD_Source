@@ -2135,7 +2135,7 @@
 				CODE_SIGN_ENTITLEMENTS = NextEld/NextEld.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: GURSHRAN GILL (NBA3ZC78V3)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 24;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NextEld/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -2165,7 +2165,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = "";
+				MARKETING_VERSION = 1.5;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = Inurum.Technology.NextEld;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = Inurum.Technology.EldTruckTrace;
@@ -2189,7 +2189,7 @@
 				CODE_SIGN_ENTITLEMENTS = NextEld/NextEld.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution: TRUCKER TRACE ELD LLC (73277279HM)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 24;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NextEld/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
