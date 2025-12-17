@@ -23,6 +23,10 @@ struct LogsDetails: View {
         self._selectedDate = State(initialValue: entry.date)
     }
     
+    private var isSelectedDateToday: Bool {
+        Calendar.current.isDateInToday(selectedDate)
+    }
+
     var body: some View {
         //MARK: -  Header
         
@@ -79,9 +83,15 @@ struct LogsDetails: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
                    // HOSEventsChartScreen(events: hoseEventsForSelectedDate)
-                    HOSEventsChartScreen(events: homeVM.graphEvents)
+                   // HOSEventsChartScreen(events: homeVM.graphEvents)
+                    HOSEventsChartScreen(
+                        events: isSelectedDateToday
+                        ? homeVM.graphEvents
+                        : hoseEventsForSelectedDate
+                    )
+                    .frame(maxWidth: .infinity)
 
-                        .frame(maxWidth: .infinity)
+                        
                     
                     Text(" Version: \(AppInfo.version)(\(AppInfo.build))")
                         .font(.subheadline)
@@ -94,14 +104,14 @@ struct LogsDetails: View {
         }.navigationBarBackButtonHidden()
         
         .onAppear {
-           // loadLogsFromDatabase()
-            //DateTimeHelper.currentDateTime()
-           // loadLogsFromDatabase()
+//            loadLogsFromDatabase()
+//            DateTimeHelper.currentDateTime()
+//            loadLogsFromDatabase()
 
         }
-//        .onChange(of: selectedDate) { oldValue, newValue in
-//            loadLogsFromDatabase()
-//        }
+        .onChange(of: selectedDate) { oldValue, newValue in
+            loadLogsFromDatabase()
+        }
         
         .onDisappear {
             stopTimer()
@@ -124,32 +134,35 @@ struct LogsDetails: View {
                 
             } else {
                 ForEach(Array(logsForSelectedDate.enumerated()), id: \.offset) { index, log in
-                    HStack {
+                    HStack(spacing: 12) {
+                        // Left colored bar based on status
+                        Rectangle()
+                            .fill(statusColor(for: log.status))
+                            .frame(width: 4)
+                        
                         VStack(alignment: .leading, spacing: 4) {
-                            // Show exact date and time from database as stored (UTC timezone to match database)
-                            Text( DateTimeHelper.formatDatabaseDateTime(log.startTime))
-                                .font(.body)
-                                .fontWeight(.semibold)
+                            // Date and time
+                            Text(DateTimeHelper.formatDatabaseDateTime(log.startTime))
+                                .font(.subheadline)
+                                .foregroundColor(.primary)
                             
-                            // Show elapsed time in hours format for on-duty status
-                            if isOnDutyStatus(log.status) {
-                                Text(elapsedTimeInHours(for: log.startTime))
-                                    .font(.caption)
-                                    .foregroundColor(.orange)
-                                    .id("\(log.id ?? 0)-\(timerTick)")
-                            } else {
-                                // Show date only for other statuses - always use device's current timezone
-                                Text(DateTimeHelper.formatDateOnly(log.startTime))
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
+                            // Status name
+                            Text(log.status)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                         }
+                        
                         Spacer()
-                        statusBadge(for: log.status)
+                        
+                        // Duration on right side
+                        Text(calculateDuration(for: index, log: log))
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
-                    .padding()
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 8)
                     .background(Color(.systemGray6))
-                    .cornerRadius(12)
+                    .cornerRadius(8)
                 }
             }
         }
@@ -160,22 +173,29 @@ struct LogsDetails: View {
         let endDate = DateTimeHelper.endOfDay(for: selectedDate) ?? selectedDate
         let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startDate, endDate: endDate)],addWarningAndViolation: true).sorted { $0.startTime < $1.startTime }
         return logs
-        
-//        let calendar = Calendar.current
-//        let timeZone = TimeZone.current
-//
-//        return allLogs.filter { log in
-//            // Get date components for both dates in current timezone
-//            let logDateComponents = calendar.dateComponents(in: timeZone, from: log.startTime)
-//            let selectedDateComponents = calendar.dateComponents(in: timeZone, from: selectedDate)
-//            
-//            // Compare year, month, and day components
-//            return logDateComponents.year == selectedDateComponents.year &&
-//                   logDateComponents.month == selectedDateComponents.month &&
-//                   logDateComponents.day == selectedDateComponents.day
-//        }
-//        .sorted { $0.startTime < $1.startTime }
+
     }
+    
+    //LAST Log for Previous date if no record found in DB
+    private func lastLogBeforeSelectedDate() -> DriverLogModel? {
+
+        let startOfSelected = DateTimeHelper.startOfDay(for: selectedDate)
+
+        // Fetch all logs once
+        let allLogs = DatabaseManager.shared.fetchLogs(
+            addWarningAndViolation: true
+        )
+
+        // Filter logs strictly BEFORE selected date
+        let previousLogs = allLogs
+            .filter { $0.startTime < startOfSelected }
+            .sorted { $0.startTime > $1.startTime }
+
+        return previousLogs.first
+    }
+
+
+    
     
     private var hoseEventsForSelectedDate: [HOSEvent] {
         let logs = logsForSelectedDate
@@ -190,6 +210,8 @@ struct LogsDetails: View {
             ? logs[index + 1].startTime
             : DateTimeHelper.currentDateTime()
             
+            
+            
             events.append(
                 HOSEvent(
                     id: Int(log.id ?? Int64(index)),
@@ -202,6 +224,8 @@ struct LogsDetails: View {
         
         return events
     }
+    
+
     
     private func driverStatusType(for status: String) -> DriverStatusType {
         switch status.lowercased() {
@@ -231,7 +255,33 @@ struct LogsDetails: View {
         let lowercased = status.lowercased()
         return lowercased == "onduty" || lowercased == "on duty"
     }
-
+    
+    // Calculate duration between current log and next log (or current time if last log)
+    private func calculateDuration(for index: Int, log: DriverLogModel) -> String {
+        let logs = logsForSelectedDate
+        let startTime = log.startTime
+        let endTime: Date
+        
+        if index + 1 < logs.count {
+            // Use next log's start time
+            endTime = logs[index + 1].startTime
+        } else {
+            // Last log - use current time if today, else end of day
+            let calendar = Calendar.current
+            if calendar.isDateInToday(selectedDate) {
+                endTime = DateTimeHelper.currentDateTime()
+            } else {
+                endTime = DateTimeHelper.endOfDay(for: selectedDate) ?? selectedDate
+            }
+        }
+        
+        let elapsed = endTime.timeIntervalSince(startTime)
+        let hours = Int(elapsed) / 3600
+        let minutes = (Int(elapsed) % 3600) / 60
+        let seconds = Int(elapsed) % 60
+        
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
     
     private func elapsedTimeInHours(for startTime: Date) -> String {
         let currentTime = DateTimeHelper.currentDateTime()
@@ -273,7 +323,7 @@ struct LogsDetails: View {
         case "offduty", "off duty", "personaluse":
             return .orange
         default:
-            return .purple
+            return .gray
         }
     }
     

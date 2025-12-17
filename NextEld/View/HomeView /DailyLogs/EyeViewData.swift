@@ -23,6 +23,9 @@ struct EyeViewData: View {
         self.entry = entry
         self._selectedDate = State(initialValue: entry.date)
     }
+    private var isSelectedDateToday: Bool {
+        Calendar.current.isDateInToday(selectedDate)
+    }
 
 
     var body: some View {
