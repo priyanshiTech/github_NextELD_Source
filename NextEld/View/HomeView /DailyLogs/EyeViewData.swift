@@ -172,7 +172,13 @@ struct EyeViewData: View {
                         )
 
                         VStack {
-                            HOSEventsChartScreen(events: homeVM.graphEvents)
+                            // Use selected date graph events (same as LogsDetails)
+                            HOSEventsChartScreen(
+                                events: isSelectedDateToday
+                                ? homeVM.graphEvents
+                                : hoseEventsForSelectedDate
+                            )
+                            .frame(maxWidth: .infinity)
                         }
 
                         VStack(alignment: .leading) {
@@ -263,6 +269,13 @@ struct EyeViewData: View {
         }
     }
     
+    private var logsForSelectedDate: [DriverLogModel] {
+        let startDate = DateTimeHelper.startOfDay(for: selectedDate)
+        let endDate = DateTimeHelper.endOfDay(for: selectedDate) ?? selectedDate
+        let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startDate, endDate: endDate)],addWarningAndViolation: true).sorted { $0.startTime < $1.startTime }
+        return logs
+
+    }
     private func fetchDriverData() async {
         await viewModel.fetch(
             driverId: String(AppStorageHandler.shared.driverId ?? 0),
@@ -289,6 +302,35 @@ struct EyeViewData: View {
         // print("Loaded \(databaseLogs.count) logs from database for date: \(selectedDate)")
     }
     
+    
+    
+    private var hoseEventsForSelectedDate: [HOSEvent] {
+        let logs = logsForSelectedDate
+        guard !logs.isEmpty else { return [] }
+        
+        var events: [HOSEvent] = []
+        let calendar = Calendar.current
+        
+        for (index, log) in logs.enumerated() {
+            let start = log.startTime
+            let nextStart = index + 1 < logs.count
+            ? logs[index + 1].startTime
+            : DateTimeHelper.currentDateTime()
+            
+            
+            
+            events.append(
+                HOSEvent(
+                    id: Int(log.id ?? Int64(index)),
+                    x: start,
+                    event_end_time: nextStart,
+                    dutyType: DriverStatusType(fromName: log.status) ?? .offDuty
+                )
+            )
+        }
+        
+        return events
+    }
 //    private func formatDateTime(_ date: Date) -> String {
 //        let dateFormatter = DateFormatter()
 //        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

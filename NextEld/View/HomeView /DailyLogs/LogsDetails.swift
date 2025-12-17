@@ -135,21 +135,21 @@ struct LogsDetails: View {
             } else {
                 ForEach(Array(logsForSelectedDate.enumerated()), id: \.offset) { index, log in
                     HStack(spacing: 12) {
-                        // Left colored bar based on status
+                        // Left colored bar based on status - red for warning/violation
                         Rectangle()
-                            .fill(statusColor(for: log.status))
+                            .fill(isWarningOrViolation(log.status) ? Color.red : statusColor(for: log.status))
                             .frame(width: 4)
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            // Date and time
+                            // Date and time - red for warning/violation
                             Text(DateTimeHelper.formatDatabaseDateTime(log.startTime))
                                 .font(.subheadline)
-                                .foregroundColor(.primary)
+                                .foregroundColor(isWarningOrViolation(log.status) ? .red : .primary)
                             
-                            // Status name
-                            Text(log.status)
+                            // Status name - show Warning(dutyType) or Violation(dutyType) format - red for warning/violation
+                            Text(formatStatusDisplay(log: log))
                                 .font(.subheadline)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(isWarningOrViolation(log.status) ? .red : .secondary)
                         }
                         
                         Spacer()
@@ -281,6 +281,29 @@ struct LogsDetails: View {
         let seconds = Int(elapsed) % 60
         
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+    
+    // Format status display - show Warning(dutyType) or Violation(dutyType) if applicable
+    private func formatStatusDisplay(log: DriverLogModel) -> String {
+        let status = log.status.lowercased()
+        let dutyType = log.dutyType
+        
+        if status.contains("warning") {
+            // Show Warning(dutyType) format
+            return "Warning(\(dutyType))"
+        } else if status.contains("violation") {
+            // Show Violation(dutyType) format
+            return "Violation(\(dutyType))"
+        } else {
+            // Normal status - just show the status
+            return log.status
+        }
+    }
+    
+    // Check if status is warning or violation
+    private func isWarningOrViolation(_ status: String) -> Bool {
+        let lowercased = status.lowercased()
+        return lowercased.contains("warning") || lowercased.contains("violation")
     }
     
     private func elapsedTimeInHours(for startTime: Date) -> String {
