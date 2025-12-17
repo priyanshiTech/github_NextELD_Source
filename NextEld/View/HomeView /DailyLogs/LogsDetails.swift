@@ -83,7 +83,7 @@ struct LogsDetails: View {
 
                         .frame(maxWidth: .infinity)
                     
-                    Text("Version - OS/02/May")
+                    Text(" Version: \(AppInfo.version)(\(AppInfo.build))")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
 
@@ -264,14 +264,14 @@ struct LogsDetails: View {
     
     private func statusColor(for status: String) -> Color {
         switch status.lowercased() {
-        case "onduty", "on duty":
-            return .orange
-        case "driving":
-            return .green
-        case "sleeper":
+        case "onduty", "on duty" ,  "yardmove":
             return .blue
-        case "offduty", "off duty":
+        case "ondrive":
+            return .green
+        case "onsleep":
             return .gray
+        case "offduty", "off duty", "personaluse":
+            return .orange
         default:
             return .purple
         }

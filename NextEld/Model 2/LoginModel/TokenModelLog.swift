@@ -83,7 +83,7 @@ struct DvirLogItem: Decodable {
     let location: String?
     let truckDefect: [String]?
     let trailerDefect: [String]?
-    let trailer: String?
+    let trailer: [String]?
     let truckDefectImage: String?
     let trailerDefectImage: String?
     let notes: String?

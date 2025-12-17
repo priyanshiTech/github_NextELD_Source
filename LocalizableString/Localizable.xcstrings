@@ -87,16 +87,6 @@
         }
       }
     },
-    "%lld %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld %2$@"
-          }
-        }
-      }
-    },
     "%lld Defects" : {
       "localizations" : {
         "pa" : {
@@ -2436,6 +2426,7 @@
       }
     },
     "Version - OS/02/May" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -2541,6 +2532,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ਤੁਹਾਡਾ ਚੱਕਰ ਪੂਰਾ ਹੋ ਗਿਆ ਹੈ?"
+          }
+        }
+      }
+    },
+    " Version: %@(%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : " Version: %1$@(%2$@)"
           }
         }
       }

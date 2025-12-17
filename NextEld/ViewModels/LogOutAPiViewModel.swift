@@ -17,7 +17,7 @@ class APILogoutViewModel: ObservableObject {
     @Published var loginDateTime: Int64 = 0
     @Published var logoutDateTime: Int64 = 0
     @Published var isSessionExpired: Bool = false
-    var appRootManager: AppRootManager?
+    var appRootManager: AppRootManager?                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
  
     func callLogoutAPI() async -> Bool {
         isSessionExpired = false
