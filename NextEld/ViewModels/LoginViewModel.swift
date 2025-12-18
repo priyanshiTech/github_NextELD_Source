@@ -328,6 +328,10 @@ class LoginViewModel: ObservableObject {
                    // session.logIn(token: token)
                 }
             
+            DatabaseManager.shared.deleteAllLogs()
+            DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
+            CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+            
             //MARK: - Logout /Login data saved
                 let logs = response.result?.driverLog ?? []
                 // Save logs to DB

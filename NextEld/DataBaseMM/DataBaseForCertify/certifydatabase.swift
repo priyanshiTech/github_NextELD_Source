@@ -379,7 +379,10 @@ class CertifyDatabaseManager {
     //MARK: -  Delete all records from db
     func deleteAllCertifyRecords() {
         do {
-            try db?.run(certifyTable.delete())
+            try db?.transaction {
+                try db?.run(certifyTable.delete())
+                try db?.run("DELETE FROM sqlite_sequence WHERE name = 'certifyTable'")
+            }
             // print("##### All certify records deleted successfully!")
         } catch {
             // print("Error deleting all certify records: \(error)")

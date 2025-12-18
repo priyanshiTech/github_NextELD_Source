@@ -14,9 +14,6 @@ enum SessionCleanupManager {
         SessionManagerClass.shared.clearToken()
         KeychainHelper.shared.deleteToken()
         
-        // Reset @AppStorage-backed values
-        AppStorageHandler.shared.deleteAll()
-        
         // Remove auxiliary UserDefaults flags that might be set outside AppStorage
         let defaults = UserDefaults.standard
         defaults.set(false, forKey: "isLoggedIn")

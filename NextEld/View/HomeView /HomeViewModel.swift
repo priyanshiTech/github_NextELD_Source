@@ -381,6 +381,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
     init() {
+        checkWhetherTheViolationAlreadyExists()
         restoreAllTimersFromLastStatus()
         validateScenarioInEveryMinute()
         timer
@@ -518,7 +519,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func deleteAllAppData() {
         SharedInfoManager.shared.centralManager?.stopScan()
         stopTimers(for: TimerType.allCases)
-        
+        AppStorageHandler.shared.shift = 1
+        AppStorageHandler.shared.days = 1
         //  Clear SessionManager token
         SessionManagerClass.shared.clearToken()
         currentDriverStatus = .offDuty
@@ -740,14 +742,14 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             return
         }
 
-        if  remainingTime < warning1 && remainingTime > warning2 {
+        if  remainingTime < warning1 && remainingTime > warning2 && lastViolationDate30MinValue != uniqueValueForViolation30Min {
             var violationData = ViolationData()
             violationData.violationType = type
             violationData.thirtyMinWarning = true // 30 min warning
             self.violationDataArray.append(violationData)
             UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
             saveViolation(for: violationData, date: violationDate)
-        } else if remainingTime <= warning2 && remainingTime > 0  {
+        } else if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15minValue != uniqueValueForViolation15min {
             if lastViolationDate30MinValue != uniqueValueForViolation30Min {
                 var violationData = ViolationData()
                 violationData.violationType = type
@@ -763,7 +765,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             self.violationDataArray.append(violationData)
             saveViolation(for: violationData, date: violationDate)
             UserDefaults.standard.setValue(uniqueValueForViolation15min, forKey: violationKey + "_15min")
-        } else if remainingTime <= 0 {
+        } else if remainingTime <= 0 && uniqueValueForViolation != lastViolationDateValue {
             // This two condition will work when remaining time directly goes to <= 0
             if lastViolationDate30MinValue != uniqueValueForViolation30Min {
                 var violationData = ViolationData()
@@ -1056,8 +1058,6 @@ extension HomeViewModel {
     func callLogoutAPI() async -> Bool {
         let success = await APILogoutViewModel().callLogoutAPI()
         if success {
-            
-            AppStorageHandler.shared.deleteAll()
 //            UserDefaults.standard.set(false, forKey: "isLoggedIn")
 //            ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
             SessionManagerClass.shared.clearToken()
@@ -1099,48 +1099,29 @@ extension HomeViewModel {
         } else {
             scheduleRefreshAlert()
         }
-        
-        
-//
-//        guard !isManualSyncInProgress else { return }
-//        guard let context = syncPopupContext else { return }
-//        isManualSyncInProgress = true
-//        Task { @MainActor in
-//            var syncSucceeded = false
-//            while syncPopupContext == context && !syncSucceeded {
-//                await homeVM.syncViewModel.getLocation()
-//                syncSucceeded = await homeVM.syncViewModel.syncOfflineData()
-//                if !syncSucceeded {
-//                    try? await Task.sleep(nanoseconds: 2_000_000_000)
-//                }
-//            }
-//
-//            guard syncPopupContext == context, syncSucceeded else {
-//                isManualSyncInProgress = false
-//                return
-//            }
-//
-//            isManualSyncInProgress = false
-//            showPendingSyncPopup = false
-//            syncPopupContext = nil
-//
-//            let pendingLogsRemain = hasPendingUnsyncedLogs()
-//
-//            switch context {
-//            case .manualRefresh:
-//                scheduleRefreshAlert()
-//            case .logout:
-//                if pendingLogsRemain {
-//                    syncPopupContext = .logout
-//                    showPendingSyncPopup = true
-//                } else {
-//                    if homeVM.currentDriverStatus == .offDuty {
-//                        showLogoutPopup = true
-//                    } else {
-//                        showLogoutStatusAlert = true
-//                    }
-//                }
-//            }
-//        }
+    }
+    
+    func checkWhetherTheViolationAlreadyExists() {
+        let records = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .shift], addWarningAndViolation: true).filter({ $0.status == AppConstants.violation})
+        for record in records {
+            var violationKey = ""
+            if record.dutyType.contains("duty time") {
+                violationKey = AppConstants.onDutyViolationKey
+            } else if record.dutyType.contains("continue drive") {
+                violationKey = AppConstants.continueDriveViolationKey
+            } else if record.dutyType.contains("drive time") {
+                violationKey = AppConstants.onDriveViolationKey
+            } else if record.dutyType.contains("cycle time") {
+                violationKey = AppConstants.cycleTimeViolationKey
+            }
+            
+            let uniqueValueForViolation = "\(violationKey)_shift_\(record.shift)_day_\(record.day)"
+            let uniqueValueForViolation30Min = "\(violationKey)_shift_\(record.shift)_day_\(record.day)_30min"
+            let uniqueValueForViolation15min = "\(violationKey)_shift_\(record.shift)_day_\(record.day)_15min"
+            UserDefaults.standard.set(uniqueValueForViolation, forKey: violationKey)
+            UserDefaults.standard.set(uniqueValueForViolation15min, forKey: violationKey + "_15min")
+            UserDefaults.standard.set(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
+        }
     }
 }
+

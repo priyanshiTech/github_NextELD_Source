@@ -60,6 +60,7 @@ struct AppStorageHandler {
     @AppStorage("dvirLogId") var dvirLogId: String?
 
     func deleteAll() {
+        
         if let bundleID = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: bundleID)
             UserDefaults.standard.synchronize()

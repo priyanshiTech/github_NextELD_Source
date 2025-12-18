@@ -35,11 +35,7 @@ class DeleteViewModel: ObservableObject {
                 self.apiMessage = response.message ?? "Deleted successfully"
 
                 //MARK: -   Delete all local DB data
-                DatabaseManager.shared.deleteAllLogs()
-                ContinueDriveDBManager.shared.deleteAllContinueDriveData()
-                DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
-                CertifyDatabaseManager.shared.deleteAllCertifyRecords()
-                return true
+               return true
             } else {
                 self.apiMessage = response.message ?? "Failed to delete"
                 return false

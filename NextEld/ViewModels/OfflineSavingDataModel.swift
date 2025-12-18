@@ -31,7 +31,7 @@ class SyncViewModel: ObservableObject {
             let safeLatitude = SharedInfoManager.shared.lattitude
             let safeLongitude = SharedInfoManager.shared.longitude
             
-            let voilation = log.isVoilations == "Yes" ? "1" : "0"
+            let voilation = log.isVoilations == "YES" ? "1" : "0"
             let safeLogType = voilation == "0" ? "log" : (log.dutyType)
 
 ////

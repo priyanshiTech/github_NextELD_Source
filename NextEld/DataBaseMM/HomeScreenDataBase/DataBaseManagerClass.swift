@@ -298,7 +298,7 @@ class DatabaseManager: DatabaseHandler {
         }
     }
     
-    func fetchLogs(filterTypes: [FilterType] = [], addWarningAndViolation: Bool = false, order: [Expressible]? = [], limit: Int? = nil) -> [DriverLogModel] {
+    func fetchLogs(filterTypes: [FilterType] = [], addWarningAndViolation: Bool = false, order: [Expressible]? = nil, limit: Int? = nil) -> [DriverLogModel] {
         var logs: [DriverLogModel] = []
         var filterExpression: SQLite.Expression<Bool> = .init(value: true)
         
@@ -470,9 +470,9 @@ class DatabaseManager: DatabaseHandler {
                 }
             }
             
-            var isVoilation: String = "No"
+            var isVoilation: String = "NO"
             if log.isVoilation == 1 {
-                isVoilation = "Yes"
+                isVoilation = "YES"
             }
             var dateTime: Date? = nil
             if let timeStampString = log.dateTime,
@@ -527,15 +527,16 @@ class DatabaseManager: DatabaseHandler {
     func saveDriverLogsToSQLite(from logs: [ServerDriverLog]) {
         // print("Correct!!!!!!!!!!!!!!!! Saving \(logs.count) logs into SQLite")
         
-        for (index, log) in logs.enumerated() {
+        for (_, log) in logs.enumerated() {
             var isVoilation: String = ""
-            var driverStatus: DriverStatusType = DriverStatusType(fromName: log.status ?? "") ?? .offDuty
-            var dutyType: String = driverStatus.getName()
-            if driverStatus == .personalUse {
-                isVoilation = "No"
+            
+            var dutyType: String = log.status ?? ""
+
+            if log.status == AppConstants.personalUse {
+                isVoilation = "NO"
                 dutyType = DriverStatusType.personalUse.getName()
-            } else if driverStatus == .yardMode {
-                isVoilation = "No"
+            } else if log.status == AppConstants.yardMove  {
+                isVoilation = "NO"
                 dutyType = DriverStatusType.yardMode.getName()
             } else if log.status == AppConstants.engineOn {
                 isVoilation = "Engine"
@@ -543,21 +544,15 @@ class DatabaseManager: DatabaseHandler {
                 isVoilation = "Engine"
             } else{
                 if log.logType == "log" || log.logType == "System Generated" {
-                    isVoilation = "No"
+                    isVoilation = "NO"
                 } else {
-                    isVoilation = "Yes"
+                    isVoilation = "YES"
                     dutyType = log.logType ?? ""
                 }
             }
-//            if driverStatus == .yardMode {
-//                driverStatus = .onDuty
-//            } else if driverStatus == .personalUse {
-//                driverStatus = .offDuty
-//            }
-            
             let model = DriverLogModel(
                 id: nil,
-                status: driverStatus.getName(),
+                status: log.status ?? "",
                 startTime: log.dateTime?.asDate() ?? Date(),
                 userId: log.driverId ?? 0,
                 day: log.days ?? 0,
@@ -721,8 +716,10 @@ class DatabaseManager: DatabaseHandler {
 
     func deleteAllLogs(completion: (() -> Void)? = nil) {
         do {
-            try db?.run(driverLogs.delete()) //  Uses the same table instance you declared at top
-            try db?.run(splitShiftTable.delete())
+            try db?.transaction {
+                try db?.run(driverLogs.delete())
+                try db?.run("DELETE FROM sqlite_sequence WHERE name = 'driverLogs'")
+            }
             completion?()
             print("Data Delete Successfully.....")
         } catch {

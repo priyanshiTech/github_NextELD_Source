@@ -420,7 +420,10 @@ extension DvirDatabaseManager {
     // MARK: - Delete All Records
     func deleteAllRecordsForDvirDataBase() {
         do {
-            let deletedCount = try db?.run(dvirTable.delete()) ?? 0
+            try db?.transaction {
+                try db?.run(dvirTable.delete())
+                try db?.run("DELETE FROM sqlite_sequence WHERE name = 'dvirTable'")
+            }
             // print(" Deleted all DVIR records (\(deletedCount) rows removed)")
         } catch {
             // print(" Error deleting all DVIR records: \(error)")

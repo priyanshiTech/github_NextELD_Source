@@ -196,30 +196,7 @@ struct LogsDetails: View {
     
     
     private var hoseEventsForSelectedDate: [HOSEvent] {
-     /*   let logs = logsForSelectedDate
-        guard !logs.isEmpty else { return [] }
-        
-        var events: [HOSEvent] = []
-        
-        for (index, log) in logs.enumerated() {
-            let start = log.startTime
-            var endDate = nextLogCalculation()
-            if !(index == logs.count-1) {
-                let nextIndexLog = logs[index+1]
-                endDate = nextIndexLog.startTime
-            }
-            events.append(
-                HOSEvent(
-                    id: Int(log.id ?? Int64(index)),
-                    x: start,
-                    event_end_time: endDate,
-                    dutyType: DriverStatusType(fromName: log.status) ?? .offDuty
-                )
-            )
-        }
-        
-        return events
-      */
+     
         
         var logs = DatabaseManager.shared.fetchDutyEventsForToday(currentDate: selectedDate)
        // logs.sort { $0.startTime < $1.startTime }
