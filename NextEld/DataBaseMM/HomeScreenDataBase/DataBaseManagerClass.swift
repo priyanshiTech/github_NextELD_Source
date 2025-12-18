@@ -33,7 +33,7 @@ enum FilterType {
     case notEngineStartStatus
     case notEngineStopStatus
     case specificDate(date: Date)
-    
+    case login
 }
 
 enum SQLiteQuery {
@@ -293,6 +293,8 @@ class DatabaseManager: DatabaseHandler {
             return status != AppConstants.engineOff
         case .specificDate(let date):
             return startTime == date
+        case .login:
+            return status == AppConstants.login
         }
     }
     
@@ -308,9 +310,11 @@ class DatabaseManager: DatabaseHandler {
             let filter = getFilter(for: type)
             filterExpression = filterExpression && filter
         }
-        var query = driverLogs.filter(filterExpression).order(startTime.asc)
+        var query = driverLogs.filter(filterExpression)
         if let order = order {
             query = query.order(order)
+        } else {
+            query = query.order(startTime.asc)
         }
         if let limit = limit {
             query = query.limit(limit)
@@ -449,7 +453,7 @@ class DatabaseManager: DatabaseHandler {
     func saveLoginLogoutLogsToSQLite(from logs: [LoginLogoutLog]) {
         // print("Saving \(logs.count) login/logout logs into SQLite")
         
-        for log in logs {
+        for (index, log) in logs.enumerated() {
             // Determine status - Login or Logout
             var statusString = log.status ?? ""
             var dutyType = log.logType ?? ""
@@ -476,7 +480,7 @@ class DatabaseManager: DatabaseHandler {
                 let convertToSecond = TimeInterval(timeStamp/1000)
                 dateTime = Date(timeIntervalSince1970: convertToSecond)
                 print("datetime: \(dateTime!)")
-            }
+           }
             
             let model = DriverLogModel(
                 id: nil,
@@ -514,6 +518,7 @@ class DatabaseManager: DatabaseHandler {
             
             // print("Saving login/logout log: \(model.status), \(model.startTime)")
             insertLog(from: model)
+            print("Login/Logout data saved successfully, \(index + 1)/\(logs.count)")
         }
         
         // print("Finished saving login/logout logs.")
@@ -606,9 +611,9 @@ class DatabaseManager: DatabaseHandler {
             return
         }
         
-        // Check for duplicate: First by serverId (most reliable), then by status + startTime + userId
+     //    Check for duplicate: First by serverId (most reliable), then by status + startTime + userId
         do {
-            // First check: If serverId exists, check for duplicate by serverId
+             // First check: If serverId exists, check for duplicate by serverId
             if let serverId = model.serverId, !serverId.isEmpty {
                 let serverIdCheck = driverLogs.filter(
                     self.serverId == serverId &&
@@ -702,7 +707,7 @@ class DatabaseManager: DatabaseHandler {
             // print(" Log inserted into SQLite with ID: \(rowID) — \(model.status) at \(model.startTime)")
             
         } catch {
-            // print(" Insert Log Error: \(error.localizedDescription)")
+             print(" Insert Log Error: \(error.localizedDescription)")
         }
     }
     
@@ -714,14 +719,14 @@ class DatabaseManager: DatabaseHandler {
     
     //MARK: -  TO DELETE ALL SAVED DATA IN DBMS
 
-    func deleteAllLogs() {
+    func deleteAllLogs(completion: (() -> Void)? = nil) {
         do {
             try db?.run(driverLogs.delete()) //  Uses the same table instance you declared at top
             try db?.run(splitShiftTable.delete())
-
-            // print("All logs deleted successfully")
+            completion?()
+            print("Data Delete Successfully.....")
         } catch {
-            // print("Error deleting logs: \(error)")
+             print("Error deleting logs: \(error)")
         }
     }
     
@@ -736,11 +741,14 @@ class DatabaseManager: DatabaseHandler {
         return statusFilter && getFilter(for: .user)
     }
     
-    func getLastRecordOfDriverLogs(filterTypes: [FilterType] = []) -> DriverLogModel? {
+    func getLastRecordOfDriverLogs(filterTypes: [FilterType] = [], applyBaseFilter: Bool = true) -> DriverLogModel? {
         var logs: [DriverLogModel] = []
         do {
             guard let db = self.db else { return nil}
-            var filterExpression: SQLite.Expression<Bool> =  baseFilter()// default filter
+            var filterExpression: SQLite.Expression<Bool> = .init(value: true)
+            if applyBaseFilter {
+                filterExpression = baseFilter()
+            }
             for type in filterTypes {
                 let filter = getFilter(for: type)
                 filterExpression = filterExpression && filter

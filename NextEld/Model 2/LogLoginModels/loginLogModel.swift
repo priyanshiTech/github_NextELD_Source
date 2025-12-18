@@ -19,7 +19,7 @@ struct LoginLogRequestModel: Codable {
 struct LoginLogResponce: Codable {
     
     let result: String?
-    let arrayData: [String]
+    let arrayData: [String]?
     let status: String?
     let message: String?
     let token: String?

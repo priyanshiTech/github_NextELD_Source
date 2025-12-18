@@ -35,7 +35,7 @@ class APILoginLogViewModel: ObservableObject {
                 body: request
             )
             
-            let dateTime = Date(timeIntervalSince1970: TimeInterval(currentTimeStamp)).toLocalString().asDate() ?? DateTimeHelper.currentDateTime()
+            let dateTime = Date(timeIntervalSince1970: TimeInterval(currentTimeStamp/1000)).toLocalString().asDate() ?? DateTimeHelper.currentDateTime()
             
 
             if response.status == "SUCCESS" {
@@ -43,20 +43,19 @@ class APILoginLogViewModel: ObservableObject {
                 self.status = response.status ?? ""
                 self.result = response.result ?? ""
                 
-                // Manually created first log
-               
-                DatabaseManager.shared.saveTimerLog(
-                    status: "Login",
-                    startTime: dateTime,
-                    dutyType: "Login",
-                    remainingWeeklyTime: 0,
-                    remainingDriveTime: 0,
-                    remainingDutyTime: 0,
-                    remainingSleepTime: 0,
-                    breakTimeRemaning: 0,
-                    lastSleepTime: 0,
-                    RemaningRestBreak: "0.0",
-                    origin: OriginType.unidentified.description)
+                // Manually created latest login log
+                    DatabaseManager.shared.saveTimerLog(
+                        status: AppConstants.login,
+                        startTime: dateTime,
+                        dutyType: AppConstants.login,
+                        remainingWeeklyTime: 0,
+                        remainingDriveTime: 0,
+                        remainingDutyTime: 0,
+                        remainingSleepTime: 0,
+                        breakTimeRemaning: 0,
+                        lastSleepTime: 0,
+                        RemaningRestBreak: "0.0",
+                        origin: OriginType.unidentified.description)
              
                 
             } else {

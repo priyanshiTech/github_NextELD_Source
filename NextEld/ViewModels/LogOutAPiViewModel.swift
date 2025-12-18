@@ -22,10 +22,16 @@ class APILogoutViewModel: ObservableObject {
     func callLogoutAPI() async -> Bool {
         isSessionExpired = false
         //  Prepare request
-        let logintime =  AppStorageHandler.shared.loginDateTime!
+//        var loginDateTime = 0
+//        if let lastLoginRecord = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.login], applyBaseFilter: false) {
+//            loginDateTime = Int(lastLoginRecord.timestamp)
+//        }
+        
+        
+       // let logintime =  AppStorageHandler.shared.loginDateTime!
         let request = LogoutRequestModel(
             employeeId: AppStorageHandler.shared.driverId ?? 0,
-            loginDateTime:  logintime ,
+            loginDateTime:  AppStorageHandler.shared.loginDateTime ?? 0 ,
             tokenNo: AppStorageHandler.shared.authToken ?? "" ,
             logoutDateTime: CurrentTimeHelperStamp.currentTimestamp
         )
