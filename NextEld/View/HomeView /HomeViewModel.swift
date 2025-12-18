@@ -432,6 +432,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
+
+            checkForViolation()
+        
     }
     
     
@@ -735,6 +738,11 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             print("Already violation shown for \(violationKey) shift \(AppStorageHandler.shared.shift) day \(AppStorageHandler.shared.days)")
             return
         }
+
+//        guard lastViolationDate == nil || lastViolationDate15min == nil || lastViolationDate30Min == nil else {
+//            print("Already violation shown for \(violationKey)")
+//            return
+//        }
         
         guard let violationDate = remainingTime < 0 ? DateTimeHelper.calendar.date(byAdding: .second, value: Int(remainingTime), to: DateTimeHelper.currentDateTime()) : DateTimeHelper.currentDateTime() else {
             return
@@ -791,6 +799,10 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             self.violationDataArray.append(violationData)
             saveViolation(for: violationData, date: violationDate)
             
+
+//            UserDefaults.standard.removeObject(forKey: violationKey)
+//            UserDefaults.standard.removeObject(forKey: violationKey + "_15min")
+//            UserDefaults.standard.removeObject(forKey: violationKey + "_30min")
         }
         UserDefaults.standard.synchronize()
     }
