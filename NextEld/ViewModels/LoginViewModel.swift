@@ -336,11 +336,11 @@ class LoginViewModel: ObservableObject {
                 }
                 
                 // MARK: - Save Login/Logout Logs to Database
-                if let loginLogoutLogs = response.result?.loginLogoutLog, !loginLogoutLogs.isEmpty {
+            if var loginLogoutLogs = response.result?.loginLogoutLog {
+                    loginLogoutLogs.removeLast()
                     DatabaseManager.shared.saveLoginLogoutLogsToSQLite(from: loginLogoutLogs)
                     //print("Saved \(loginLogoutLogs.count) login/logout logs to database")
-                }
-                
+            }
                 // MARK: - Save Server DVIR Records from Login Response
                 if let driverDvirLog = driverDvirLogArray, !driverDvirLog.isEmpty {
                     DvirDatabaseManager.shared.saveServerDvirRecords(from: driverDvirLog)
