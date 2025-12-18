@@ -59,6 +59,7 @@ import SwiftUI
             )
         }
 
+        
         let requestBody = CertifyOfflineData(
             certifiedLogData: certifiedLogData
         )

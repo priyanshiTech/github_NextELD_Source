@@ -123,8 +123,11 @@ struct HomeScreenView: View {
                         }
                         AvailableHoursView(homeViewModel: homeVM)
                         HOSEventsChartScreen(events: homeVM.graphEvents)
-                        //MARK: - Violation Boxes (Part of Main Scroll) - Removed, now using alerts
-                        
+                        //MARK: - Violation Boxes (Part of Main Scroll)
+                        if !violationsForToday.isEmpty {
+                            ViolationsSectionView(violations: violationsForToday)
+                        }
+
                         VStack(alignment: .leading) {
                             Text(" Version: \(AppInfo.version)(\(AppInfo.build))")
                                 .font(.caption)
@@ -572,18 +575,15 @@ struct HomeScreenView: View {
         .navigationBarBackButtonHidden()
         
     }
-
-    // Computed property to fetch violations for today
+   // Computed property to fetch violations for today
     private var violationsForToday: [DriverLogModel] {
         let today = Date()
         let startOfDay = DateTimeHelper.startOfDay(for: today)
         let endOfDay = DateTimeHelper.endOfDay(for: today) ?? today
-
         let logs = DatabaseManager.shared.fetchLogs(
             filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)],
             addWarningAndViolation: true
         )
-
         return logs.filter { log in
             log.isVoilations == "YES"
         }
