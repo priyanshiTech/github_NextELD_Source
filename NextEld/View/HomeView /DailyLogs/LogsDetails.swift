@@ -273,6 +273,7 @@ struct LogsDetails: View {
         } else {
             return DateTimeHelper.endOfDay(for: selectedDate)?.addingTimeInterval(-1) ?? DateTimeHelper.currentDateTime()
         }
+    }
 
 //MARK:  for those date showing only
     // MARK: - Date validation helpers
@@ -451,7 +452,7 @@ struct LogsDetails: View {
     }
     
     }
-}
+
         
 
 
