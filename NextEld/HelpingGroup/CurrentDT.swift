@@ -23,6 +23,14 @@ struct DateTimeHelper {
         return calendar
     }
     
+    static var currentCalendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        let timeZone = AppStorageHandler.shared.timeZone ?? ""
+        calendar.timeZone = TimeZone(identifier: timeZone) ?? .current
+        calendar.locale = Locale(identifier: "en_US_POSIX")
+        return calendar
+    }
+    
     static func get15MinBeforeDate(date: Date) -> Date? {
         return calendar.date(byAdding: .minute, value: -15, to: date)
     }

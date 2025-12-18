@@ -85,9 +85,7 @@ struct LogsDetails: View {
                    // HOSEventsChartScreen(events: hoseEventsForSelectedDate)
                    // HOSEventsChartScreen(events: homeVM.graphEvents)
                     HOSEventsChartScreen(
-                        events: isSelectedDateToday
-                        ? homeVM.graphEvents
-                        : hoseEventsForSelectedDate
+                        events: hoseEventsForSelectedDate
                     )
                     .frame(maxWidth: .infinity)
 
@@ -198,33 +196,61 @@ struct LogsDetails: View {
     
     
     private var hoseEventsForSelectedDate: [HOSEvent] {
-        let logs = logsForSelectedDate
+     /*   let logs = logsForSelectedDate
         guard !logs.isEmpty else { return [] }
         
         var events: [HOSEvent] = []
-        let calendar = Calendar.current
         
         for (index, log) in logs.enumerated() {
             let start = log.startTime
-            let nextStart = index + 1 < logs.count
-            ? logs[index + 1].startTime
-            : DateTimeHelper.currentDateTime()
-            
-            
-            
+            var endDate = nextLogCalculation()
+            if !(index == logs.count-1) {
+                let nextIndexLog = logs[index+1]
+                endDate = nextIndexLog.startTime
+            }
             events.append(
                 HOSEvent(
                     id: Int(log.id ?? Int64(index)),
                     x: start,
-                    event_end_time: nextStart,
+                    event_end_time: endDate,
                     dutyType: DriverStatusType(fromName: log.status) ?? .offDuty
                 )
             )
         }
         
         return events
+      */
+        
+        var logs = DatabaseManager.shared.fetchDutyEventsForToday(currentDate: selectedDate)
+       // logs.sort { $0.startTime < $1.startTime }
+
+        let events = logs.enumerated().map { index, log in
+            let status = DriverStatusType(fromName: log.status) ?? .offDuty
+            var endDate = nextLogCalculation()
+            if !(index == logs.count-1) {
+                let nextIndexLog = logs[index+1]
+                endDate = nextIndexLog.startTime
+            }
+            
+            return HOSEvent(
+                id: log.id,
+                x: log.startTime,
+                event_end_time: endDate,
+                dutyType: status
+            )
+        }
+        
+        return events
     }
     
+    func nextLogCalculation() -> Date {
+        let selectedDateIsInTodaysDate = DateTimeHelper.currentCalendar.isDateInToday(selectedDate)
+        if selectedDateIsInTodaysDate {
+            return DateTimeHelper.currentDateTime()
+        } else {
+            return DateTimeHelper.endOfDay(for: selectedDate)?.addingTimeInterval(-1) ?? DateTimeHelper.currentDateTime()
+        }
+    }
 
     
     private func driverStatusType(for status: String) -> DriverStatusType {

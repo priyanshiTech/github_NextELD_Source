@@ -16,39 +16,17 @@ class SyncViewModel: ObservableObject {
     @discardableResult
     func syncOfflineData() async -> Bool {
         
-        let unsyncedLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.notSync])
+        let unsyncedLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.notSync, .warning], addWarningAndViolation: true)
 
         guard !unsyncedLogs.isEmpty else {
             // print(" No unsynced logs found. All data already synced!")
             syncMessage = "All data already synced!"
             return true
         }
-        
-        // print("📤 Preparing \(unsyncedLogs.count) logs for syncing...")
-        
-        func normalizedStatus(_ value: String) -> String {
-            let key = value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-            switch key {
-            case "on-duty", "onduty", "on_duty":
-                return "OnDuty"
-            case "off-duty", "offduty", "off_duty":
-                return "OffDuty"
-            case "on-drive", "ondrive", "drive", "driving", "on_drive":
-                return "OnDrive"
-            case "sleep", "sleeper", "on-sleep", "on_sleep":
-                return "Sleep"
-            case "personaluse", "personal_use", "personal-conveyance":
-                return "PersonalUse"
-            case "yardmode", "yard_move", "yard-mode":
-                return "YardMode"
-            default:
-                return value.isEmpty ? "OnDuty" : value
-            }
-        }
-                
+            
         let driveringStatusData = unsyncedLogs.map { log in
             
-            let safeStatus = normalizedStatus(log.status)
+            let safeStatus = log.status
             let safeLocation = log.location.trimmingCharacters(in: .whitespacesAndNewlines)
             let safeLatitude = SharedInfoManager.shared.lattitude
             let safeLongitude = SharedInfoManager.shared.longitude

@@ -16,7 +16,7 @@ struct AppConstants {
     static let cycleTimeViolationKey = "cycle_drive_violation"
     static let breakTimeViolationKey = "break_time_violation"
     static let warning = "Warning"
-    static let violation = "Violation"
+    static let violation = "Voilation"
     static let cycleTime30MinTime = "250200"
     static let cycleTime15MinTime = "251100"
     static let nextDayAlert = "next_day_alert"

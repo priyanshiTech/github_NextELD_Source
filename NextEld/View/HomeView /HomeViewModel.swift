@@ -237,11 +237,11 @@ enum ViolationType: Hashable {
     func getViolationText() -> String {
         switch self {
         case .onDutyViolation:
-            return "Your duty time has been exceeded to \(Int(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0)) hours"
+            return "Your duty time has been exceeded to \(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0) hours"
         case .onContinueDriveViolation:
-            return "Your continue drive time has been exceeded to \(Double(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0)) hours"
+            return "Your continue drive time has been exceeded to \(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0) hours"
         case .onDriveViolation:
-            return "Your drive time has been exceeded to \(Int(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0)) hours"
+            return "Your drive time has been exceeded to \(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0) hours"
         case .cycleTimerViolation:
             return "Your cycle time has been exceeded to \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
         case .none:
@@ -431,7 +431,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func validateScenarioInEveryMinute() {
         self.loadEventsFromDatabase()
         showNextShiftAlert()
-        
+        checkForViolation()
     }
     
     
@@ -715,22 +715,24 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func checkViolation(for warning1: TimeInterval, for warning2: TimeInterval, remainingTime: TimeInterval, type: ViolationType, violationKey: String) {
 
         // Check if we've already shown this warning/violation today
-        let lastViolationDate = UserDefaults.standard.string(forKey: violationKey)
-        let lastViolationDate15min = UserDefaults.standard.string(forKey: violationKey + "_15min")
-        let lastViolationDate30Min = UserDefaults.standard.string(forKey: violationKey + "_30min")
+        let lastViolationDateValue = UserDefaults.standard.string(forKey: violationKey)
+        let lastViolationDate15minValue = UserDefaults.standard.string(forKey: violationKey + "_15min")
+        let lastViolationDate30MinValue = UserDefaults.standard.string(forKey: violationKey + "_30min")
         let uniqueValueForViolation = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
         let uniqueValueForViolation30Min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_30min"
         let uniqueValueForViolation15min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_15min"
         
         debugPrint("remainingTime-----------------------(\(remainingTime))")
         debugPrint("Current Value--------->\(uniqueValueForViolation)")
-        debugPrint("\(violationKey)-------->\(lastViolationDate ?? "nil")")
-        debugPrint("\(violationKey + "_15min")-------->\(lastViolationDate15min ?? "nil")")
-        debugPrint("\(violationKey + "_30min")-------->\(lastViolationDate30Min ?? "nil")")
+        debugPrint("\(violationKey)-------->\(lastViolationDateValue ?? "nil")")
+        debugPrint("\(violationKey + "_15min")-------->\(lastViolationDate15minValue ?? "nil")")
+        debugPrint("\(violationKey + "_30min")-------->\(lastViolationDate30MinValue ?? "nil")")
         debugPrint("-----------------------")
         
-        guard lastViolationDate == nil || lastViolationDate15min == nil || lastViolationDate30Min == nil else {
-            print("Already violation shown for \(violationKey)")
+        guard lastViolationDate30MinValue != uniqueValueForViolation30Min ||
+              lastViolationDate15minValue != uniqueValueForViolation15min ||
+              uniqueValueForViolation != lastViolationDateValue else {
+            print("Already violation shown for \(violationKey) shift \(AppStorageHandler.shared.shift) day \(AppStorageHandler.shared.days)")
             return
         }
         
@@ -738,15 +740,15 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             return
         }
 
-        if  remainingTime < warning1 && remainingTime > warning2 && lastViolationDate30Min != uniqueValueForViolation30Min {
+        if  remainingTime < warning1 && remainingTime > warning2 {
             var violationData = ViolationData()
             violationData.violationType = type
             violationData.thirtyMinWarning = true // 30 min warning
             self.violationDataArray.append(violationData)
             UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
             saveViolation(for: violationData, date: violationDate)
-        } else if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15min != uniqueValueForViolation15min {
-            if lastViolationDate30Min != uniqueValueForViolation30Min {
+        } else if remainingTime <= warning2 && remainingTime > 0  {
+            if lastViolationDate30MinValue != uniqueValueForViolation30Min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
@@ -761,9 +763,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             self.violationDataArray.append(violationData)
             saveViolation(for: violationData, date: violationDate)
             UserDefaults.standard.setValue(uniqueValueForViolation15min, forKey: violationKey + "_15min")
-        } else if remainingTime <= 0, uniqueValueForViolation != lastViolationDate {
+        } else if remainingTime <= 0 {
             // This two condition will work when remaining time directly goes to <= 0
-            if lastViolationDate30Min != uniqueValueForViolation30Min {
+            if lastViolationDate30MinValue != uniqueValueForViolation30Min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
@@ -772,7 +774,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
             }
             
-            if lastViolationDate15min != uniqueValueForViolation15min {
+            if lastViolationDate15minValue != uniqueValueForViolation15min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.fifteenMinWarning = true
@@ -788,9 +790,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey)
             self.violationDataArray.append(violationData)
             saveViolation(for: violationData, date: violationDate)
-            UserDefaults.standard.removeObject(forKey: violationKey)
-            UserDefaults.standard.removeObject(forKey: violationKey + "_15min")
-            UserDefaults.standard.removeObject(forKey: violationKey + "_30min")
+            
         }
         UserDefaults.standard.synchronize()
     }
@@ -848,8 +848,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 self.changeDayAfter10HoursCompleted(uniqueValue: uniqueValueForNextDayAlert)
                 debugPrint("Next Day Shift Stared")
             }
-        } else {
-            checkForViolation()
         }
     }
     

@@ -27,7 +27,6 @@ struct HomeScreenView: View {
     @State private var showDeviceSelector: Bool = false
     @State private var selectedDevice: String? = nil
     @State private var hasShownSleepResetPopup = false  //For reset SLEpp Timer
-    @State private var hoseEvents: [HOSEvent] = []
     @State private var timer: Timer? = nil
     @State private var driverWorkingTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     @State private var showPendingSyncPopup = false

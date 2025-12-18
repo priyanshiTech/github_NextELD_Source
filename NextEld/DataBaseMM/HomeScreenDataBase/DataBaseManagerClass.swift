@@ -33,6 +33,7 @@ enum FilterType {
     case notEngineStartStatus
     case notEngineStopStatus
     case specificDate(date: Date)
+    
 }
 
 enum SQLiteQuery {
@@ -838,17 +839,29 @@ class DatabaseManager: DatabaseHandler {
     }
 
     
-    func fetchDutyEventsForToday() -> [DutyLog] {
-        let fetchTodaysLogs = fetchLogs(filterTypes: [.getTodayRecord])
+    func fetchDutyEventsForToday(currentDate: Date = DateTimeHelper.currentDateTime()) -> [DutyLog] {
+        let startOfDay = DateTimeHelper.startOfDay(for: currentDate)
+        let endOfDay = DateTimeHelper.endOfDay(for: currentDate) ?? DateTimeHelper.currentDateTime()
+        let fetchTodaysLogs = fetchLogs(filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)])
         var logs: [DutyLog] = []
-        let currentStartOfDay = DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
+        let currentStartOfDay = DateTimeHelper.startOfDay(for: currentDate)
         for log in fetchTodaysLogs {
             let log = DutyLog(id: Int(log.id ?? 0), status: log.status, startTime: log.startTime, endTime: log.startTime)
             logs.append(log)
         }
-        if let yesterDayLastRecord = getLastRecordOfDriverLogs(filterTypes: [.getYesterdayRecord]) {
+        
+        let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: currentDate) ?? Date()
+        let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
+        let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
+        
+        if let yesterDayLastRecord = getLastRecordOfDriverLogs(filterTypes: [.betweenDates(startDate: yesterDayStartOfDay, endDate: yesterDayEndOfDay)]) {
             // Previous day status continue today
-            logs.insert(DutyLog(id: Int(yesterDayLastRecord.id ?? 0), status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime()), at: 0)
+            if DateTimeHelper.currentCalendar.isDateInToday(currentDate) {
+                logs.insert(DutyLog(id: Int(yesterDayLastRecord.id ?? 0), status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime()), at: 0)
+            } else {
+                logs.insert(DutyLog(id: Int(yesterDayLastRecord.id ?? 0), status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: currentDate), at: 0)
+            }
+            
         } else {
             let logFromToday12AMtoCurrentTime = DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime())
             logs.insert(logFromToday12AMtoCurrentTime, at: 0)
@@ -957,6 +970,7 @@ extension DatabaseManager {
             originType = OriginType.unidentified.description
         }
         AppStorageHandler.shared.origin = originType
+        let timestamp = Int64(startTime.timeIntervalSince1970 * 1000)
         
         let log = DriverLogModel(
             id: nil,
@@ -981,7 +995,7 @@ extension DatabaseManager {
             trailers: UserDefaults.standard.string(forKey: "trailer") ?? "",
             notes: notes,
             serverId: nil,
-            timestamp:TimeUtils.currentTimestamp(with: AppStorageHandler.shared.timeZoneOffset ?? ""),
+            timestamp:timestamp,
               //CurrentTimeHelperStamp.currentTimestamp,
             // Int64(Date().timeIntervalSince1970),
             identifier: AppStorageHandler.shared.splitShiftIdentifier,
