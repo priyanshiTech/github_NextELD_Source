@@ -172,11 +172,16 @@ struct EyeViewData: View {
                             // Use selected date graph events (same as LogsDetails)
                             HOSEventsChartScreen(events: hoseEventsForSelectedDate)
                             .frame(maxWidth: .infinity)
+                            VStack(alignment: .leading) {
+                                Text(" Version: \(AppInfo.version)(\(AppInfo.build))")
+                            }
                         }
 
-                        VStack(alignment: .leading) {
-                            Text("Version - \(d.version ?? "NA")")
+                        //MARK: - Violation Boxes (Part of Main Scroll)
+                        if !violationsForToday.isEmpty {
+                            ViolationsSectionView(violations: violationsForToday)
                         }
+                        
 
                         // Display header once
                         sectionSmallGridHeader(
@@ -261,6 +266,24 @@ struct EyeViewData: View {
             }
         }
     }
+    //MARK:  to showing voilation box
+    private var violationsForToday: [DriverLogModel] {
+        let today = selectedDate
+        let startOfDay = DateTimeHelper.startOfDay(for: today)
+        let endOfDay = DateTimeHelper.endOfDay(for: today) ?? today
+        
+        let logs = DatabaseManager.shared.fetchLogs(
+            filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)],
+            addWarningAndViolation: true
+        )
+        
+        // Filter only violations (status contains "violation" or "warning")
+        return logs.filter { log in
+            let status = log.status.lowercased()
+            return status.contains("voilation") || status.contains("warning")
+        }.sorted { $0.startTime < $1.startTime }
+    }
+    
     
     private var logsForSelectedDate: [DriverLogModel] {
         let startDate = DateTimeHelper.startOfDay(for: selectedDate)

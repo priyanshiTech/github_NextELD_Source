@@ -585,9 +585,9 @@ struct HomeScreenView: View {
         )
 
         return logs.filter { log in
-            log.isVoilations == "YES"
-        }
-        .sorted { $0.startTime < $1.startTime }
+            let status = log.status.lowercased()
+            return status.contains("voilation") || status.contains("warning")
+        }.sorted { $0.startTime < $1.startTime }
     }
 
     private func updateDriverWorkingPayload() {

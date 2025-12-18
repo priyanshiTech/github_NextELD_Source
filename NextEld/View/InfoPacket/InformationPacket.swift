@@ -51,7 +51,7 @@ struct InformationPacket: View {
                     .bold()
                     .padding()
                 
-                Text("  The user is Manual  , instruction sheet, and malfunction instruction Sheet can be in electronic form. this is accordance with fedral register titled Regulatory Guidance Concerning Electronic Signature and Documents (76 FR 411)")
+                Text(" The user manual, instruction sheet, and malfunction instructions can be in electronic form. This is in accordance with the Federal Register titled Regulatory Guidance Concerning Electronic Signatures and Documents (76 FR 411).")
                     .font(.title3)
                     .foregroundColor(.gray)
                     .padding(.horizontal)
@@ -79,7 +79,7 @@ struct InformationPacket: View {
                     .bold()
                     .padding()
                 
-                Text(" In additional the above the above , a supply of blank  driver's records of duty status (RODS) graph - grids sufficient  to records the driver's duty status and other related information for a minimum of 8 days must be Onboard the commercisl motor Vechicle (CMV)")
+                Text("In addition to the above, a supply of blank driver’s Records of Duty Status (RODS) graph grids, sufficient to record the driver’s duty status and other related information for a minimum of 8 days, must be onboard the commercial motor vehicle (CMV).")
                     .font(.title3)
                     .foregroundColor(.gray)
                     .padding(.horizontal)

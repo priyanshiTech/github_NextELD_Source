@@ -46,6 +46,7 @@
 		AF45BB782EB8968600DDDB4D /* VehicleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB772EB8968600DDDB4D /* VehicleModel.swift */; };
 		AF45BB7B2EB8AAE800DDDB4D /* vehicleCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB7A2EB8AAE800DDDB4D /* vehicleCondition.swift */; };
 		AF58BFD82E69C7CE00F0E765 /* SignatureAddDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */; };
+		AF5EE7122EF3DB07001AE01A /* VoilationRedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5EE7112EF3DB07001AE01A /* VoilationRedBox.swift */; };
 		AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */; };
 		AF6532A52E66D07000FB2A11 /* SplashScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */; };
 		AF66F7932E4C7B26009A13A0 /* ShippingDocView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF66F7922E4C7B26009A13A0 /* ShippingDocView.swift */; };
@@ -322,6 +323,7 @@
 		AF45BB772EB8968600DDDB4D /* VehicleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleModel.swift; sourceTree = "<group>"; };
 		AF45BB7A2EB8AAE800DDDB4D /* vehicleCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vehicleCondition.swift; sourceTree = "<group>"; };
 		AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureAddDvir.swift; sourceTree = "<group>"; };
+		AF5EE7112EF3DB07001AE01A /* VoilationRedBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoilationRedBox.swift; sourceTree = "<group>"; };
 		AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashModel.swift; sourceTree = "<group>"; };
 		AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewModel.swift; sourceTree = "<group>"; };
 		AF66F7922E4C7B26009A13A0 /* ShippingDocView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingDocView.swift; sourceTree = "<group>"; };
@@ -673,6 +675,7 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AF5EE7102EF3DAEF001AE01A /* VoilationboxView */,
 				AFFCF1E32EDCCADA00D548DF /* AppBlockView */,
 				CB4D817D2ECA803A00590F62 /* Disclamer */,
 				AFBB48F72EBF23F100E88DD5 /* Terms&Condition */,
@@ -852,6 +855,14 @@
 				AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */,
 			);
 			path = SignatureViewADDDvir;
+			sourceTree = "<group>";
+		};
+		AF5EE7102EF3DAEF001AE01A /* VoilationboxView */ = {
+			isa = PBXGroup;
+			children = (
+				AF5EE7112EF3DB07001AE01A /* VoilationRedBox.swift */,
+			);
+			path = VoilationboxView;
 			sourceTree = "<group>";
 		};
 		AF6532A12E66CFB200FB2A11 /* SplashModel */ = {
@@ -1886,6 +1897,7 @@
 				AFB943252E029CB000AD19D7 /* StoredEventsViewController+UITableView.swift in Sources */,
 				AFDEF7242E4B18AE00BEB2B1 /* Help&SupportViewModel.swift in Sources */,
 				AF95DD432DE9C1280099D4CC /* PDFInformationEld.swift in Sources */,
+				AF5EE7122EF3DB07001AE01A /* VoilationRedBox.swift in Sources */,
 				AFB7511B2E97C20900A4B65F /* Extension + View.swift in Sources */,
 				AFC0386B2E0FF10600944204 /* CountDownTimer.swift in Sources */,
 				AFC3CF9C2DE5D0C100D83558 /* CompanyInformationView.swift in Sources */,

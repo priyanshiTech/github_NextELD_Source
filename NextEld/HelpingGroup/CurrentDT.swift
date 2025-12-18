@@ -12,6 +12,7 @@ enum DateFormatterConstants: String {
     case defaultDateTime = "yyyy-MM-dd HH:mm:ss"
     case timeFormat = "HH:mm:ss"
     case dateOnlyFormat = "yyyy-MM-dd"
+    case dayMonthTime = "dd MMM, HH:mm:ss"
 }
 
 struct DateTimeHelper {
