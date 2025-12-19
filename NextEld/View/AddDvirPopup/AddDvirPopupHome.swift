@@ -13,7 +13,18 @@ struct AddDvirPopup: View {
     
     @Binding var isPresented: Bool
     var dvirRecord: DvirRecord?
+    //var workingRecord: DvirRecord
     @State private var currentRecord: DvirRecord?
+    @StateObject var trailerVM: TrailerViewModel = .init()
+    @StateObject var vehicleVM: VehicleConditionViewModel = .init()
+   // @StateObject var DVClocationManager: DeviceLocationManager = .init()
+    @StateObject var viewModel = AddDvirScreenViewModel()
+    // "Truck" or "Trailer"
+    // MARK: - Toast/Banner States
+    @State private var showBanner: Bool = false
+    @State private var bannerMessage: String = ""
+    @State private var bannerColor: Color = .green
+
     
     var body: some View {
 
@@ -76,8 +87,44 @@ struct AddDvirPopup: View {
                         .foregroundColor(.gray)
                 }
                 // Add button
+                let vehicleName = vehicleVM.selectedVehicleNumber.isEmpty ? (AppStorageHandler.shared.vehicleNo ?? "") : vehicleVM.selectedVehicleNumber
+                let vehicleId = vehicleVM.vehicleID > 0 ? "\(vehicleVM.vehicleID)" : (AppStorageHandler.shared.vehicleId.map { "\($0)" } ?? "0")
                 Button(action: {
-                    isPresented = false
+                    
+              
+                    let workingRecord = DvirRecord(
+                        id: nil,
+                        UserID: viewModel.driverID,
+                        UserName:  currentRecord?.UserName ?? "",
+                        startTime: Date(),
+                        DAY: AppStorageHandler.shared.days,
+                        Shift: AppStorageHandler.shared.shift,
+                        DvirTime: DateTimeHelper.currentTime(),
+                        odometer: viewModel.odometer,
+                        location: viewModel.Location,
+                        truckDefect: trailerVM.truckDefectSelection ?? "No",
+                        trailerDefect: trailerVM.trailerDefectSelection ?? "No",
+                        vehicleCondition: vehicleVM.selectedCondition ?? "None",
+                        notes:  currentRecord?.notes ?? "",
+                        vehicleName: vehicleName,
+                        vechicleID: vehicleId,
+                        Sync: 1,
+                        timestamp: currentTimestampMillis(),
+                        Server_ID: "",
+                        Trailer: trailerVM.trailers.joined(separator: ", "),
+                        signature: viewModel.signatureImage?.pngData()
+                    )
+
+                    //  SAVE TO DATABASE
+                    DvirDatabaseManager.shared.insertRecord(workingRecord)
+                    showToast(message: "Dvir Saved", color: .green)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                        
+                          isPresented = false
+                      }
+                   
+                    
                 }) {
                     Text("Add Dvir")
                         .font(.headline)
@@ -94,6 +141,27 @@ struct AddDvirPopup: View {
             .cornerRadius(20)
             .frame(width: 300, height: 400)
             .shadow(radius: 10)
+            
+            //MARK: -  Show toast dvir data daved
+            if showBanner {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Text(bannerMessage)
+                            .foregroundColor(.white)
+                            .font(.system(size: 14))
+                            .multilineTextAlignment(.center)
+                            .frame(width: 150, height: 40)
+                            .background(bannerColor)
+                            .cornerRadius(8)
+                        Spacer()
+                    }
+                    Spacer()
+                }
+                .transition(.opacity.combined(with: .scale))
+                .animation(.easeInOut, value: showBanner)
+            }
         }
         .onAppear {
             // If dvirRecord is provided, use it; otherwise fetch the last record from database
@@ -103,6 +171,18 @@ struct AddDvirPopup: View {
                 // Fetch the last DVIR record from database
                 let records = DvirDatabaseManager.shared.fetchAllRecords(limit: 1)
                 currentRecord = records.first
+            }
+        }
+    }
+    // MARK: - Toast Function
+    private func showToast(message: String, color: Color) {
+        bannerMessage = message
+        bannerColor = color
+        showBanner = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            withAnimation {
+                showBanner = false
             }
         }
     }
