@@ -34,7 +34,7 @@ struct CertifySelectedView: View {
     @State private var isCertified: Bool = false
     @State private var isCertify: String = "No" //Default "No"
     @State private var hasLoadedInitialData = false
-
+    
     // MARK: - Toast/Banner States
     @State private var showBanner: Bool = false
     @State private var bannerMessage: String = ""
@@ -224,7 +224,7 @@ struct CertifySelectedView: View {
                             let trailerValue = trailerVM.trailers.isEmpty || trailerVM.trailers.contains(where: { $0.trimmingCharacters(in: .whitespaces).lowercased() == "none" })
                                 ? "None"
                                 : trailerVM.trailers.prefix(10).joined(separator: ",")
-                
+                            
                             let record = CertifyRecord(
                                 userID: "\(AppStorageHandler.shared.driverId ?? 0)",
                               //  userName: AppStorageHandler.shared.UserName,

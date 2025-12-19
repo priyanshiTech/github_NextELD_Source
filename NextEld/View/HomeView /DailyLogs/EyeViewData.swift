@@ -174,12 +174,8 @@ struct EyeViewData: View {
                             .frame(maxWidth: .infinity)
                         }
 
-                        //MARK: - Violation Boxes (Part of Main Scroll)
-                        if !violationsForToday.isEmpty {
-                            ViolationsSectionView(violations: violationsForToday)
-                        }
                         VStack(alignment: .leading) {
-                            Text(" Version: \(AppInfo.version)(\(AppInfo.build))")
+                            Text("Version - \(d.version ?? "NA")")
                         }
 
                         // Display header once
@@ -265,24 +261,6 @@ struct EyeViewData: View {
             }
         }
     }
-    //MARK:  to showing voilation box
-    private var violationsForToday: [DriverLogModel] {
-        let today = Date()
-        let startOfDay = DateTimeHelper.startOfDay(for: today)
-        let endOfDay = DateTimeHelper.endOfDay(for: today) ?? today
-        
-        let logs = DatabaseManager.shared.fetchLogs(
-            filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)],
-            addWarningAndViolation: true
-        )
-        
-        // Filter only violations (status contains "violation" or "warning")
-        return logs.filter { log in
-            let status = log.status.lowercased()
-            return status.contains("violation") || status.contains("warning")
-        }.sorted { $0.startTime < $1.startTime }
-    }
-    
     
     private var logsForSelectedDate: [DriverLogModel] {
         let startDate = DateTimeHelper.startOfDay(for: selectedDate)

@@ -91,13 +91,13 @@ class SyncViewModel: ObservableObject {
             
             let response: SyncResponse = try await NetworkManager.shared.post(.ForSavingOfflineData, body: requestBody)
             
-            print(" API Status: \(String(describing: response.result))")
+            // print(" API Status: \(response.status)")
             if let message = response.message {
-                 print(" Message: \(message)")
+                // print(" Message: \(message)")
             }
             
             response.result?.forEach { item in
-                 print(" Synced localId: \(item.localId) → serverId: \(item.serverId)")
+                // print(" Synced localId: \(item.localId) → serverId: \(item.serverId)")
                 DatabaseManager.shared.markLogAsSynced(localId: Int64(item.localId) ?? 0, serverId: item.serverId)
             }
             
@@ -110,12 +110,11 @@ class SyncViewModel: ObservableObject {
 //            }
             return true
         } catch {
-            //print(" Sync Failed: \(error.localizedDescription)")
+            // print(" Sync Failed: \(error.localizedDescription)")
             syncMessage = "Sync Failed!"
             return false
         }
     }
-    
     
     func getLocation() async -> String {
         let lattitude = SharedInfoManager.shared.lattitude

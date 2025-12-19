@@ -121,14 +121,14 @@ struct DefectRowView: View {
                 .lineLimit(1)
             Spacer()
             if showUploadButton {
-            Button(isUploaded ? "Uploaded" : (isUploading ? "Uploading..." : "Upload")) {
-                if !isUploaded && !isUploading {
-                    onUpload()
+                Button(isUploaded ? "Uploaded" : (isUploading ? "Uploading..." : "Upload")) {
+                    if !isUploaded && !isUploading {
+                        onUpload()
+                    }
                 }
-            }
-            .foregroundColor(isUploaded ? .green : (isUploading ? .gray : .red))
-            .font(.subheadline)
-            .disabled(isUploaded || isUploading)
+                .foregroundColor(isUploaded ? .green : (isUploading ? .gray : .red))
+                .font(.subheadline)
+                .disabled(isUploaded || isUploading)
             }
         }
         .padding(.vertical, 4)

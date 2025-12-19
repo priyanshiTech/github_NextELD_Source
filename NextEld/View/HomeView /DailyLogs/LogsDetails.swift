@@ -87,12 +87,9 @@ struct LogsDetails: View {
                     HOSEventsChartScreen(
                         events: hoseEventsForSelectedDate
                     )
-                        .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity)
 
-                    //MARK: - Violation Boxes (Part of Main Scroll)
-                    if !violationsForToday.isEmpty {
-                        ViolationsSectionView(violations: violationsForToday)
-                    }
+                        
                     
                     Text(" Version: \(AppInfo.version)(\(AppInfo.build))")
                         .font(.subheadline)
@@ -103,7 +100,13 @@ struct LogsDetails: View {
                 .padding()
             }
         }.navigationBarBackButtonHidden()
+        
+        .onAppear {
+//            loadLogsFromDatabase()
+//            DateTimeHelper.currentDateTime()
+//            loadLogsFromDatabase()
 
+        }
         .onChange(of: selectedDate) { oldValue, newValue in
             loadLogsFromDatabase()
         }
@@ -112,25 +115,6 @@ struct LogsDetails: View {
             stopTimer()
         }
         
-    }
-    
-    
-    // Computed property to fetch violations for today
-    private var violationsForToday: [DriverLogModel] {
-        let today = Date()
-        let startOfDay = DateTimeHelper.startOfDay(for: today)
-        let endOfDay = DateTimeHelper.endOfDay(for: today) ?? today
-        
-        let logs = DatabaseManager.shared.fetchLogs(
-            filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)],
-            addWarningAndViolation: true
-        )
-        
-        // Filter only violations (status contains "violation" or "warning")
-        return logs.filter { log in
-            let status = log.status.lowercased()
-            return status.contains("violation") || status.contains("warning")
-        }.sorted { $0.startTime < $1.startTime }
     }
     private var currentDayLogsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -150,28 +134,21 @@ struct LogsDetails: View {
                 ForEach(Array(logsForSelectedDate.enumerated()), id: \.offset) { index, log in
                     HStack(spacing: 12) {
                         // Left colored bar based on status - red for warning/violation
-                      //  Rectangle()
-                          //  .fill(isWarningOrViolation(log.status) ? Color.red : statusColor(for: log.status))
                         Rectangle()
-                            .fill(logBarColor(for: log.status))
+                            .fill(isWarningOrViolation(log.status) ? Color.red : statusColor(for: log.status))
                             .frame(width: 4)
-
                         
                         VStack(alignment: .leading, spacing: 4) {
                             // Date and time - red for warning/violation
                             Text(DateTimeHelper.formatDatabaseDateTime(log.startTime))
                                 .font(.subheadline)
-                               // .foregroundColor(isWarningOrViolation(log.status) ? .red : .primary)
-                                .foregroundColor(logTextColor(for: log.status))
-
+                                .foregroundColor(isWarningOrViolation(log.status) ? .red : .primary)
                             
                             // Status name - show Warning(dutyType) or Violation(dutyType) format - red for warning/violation
                             Text(formatStatusDisplay(log: log))
                                 .font(.subheadline)
-                               // .foregroundColor(isWarningOrViolation(log.status) ? .red : .secondary)
-                                .foregroundColor(logTextColor(for: log.status))
-
-                            }
+                                .foregroundColor(isWarningOrViolation(log.status) ? .red : .secondary)
+                        }
                         
                         Spacer()
                         
@@ -194,7 +171,7 @@ struct LogsDetails: View {
         let endDate = DateTimeHelper.endOfDay(for: selectedDate) ?? selectedDate
         let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startDate, endDate: endDate)],addWarningAndViolation: true).sorted { $0.startTime < $1.startTime }
         return logs
-        
+
     }
     
     //LAST Log for Previous date if no record found in DB
@@ -250,30 +227,6 @@ struct LogsDetails: View {
         } else {
             return DateTimeHelper.endOfDay(for: selectedDate)?.addingTimeInterval(-1) ?? DateTimeHelper.currentDateTime()
         }
-
-//MARK:  for those date showing only
-    // MARK: - Date validation helpers
-
-    private var earliestLogDate: Date? {
-        let logs = DatabaseManager.shared.fetchLogs()
-        return logs
-            .map { DateTimeHelper.startOfDay(for: $0.startTime) }
-            .min()
-    }
-
-    private var latestAllowedDate: Date {
-        DateTimeHelper.startOfDay(for: Date()) // today
-    }
-
-    private func nearestPreviousLogDate(from date: Date) -> Date? {
-        let startOfDate = DateTimeHelper.startOfDay(for: date)
-
-        let dates = DatabaseManager.shared.fetchLogs()
-            .map { DateTimeHelper.startOfDay(for: $0.startTime) }
-            .filter { $0 < startOfDate }
-            .sorted(by: >)
-
-        return dates.first
     }
 
     
@@ -305,7 +258,7 @@ struct LogsDetails: View {
         let lowercased = status.lowercased()
         return lowercased == "onduty" || lowercased == "on duty"
     }
-
+    
     // Calculate duration between current log and next log (or current time if last log)
     private func calculateDuration(for index: Int, log: DriverLogModel) -> String {
         let logs = logsForSelectedDate
@@ -385,33 +338,6 @@ struct LogsDetails: View {
             .cornerRadius(12)
     }
     
-    private func isWarning(_ status: String) -> Bool {
-        status.lowercased().contains("warning")
-    }
-
-    private func isViolation(_ status: String) -> Bool {
-        status.lowercased().contains("violation")
-    }
-
-    private func logTextColor(for status: String) -> Color {
-        if isViolation(status) {
-            return .red
-        } else if isWarning(status) {
-            return .yellow
-        } else {
-            return .primary
-        }
-    }
-
-    private func logBarColor(for status: String) -> Color {
-        if isViolation(status) {
-            return .red
-        } else if isWarning(status) {
-            return Color(UIColor.yellow)
-        } else {
-            return statusColor(for: status)
-        }
-    }
     private func statusColor(for status: String) -> Color {
         switch status.lowercased() {
         case "onduty", "on duty" ,  "yardmove":
@@ -427,7 +353,7 @@ struct LogsDetails: View {
         }
     }
     
-    }
+ 
 }
         
 
