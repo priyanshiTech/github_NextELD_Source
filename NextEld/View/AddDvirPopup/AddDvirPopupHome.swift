@@ -96,7 +96,7 @@ struct AddDvirPopup: View {
                         id: nil,
                         UserID: viewModel.driverID,
                         UserName:  currentRecord?.UserName ?? "",
-                        startTime: Date(),
+                        startTime: DateTimeHelper.currentDateTime(),
                         DAY: AppStorageHandler.shared.days,
                         Shift: AppStorageHandler.shared.shift,
                         DvirTime: DateTimeHelper.currentTime(),
