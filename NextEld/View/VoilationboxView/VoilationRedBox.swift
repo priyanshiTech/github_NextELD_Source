@@ -28,7 +28,7 @@ struct ViolationsSectionView: View {
                     .fontWeight(.semibold)
                 
                 //  2-column Android-style layout
-                VStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: 8) {
                     ForEach(violationOnlyLogs, id: \.id) { violation in
                         ViolationBoxView(violation: violation)
                     }

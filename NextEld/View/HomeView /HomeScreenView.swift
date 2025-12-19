@@ -81,54 +81,57 @@ struct HomeScreenView: View {
                 
                 
                 UniversalScrollView {
-                    
-                    VStack {
-                        Text(SharedInfoManager.shared.isDeviceConnected ? "Connected": "Disconnected")
-                            .font(.title2)
-                            .foregroundColor(SharedInfoManager.shared.isDeviceConnected ? .green : .red)
-                        //UserDefaults.standard.string(forKey: "truckNo"),
-                        VehicleInfoView(
-                            GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
-                            trailer: trailerVM.getTrailerValue()
-                        )
-                        StatusView(homeViewModel: homeVM) {  status in
-                            guard status != homeVM.currentDriverStatus else { return }
-                            if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                    homeVM.alertType = .thirtyFourHours
-                                    homeVM.showAlertOnHomeScreen = true
-                                }
-                            } else {
-                                if (status == .onDuty || status == .onDrive) {
-                                    if homeVM.checkWhetherTheLogCertifyOrNot(status: status) {
-                                        if status == .onDrive {
-                                            if homeVM.checkWhetherTheDVIRAddedOrNot(status: status) {
-                                                homeVM.showDriverStatusAlert = (true, status)
-                                            } else if homeVM.checkWetherLastRecordExistInDVIRTable(status: status) {
-                                                showAddDvirPopup = true
-                                            } else {
-                                                showDvirPopup = true
-                                            }
-                                        } else {
-                                            homeVM.showDriverStatusAlert = (true, status)
-                                        }
-                                    } else {
-                                       showCertifyLogAlert = true
+                    VStack(alignment: .leading) {
+                        VStack {
+                            Text(SharedInfoManager.shared.isDeviceConnected ? "Connected": "Disconnected")
+                                .font(.title2)
+                                .foregroundColor(SharedInfoManager.shared.isDeviceConnected ? .green : .red)
+                            //UserDefaults.standard.string(forKey: "truckNo"),
+                            VehicleInfoView(
+                                GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
+                                trailer: trailerVM.getTrailerValue()
+                            )
+                            StatusView(homeViewModel: homeVM) {  status in
+                                guard status != homeVM.currentDriverStatus else { return }
+                                if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        homeVM.alertType = .thirtyFourHours
+                                        homeVM.showAlertOnHomeScreen = true
                                     }
                                 } else {
-                                    homeVM.showDriverStatusAlert = (true, status)
+                                    if (status == .onDuty || status == .onDrive) {
+                                        if homeVM.checkWhetherTheLogCertifyOrNot(status: status) {
+                                            if status == .onDrive {
+                                                if homeVM.checkWhetherTheDVIRAddedOrNot(status: status) {
+                                                    homeVM.showDriverStatusAlert = (true, status)
+                                                } else if homeVM.checkWetherLastRecordExistInDVIRTable(status: status) {
+                                                    showAddDvirPopup = true
+                                                } else {
+                                                    showDvirPopup = true
+                                                }
+                                            } else {
+                                                homeVM.showDriverStatusAlert = (true, status)
+                                            }
+                                        } else {
+                                           showCertifyLogAlert = true
+                                        }
+                                    } else {
+                                        homeVM.showDriverStatusAlert = (true, status)
+                                    }
+                                    
                                 }
-                                
                             }
-                        }
-                        AvailableHoursView(homeViewModel: homeVM)
-                        HOSEventsChartScreen(events: homeVM.graphEvents)
-                        //MARK: - Violation Boxes (Part of Main Scroll) - Removed, now using alerts
-                        
-                        VStack(alignment: .leading) {
+                            AvailableHoursView(homeViewModel: homeVM)
+                            HOSEventsChartScreen(events: homeVM.graphEvents)
+                            //MARK: - Violation Boxes (Part of Main Scroll) - Removed, now using alerts
                             Text(" Version: \(AppInfo.version)(\(AppInfo.build))")
                                 .font(.caption)
                                 .foregroundColor(.black)
+                        }
+                        VStack(alignment: .leading, spacing: 12) {
+                            if !violationsForToday.isEmpty {
+                                ViolationsSectionView(violations: violationsForToday)
+                            }
                         }
                     }
                 }
