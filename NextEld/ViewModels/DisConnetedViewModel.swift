@@ -50,7 +50,13 @@ class DeviceStatusViewModel: ObservableObject {
             // print(" Response token value: \(response.token)")
             
             // Check if token is false - session expired
-            if response.token.lowercased() == "false" {
+           
+            
+            if response.status == "SUCCESS" {
+                self.responseMessage = response.message
+                
+            
+            } else  if response.token.lowercased() == "false" {
                 // Session expired - token is false
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
@@ -60,12 +66,6 @@ class DeviceStatusViewModel: ObservableObject {
                 // print("  Navigating to SessionExpireUIView")
                 isLoading = false
                 return false
-            }
-            
-            if response.status == "SUCCESS" {
-                self.responseMessage = response.message
-                
-            
             } else {
                 self.errorMessage = response.message
             }

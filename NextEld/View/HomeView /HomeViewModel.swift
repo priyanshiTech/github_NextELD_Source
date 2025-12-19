@@ -237,11 +237,11 @@ enum ViolationType: Hashable {
     func getViolationText() -> String {
         switch self {
         case .onDutyViolation:
-            return "Your duty time has been exceeded to \(Double(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0)) hours"
+            return "Your duty time has been exceeded to \(Int(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0)) hours"
         case .onContinueDriveViolation:
             return "Your continue drive time has been exceeded to \(Double(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0)) hours"
         case .onDriveViolation:
-            return "Your drive time has been exceeded to \(Double(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0)) hours"
+            return "Your drive time has been exceeded to \(Int(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0)) hours"
         case .cycleTimerViolation:
             return "Your cycle time has been exceeded to \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
         case .none:
@@ -431,7 +431,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func validateScenarioInEveryMinute() {
         self.loadEventsFromDatabase()
         showNextShiftAlert()
-        checkForViolation()
+        
     }
     
     
@@ -518,11 +518,16 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func deleteAllAppData() {
         SharedInfoManager.shared.centralManager?.stopScan()
         stopTimers(for: TimerType.allCases)
-        UserDefaults.standard.removePersistentDomain(forName: "Inurum.Technology.EldTruckTrace")
+        
         //  Clear SessionManager token
         SessionManagerClass.shared.clearToken()
-        DatabaseManager.shared.deleteAllLogs()
         currentDriverStatus = .offDuty
+        AppStorageHandler.shared.deleteAll()
+        DatabaseManager.shared.deleteAllLogs() // Clears driverLogs and splitShiftTable
+        ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+        DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
+        CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+
         // print(" All app data deleted successfully")
     }
     
@@ -717,18 +722,23 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let uniqueValueForViolation30Min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_30min"
         let uniqueValueForViolation15min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_15min"
         
-        debugPrint("remainingTime-----------------------\(remainingTime)")
+        debugPrint("remainingTime-----------------------(\(remainingTime))")
         debugPrint("Current Value--------->\(uniqueValueForViolation)")
         debugPrint("\(violationKey)-------->\(lastViolationDate ?? "nil")")
         debugPrint("\(violationKey + "_15min")-------->\(lastViolationDate15min ?? "nil")")
         debugPrint("\(violationKey + "_30min")-------->\(lastViolationDate30Min ?? "nil")")
         debugPrint("-----------------------")
         
+        guard lastViolationDate == nil || lastViolationDate15min == nil || lastViolationDate30Min == nil else {
+            print("Already violation shown for \(violationKey)")
+            return
+        }
+        
         guard let violationDate = remainingTime < 0 ? DateTimeHelper.calendar.date(byAdding: .second, value: Int(remainingTime), to: DateTimeHelper.currentDateTime()) : DateTimeHelper.currentDateTime() else {
             return
         }
 
-        if remainingTime < warning1 && remainingTime > warning2 && lastViolationDate30Min != uniqueValueForViolation30Min {
+        if  remainingTime < warning1 && remainingTime > warning2 && lastViolationDate30Min != uniqueValueForViolation30Min {
             var violationData = ViolationData()
             violationData.violationType = type
             violationData.thirtyMinWarning = true // 30 min warning
@@ -778,6 +788,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey)
             self.violationDataArray.append(violationData)
             saveViolation(for: violationData, date: violationDate)
+            UserDefaults.standard.removeObject(forKey: violationKey)
+            UserDefaults.standard.removeObject(forKey: violationKey + "_15min")
+            UserDefaults.standard.removeObject(forKey: violationKey + "_30min")
         }
         UserDefaults.standard.synchronize()
     }
@@ -835,6 +848,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 self.changeDayAfter10HoursCompleted(uniqueValue: uniqueValueForNextDayAlert)
                 debugPrint("Next Day Shift Stared")
             }
+        } else {
+            checkForViolation()
         }
     }
     
@@ -1068,6 +1083,7 @@ extension HomeViewModel {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.alertType = .refresh
             self.showAlertOnHomeScreen = true
+            self.showSyncconfirmation = false
         }
     }
     

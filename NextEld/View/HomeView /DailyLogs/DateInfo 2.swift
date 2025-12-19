@@ -20,31 +20,6 @@ struct WorkEntry: Identifiable, Hashable, Codable {
     }
 }
 
-func generateWorkEntries() -> [WorkEntry] {
-    var entries: [WorkEntry] = []
-    let calendar = Calendar.current
-    let today = Date()
-
-    // MARK: - Get the range of days in the current month
-    if let range = calendar.range(of: .day, in: .month, for: today) {
-        
-        //MARK: -  Get the first day of the current month
-        var components = calendar.dateComponents([.year, .month], from: today)
-        components.day = 1
-
-        if let firstDayOfMonth = calendar.date(from: components) {
-            for day in range {
-                if let date = calendar.date(byAdding: .day, value: day - 1, to: firstDayOfMonth) {
-                    let hours = Double.random(in: 4...10)
-                    entries.append(WorkEntry(date: date, hoursWorked: hours))
-                }
-            }
-        }
-    }
-
-    return entries
-}
-
 struct DateStepperView: View {
        @Binding var currentDate: Date
 // private var currentDate = Date()

@@ -329,7 +329,6 @@ class LoginViewModel: ObservableObject {
                 }
             
             //MARK: - Logout /Login data saved
-                let loginLogoutLog = response.result?.loginLogoutLog ?? []
                 let logs = response.result?.driverLog ?? []
                 // Save logs to DB
                 if !logs.isEmpty {

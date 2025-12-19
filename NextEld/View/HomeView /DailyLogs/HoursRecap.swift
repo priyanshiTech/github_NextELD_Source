@@ -65,7 +65,7 @@ struct HoursRecap: View {
             List {
                 ForEach(last7Days) { entry in
                     HStack {
-                        Text(formatDate(entry.date))
+                        Text(entry.date.toLocalString(format: .dateOnlyFormat))
                         Spacer()
                         Text(formatTime(entry.hoursWorked))
                     }

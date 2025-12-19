@@ -252,11 +252,10 @@ struct HomeScreenView: View {
                         
                         title: "Refresh Log",
                         message: "You have some records to update, do you want to update?",
-                        onOK: {    DatabaseManager.shared.deleteAllLogs() // Clears driverLogs and splitShiftTable
-                            ContinueDriveDBManager.shared.deleteAllContinueDriveData()
-                            DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
-                            CertifyDatabaseManager.shared.deleteAllCertifyRecords()
-                            homeVM.handleSyncPopupConfirmation() },
+                        onOK: {
+                            
+                            homeVM.handleSyncPopupConfirmation()
+                        },
                         onCancel: {
                             isManualSyncInProgress = false
                         syncPopupContext = nil
@@ -539,7 +538,6 @@ struct HomeScreenView: View {
                         }
                         if success {
                             homeVM.deleteAllAppData()
-                            ContinueDriveDBManager.shared.deleteAllContinueDriveData()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                 self.homeVM.alertType = .sucessConfimration
                                 self.homeVM.showAlertOnHomeScreen = true

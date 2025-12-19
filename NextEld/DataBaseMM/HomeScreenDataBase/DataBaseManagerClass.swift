@@ -472,10 +472,9 @@ class DatabaseManager: DatabaseHandler {
             var dateTime: Date? = nil
             if let timeStampString = log.dateTime,
                 let timeStamp = TimeInterval(timeStampString) {
-                let convertToSecond = timeStamp/1000
-                let timeStampDate = Date(timeIntervalSince1970: convertToSecond)
-                let timezone = AppStorageHandler.shared.timeZoneOffset ?? ""
-                dateTime = DateTimeHelper.convertToUserTimezone(timeStampDate, offset: timezone)
+                let convertToSecond = TimeInterval(timeStamp/1000)
+                dateTime = Date(timeIntervalSince1970: convertToSecond)
+                print("datetime: \(dateTime!)")
             }
             
             let model = DriverLogModel(
@@ -499,7 +498,7 @@ class DatabaseManager: DatabaseHandler {
                 trailers: "",
                 notes: log.note ?? "",
                 serverId: log._id,
-                timestamp:Int64(CurrentTimeHelperStamp.currentTimestamp),
+                timestamp:Int64(log.dateTime ?? "0") ?? 0,
                 identifier: 0,
                 remainingWeeklyTime: Int(log.remainingWeeklyTime ?? "0") ?? 0,
                 remainingDriveTime: Int(log.remainingDriveTime ?? "0") ?? 0,
@@ -571,7 +570,7 @@ class DatabaseManager: DatabaseHandler {
                 trailers: (log.trailers ?? []).joined(separator: ", "),
                 notes: log.note ?? "",
                 serverId: log._id,
-                timestamp: Int64(CurrentTimeHelperStamp.currentTimestamp),   
+                timestamp: log.receivedTimestamp ?? 0,
                 identifier: log.identifier ?? 0,
                 remainingWeeklyTime: Int(log.remainingWeeklyTime ?? "0") ?? 0,
                 remainingDriveTime: Int(log.remainingDriveTime ?? "0") ?? 0,
