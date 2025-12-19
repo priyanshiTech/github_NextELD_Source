@@ -432,8 +432,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
-
-            checkForViolation()
+   
         
     }
     

@@ -38,7 +38,7 @@ struct CertifySelectedView: View {
     // MARK: - Toast/Banner States
     @State private var showBanner: Bool = false
     @State private var bannerMessage: String = ""
-    @State private var bannerColor: Color = .green
+    @State private var bannerColor: Color = Color(uiColor: .wine)
 
 
     var title: String
@@ -271,7 +271,7 @@ struct CertifySelectedView: View {
 
                     .padding(.top)
                 }
-                
+              
                 // MARK: - Signature Tab Content
 
                 if selectedTab == "Certify" {

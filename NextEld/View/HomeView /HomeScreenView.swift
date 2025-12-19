@@ -135,7 +135,6 @@ struct HomeScreenView: View {
                         }
                     }
                 }
-                .scrollIndicators(.hidden)
               .scrollIndicators(.hidden)
             }
             .disabled(homeVM.presentSideMenu || homeVM.showLogoutPopup || ShowrefreshPopup )
@@ -582,18 +581,18 @@ struct HomeScreenView: View {
         let today = Date()
         let startOfDay = DateTimeHelper.startOfDay(for: today)
         let endOfDay = DateTimeHelper.endOfDay(for: today) ?? today
-        
+
         let logs = DatabaseManager.shared.fetchLogs(
             filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)],
             addWarningAndViolation: true
         )
-        
-        // Filter only violations (status contains "violation" or "warning")
+
         return logs.filter { log in
-            let status = log.status.lowercased()
-            return status.contains("violation") || status.contains("warning")
-        }.sorted { $0.startTime < $1.startTime }
+            log.isVoilations == "YES"
+        }
+        .sorted { $0.startTime < $1.startTime }
     }
+
     
     private func updateDriverWorkingPayload() {
         driverWorkviewModel.status = homeVM.currentDriverStatus.getName()

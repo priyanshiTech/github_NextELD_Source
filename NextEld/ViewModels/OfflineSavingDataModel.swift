@@ -30,11 +30,13 @@ class SyncViewModel: ObservableObject {
             let safeLocation = log.location.trimmingCharacters(in: .whitespacesAndNewlines)
             let safeLatitude = SharedInfoManager.shared.lattitude
             let safeLongitude = SharedInfoManager.shared.longitude
-            
-            let voilation = log.isVoilations == "Yes" ? "1" : "0"
-            let safeLogType = voilation == "0" ? "log" : (log.dutyType)
 
-////
+            
+            let isViolation = log.isVoilations.uppercased() == "YES"
+
+            let violation = isViolation ? "1" : "0"
+            let safeLogType = isViolation ? "log" : log.dutyType
+
             return DriveringStatusData(
                 appVersion: AppInfo.version,
                 clientId: AppStorageHandler.shared.clientId ?? 1,
@@ -47,7 +49,7 @@ class SyncViewModel: ObservableObject {
                 engineStatus: log.engineStatus,
                 identifier: log.identifier,
                 isSplit: log.isSplit,
-                isVoilation: voilation,
+                isVoilation: violation,
                 lastOnSleepTime: Int(log.lastSleepTime),
                 lattitude: safeLatitude,
                 localId: "\(log.id ?? 0)",
@@ -68,6 +70,7 @@ class SyncViewModel: ObservableObject {
             )
         }
         var requestBody = SyncRequest()
+        print("request Body Sync API: \(requestBody)")
         var splitLogs: SplllitLogss = .init(day: 0, dbId: 0, driverId: 0, shift: 0)
         requestBody.driveringStatusData = driveringStatusData
         if let firstLog = DatabaseManager.shared.getLastRecordForSplitShiftLog() {
