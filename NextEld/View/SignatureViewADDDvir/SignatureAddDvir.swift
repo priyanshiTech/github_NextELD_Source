@@ -1,80 +1,110 @@
 
 import Foundation
 import SwiftUI
+import SwiftUI
 
 struct SignatureAddDvir: View {
-    
+
     @Binding var isPresented: Bool
-    @Binding var points: [CGPoint]   // parent se bhi milega
-    var onSave: (UIImage) -> Void    // yeh closure parent ko image bhejega
-    
+    @Binding var points: [CGPoint]
+    var onSave: (UIImage) -> Void
+
     var body: some View {
         ZStack {
-            Color(uiColor:.black).opacity(0.4)
-                .edgesIgnoringSafeArea(.all)
+            // Dim Background
+            Color.black.opacity(0.45)
+                .ignoresSafeArea()
                 .onTapGesture { isPresented = false }
-            
-            VStack(spacing: 16) {
+
+            VStack(spacing: 18) {
+
+                // Header
                 HStack {
-                    
                     Text("Driver Signature")
                         .font(.headline)
+                        .fontWeight(.semibold)
+
                     Spacer()
-                    Button(action: { isPresented = false }) {
+
+                    Button {
+                        isPresented = false
+                    } label: {
                         Image(systemName: "xmark.circle.fill")
+                            .font(.title3)
                             .foregroundColor(.red)
-                            .font(.title2)
                     }
                 }
                 .padding(.horizontal)
-                
-                // Signature Canvas
+
+                Divider()
+
+                // Signature Box
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray.opacity(0.6), lineWidth: 2)
-                        .frame(height: 200)
-                    
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.gray.opacity(0.5), lineWidth: 1.5)
+                        .background(Color.white.cornerRadius(12))
+                        .frame(height: 220)
+
                     SignatureCanvas(points: $points)
-                        .frame(height: 200)
+                        .frame(height: 220)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .padding(.horizontal)
-                
-                // Certification
+
+                // Certification Text
                 Text("I hereby certify that my data entries are true and correct")
                     .font(.footnote)
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                
-                // Buttons
-                HStack(spacing: 16) {
-                    Button("Clear") { points.removeAll() }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.white)
-                        .foregroundColor(.red)
-                        .cornerRadius(10)
-                    
-                    Button("Agree") {
-                        let image = signatureToImage(points: points, size: CGSize(width: 300, height: 150))
-                        onSave(image)         // parent ko image bhej do
-                        isPresented = false   // popup close
+                    .padding(.horizontal, 24)
+
+                // Action Buttons
+                HStack(spacing: 14) {
+
+                    Button {
+                        points.removeAll()
+                    } label: {
+                        Text("Clear")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                            .foregroundColor(.gray)
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.gray.opacity(0.6), lineWidth: 1)
+                            )
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color(UIColor.wine))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+
+                    Button {
+                        let image = signatureToImage(
+                            points: points,
+                            size: CGSize(width: 320, height: 160)
+                        )
+                        onSave(image)
+                        isPresented = false
+                    } label: {
+                        Text("Agree")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                            .foregroundColor(.white)
+                            .background(Color(uiColor: .wine))
+                            .cornerRadius(10)
+                    }
                 }
                 .padding(.horizontal)
+
             }
+            .padding(.vertical, 18)
             .background(Color.white)
-            .cornerRadius(16)
-            .shadow(radius: 10)
-            .padding()
+            .cornerRadius(20)
+            .shadow(color: .black.opacity(0.2), radius: 12)
+            .frame(maxWidth: 360)
+            .padding(.horizontal)
         }
     }
 }
+
+
 
 // Helper: Path -> UIImage
 func signatureToImage(points: [CGPoint], size: CGSize) -> UIImage {

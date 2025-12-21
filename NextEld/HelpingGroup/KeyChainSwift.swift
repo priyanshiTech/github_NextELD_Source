@@ -45,6 +45,7 @@ class SessionManagerClass {
     }
 
     func clearToken() {
+        
         let deleted = keychain.delete("userToken")
         if deleted {
             // print("Token removed from keychain")

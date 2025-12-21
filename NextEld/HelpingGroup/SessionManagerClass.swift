@@ -45,7 +45,6 @@ class KeychainHelper {
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: "authToken"
         ]
-
         SecItemDelete(query as CFDictionary)
     }
 }
