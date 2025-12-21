@@ -242,6 +242,7 @@
 		CBBC97012EC6278B0049E376 /* DataBaseManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC97002EC6278B0049E376 /* DataBaseManagerClass.swift */; };
 		CBBC97032EC6289F0049E376 /* DriverLogList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC97022EC6289F0049E376 /* DriverLogList.swift */; };
 		CBBC97052EC628DB0049E376 /* DriverLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC97042EC628DB0049E376 /* DriverLogViewModel.swift */; };
+		CBBCA4FE2EF7C26B005B6AAC /* HomeViewModel+Cycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBCA4FD2EF7C25A005B6AAC /* HomeViewModel+Cycle.swift */; };
 		CBE886042E995A2D00B7D581 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE886032E995A2500B7D581 /* HomeViewModel.swift */; };
 		CBE886072E9969F900B7D581 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE886062E9969F300B7D581 /* AppConstants.swift */; };
 		CBFD7D3F2EDB14AB008353E8 /* HomeViewModel+DeviceOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBFD7D3E2EDB149B008353E8 /* HomeViewModel+DeviceOperation.swift */; };
@@ -516,6 +517,7 @@
 		CBBC97002EC6278B0049E376 /* DataBaseManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerClass.swift; sourceTree = "<group>"; };
 		CBBC97022EC6289F0049E376 /* DriverLogList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLogList.swift; sourceTree = "<group>"; };
 		CBBC97042EC628DB0049E376 /* DriverLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLogViewModel.swift; sourceTree = "<group>"; };
+		CBBCA4FD2EF7C25A005B6AAC /* HomeViewModel+Cycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+Cycle.swift"; sourceTree = "<group>"; };
 		CBE886032E995A2500B7D581 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		CBE886062E9969F300B7D581 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		CBEF2F572EAE098900451B22 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
@@ -965,6 +967,7 @@
 		AF72E4302DFD54B400626DC0 /* HomeView  */ = {
 			isa = PBXGroup;
 			children = (
+				CBBCA4FD2EF7C25A005B6AAC /* HomeViewModel+Cycle.swift */,
 				CBFD7D3E2EDB149B008353E8 /* HomeViewModel+DeviceOperation.swift */,
 				CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */,
 				CB4D81812ECA86E400590F62 /* HomeViewModel+splitshift.swift */,
@@ -1865,6 +1868,7 @@
 				AF24F36C2E966796000E4909 /* RootView.swift in Sources */,
 				AFDBF8942E5735A5002DB62D /* SharedManager.swift in Sources */,
 				AFD4284A2EAB98FA00E56B3F /* AddDvirPopupHome.swift in Sources */,
+				CBBCA4FE2EF7C26B005B6AAC /* HomeViewModel+Cycle.swift in Sources */,
 				10CA6EC02DCC9103003B265C /* ScrollViewUniversal.swift in Sources */,
 				AFA98C8F2E01748000E87802 /* VariablesView.swift in Sources */,
 				AF3A59362EB4F48F007A438F /* UploadDefectView.swift in Sources */,

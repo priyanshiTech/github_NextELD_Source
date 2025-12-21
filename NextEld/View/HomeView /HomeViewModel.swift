@@ -13,6 +13,7 @@ enum AlertType {
     case splitShiftEnds
     case idleState
     case logoutOFFSleepDuty
+    case cycleComplete
     //MARK: DVIR Alert
     
     
@@ -42,6 +43,8 @@ enum AlertType {
             title = ""
         case .logoutOFFSleepDuty:
             title = AppConstants.logoutOffDutyAlert
+        case .cycleComplete:
+            title = ""
   
         }
         return title
@@ -71,6 +74,8 @@ enum AlertType {
             return "you are idle from 10 minutes, Do you want to switch to on duty"
         case .logoutOFFSleepDuty:
             message = "Please change your duty status to Off Duty before logging out."
+        case .cycleComplete:
+            message = "Your cycle is completed, You need to rest for 34 hours to start a new shift"
         }
         return message
     }
@@ -356,6 +361,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     @Published var showLogoutPopup: Bool = false
     @Published var presentSideMenu: Bool = false
     @Published var displayLoader: Bool = false
+    @Published var cycleMessage: String = ""
     
     // Block screen management
     @Published var showBlockScreen: Bool = false
@@ -384,6 +390,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         checkWhetherTheViolationAlreadyExists()
         restoreAllTimersFromLastStatus()
         validateScenarioInEveryMinute()
+        
         timer
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
@@ -433,6 +440,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
+        showCycleMessage()
     }
     
     
@@ -546,7 +554,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             checkForSplitShift()
             timerTypes = [.onDuty, .cycleTimer]
             if previousStatus == .onDrive {
-                timerTypes = [.breakTimer , .onDuty, .cycleTimer, .continueDrive]
+                resetContinueDriveTimeWhenMoveFromOnDrvieToOnDuty()
+                timerTypes = [.breakTimer , .onDuty, .cycleTimer]
             }
 
         case .onDrive:
@@ -589,7 +598,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
     func checkedOffDutyTimeIsLessThan2Hour()  {
         // off duty time is less than two hours and next status != sleep then time should dedut from OnDuty
-        guard let lastRecord = DatabaseManager.shared.getLastRecordOfDriverLogs(),
+        guard let lastRecord = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift]),
         let status = DriverStatusType(fromName: lastRecord.status) else {
             return
         }
@@ -606,9 +615,18 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     // # changes by priyanshi - compact + safe version
     
+    func resetContinueDriveTimeWhenMoveFromOnDrvieToOnDuty() {
+        continueDriveTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.continueDriveTime ?? 0))
+    }
+    
+    func resetBreakTime(from timeInterval: TimeInterval = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)) {
+        breakTimer = CountdownTimer(startTime: timeInterval)
+        breakTimer?.start()
+    }
+    
     func restoreAllTimersFromLastStatus() {
         
-        var lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day])
+        var lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift])
         guard let latestLog = lastLog else {
             if let lastRecordFromDB = DatabaseManager.shared.getLastRecordOfDriverLogs() {
                 lastLog = lastRecordFromDB
@@ -660,7 +678,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     }
     
     
-    private func getElapsedTime(lastLog: DriverLogModel) -> TimeInterval {
+    func getElapsedTime(lastLog: DriverLogModel) -> TimeInterval {
         
         // Get current time in the same timezone as saved time
         let currentTime = DateTimeHelper.currentDateTime()
@@ -797,61 +815,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         UserDefaults.standard.synchronize()
     }
     
-    // MARK: - Check Sleep Timer Completion
-    
-    // calucate sleep time to 10 hours to change day to next
-    func calculateOffDutyAndSleepTime() -> TimeInterval {
-        let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day])
-        
-        guard !allLogs.isEmpty,
-                let status = allLogs.last?.status,
-                let driverStatus = DriverStatusType(fromName: status),
-              (driverStatus == .sleep || driverStatus == .offDuty) else {
-            debugPrint("calculateOffDutyAndSleepTime: No logs found in database")
-            return 0
-        }
-        // Sort logs by timestamp
-        let sortedLogs = allLogs.sorted { $0.timestamp > $1.timestamp } // required reverse order
-        
-        var totalSleep: TimeInterval = 0
-        for log in sortedLogs {
-            let duration = getElapsedTime(lastLog: log)
-            let status = DriverStatusType(fromName: log.status) ?? .none
-            if status == .sleep || status == .offDuty {
-                totalSleep = duration
-            } else {
-                break // for other status will break the loop
-            }
-          }
-        debugPrint("Total sleep: \(totalSleep.getHours()) hours")
-        return totalSleep
-    }
-    
-    // Show the next day dialog once sleep exceed to 10 hours
-    func showNextShiftAlert() {
-        // check whether 34 hours completed or not
-        let uniqueValueForShiftChange = "shift_changed_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
-        let shiftChangeAlertValue = UserDefaults.standard.string(forKey: AppConstants.shiftChanged)
-        if check34HoursSleepOrOffDutyCompleted() && shiftChangeAlertValue != uniqueValueForShiftChange {
-            // Shift change
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.changeShiftAfter34HoursComplete(uniqueValue: uniqueValueForShiftChange)
-            }
-            debugPrint("34 hour completed...")
-            return
-        }
-                
-        
-        let nextDayAlertValue = UserDefaults.standard.string(forKey: AppConstants.nextDayAlert)
-        let uniqueValueForNextDayAlert = "nextday_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
-        if  check10HoursSleepOrOffDutyCompleted() && nextDayAlertValue != uniqueValueForNextDayAlert {
-            // next day popup show
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.changeDayAfter10HoursCompleted(uniqueValue: uniqueValueForNextDayAlert)
-                debugPrint("Next Day Shift Stared")
-            }
-        }
-    }
+   
     
     // Reset Break Time if Break time is less than 30 min
     func checkWheterBreakTimeIsOver(previousStatus: DriverStatusType) {
@@ -863,54 +827,21 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     }
     
     func checkForViolation() {
-        if let continueDriveTimer {
+        if let continueDriveTimer, currentDriverStatus == .onDrive {
             onChangeRemaingTime(type: .continueDrive, remainigTime: continueDriveTimer.remainingTime)
         }
-        if let onDriveTimer {
+        if let onDriveTimer, currentDriverStatus == .onDrive {
             onChangeRemaingTime(type: .onDrive, remainigTime: onDriveTimer.remainingTime)
         }
-        if let onDutyTimer {
+        if let onDutyTimer, (currentDriverStatus == .onDrive || currentDriverStatus == .onDuty || currentDriverStatus == .yardMode) {
             onChangeRemaingTime(type: .onDuty, remainigTime: onDutyTimer.remainingTime)
         }
-        if let cycleTimer {
+        if let cycleTimer, (currentDriverStatus == .onDrive || currentDriverStatus == .onDuty || currentDriverStatus == .yardMode) {
+           // cycleMessageDisplay = cycleTimer.remainingTime <= 0
             onChangeRemaingTime(type: .cycleTimer, remainigTime: cycleTimer.remainingTime)
         }
     }
     
-    func changeDayAfter10HoursCompleted(uniqueValue: String) {
-        self.alertType = .nextDay
-        self.showAlertOnHomeScreen = true
-        self.resetToInitialState()
-        self.saveTimerStateForStatus(status: AppConstants.nextDayAlertTitle, originType: .auto, note: "Next Day Started")
-        AppStorageHandler.shared.days += 1
-        UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.nextDayAlert)
-        calculateTimeWhenDaysIsGreaterThan8days() // When days greater than 8 days cycle
-        
-    }
-    
-    func changeShiftAfter34HoursComplete(uniqueValue: String) {
-        self.alertType = .shiftChange
-        self.showAlertOnHomeScreen = true
-        resetToInitialState(isResetCycleTimer: true)
-        self.saveTimerStateForStatus(status: AppConstants.shiftChangeAlertTitle, originType: .auto, note: "New Shift Started")
-        AppStorageHandler.shared.shift += 1
-        AppStorageHandler.shared.days = 1
-        UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.shiftChanged)
-        
-    }
-    
-    func check34HoursSleepOrOffDutyCompleted() -> Bool {
-        let shiftChangeSleepTotalSeconds = AppStorageHandler.shared.cycleRestartTime ?? 0 // 34 hours
-        let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
-        // print("Total sleep taken: \(shiftChangeSleepTotalSeconds) - \(calculatedSleepTaken)")
-        return calculatedSleepTaken >= TimeInterval(shiftChangeSleepTotalSeconds)// return true if calculatedSleepTaken > shiftChangeSleepTotalSeconds
-    }
-    
-    func check10HoursSleepOrOffDutyCompleted() -> Bool {
-        let totalSleepAllowed = AppStorageHandler.shared.onSleepTime ?? 0
-        let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
-        return calculatedSleepTaken >= TimeInterval(totalSleepAllowed)
-    }
     
     func addIntermediateLogs() {
         guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day]), lastLog.status == AppConstants.onDrive else {
@@ -1072,17 +1003,13 @@ extension HomeViewModel {
             showLogoutPopup = true
         } else {
             // Show alert popup for other statuses (On Duty, On Drive, etc.)
-            alertType = .logoutOFFSleepDuty
-            showAlertOnHomeScreen = true
+            showAlert(alertType: .logoutOFFSleepDuty)
         }
     }
     
     private func scheduleRefreshAlert() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.alertType = .refresh
-            self.showAlertOnHomeScreen = true
-            self.showSyncconfirmation = false
-        }
+        showAlert(alertType: .refresh)
+        self.showSyncconfirmation = false
     }
     
     func handleSyncPopupConfirmation() {
@@ -1102,7 +1029,7 @@ extension HomeViewModel {
     }
     
     func checkWhetherTheViolationAlreadyExists() {
-        let records = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .shift], addWarningAndViolation: true).filter({ $0.status == AppConstants.violation})
+        let records = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .shift], addWarningAndViolation: true).filter({ $0.status == AppConstants.violation } )
         for record in records {
             var violationKey = ""
             if record.dutyType.contains("duty time") {
@@ -1123,5 +1050,26 @@ extension HomeViewModel {
             UserDefaults.standard.set(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
         }
     }
+    
+    func showAlert(alertType: AlertType) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.alertType = alertType
+            self.showAlertOnHomeScreen = true
+        }
+    }
+    
+    func showCycleMessage() {
+        guard let cycleTimer = cycleTimer, cycleTimer.remainingTime <= 0 else {
+            
+            return
+        }
+        let timeWhenCycleTimeZero = DateTimeHelper.currentDateTime().addingTimeInterval(cycleTimer.remainingTime)
+        let dateAfter34Hour = timeWhenCycleTimeZero.addingTimeInterval(3600 * 34)
+        let remainingBreakTime = dateAfter34Hour.timeIntervalSince(timeWhenCycleTimeZero)
+        resetBreakTime(from: remainingBreakTime)
+        self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
+    }
+    
+    
 }
 

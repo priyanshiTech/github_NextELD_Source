@@ -29,7 +29,7 @@ extension DatabaseManager {
             }
             else if status == AppConstants.offDuty {
                 // optional split rule: short off-duty counts as duty
-                if duration <= 2 * 3600 {
+                if duration < (2 * 3600) {
                     dutySeconds += duration
                 }
             }
@@ -67,7 +67,7 @@ extension DatabaseManager {
                 }
                 else if status == AppConstants.offDuty {
                     // optional split rule: short off-duty counts as duty
-                    if duration <= 2 * 3600 {
+                    if duration < (2 * 3600) {
                         dutySeconds += duration
                     }
                 }
@@ -97,7 +97,7 @@ extension DatabaseManager {
             let status = log.1
             
             let endDate: Date
-            if i + 1 < logsForDay.count {
+            if (i + 1) < logsForDay.count {
                 endDate = logsForDay[i+1].0
             } else {
                 endDate = DateTimeHelper.currentDateTime()//log.0//calendar.isDateInToday(day) ? Date() : startOfNextDay
@@ -110,7 +110,7 @@ extension DatabaseManager {
             }
             else if status == AppConstants.offDuty {
                 // optional split rule: short off-duty counts as duty
-                if duration <= 2 * 3600 {
+                if duration < (2 * 3600) {
                     dutySeconds += duration
                 }
             }

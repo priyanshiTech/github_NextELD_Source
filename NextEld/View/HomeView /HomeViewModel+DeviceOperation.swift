@@ -126,14 +126,6 @@ extension HomeViewModel {
                 // Unblock the screen
                 unBlockScreen()
             }
-
-            // Additional "idle" dialog when speed == 0  //MARK: -  currently off
-//            if speed == 0 {
-//                if currentDriverStatus == .onDrive {
-//                    alertType = .idleState
-//                    showAlertOnHomeScreen = true
-//                }
-//            }
         }
     }
     

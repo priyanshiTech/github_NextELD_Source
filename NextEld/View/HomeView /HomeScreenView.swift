@@ -83,6 +83,11 @@ struct HomeScreenView: View {
                 UniversalScrollView {
                     VStack(alignment: .leading) {
                         VStack {
+                            if !homeVM.cycleMessage.isEmpty {
+                                Text(homeVM.cycleMessage)
+                                    .font(.title3)
+                                    .foregroundColor(.red)
+                            }
                             Text(SharedInfoManager.shared.isDeviceConnected ? "Connected": "Disconnected")
                                 .font(.title2)
                                 .foregroundColor(SharedInfoManager.shared.isDeviceConnected ? .green : .red)
@@ -93,11 +98,11 @@ struct HomeScreenView: View {
                             )
                             StatusView(homeViewModel: homeVM) {  status in
                                 guard status != homeVM.currentDriverStatus else { return }
+                                
                                 if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                        homeVM.alertType = .thirtyFourHours
-                                        homeVM.showAlertOnHomeScreen = true
-                                    }
+                                        homeVM.showAlert(alertType: .thirtyFourHours)
+                                } else if homeVM.isCycleTimeCompleted() && status != .offDuty && status != .sleep {
+                                    homeVM.showAlert(alertType: .cycleComplete)
                                 } else {
                                     if (status == .onDuty || status == .onDrive) {
                                         if homeVM.checkWhetherTheLogCertifyOrNot(status: status) {
@@ -417,11 +422,8 @@ struct HomeScreenView: View {
         // Set alert type when delete confirmation is triggered
         .onChange(of: showDeleteConfirm) { newValue in
             if newValue {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    homeVM.alertType = .deleteLogs
-                    homeVM.showAlertOnHomeScreen = true
-                    showDeleteConfirm = false
-                }
+                showDeleteConfirm = false
+                homeVM.showAlert(alertType: .deleteLogs)
             }
         }
         
@@ -518,11 +520,6 @@ struct HomeScreenView: View {
         Button("OK", role: .destructive) {
             homeVM.showAlertOnHomeScreen = false
             switch homeVM.alertType {
-            
-            case .nextDay:
-                break
-                // print("Resetting all timers for new day...")
-               // homeVM.resetToInitialState()
             case .refresh:
                 //MARK: -  Call refresh API
                 Task {
@@ -539,10 +536,7 @@ struct HomeScreenView: View {
                         }
                         if success {
                             homeVM.deleteAllAppData()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                self.homeVM.alertType = .sucessConfimration
-                                self.homeVM.showAlertOnHomeScreen = true
-                            }
+                            homeVM.showAlert(alertType: .sucessConfimration)
                         } else if !deleteViewModel.apiMessage.isEmpty {
                             // print(" Delete API message: \(deleteViewModel.apiMessage)")
                         }
@@ -553,17 +547,9 @@ struct HomeScreenView: View {
                 break
             case .sucessConfimration:
                 appRootManager.currentRoot = .login
-                break
-            case .shiftChange:
-                break
-            case .thirtyFourHours:
-                break
             case .splitShiftEnds:
                 AppStorageHandler.shared.splitShiftIdentifier = 0
-                break
-            case .idleState:
-                break
-            case .logoutOFFSleepDuty:
+            default:
                 break
             }
         }

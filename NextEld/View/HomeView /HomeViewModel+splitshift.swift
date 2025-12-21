@@ -28,7 +28,7 @@ extension HomeViewModel {
     
     func checkForSplitShift() {
         let totalSleepRequired = AppStorageHandler.shared.onSleepTime ?? 0
-        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day]), (lastLog.status == AppConstants.onSleep || lastLog.status == AppConstants.offDuty) else {
+        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift]), (lastLog.status == AppConstants.onSleep || lastLog.status == AppConstants.offDuty) else {
             return
         }
          if let lastSplitRecord = getLastRecordFromSplitShiftLog() {
@@ -74,8 +74,8 @@ extension HomeViewModel {
             startTimers(for: [.onDrive, .cycleTimer, .onDuty])
         }
         DatabaseManager.shared.deleteAllSplitShiftLogs()
-        alertType = .splitShiftEnds
-        showAlertOnHomeScreen = true
+        showAlert(alertType: .splitShiftEnds)
+      
     }
     
     func getSplitShiftType() -> SplitShiftType {

@@ -16,7 +16,7 @@ class SyncViewModel: ObservableObject {
     @discardableResult
     func syncOfflineData() async -> Bool {
         
-        let unsyncedLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.notSync, .warning], addWarningAndViolation: true)
+        let unsyncedLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.notSync, .warning, .nextDayAlert], addWarningAndViolation: true)
 
         guard !unsyncedLogs.isEmpty else {
             // print(" No unsynced logs found. All data already synced!")
