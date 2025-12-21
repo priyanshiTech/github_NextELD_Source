@@ -75,7 +75,7 @@ extension  HomeViewModel {
     
     func changeShiftAfter34HoursComplete(uniqueValue: String) {
         showAlert(alertType: .shiftChange)
-        cycleMessage = "" 
+        cycleMessage = ""
         resetToInitialState(isResetCycleTimer: true)
         self.saveTimerStateForStatus(status: AppConstants.shiftChangeAlertTitle, originType: .auto, note: "New Shift Started")
         AppStorageHandler.shared.shift += 1
