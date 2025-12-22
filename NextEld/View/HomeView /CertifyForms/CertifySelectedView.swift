@@ -74,11 +74,6 @@ struct CertifySelectedView: View {
                                 .foregroundColor(Color(uiColor:.white))
                                 .imageScale(.large)
                         }.padding()
-
-                      //  Button(action: {
-                       //     navManager.navigate(to: .DatabaseCertifyView)
-                      //  }) {
-                        
                             Text(title)
                                 .font(.headline)
                                 .foregroundColor(Color(uiColor:.white))
@@ -221,9 +216,23 @@ struct CertifySelectedView: View {
  
                         Button(action: {
                             // Allow save even if trailer is "None"
-                            let trailerValue = trailerVM.trailers.isEmpty || trailerVM.trailers.contains(where: { $0.trimmingCharacters(in: .whitespaces).lowercased() == "none" })
-                                ? "None"
-                                : trailerVM.trailers.prefix(10).joined(separator: ",")
+                            if !isTrailerAndShippingValid() {
+                                  showToast(
+                                      message: "Missing Trailer or Shipping Docs",
+                                      color: .red
+                                  )
+                                  return
+                              }
+                            //MARK:  add a check both are filled or not
+                            let trailerValue =
+                                  trailerVM.trailers.isEmpty
+                                  ? "None"
+                                  : trailerVM.trailers.prefix(10).joined(separator: ",")
+
+                              let shippingValue =
+                                  shippingVM.ShippingDoc.isEmpty
+                                  ? "None"
+                                  : shippingVM.ShippingDoc.prefix(10).joined(separator: ",")
                 
                             let record = CertifyRecord(
                                 userID: "\(AppStorageHandler.shared.driverId ?? 0)",
@@ -233,9 +242,8 @@ struct CertifySelectedView: View {
                                 shift: AppStorageHandler.shared.shift,
                                 selectedVehicle: vehiclesc,
                                 selectedTrailer: trailerValue,
-                                selectedShippingDoc: shippingVM.ShippingDoc.isEmpty
-                                     ? "None"
-                                     : shippingVM.ShippingDoc.prefix(10).joined(separator: ","),
+                                selectedShippingDoc: shippingValue,
+                             
                                 
                                // selectedTrailer: SelectedTraller,
                                 selectedCoDriver: selectedCoDriverName ?? "None",
@@ -253,6 +261,12 @@ struct CertifySelectedView: View {
                             
                             // Show success toast
                             showToast(message: "Data Saved", color: .green)
+                            withAnimation(.easeInOut) {
+                                   selectedTab = "Certify"
+                                   showSignaturePad = true
+                                   showCoDriverPopup = false
+                               }
+                            
                         }) {
                             Text("Save")
                                 .frame(maxWidth: .infinity)
@@ -355,7 +369,28 @@ struct CertifySelectedView: View {
             }
         }
     }
-    
+    //MARK: -  check validation
+    private func isTrailerAndShippingValid() -> Bool {
+
+        let trailerIsInvalid =
+            trailerVM.trailers.isEmpty ||
+            trailerVM.trailers.allSatisfy {
+                $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                 .lowercased() == "none"
+            }
+
+        let shippingIsInvalid =
+            shippingVM.ShippingDoc.isEmpty ||
+            shippingVM.ShippingDoc.allSatisfy {
+                $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                 .lowercased() == "none"
+            }
+
+        //  even individula is mising showing  → INVALID
+        return !(trailerIsInvalid || shippingIsInvalid)
+    }
+
+
     // MARK: - Toast Function
     private func showToast(message: String, color: Color) {
         bannerMessage = message
@@ -389,7 +424,6 @@ struct CertifySelectedView: View {
                 vehiclesc = record.selectedVehicle
                 SelectedVechicle = record.selectedVehicle
             }
-                      
             if record.selectedTrailer != "None" && !record.selectedTrailer.isEmpty {
                 trailerVM.trailers = record.selectedTrailer
                     .split(separator: ",")
@@ -399,7 +433,6 @@ struct CertifySelectedView: View {
             } else {
                 trailerVM.trailers = []
             }
-
             // Load shipping docs from database - preserve user's current changes if they exist
             if shippingVM.ShippingDoc.isEmpty {
                 // Only load from database if shippingVM is empty (preserve user's changes)

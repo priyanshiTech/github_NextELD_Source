@@ -38,7 +38,6 @@ struct DailyLogView: View {
             if numberOfDay > 14 {
                 numberOfDay = 14
             }
-                    
             for dayValue in 0...numberOfDay {
                 let date = DateTimeHelper.calendar.date(byAdding: .day, value: -(dayValue), to: todayDate) ?? Date()
                 dailyLogsDates.append(LogDate(date: date, isMissing: false))
