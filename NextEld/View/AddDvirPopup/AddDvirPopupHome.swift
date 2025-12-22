@@ -59,7 +59,6 @@ struct AddDvirPopup: View {
                             .font(.title3)
                     }
                 }
-                
                 Divider()
                 // Information fields
                 Group {
@@ -74,7 +73,6 @@ struct AddDvirPopup: View {
                 }
                 
                 Divider()
-                
                 Group {
                     
                     InfoRow(label: "Vehicle", value: AppStorageHandler.shared.vehicleNo ?? "")
@@ -82,10 +80,10 @@ struct AddDvirPopup: View {
                     InfoRow(label: "Truck Defect", value: currentRecord?.truckDefect ?? "")
                     InfoRow(label: "Trailer Defect", value: currentRecord?.trailerDefect ?? "")
                     InfoRow(label: "Notes", value: currentRecord?.notes ?? "")
+                    
                 }
                 
                 Divider()
-                
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Vehicle Condition")
                         .font(.subheadline)
@@ -98,9 +96,9 @@ struct AddDvirPopup: View {
                 // Add button
                 let vehicleName = vehicleVM.selectedVehicleNumber.isEmpty ? (AppStorageHandler.shared.vehicleNo ?? "") : vehicleVM.selectedVehicleNumber
                 let vehicleId = vehicleVM.vehicleID > 0 ? "\(vehicleVM.vehicleID)" : (AppStorageHandler.shared.vehicleId.map { "\($0)" } ?? "0")
+                
                 Button(action: {
                     
-              
                     let workingRecord = DvirRecord(
                         id: nil,
                         UserID: viewModel.driverID,
@@ -108,7 +106,7 @@ struct AddDvirPopup: View {
                         startTime: DateTimeHelper.currentDateTime(),
                         DAY: AppStorageHandler.shared.days,
                         Shift: AppStorageHandler.shared.shift,
-                        DvirTime: DateTimeHelper.currentTime(),                                                                                                                                                            
+                        DvirTime: DateTimeHelper.currentTime(),
                         odometer: viewModel.odometer,
                         location: viewModel.Location,
                         truckDefect: currentRecord?.truckDefect ?? "None",
@@ -122,13 +120,12 @@ struct AddDvirPopup: View {
                         Server_ID: "",
                         Trailer: trailerVM.trailers.joined(separator: ", "),
                         signature:currentRecord?.signature
-                            
+                        
                     )
 
                     //  SAVE TO DATABASE
                     DvirDatabaseManager.shared.insertRecord(workingRecord)
                     showToast(message: "Dvir Saved", color: .green)
-                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                         
                           isPresented = false

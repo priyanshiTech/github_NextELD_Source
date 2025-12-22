@@ -197,19 +197,20 @@ enum ViolationType: Hashable {
     case none
     
     func getFifteenMinWarningText() -> String {
+        
         switch self {
         case .onDutyViolation:
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.onDutyTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime2 ?? 0))
-            return "\(warning2.getMin()) min left for completing your on duty cycle"
+            return "you have \(warning2.getMin()) minutes left to  complete your on duty cycle for today"
         case .onContinueDriveViolation:
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0))
-            return "\(warning2.getMin()) min left for completing your continue drive cycle"
+            return "you have \(warning2.getMin()) minutes left to  complete your on drive cycle for today"
         case .onDriveViolation:
             let warning2 = TimeInterval(Int( AppStorageHandler.shared.onDriveTime  ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime2  ?? 0))
-            return "\(warning2.getMin()) min left for completing your drive cycle"
+            return "you have \(warning2.getMin()) minutes left to complete your Drive cycle for today"
         case .cycleTimerViolation:
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime15MinTime) ?? 0))
-            return "\(warning2.getMin()) min left for completing your day cycle"
+            return "you have \(warning2.getMin()) minutes left to complete your  cycle for today"
         case .none:
             return ""
         }
@@ -217,33 +218,43 @@ enum ViolationType: Hashable {
     
     func getThirtyMinWarningText() -> String {
         switch self {
+            
         case .onDutyViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDutyTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime1 ?? 0))
-            return "\(warning1.getMin()) min left for completing your on duty cycle"
+            return " You have \(warning1.getMin()) minutes  left for complete your on duty cycle for today"
+            
         case .onContinueDriveViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime1 ?? 0))
-            return "\(warning1.getMin()) min left for completing your continue drive cycle"
+            return "You have \(warning1.getMin()) minutes left for complete your Continue Drive cycle for today"
+            
         case .onDriveViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime1 ?? 0))
-            return "\(warning1.getMin()) min left for completing your drive cycle"
+            return "You have \(warning1.getMin())minutes left for complete your  Drive cycle for today"
+            
         case .cycleTimerViolation:
              let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime30MinTime) ?? 0))
-            return "\(warning1.getMin()) min left for completing your day cycle"
+            return "You have \(warning1.getMin()) minutes left for complete your  cycle for today"
         case .none:
             return ""
         }
     }
     
     func getViolationText() -> String {
+         
         switch self {
+            
         case .onDutyViolation:
-            return "Your duty time has been exceeded to \(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0) hours"
+            return "Your Onduty time exceeded to \(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0) hours"
+             
         case .onContinueDriveViolation:
-            return "Your continue drive time has been exceeded to \(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0) hours"
+            return "Your continue drive time exceeded to \(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0) hours"
+            
         case .onDriveViolation:
-            return "Your drive time has been exceeded to \(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0) hours"
+            return "Your Ondrive time  exceeded to \(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0) hours"
+            
         case .cycleTimerViolation:
-            return "Your cycle time has been exceeded to \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
+            return "Your cycle time  exceeded to \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
+            
         case .none:
             return ""
         }
@@ -391,14 +402,14 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 self?.addIntermediateLogs()
                 
                 Task { @MainActor in
+                    
                     // Sync offline data
                     await self?.syncViewModel.syncOfflineData()
-                    // Sync certified offline logs with error handling
                     let certifySuccess = await self?.certifySyncViewModel.syncCertifiedOfflineLogs()
                     if certifySuccess == false {
                         print(" Certified offline logs sync failed: \(self?.certifySyncViewModel.syncMessage ?? "Unknown error")")
                     }
-                    
+
                     // Sync DVIR offline logs with error handling
                     let dvirSuccess = await self?.DVIRDataViewModel.syncDVIROfflineLogs()
                     if dvirSuccess == false {
@@ -416,6 +427,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 self?.hadleDeviceValues(notification: notification)
             })
             .store(in: &cancellable)
+        
    }
     
     deinit {
@@ -516,7 +528,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     }
     
     // MARK: - Delete All App Data
-    func deleteAllAppData() {
+    func deleteAllAppData(){
+        
         SharedInfoManager.shared.centralManager?.stopScan()
         stopTimers(for: TimerType.allCases)
         AppStorageHandler.shared.shift = 1
@@ -525,12 +538,12 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         SessionManagerClass.shared.clearToken()
         currentDriverStatus = .offDuty
         AppStorageHandler.shared.deleteAll()
-        DatabaseManager.shared.deleteAllLogs() // Clears driverLogs and splitShiftTable
+        DatabaseManager.shared.deleteAllLogs()                          //Clears driverLogs and splitShiftTable
         ContinueDriveDBManager.shared.deleteAllContinueDriveData()
         DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
         CertifyDatabaseManager.shared.deleteAllCertifyRecords()
-
         // print(" All app data deleted successfully")
+        
     }
     
     func setDriverStatus(status: DriverStatusType, restoreBreakTimerRunning: Bool = false, note: String? = nil, saveLogsToDatabase: Bool = false) {
@@ -556,6 +569,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 breakTimer?.reset(startTime: breakTimer?.startDuration ?? 0)
                 breakTimer?.stop()
             }
+            
             timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
             
         case .sleep:
@@ -640,14 +654,14 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         
         
         // Timers
-        onDutyTimer        = CountdownTimer(startTime: onDutyRemainingTime)
-        onDriveTimer       = CountdownTimer(startTime: onDriveRemainingTime)
-        cycleTimer         = CountdownTimer(startTime: cycleRemainingTime)
-        sleepTimer         = CountdownTimer(startTime: sleepRemainingTime)
-        continueDriveTimer = CountdownTimer(startTime: continueDriveRemainingTime)
-        breakTimer         = CountdownTimer(startTime: breakRemainingTime)
+        onDutyTimer               = CountdownTimer(startTime: onDutyRemainingTime)
+        onDriveTimer              = CountdownTimer(startTime: onDriveRemainingTime)
+        cycleTimer                = CountdownTimer(startTime: cycleRemainingTime)
+        sleepTimer                = CountdownTimer(startTime: sleepRemainingTime)
+        continueDriveTimer        = CountdownTimer(startTime: continueDriveRemainingTime)
+        breakTimer                = CountdownTimer(startTime: breakRemainingTime)
+        
 
-        // Setup callbacks for restored timers
       //  setupTimerCallbacks()
 
         // Resume
