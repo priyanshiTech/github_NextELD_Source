@@ -214,6 +214,7 @@ struct DailyLogView: View {
 //                    }
 //                }
 //            }
+            
         }.navigationBarBackButtonHidden()
     }
 

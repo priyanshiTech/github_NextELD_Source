@@ -2,12 +2,13 @@
 //  LogsDetails.swift
 //  NextEld
 //
-//  Created by priyanshi   on 17/05/25.
+//  Created by priyanshi on 17/05/25.
 //
 
 import SwiftUI
 
 struct LogsDetails: View {
+    
     @EnvironmentObject var navManager: NavigationManager
     var title: String
     let entry: WorkEntry
@@ -67,8 +68,6 @@ struct LogsDetails: View {
                                 entry: entry))
 
                         })
-
-
                     }
                 }
                 .padding(.horizontal) // or even remove entirely to test
@@ -127,13 +126,13 @@ struct LogsDetails: View {
             filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)],
             addWarningAndViolation: true
         )
-        
         // Filter only violations (status contains "violation" or "warning")
         return logs.filter { log in
             let status = log.status.lowercased()
             return status.contains("voilation") || status.contains("warning")
         }.sorted { $0.startTime < $1.startTime }
     }
+    
     private var currentDayLogsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Current Day Logs")
@@ -149,6 +148,7 @@ struct LogsDetails: View {
                     .cornerRadius(10)
                 
             } else {
+                
                 ForEach(Array(logsForSelectedDate.enumerated()), id: \.offset) { index, log in
                     HStack(spacing: 12) {
                         // Left colored bar based on status - red for warning/violation
@@ -176,7 +176,6 @@ struct LogsDetails: View {
                             }
                         
                         Spacer()
-                        
                         // Duration on right side
                         Text(calculateDuration(for: index, log: log))
                             .font(.subheadline)
@@ -187,11 +186,13 @@ struct LogsDetails: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(8)
                 }
+                
             }
         }
     }
     
     private var logsForSelectedDate: [DriverLogModel] {
+        
         let startDate = DateTimeHelper.startOfDay(for: selectedDate)
         let endDate = DateTimeHelper.endOfDay(for: selectedDate) ?? selectedDate
         let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startDate, endDate: endDate)],addWarningAndViolation: true).sorted { $0.startTime < $1.startTime }
@@ -203,17 +204,15 @@ struct LogsDetails: View {
     private func lastLogBeforeSelectedDate() -> DriverLogModel? {
 
         let startOfSelected = DateTimeHelper.startOfDay(for: selectedDate)
-
         // Fetch all logs once
         let allLogs = DatabaseManager.shared.fetchLogs(
             addWarningAndViolation: true
         )
-
         // Filter logs strictly BEFORE selected date
         let previousLogs = allLogs
             .filter { $0.startTime < startOfSelected }
             .sorted { $0.startTime > $1.startTime }
-
+        
         return previousLogs.first
     }
 

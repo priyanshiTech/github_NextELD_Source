@@ -35,7 +35,8 @@ import SwiftUI
             DvirStatusDataOffline(
                 clientId: AppStorageHandler.shared.clientId,
                 companyName: AppStorageHandler.shared.company,
-                dateTime: "\(record.startTime)",
+                dateTime:  DateTimeHelper.formatDateToLocalTime(record.startTime),
+
                 driverId: Int(record.UserID),
                 driverSignFile: record.signature?.base64EncodedString(),
                 engineHour: nil,
@@ -59,7 +60,7 @@ import SwiftUI
         isSyncing = true
         defer { isSyncing = false }
 
-        //  API Call
+        // API Call
         do {
             let response: DVIROfflineResponseModel =
             try await NetworkManager.shared.post(
@@ -78,7 +79,7 @@ import SwiftUI
             response.result?.forEach { item in
                 guard let localIdString = item.localId,
                       let localIdInt64 = Int64(localIdString) else {
-                    print("⚠️ Failed to convert localId to Int64: \(item.localId ?? "nil")")
+                    print(" Failed to convert localId to Int64: \(item.localId ?? "nil")")
                     return
                 }
 

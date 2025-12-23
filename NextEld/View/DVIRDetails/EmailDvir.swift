@@ -16,12 +16,22 @@ struct EmailDvir: View {
     @StateObject var trailerVM: TrailerViewModel = .init()
     
     //MARK: - remove placeholder multiple value  filteredRecords
+    
+//    var filteredRecords: [DvirRecord] {
+//        let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
+//        return allRecords
+//    }
+    
     var filteredRecords: [DvirRecord] {
         let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
-        return allRecords
+        
+        return allRecords.sorted {
+            let t1 = Int64($0.timestamp) ?? 0
+            let t2 = Int64($1.timestamp) ?? 0
+            return t1 > t2
+        }
     }
-    
-    
+
     
     var body: some View {
             

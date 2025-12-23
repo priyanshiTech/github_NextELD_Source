@@ -123,6 +123,7 @@ struct DvirTableHeader: View {
             TableCellDvirList(text: "Day", width: 100, isHeader: true)
             TableCellDvirList(text: "Shift", width: 60, isHeader: true)
             TableCellDvirList(text: "Notes", width: 250, isHeader: true)
+            TableCellDvirList(text: "Sync", width: 250, isHeader: true)
             TableCellDvirList(text: "Signature", width: 250, isHeader: true)
         }
     }
@@ -146,6 +147,8 @@ struct DvirTableRow: View {
             TableCellDvirList(text: "\(AppStorageHandler.shared.days)", width: 100)
             TableCellDvirList(text: "\(AppStorageHandler.shared.shift)", width: 60)
             TableCellDvirList(text: record.notes, width: 250)
+            TableCellDvirList(text: "\(record.Sync)", width: 250)
+            
 
             if let signatureData = record.signature,
                let uiImage = UIImage(data: signatureData) {

@@ -195,6 +195,7 @@ enum TimerType: Hashable, CaseIterable {
 }
 
 enum ViolationType: Hashable {
+    
     case onDutyViolation
     case onContinueDriveViolation
     case onDriveViolation
@@ -204,18 +205,23 @@ enum ViolationType: Hashable {
     func getFifteenMinWarningText() -> String {
         
         switch self {
+            
         case .onDutyViolation:
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.onDutyTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime2 ?? 0))
             return "you have \(warning2.getMin()) minutes left to  complete your on duty cycle for today"
+            
         case .onContinueDriveViolation:
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0))
             return "you have \(warning2.getMin()) minutes left to  complete your on drive cycle for today"
+            
         case .onDriveViolation:
             let warning2 = TimeInterval(Int( AppStorageHandler.shared.onDriveTime  ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime2  ?? 0))
             return "you have \(warning2.getMin()) minutes left to complete your Drive cycle for today"
+            
         case .cycleTimerViolation:
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime15MinTime) ?? 0))
             return "you have \(warning2.getMin()) minutes left to complete your  cycle for today"
+            
         case .none:
             return ""
         }
@@ -226,19 +232,19 @@ enum ViolationType: Hashable {
             
         case .onDutyViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDutyTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime1 ?? 0))
-            return " You have \(warning1.getMin()) minutes  left for complete your on duty cycle for today"
+            return " You have \(warning1.getMin()) minutes  left to complete your on-duty cycle for today"
             
         case .onContinueDriveViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime1 ?? 0))
-            return "You have \(warning1.getMin()) minutes left for complete your Continue Drive cycle for today"
+            return "You have \(warning1.getMin()) minutes left to complete your Continue Drive cycle for today"
             
         case .onDriveViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime1 ?? 0))
-            return "You have \(warning1.getMin())minutes left for complete your  Drive cycle for today"
+            return "You have \(warning1.getMin())minutes left to complete your  on-Drive cycle for today"
             
         case .cycleTimerViolation:
              let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime30MinTime) ?? 0))
-            return "You have \(warning1.getMin()) minutes left for complete your  cycle for today"
+            return "You have \(warning1.getMin()) minutes left to complete your  cycle for today"
         case .none:
             return ""
         }
@@ -249,16 +255,16 @@ enum ViolationType: Hashable {
         switch self {
             
         case .onDutyViolation:
-            return "Your Onduty time exceeded to \(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0) hours"
+            return "Your Onduty time has exceeded  \(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0) hours"
              
         case .onContinueDriveViolation:
-            return "Your continue drive time exceeded to \(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0) hours"
+            return "Your continue drive time has exceeded  \(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0) hours"
             
         case .onDriveViolation:
-            return "Your Ondrive time  exceeded to \(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0) hours"
+            return "Your drive time has  exceeded  \(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0) hours"
             
         case .cycleTimerViolation:
-            return "Your cycle time  exceeded to \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
+            return "Your cycle time has  exceeded  \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
             
         case .none:
             return ""
@@ -419,7 +425,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
                     // Sync DVIR offline logs with error handling
                     let dvirSuccess = await self?.DVIRDataViewModel.syncDVIROfflineLogs()
+                    
                     if dvirSuccess == false {
+                        
                         print(" DVIR offline logs sync failed: \(self?.DVIRDataViewModel.syncMessage ?? "Unknown error")")
                     }
                 }

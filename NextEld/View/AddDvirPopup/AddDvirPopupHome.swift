@@ -115,7 +115,7 @@ struct AddDvirPopup: View {
                         notes:  currentRecord?.notes ?? "",
                         vehicleName: vehicleName,
                         vechicleID: vehicleId,
-                        Sync: 1,
+                        Sync: 0,
                         timestamp: currentTimestampMillis(),
                         Server_ID: "",
                         Trailer: trailerVM.trailers.joined(separator: ", "),

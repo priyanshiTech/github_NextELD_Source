@@ -11,9 +11,10 @@ import SwiftUI
 // MARK: - Violations Section View
 
 struct ViolationsSectionView: View {
-    let violations: [DriverLogModel]
     
+    let violations: [DriverLogModel]
     private var violationOnlyLogs: [DriverLogModel] {
+        
         violations.filter {
             $0.status.lowercased().contains("voilation")
         }
@@ -70,7 +71,7 @@ struct ViolationBoxView: View {
 //            } else if status.contains("ondrive") || dutyType.lowercased().contains("ondrive") || dutyType.lowercased().contains("drive") {
 //                return "Your drive time has been exceeded to 11 hours"
 //            } else if status.contains("continue") || dutyType.lowercased().contains("continue") {
-//                return "You are continuously driving for 8 hours"
+//                return "You have been  continuously driving for 8 hours"
 //            } else {
 //                return dutyType
 //            }
