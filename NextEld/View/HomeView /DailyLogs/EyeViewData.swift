@@ -359,68 +359,68 @@ struct EyeViewData: View {
 //        return dateFormatter.string(from: date)
 //    }
 
-    private func loadGraphEventsFromDatabase(for date: Date) -> [HOSEvent] {
-        let startOfDay = DateTimeHelper.startOfDay(for: date)
-        let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
+//    private func loadGraphEventsFromDatabase(for date: Date) -> [HOSEvent] {
+//        let startOfDay = DateTimeHelper.startOfDay(for: date)
+//        let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
+//
+//        let dutyLogs = DatabaseManager.shared.fetchDutyEvents(for: date)
+//        guard !dutyLogs.isEmpty else {
+//            return []
+//        }
+//
+//        let events = dutyLogs.enumerated().map { index, log -> HOSEvent in
+//            let nextStart = index == dutyLogs.count - 1 ? endOfDay : dutyLogs[index + 1].startTime
+//            let status = DriverStatusType(fromName: log.status) ?? .offDuty
+//            return HOSEvent(
+//                id: log.id,
+//                x: max(log.startTime, startOfDay),
+//                event_end_time: min(nextStart, endOfDay),
+//                dutyType: status
+//            )
+//        }
+//
+//        return events
+//    }
 
-        let dutyLogs = DatabaseManager.shared.fetchDutyEvents(for: date)
-        guard !dutyLogs.isEmpty else {
-            return []
-        }
-
-        let events = dutyLogs.enumerated().map { index, log -> HOSEvent in
-            let nextStart = index == dutyLogs.count - 1 ? endOfDay : dutyLogs[index + 1].startTime
-            let status = DriverStatusType(fromName: log.status) ?? .offDuty
-            return HOSEvent(
-                id: log.id,
-                x: max(log.startTime, startOfDay),
-                event_end_time: min(nextStart, endOfDay),
-                dutyType: status
-            )
-        }
-
-        return events
-    }
-
-    private func buildEvents(from records: [DriverStatus], for date: Date) -> [HOSEvent] {
-        let startOfDay = DateTimeHelper.startOfDay(for: date)
-        let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-
-        let sortedRecords = records.compactMap { record -> (DriverStatus, Date)? in
-            if let utc = record.utcDateTime {
-                let date = Date(timeIntervalSince1970: TimeInterval(utc) / 1000)
-                return (record, date)
-            } else if let dateString = record.dateTime, let parsed = formatter.date(from: dateString) {
-                return (record, parsed)
-            }
-            return nil
-        }
-        .sorted { $0.1 < $1.1 }
-
-        guard !sortedRecords.isEmpty else {
-            return loadGraphEventsFromDatabase(for: date)
-        }
-
-        let events: [HOSEvent] = sortedRecords.enumerated().map { index, element in
-            let record = element.0
-            let startTime = max(element.1, startOfDay)
-            let nextTime = index == sortedRecords.count - 1 ? endOfDay : sortedRecords[index + 1].1
-            let endTime = min(nextTime, endOfDay)
-            let dutyType = DriverStatusType(fromName: record.status ?? "") ?? .offDuty
-            let identifier = record.statusId ?? record.driverId ?? index
-            return HOSEvent(
-                id: identifier,
-                x: startTime,
-                event_end_time: endTime,
-                dutyType: dutyType
-            )
-        }
-
-        return events
-    }
+//    private func buildEvents(from records: [DriverStatus], for date: Date) -> [HOSEvent] {
+//        let startOfDay = DateTimeHelper.startOfDay(for: date)
+//        let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+//
+//        let sortedRecords = records.compactMap { record -> (DriverStatus, Date)? in
+//            if let utc = record.utcDateTime {
+//                let date = Date(timeIntervalSince1970: TimeInterval(utc) / 1000)
+//                return (record, date)
+//            } else if let dateString = record.dateTime, let parsed = formatter.date(from: dateString) {
+//                return (record, parsed)
+//            }
+//            return nil
+//        }
+//        .sorted { $0.1 < $1.1 }
+//
+//        guard !sortedRecords.isEmpty else {
+//            return loadGraphEventsFromDatabase(for: date)
+//        }
+//
+//        let events: [HOSEvent] = sortedRecords.enumerated().map { index, element in
+//            let record = element.0
+//            let startTime = max(element.1, startOfDay)
+//            let nextTime = index == sortedRecords.count - 1 ? endOfDay : sortedRecords[index + 1].1
+//            let endTime = min(nextTime, endOfDay)
+//            let dutyType = DriverStatusType(fromName: record.status ?? "") ?? .offDuty
+//            let identifier = record.statusId ?? record.driverId ?? index
+//            return HOSEvent(
+//                id: identifier,
+//                x: startTime,
+//                event_end_time: endTime,
+//                dutyType: dutyType
+//            )
+//        }
+//
+//        return events
+//    }
 
         //MARK: -  Reusable Section Grid
         @ViewBuilder

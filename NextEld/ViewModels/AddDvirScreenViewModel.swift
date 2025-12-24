@@ -49,6 +49,11 @@ class AddDvirScreenViewModel: ObservableObject {
     
     // MARK: - Co-Driver
     @Published var selectedCoDriver: String? = nil
+    
+    
+    @Published var isLoading: Bool = false
+    
+    
 }
 
 

@@ -11,15 +11,29 @@ extension DatabaseManager {
         let startOfDay = calendar.startOfDay(for: day)
         let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startOfDay, endDate: startOfNextDay)])
-        for (i, log) in allLogs.enumerated() {
-            let startDate = log.startTime
-            let status = log.status
+        
+        var logsForDay = allLogs.compactMap { log -> (Date, String)? in
+            return (log.startTime, log.status)
+        }
+        
+        if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.specificDate(date: startOfDay)]),
+            (lastlog.status != AppConstants.onSleep || lastlog.status != AppConstants.offDuty),
+           startOfDay > lastlog.startTime  {
+            logsForDay.append((startOfDay, lastlog.status))
+        }
+        
+        let soredLog = logsForDay.sorted(by: { $0.0 < $1.0 })
+        
+        for (i, log) in soredLog.enumerated() {
+            let startDate = log.0
+            let status = log.1
             
             let endDate: Date
-            if i + 1 < allLogs.count {
-                endDate = allLogs[i+1].startTime
+            if i + 1 < soredLog.count {
+                endDate = soredLog[i+1].0
             } else {
-                endDate = today
+                let endOfDay = (DateTimeHelper.endOfDay(for: log.0) ?? Date())
+                endDate = today > endOfDay ? endOfDay : today
             }
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
@@ -49,15 +63,27 @@ extension DatabaseManager {
             let startOfDay = calendar.startOfDay(for: day)
             let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
             let allLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: startOfDay, endDate: startOfNextDay)])
-            for (i, log) in allLogs.enumerated() {
-                let startDate = log.startTime
-                let status = log.status
+            var logsForDay = allLogs.compactMap { log -> (Date, String)? in
+                return (log.startTime, log.status)
+            }
+            
+            if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.specificDate(date: startOfDay)]),
+                (lastlog.status != AppConstants.onSleep || lastlog.status != AppConstants.offDuty),
+               startOfDay > lastlog.startTime  {
+                logsForDay.append((startOfDay, lastlog.status))
+            }
+            
+            let soredLog = logsForDay.sorted(by: { $0.0 < $1.0 })
+            
+            for (i, log) in soredLog.enumerated() {
+                let startDate = log.0
+                let status = log.1
                 
                 let endDate: Date
-                if i + 1 < allLogs.count {
-                    endDate = allLogs[i+1].startTime
+                if i + 1 < soredLog.count {
+                    endDate = soredLog[i+1].0
                 } else {
-                    let endOfDay = (DateTimeHelper.endOfDay(for: log.startTime) ?? Date())
+                    let endOfDay = (DateTimeHelper.endOfDay(for: log.0) ?? Date())
                     endDate = today > endOfDay ? endOfDay : today
                 }
                 
@@ -73,19 +99,7 @@ extension DatabaseManager {
                     }
                 }
             }
-            
-            if allLogs.isEmpty {
-                let lastDate = calendar.date(byAdding: .day, value: -1, to: startOfDay) ?? Date()
-                let endOfLastDate = DateTimeHelper.endOfDay(for: lastDate) ?? Date()
-                if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.betweenDates(startDate: lastDate, endDate: endOfLastDate)]),
-                    (lastlog.status != AppConstants.onSleep || lastlog.status != AppConstants.offDuty),
-                    startOfDay > lastlog.startTime  {
-                    let startOfToday = DateTimeHelper.startOfDay(for: today)
-                    if startOfDay < startOfToday {
-                        dutySeconds = 24 * 60 * 60
-                    }
-                }
-            }
+             print("day--> \(day)--> \(dutySeconds.timeString)")
             results.append(WorkEntry(date: day, hoursWorked: dutySeconds))
             
         }
@@ -96,36 +110,23 @@ extension DatabaseManager {
         let OnDutyTodayTotalTime = TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0)
         var dutySeconds: TimeInterval = 0
         let allLogs = fetchLogs(filterTypes: [.getTodayRecord])
-        if allLogs.isEmpty {
-            let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) ?? Date()
-            let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
-            let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
-            let startOfToday =  DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
-            
-            if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.betweenDates(startDate: yesterDayStartOfDay, endDate: yesterDayEndOfDay)]) {
-                let elapsed = DateTimeHelper.currentDateTime().timeIntervalSince(startOfToday)
-                if lastlog.status == AppConstants.onDuty || lastlog.status == AppConstants.onDrive {
-                    dutySeconds = elapsed
-                    let dutyTime = max(0, OnDutyTodayTotalTime - dutySeconds)
-                    return (dutySeconds,dutyTime)
-                }
-            }
-            return (0,OnDutyTodayTotalTime)
-        }
-        let logsForDay = allLogs.compactMap { log -> (Date, String)? in
+        let startOfToday =  DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
+        var logsForDay = allLogs.compactMap { log -> (Date, String)? in
             return (log.startTime, log.status)
         }
-        // .filter { $0.0 >= startOfDay && $0.0 < startOfNextDay }
-            .sorted { $0.0 < $1.0 }
+            
+        if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.specificDate(date: startOfToday)]), (lastlog.status ==  AppConstants.onDuty || lastlog.status ==  AppConstants.onDrive) {
+            logsForDay.append((startOfToday, lastlog.status))
+        }
+        let sortedLogs = logsForDay.sorted(by: { $0.0 < $1.0 })
         
-        
-        for (i, log) in logsForDay.enumerated() {
+        for (i, log) in sortedLogs.enumerated() {
             let startDate = log.0
             let status = log.1
             
             let endDate: Date
-            if (i + 1) < logsForDay.count {
-                endDate = logsForDay[i+1].0
+            if (i + 1) < sortedLogs.count {
+                endDate = sortedLogs[i+1].0
             } else {
                 endDate = DateTimeHelper.currentDateTime()//log.0//calendar.isDateInToday(day) ? Date() : startOfNextDay
             }

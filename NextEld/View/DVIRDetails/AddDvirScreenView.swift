@@ -294,7 +294,8 @@ struct AddDvirScreenView: View  {
                 addDvirButton
             }
         
-
+            
+            
             .onAppear {
                 // print(" AddDvirScreenView - onAppear called")
                 loadRecordData()
@@ -370,6 +371,10 @@ struct AddDvirScreenView: View  {
                 VehicleConditionPopupView(isPresented: $vehicleVM.showPopupVechicle)
                     .environmentObject(vehicleVM)
                     .transition(.scale)
+            }
+            
+            if viewModel.isLoading {
+                LoadingView()
             }
         }
         .navigationBarBackButtonHidden()
@@ -576,6 +581,7 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Save DVIR Record
     private func saveDvirRecord(workingRecord: DvirRecord) {
+        viewModel.isLoading = true
         // print(" ========== SAVE DVIR RECORD ==========")
         // print(" Validation Passed - Starting Database Save")
         // print(" Working Record Vehicle: \(workingRecord.vehicleName)")
@@ -685,15 +691,14 @@ struct AddDvirScreenView: View  {
             // print(" Calling update API...")
             DvirDatabaseManager.shared.updateRecord(record)
             updateDvirDataUsingCommonService(record: dvirRecord, dvirLogId: viewModel.driverID, appRootManager: appRootManager, completion: { success in
-                
+                DispatchQueue.main.async {
                 if success {
-                    DispatchQueue.main.async {
-                        let successMsg = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
-                        viewModel.successMessage = successMsg
-                        viewModel.alertType = .success(successMsg)
-                    }
+                    let successMsg = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
+                    viewModel.successMessage = successMsg
+                    viewModel.alertType = .success(successMsg)
                 }
-                
+                    viewModel.isLoading = false
+                }
             })
          //   NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
             // print(" Update notification posted")
@@ -713,13 +718,13 @@ struct AddDvirScreenView: View  {
             // print(" ========== CALLING dispatchadd_dvir_data API ==========")
             DvirDatabaseManager.shared.insertRecord(record)
             uploadDvirDataUsingCommonService(record: dvirRecord, appRootManager: appRootManager, completion: { success in
-                
-                if success {
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    if success {
                         let successMsg = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
                         viewModel.successMessage = successMsg
                         viewModel.alertType = .success(successMsg)
                     }
+                    viewModel.isLoading = false
                 }
             })
             // print(" API call initiated successfully!")

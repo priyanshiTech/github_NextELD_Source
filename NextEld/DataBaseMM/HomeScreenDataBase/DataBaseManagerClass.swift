@@ -855,19 +855,19 @@ class DatabaseManager: DatabaseHandler {
             logs.append(log)
         }
         
-        let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: currentDate) ?? Date()
-        let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
-        let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
-        
-        if let yesterDayLastRecord = getLastRecordOfDriverLogs(filterTypes: [.betweenDates(startDate: yesterDayStartOfDay, endDate: yesterDayEndOfDay)]) {
-            // Previous day status continue today
-            if DateTimeHelper.currentCalendar.isDateInToday(currentDate) {
-                logs.insert(DutyLog(id: Int(yesterDayLastRecord.id ?? 0), status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime()), at: 0)
-            } else {
-                logs.insert(DutyLog(id: Int(yesterDayLastRecord.id ?? 0), status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: currentDate), at: 0)
-            }
-            
-        } else {
+//        let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: currentDate) ?? Date()
+//        let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
+//        let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
+//        
+//        if let yesterDayLastRecord = getLastRecordOfDriverLogs(filterTypes: [.betweenDates(startDate: yesterDayStartOfDay, endDate: yesterDayEndOfDay)]) {
+//            // Previous day status continue today
+//            if DateTimeHelper.currentCalendar.isDateInToday(currentDate) {
+//                logs.insert(DutyLog(id: Int(yesterDayLastRecord.id ?? 0), status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime()), at: 0)
+//            } else {
+//                logs.insert(DutyLog(id: Int(yesterDayLastRecord.id ?? 0), status: yesterDayLastRecord.status, startTime: currentStartOfDay, endTime: currentDate), at: 0)
+//            }
+//            
+//        } else {
             // When there is no record in selected Date but previous date record exist
             if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.specificDate(date: startOfDay)]),
                startOfDay > lastlog.startTime  {
@@ -890,38 +890,38 @@ class DatabaseManager: DatabaseHandler {
                 let logFromToday12AMtoCurrentTime = DutyLog(id: Int.random(in: -300 ... -201), status: DriverStatusType.offDuty.getName(), startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime())
                 logs.insert(logFromToday12AMtoCurrentTime, at: 0)
             }
-        }
+     //   }
         return logs
     }
 
-    func fetchDutyEvents(for date: Date) -> [DutyLog] {
-        let startOfDay = DateTimeHelper.startOfDay(for: date)
-        let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
-
-        let dayLogs = fetchLogs(filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)])
-        var dutyLogs: [DutyLog] = dayLogs
-            .map { DutyLog(id: Int($0.id ?? 0), status: $0.status, startTime: $0.startTime, endTime: $0.startTime) }
-
-        if let previousLog = fetchLastRecord(before: startOfDay) {
-            dutyLogs.insert(
-                DutyLog(id: Int(previousLog.id ?? 0), status: previousLog.status, startTime: startOfDay, endTime: startOfDay),
-                at: 0
-            )
-        } else {
-            dutyLogs.insert(
-                DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: startOfDay, endTime: startOfDay),
-                at: 0
-            )
-        }
-
-        if dutyLogs.isEmpty {
-            dutyLogs = [
-                DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: startOfDay, endTime: startOfDay)
-            ]
-        }
-
-        return dutyLogs.sorted { $0.startTime < $1.startTime }
-    }
+//    func fetchDutyEvents(for date: Date) -> [DutyLog] {
+//        let startOfDay = DateTimeHelper.startOfDay(for: date)
+//        let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
+//
+//        let dayLogs = fetchLogs(filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)])
+//        var dutyLogs: [DutyLog] = dayLogs
+//            .map { DutyLog(id: Int($0.id ?? 0), status: $0.status, startTime: $0.startTime, endTime: $0.startTime) }
+//
+//        if let previousLog = fetchLastRecord(before: startOfDay) {
+//            dutyLogs.insert(
+//                DutyLog(id: Int(previousLog.id ?? 0), status: previousLog.status, startTime: startOfDay, endTime: startOfDay),
+//                at: 0
+//            )
+//        } else {
+//            dutyLogs.insert(
+//                DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: startOfDay, endTime: startOfDay),
+//                at: 0
+//            )
+//        }
+//
+//        if dutyLogs.isEmpty {
+//            dutyLogs = [
+//                DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: startOfDay, endTime: startOfDay)
+//            ]
+//        }
+//
+//        return dutyLogs.sorted { $0.startTime < $1.startTime }
+//    }
 }
 
     //MARK: - Fetch last recent Day & Shift from DB

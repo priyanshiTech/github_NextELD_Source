@@ -847,8 +847,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         UserDefaults.standard.synchronize()
     }
     
-   
-    
     // Reset Break Time if Break time is less than 30 min
     func checkWheterBreakTimeIsOver(previousStatus: DriverStatusType) {
         let remainingBreakTime = self.breakTimer?.remainingTime ?? 0
@@ -934,15 +932,12 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func isLogVerify(dateTime: Date) -> Bool {
         let startOfDay = DateTimeHelper.calendar.startOfDay(for: dateTime)
         let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? Date()
-        var currentDay = AppStorageHandler.shared.days
+        let currentDay = AppStorageHandler.shared.days
         
         if currentDay == 1 {
             return true
         } else {
-            if currentDay != 0 {
-                currentDay -= 1
-
-            }
+            
             // check whether the certify table have data or not
             let record = CertifyDatabaseManager.shared.getLastRecordOfCertifyLogs(
                 filterTypes: [.userId, .specificDate(date: dateTime)]
@@ -950,7 +945,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             let recordExist = record != nil && record?.isCertify == "Yes"
             if !recordExist {
                 // check whether the driver table have data or not
-                if let lastDriverLog = DatabaseManager.shared.getLastRecordOfDriverLogs(
+                if let _ = DatabaseManager.shared.getLastRecordOfDriverLogs(
                     filterTypes: [.user, .betweenDates(startDate: startOfDay, endDate: endOfDay)]
                 ) {
                     
@@ -971,7 +966,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 let yesterDayDate = yesterDayDateString.asDate(format: .dateOnlyFormat) else {
             return true
         }
-        return isLogVerify(dateTime: yesterDayDate)
+        let isCertified = isLogVerify(dateTime: yesterDayDate)
+        return isCertified
     }
   
     func checkWhetherTheDVIRAddedOrNot(status: DriverStatusType) -> Bool {

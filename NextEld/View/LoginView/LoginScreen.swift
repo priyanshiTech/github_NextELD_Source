@@ -37,93 +37,94 @@ struct LoginScreen: View {
     var body: some View {
         
         NavigationStack(path: $navManager.path) {
-            VStack(spacing: 15) {
-                Spacer()
-                Text("All Star Elogs")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundStyle(Color(uiColor: .white))
-                    .padding()
-                //  Email field with validation
-                HStack {
-                    Image(systemName: "envelope")
-                        .foregroundColor(Color(uiColor: .wine))
-                    TextField("UserName", text: $UserName)
-                        .autocapitalization(.none)
-                        .keyboardType(.emailAddress)
-                        .foregroundColor(Color.primary)
-                }
-                .inputBoxStyle(isValid: UserName.isEmpty)
-                
-                // Inline validation message
-//                if !UserName.isEmpty {
-//                    // Text("Enter a valid email address")
-//                    Text("Enter a  UserName")
-//
-//                        .foregroundColor(.red)
-//                        .font(.caption)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.horizontal, 5)
-//                }
-                
-                //  Password field with validation
-                HStack {
-                    Image(systemName: "lock")
-                        .foregroundColor(Color(uiColor: .wine))
-                    
-                    if isPasswordShowing {
-                        TextField("Password", text: $password)
+            ZStack {
+                VStack(spacing: 15) {
+                    Spacer()
+                    Text("All Star Elogs")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundStyle(Color(uiColor: .white))
+                        .padding()
+                    //  Email field with validation
+                    HStack {
+                        Image(systemName: "envelope")
+                            .foregroundColor(Color(uiColor: .wine))
+                        TextField("UserName", text: $UserName)
                             .autocapitalization(.none)
-                            .foregroundColor(Color.primary)
-                    } else {
-                        SecureField("Password", text: $password)
-                            .autocapitalization(.none)
+                            .keyboardType(.emailAddress)
                             .foregroundColor(Color.primary)
                     }
+                    .inputBoxStyle(isValid: UserName.isEmpty)
+                    
+                    // Inline validation message
+                    //                if !UserName.isEmpty {
+                    //                    // Text("Enter a valid email address")
+                    //                    Text("Enter a  UserName")
+                    //
+                    //                        .foregroundColor(.red)
+                    //                        .font(.caption)
+                    //                        .frame(maxWidth: .infinity, alignment: .leading)
+                    //                        .padding(.horizontal, 5)
+                    //                }
+                    
+                    //  Password field with validation
+                    HStack {
+                        Image(systemName: "lock")
+                            .foregroundColor(Color(uiColor: .wine))
+                        
+                        if isPasswordShowing {
+                            TextField("Password", text: $password)
+                                .autocapitalization(.none)
+                                .foregroundColor(Color.primary)
+                        } else {
+                            SecureField("Password", text: $password)
+                                .autocapitalization(.none)
+                                .foregroundColor(Color.primary)
+                        }
+                        
+                        Button {
+                            isPasswordShowing.toggle()
+                        } label: {
+                            Image(systemName: isPasswordShowing ? "eye.fill" : "eye.slash.fill")
+                                .foregroundColor(Color(uiColor: .wine))
+                        }
+                    }
+                    .inputBoxStyle(isValid: password.isEmpty)
+                    
+                    // Inline validation message
+                    //                if !password.isEmpty && !isValidPassword(password) {
+                    //                    // Text("Password must be 8+ chars, 1 uppercase, 1 number & 1 symbol")
+                    //                    Text( "Password must be numeric (min 6 digits)")
+                    //                        .foregroundColor(Color(uiColor:.red))
+                    //                        .font(.caption)
+                    //                        .frame(maxWidth: .infinity, alignment: .leading)
+                    //                        .padding(.horizontal, 5)
+                    //                }
+                    
+                    // Forget Password
+                    Button {
+                        navManager.navigate(to: AppRoute.LoginFlow.forgetPassword(tittle: "Forget Password"))
+                    } label: {
+                        Text("Forget Password?")
+                            .font(.callout)
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color(uiColor:.white))
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .padding(.horizontal, 20)
+                    }
+                    
+                    //MARK:  With API Verification
                     
                     Button {
-                        isPasswordShowing.toggle()
-                    } label: {
-                        Image(systemName: isPasswordShowing ? "eye.fill" : "eye.slash.fill")
-                            .foregroundColor(Color(uiColor: .wine))
-                    }
-                }
-                .inputBoxStyle(isValid: password.isEmpty)
-                
-                // Inline validation message
-//                if !password.isEmpty && !isValidPassword(password) {
-//                    // Text("Password must be 8+ chars, 1 uppercase, 1 number & 1 symbol")
-//                    Text( "Password must be numeric (min 6 digits)")
-//                        .foregroundColor(Color(uiColor:.red))
-//                        .font(.caption)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .padding(.horizontal, 5)
-//                }
-                
-                // Forget Password
-                Button {
-                    navManager.navigate(to: AppRoute.LoginFlow.forgetPassword(tittle: "Forget Password"))
-                } label: {
-                    Text("Forget Password?")
-                        .font(.callout)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color(uiColor:.white))
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .padding(.horizontal, 20)
-                }
-                
-                //MARK:  With API Verification
-                
-                Button {
                         if !isValidPassword(password) {
                             alertVisible = true
                             return
                         }
-        
+                        
                         Task {
                             let success = await loginVM.login(email: UserName, password: password)
                             if success && SessionManagerClass.shared.isLoggedIn() {
-        
+                                
                                 await viewModel.callLoginLogUpdateAPI()
                                 handlePostLoginNavigation()
                                 
@@ -131,44 +132,47 @@ struct LoginScreen: View {
                                 alertVisible = true
                             }
                         }
+                        
+                    } label: {
+                        Text("Log - In")
+                            .foregroundColor(Color(uiColor: .wine))
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(UIColor.systemGray4))
+                            .cornerRadius(10)
+                    }
                     
-                } label: {
-                    Text("Log - In")
-                        .foregroundColor(Color(uiColor: .wine))
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color(UIColor.systemGray4))
-                        .cornerRadius(10)
+                    .frame(width: txtFieldWidth, height: txtFieldHeight)
+                    // .disabled(!isValidPassword(password))
+                    
+                    // Loading indicator
+                    
+                    
+                    Spacer()
+                    
+                    // Forget Username
+                    Button {
+                        navManager.navigate(to: AppRoute.LoginFlow.forgetUser(tittle: "Forget Username"))
+                    } label: {
+                        Text("Forget Username?")
+                            .font(.callout)
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color(uiColor:.white))
+                    }
+                    
+                    Spacer()
+                    
+                    // Error message from API
+                    if let error = loginVM.errorMessage {
+                        Text(error)
+                            .foregroundColor(Color(uiColor:.red))
+                            .padding(.horizontal)
+                    }
                 }
                 
-                .frame(width: txtFieldWidth, height: txtFieldHeight)
-               // .disabled(!isValidPassword(password))
-
-                // Loading indicator
                 if loginVM.isLoading {
-                    ProgressView("Logging in...")
-                        .padding()
-                }
-                
-                Spacer()
-                
-                // Forget Username
-                Button {
-                    navManager.navigate(to: AppRoute.LoginFlow.forgetUser(tittle: "Forget Username"))
-                } label: {
-                    Text("Forget Username?")
-                        .font(.callout)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color(uiColor:.white))
-                }
-                
-                Spacer()
-                
-                // Error message from API
-                if let error = loginVM.errorMessage {
-                    Text(error)
-                        .foregroundColor(Color(uiColor:.red))
-                        .padding(.horizontal)
+                    LoadingView()
+                        .foregroundStyle(Color.white)
                 }
             }
             
