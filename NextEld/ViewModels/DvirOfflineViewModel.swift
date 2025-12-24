@@ -60,7 +60,7 @@ import SwiftUI
         isSyncing = true
         defer { isSyncing = false }
 
-        // API Call
+        // API Callj
         do {
             let response: DVIROfflineResponseModel =
             try await NetworkManager.shared.post(
@@ -69,11 +69,12 @@ import SwiftUI
             )
 
             //  Token expiry
-//            if response.token?.lowercased() == "false" {
-//                SessionManagerClass.shared.clearToken()
+//            if response.token?.lowercased() == "false" {
+            //                SessionManagerClass.shared.clearToken()
 //                syncMessage = "Session expired"
 //                return false
 //            }
+            
 
             //  Mark DVIR records as synced
             response.result?.forEach { item in
