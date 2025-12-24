@@ -421,12 +421,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                     if certifySuccess == false {
                         print(" Certified offline logs sync failed: \(self?.certifySyncViewModel.syncMessage ?? "Unknown error")")
                     }
-
                     // Sync DVIR offline logs with error handling
                     let dvirSuccess = await self?.DVIRDataViewModel.syncDVIROfflineLogs()
-                    
                     if dvirSuccess == false {
-                        
                         print(" DVIR offline logs sync failed: \(self?.DVIRDataViewModel.syncMessage ?? "Unknown error")")
                     }
                 }

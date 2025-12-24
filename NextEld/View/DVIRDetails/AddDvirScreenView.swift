@@ -810,6 +810,7 @@ struct AddDvirScreenView: View  {
     func checkAndSetVehicleCondition() {
         if trailerVM.truckDefectSelection == "no" && trailerVM.trailerDefectSelection == "no" {
             vehicleVM.selectedCondition = "Vehicle Condition Satisfactory"
+            viewModel.notesText =  "All Good"
         }
         else if trailerVM.truckDefectSelection == "yes" || trailerVM.trailerDefectSelection == "yes" {
             vehicleVM.selectedCondition = nil
