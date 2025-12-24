@@ -120,9 +120,7 @@ struct DeviceScannerView: View {
                     Button {
                         
                         Task {
-                            deviceStatusVM.isLoading = true
                             await deviceStatusVM.updateDeviceStatus(status: "Disconnected")
-                            deviceStatusVM.isLoading = false
                             // Check if session expired - if yes, don't navigate anywhere else
                             if deviceStatusVM.isSessionExpired {
                                 // print(" Session expired detected - staying on SessionExpireUIView")
