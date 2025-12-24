@@ -55,6 +55,7 @@ struct AppStorageHandler {
     @AppStorage("warningOnDriveTime2") var warningOnDriveTime2: Int?
     @AppStorage("warningBreakTime1") var warningBreakTime1: Int?
     @AppStorage("warningBreakTime2") var warningBreakTime2: Int?
+    @AppStorage("is34HourStarted") var is34HourStarted: Bool = false
     //MARK: -  for saving a data to Add dvir
     @AppStorage("_id") var IdShowing : Int?
     @AppStorage("dvirLogId") var dvirLogId: String?

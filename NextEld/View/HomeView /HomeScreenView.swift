@@ -85,8 +85,9 @@ struct HomeScreenView: View {
                         VStack {
                             if !homeVM.cycleMessage.isEmpty {
                                 Text(homeVM.cycleMessage)
-                                    .font(.title3)
+                                    .font(.body)
                                     .foregroundColor(.red)
+                                    .multilineTextAlignment(.center)
                             }
                             Text(SharedInfoManager.shared.isDeviceConnected ? "Connected": "Disconnected")
                                 .font(.title2)
@@ -99,9 +100,9 @@ struct HomeScreenView: View {
                             StatusView(homeViewModel: homeVM) {  status in
                                 guard status != homeVM.currentDriverStatus else { return }
                                 
-                                if homeVM.check34HoursSleepOrOffDutyCompleted() && status != .offDuty && status != .sleep {
+                                if homeVM.check34HoursSleepOrOffDutyCompleted() && (status == .onDrive || status == .onDuty) {
                                         homeVM.showAlert(alertType: .thirtyFourHours)
-                                } else if homeVM.isCycleTimeCompleted() && status != .offDuty && status != .sleep {
+                                } else if homeVM.isCycleTimeCompleted() && (status == .onDrive || status == .onDuty) {
                                     homeVM.showAlert(alertType: .cycleComplete)
                                 } else {
                                     if (status == .onDuty || status == .onDrive) {

@@ -407,7 +407,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         checkWhetherTheViolationAlreadyExists()
         restoreAllTimersFromLastStatus()
         validateScenarioInEveryMinute()
-        
         timer
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
@@ -460,7 +459,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
-        showCycleMessage()
     }
     
     
@@ -590,10 +588,10 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
             
         case .sleep:
-            timerTypes = [.sleepTimer]
-            if restoreBreakTimerRunning {
-                timerTypes.append(.breakTimer)
-            }
+//            timerTypes = [.sleepTimer]
+//            if restoreBreakTimerRunning {
+//                timerTypes.append(.breakTimer)
+//            }
             timerTypes = [.breakTimer, .sleepTimer]
 
         case .offDuty:
@@ -616,6 +614,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {[weak self] in
             self?.loadEventsFromDatabase()
         }
+        showCycleMessage()
     }
 
     func checkedOffDutyTimeIsLessThan2Hour()  {
@@ -643,7 +642,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     func resetBreakTime(from timeInterval: TimeInterval = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)) {
         breakTimer = CountdownTimer(startTime: timeInterval)
-        breakTimer?.start()
+        if currentDriverStatus == .offDuty || currentDriverStatus == .sleep {
+            breakTimer?.start()
+        }
     }
     
     func restoreAllTimersFromLastStatus() {
@@ -676,7 +677,16 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let cycleRemainingTime = adjusted(latestLog.remainingWeeklyTime, elapsed: elapsed, active: isCycle)
         let sleepRemainingTime = adjusted(latestLog.remainingSleepTime, elapsed: elapsed, active: isSleep)
         let continueDriveRemainingTime = adjusted(Int(AppStorageHandler.shared.continueDriveTime ?? 0), elapsed: elapsed, active: isContDrv)
-        let breakRemainingTime = adjusted(Int(AppStorageHandler.shared.breakTime ?? 0), elapsed: elapsed, active: isBreak)
+        var breakRemainingTime = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)
+        if cycleRemainingTime < 0 {
+            breakRemainingTime = (34 * 60 * 60)
+            let remainingTime = breakRemainingTime - elapsed
+            let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(remainingTime)
+            self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
+        }
+        if (status == .offDuty || status == .sleep) {
+            breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
+        }
         
         
         // Timers
@@ -1081,17 +1091,15 @@ extension HomeViewModel {
     }
     
     func showCycleMessage() {
-        guard let cycleTimer = cycleTimer, cycleTimer.remainingTime <= 0 else {
-            
+        guard let cycleTimer = cycleTimer, cycleTimer.remainingTime <= 0, (currentDriverStatus == .offDuty || currentDriverStatus == .sleep), !AppStorageHandler.shared.is34HourStarted else {
             return
         }
-        let timeWhenCycleTimeZero = DateTimeHelper.currentDateTime().addingTimeInterval(cycleTimer.remainingTime)
-        let dateAfter34Hour = timeWhenCycleTimeZero.addingTimeInterval(3600 * 34)
-        let remainingBreakTime = dateAfter34Hour.timeIntervalSince(timeWhenCycleTimeZero)
-        resetBreakTime(from: remainingBreakTime)
+        let time34Hour = TimeInterval(34 * 60 * 60)
+        let currentDateTime = DateTimeHelper.currentDateTime()
+        let dateAfter34Hour = currentDateTime.addingTimeInterval(time34Hour)
+        resetBreakTime(from: time34Hour)
         self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
+        AppStorageHandler.shared.is34HourStarted = true
     }
-    
-    
 }
 

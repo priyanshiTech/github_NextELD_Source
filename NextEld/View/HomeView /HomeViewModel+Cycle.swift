@@ -15,6 +15,7 @@ extension  HomeViewModel {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     self.changeShiftAfter34HoursComplete(uniqueValue: uniqueValueForShiftChange)
                 }
+                AppStorageHandler.shared.is34HourStarted = false
                 debugPrint("34 hour completed...")
             }
             

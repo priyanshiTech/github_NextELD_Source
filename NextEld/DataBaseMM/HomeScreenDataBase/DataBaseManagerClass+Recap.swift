@@ -57,7 +57,8 @@ extension DatabaseManager {
                 if i + 1 < allLogs.count {
                     endDate = allLogs[i+1].startTime
                 } else {
-                    endDate = today
+                    let endOfDay = (DateTimeHelper.endOfDay(for: log.startTime) ?? Date())
+                    endDate = today > endOfDay ? endOfDay : today
                 }
                 
                 let duration = max(0, endDate.timeIntervalSince(startDate))
@@ -73,6 +74,18 @@ extension DatabaseManager {
                 }
             }
             
+            if allLogs.isEmpty {
+                let lastDate = calendar.date(byAdding: .day, value: -1, to: startOfDay) ?? Date()
+                let endOfLastDate = DateTimeHelper.endOfDay(for: lastDate) ?? Date()
+                if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.betweenDates(startDate: lastDate, endDate: endOfLastDate)]),
+                    (lastlog.status != AppConstants.onSleep || lastlog.status != AppConstants.offDuty),
+                    startOfDay > lastlog.startTime  {
+                    let startOfToday = DateTimeHelper.startOfDay(for: today)
+                    if startOfDay < startOfToday {
+                        dutySeconds = 24 * 60 * 60
+                    }
+                }
+            }
             results.append(WorkEntry(date: day, hoursWorked: dutySeconds))
             
         }
@@ -81,8 +94,22 @@ extension DatabaseManager {
     
     func getTodaysWork() -> (totalWorkedToday: TimeInterval, remainingWorkedToday: TimeInterval) {
         let OnDutyTodayTotalTime = TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0)
+        var dutySeconds: TimeInterval = 0
         let allLogs = fetchLogs(filterTypes: [.getTodayRecord])
         if allLogs.isEmpty {
+            let yesterDay =  DateTimeHelper.calendar.date(byAdding: .day, value: -1, to: DateTimeHelper.currentDateTime()) ?? Date()
+            let yesterDayStartOfDay =  DateTimeHelper.startOfDay(for: yesterDay)
+            let yesterDayEndOfDay =  DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: yesterDayStartOfDay) ?? Date()
+            let startOfToday =  DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
+            
+            if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.betweenDates(startDate: yesterDayStartOfDay, endDate: yesterDayEndOfDay)]) {
+                let elapsed = DateTimeHelper.currentDateTime().timeIntervalSince(startOfToday)
+                if lastlog.status == AppConstants.onDuty || lastlog.status == AppConstants.onDrive {
+                    dutySeconds = elapsed
+                    let dutyTime = max(0, OnDutyTodayTotalTime - dutySeconds)
+                    return (dutySeconds,dutyTime)
+                }
+            }
             return (0,OnDutyTodayTotalTime)
         }
         let logsForDay = allLogs.compactMap { log -> (Date, String)? in
@@ -90,7 +117,7 @@ extension DatabaseManager {
         }
         // .filter { $0.0 >= startOfDay && $0.0 < startOfNextDay }
             .sorted { $0.0 < $1.0 }
-        var dutySeconds: TimeInterval = 0
+        
         
         for (i, log) in logsForDay.enumerated() {
             let startDate = log.0
