@@ -35,9 +35,9 @@ import SwiftUI
             DvirStatusDataOffline(
                 clientId: AppStorageHandler.shared.clientId,
                 companyName: AppStorageHandler.shared.company,
-                dateTime:  DateTimeHelper.formatDateToLocalTime(record.startTime),
-
-                driverId: Int(record.UserID),
+                dateTime:   DateTimeHelper.formatDateToLocalTime(record.startTime),
+              
+                driverId: AppStorageHandler.shared.driverId,
                 driverSignFile: record.signature?.base64EncodedString(),
                 engineHour: nil,
                 localId: "\(record.id ?? 0)",

@@ -764,6 +764,9 @@
         }
       }
     },
+    "Edit" : {
+
+    },
     "eld connection" : {
       "extractionState" : "manual",
       "localizations" : {

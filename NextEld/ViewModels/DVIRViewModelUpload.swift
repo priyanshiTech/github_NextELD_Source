@@ -162,11 +162,8 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
                 let driverId = AppStorageHandler.shared.driverId ?? 0
                 let filename = "\(driverId)_sign_1.jpg"
                 
-                // print(" Creating multipart file:")
-                // print("   - name: file")
                 // print("   - filename: \(filename)")
-                // print("   - mimeType: image/jpeg")
-                // print("   - data size: \(jpegData.count) bytes")
+            
                 
                 // Use "file" as field name (same as defect images, server will map it to driverSignFile)
                 files.append(MultipartFile(

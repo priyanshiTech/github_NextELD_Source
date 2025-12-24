@@ -41,11 +41,12 @@ struct AddDvirPopup: View {
                 
                 HStack {
                     Button(action: {  navManager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: currentRecord)) }) {
-                        Image("pencil")
-                            .foregroundColor(.red)
+                        Text("Edit")
+                            .fontWeight(.bold)
+                            .foregroundColor(.green)
                             .font(.title3)
                     }
-                    .padding()
+                    
                     
                     Text("Add Dvir")
                         .font(.headline)
