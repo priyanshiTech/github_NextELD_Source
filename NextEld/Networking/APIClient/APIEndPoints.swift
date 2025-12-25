@@ -12,10 +12,12 @@ import Foundation
 enum API {
     
     static let baseURL = URL(string: "https://admin.allstarelogs.com/eld_log/")!
+  
   //static let baseURL = URL(string: "https://admin.gbt-usa.com/eld_log/")!
     static let baseURLTwo = URL(string: "https://superadmin.gbt-usa.com/")!
     static let privacyPolicyURL = "https://allstarelogs.com/privacypolicy/"
     static let DominNameNew = "https://allstarelogs.com/"
+    static let baseUrlForReviewOndevice = URL(string: "https://admin.allstarelogs.com/eld_log-1/")!
    //static let AllStarDisclamer = "https://admin.allstarelogs.com/eld_log/"
 
     enum Endpoint {
@@ -108,7 +110,7 @@ enum API {
             case .vehicleConditionApi:
                 return API.baseURL.appendingPathComponent("master/view_vehicle_condition")
             case .dataTransferAPI:
-                return API.baseURL.appendingPathComponent("api/jsoncrypto/encrypt")
+                return API.baseUrlForReviewOndevice.appendingPathComponent("api/eld/generateCsv")
             case .DriverWorkingtime:
                 return API.baseURL.appendingPathComponent("dispatch/add_driver_working_status")
             case .DisclamerAPI:

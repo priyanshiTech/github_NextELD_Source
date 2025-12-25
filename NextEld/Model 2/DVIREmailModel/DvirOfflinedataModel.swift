@@ -17,7 +17,7 @@ struct DvirStatusDataOffline : Codable {
     let companyName : String?
     let dateTime : String?
     let driverId : Int?
-    let driverSignFile : String?
+    let driverSignFile : Data?
     let engineHour : String?
     let localId : String?
     let location : String?

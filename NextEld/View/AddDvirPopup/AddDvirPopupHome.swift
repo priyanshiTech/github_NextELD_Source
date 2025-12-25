@@ -45,13 +45,16 @@ struct AddDvirPopup: View {
                             .fontWeight(.bold)
                             .foregroundColor(.green)
                             .font(.title3)
+                           
                     }
-                    
-                    
+                   
+                    Spacer()
                     Text("Add Dvir")
                         .font(.headline)
                         .fontWeight(.bold)
                         .foregroundColor(Color(uiColor:.wine))
+                        .padding()
+                  
                     
                     Spacer()
                     Button(action: { isPresented = false }) {
