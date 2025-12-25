@@ -627,6 +627,15 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             let onDutyRemainingTime = adjusted(lastRecord.remainingDutyTime, elapsed: elapsed, active: true)
             onDutyTimer = CountdownTimer(startTime: onDutyRemainingTime)
             onDutyTimer?.start()
+            if AppStorageHandler.shared.splitShiftIdentifier == 1 {
+                // split sleep case, reset to remaining sleep time
+                let shiftType = getSplitShiftType()
+                let remainingSleepTime = (AppStorageHandler.shared.onSleepTime ?? 0) - shiftType.getSeconds()
+                sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
+            } else {
+                // default sleep case, reset to 10 hours
+                sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
+            }
         }
     }
 

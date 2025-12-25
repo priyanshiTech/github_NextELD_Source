@@ -55,7 +55,10 @@ extension DatabaseManager {
     func deleteAllSplitShiftLogs() {
         guard let db else { return }
         do {
-            try db.run(splitShiftTable.delete())
+            try db.transaction {
+                try db.run(splitShiftTable.delete())
+                try db.run("DELETE FROM sqlite_sequence WHERE name = 'splitShiftTable'")
+            }
         } catch {
             // print("Error while deleting all split shift logs: \(error)")
         }

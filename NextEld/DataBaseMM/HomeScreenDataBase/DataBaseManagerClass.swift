@@ -719,6 +719,8 @@ class DatabaseManager: DatabaseHandler {
             try db?.transaction {
                 try db?.run(driverLogs.delete())
                 try db?.run("DELETE FROM sqlite_sequence WHERE name = 'driverLogs'")
+                try db?.run(splitShiftTable.delete())
+                try db?.run("DELETE FROM sqlite_sequence WHERE name = 'splitShiftTable'")
             }
             completion?()
             print("Data Delete Successfully.....")

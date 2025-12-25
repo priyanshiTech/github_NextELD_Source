@@ -48,7 +48,7 @@ extension  HomeViewModel {
             return 0
         }
         // Sort logs by timestamp
-        let sortedLogs = allLogs.sorted { $0.timestamp > $1.timestamp } // required reverse order
+        let sortedLogs = allLogs.sorted { $0.startTime > $1.startTime } // required reverse order
         
         var totalSleep: TimeInterval = 0
         for log in sortedLogs {
@@ -57,7 +57,7 @@ extension  HomeViewModel {
             if status == .sleep || status == .offDuty {
                 totalSleep = duration
             } else {
-                continue // for other status will break the loop
+                break // for other status will break the loop
             }
           }
         debugPrint("Total sleep: \(totalSleep.getHours()) hours")

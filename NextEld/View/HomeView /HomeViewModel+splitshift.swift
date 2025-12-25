@@ -38,8 +38,6 @@ extension HomeViewModel {
                  // reset sleep time to alertnate remaining sleep
                  let remainingSleepTime = totalSleepRequired - alternateDuration
                  self.sleepTimer = CountdownTimer(startTime: remainingSleepTime)
-                 
-                 
                  updateSplitDuration(id: lastSplitRecord.id, duration: alternateDuration)
                  updateTimeAfterSplitShiftEnds()
                  
