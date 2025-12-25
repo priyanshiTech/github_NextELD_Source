@@ -1644,7 +1644,11 @@
         }
       }
     },
+    "Please display required logs as per FMCSA" : {
+
+    },
     "Please display required logs as per FMCSA and CCATM" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {

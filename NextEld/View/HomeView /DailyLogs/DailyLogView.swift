@@ -141,16 +141,18 @@ struct DailyLogView: View {
             }
             
             HStack{
-                
+
                 Image(systemName: "exclamationmark.circle.fill")
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(.white, Color(uiColor: .wine)) // mark = white, circle = blue
                     .font(.system(size: 25))
                 
-                Text("Please display required logs as per FMCSA and CCATM")
+                Text("Please display required logs as per FMCSA")
                     .font(.callout)
                     .foregroundColor(.gray)
+                
             }
+            
             .padding()
 
             
