@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: - API Request Model
 struct ReportRequestModel: Codable {
+    let clientId:Int
     let driverId: Int
     let fromDate: String
     let toDate: String

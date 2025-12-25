@@ -35,6 +35,7 @@ class DVIRAPIViewModel: ObservableObject {
 
         let requestBody = ReportRequestModel(
             
+            clientId: AppStorageHandler.shared.clientId ?? 0,
             driverId: AppStorageHandler.shared.driverId ?? 0,
             fromDate: fromDate,
             toDate: toDate,

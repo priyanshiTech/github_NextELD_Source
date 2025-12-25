@@ -145,7 +145,7 @@ struct EmailLogs: View {
                             let fromStr = "\(dateFormatted(fromDate)) 00:00:00"
                             let toStr = "\(dateFormatted(toDate)) 23:59:59"
                             let urlString = "\(base)/\(driverId ?? 0)/\(fromStr)/\(toStr)/\(email)"
-                            // print(urlString)
+                             print(urlString)
                             
                             if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) ?? "") {
                                 reportURL = url

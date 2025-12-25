@@ -142,8 +142,7 @@ struct LogsDetails: View {
                     .font(.subheadline) 
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .background(Color(.systemGray6))
+                    .padding()                    .background(Color(.systemGray6))
                     .cornerRadius(10)
                 
             } else {
@@ -154,6 +153,7 @@ struct LogsDetails: View {
                       //  Rectangle()
                           //  .fill(isWarningOrViolation(log.status) ? Color.red : statusColor(for: log.status))
                         Rectangle()
+
                             .fill(logBarColor(for: log.status))
                             .frame(width: 4)
 

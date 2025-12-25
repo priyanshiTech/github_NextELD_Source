@@ -283,14 +283,22 @@ struct DataTransferInspectionView: View {
         }
     }
     
+//    private func presentAlert(_ message: String) {
+//        if viewModel.errorMessage == nil {
+//            viewModel.alertMessage = "Data Sent Successfully"
+//        } else {
+//            viewModel.alertMessage = message
+//        }
+//        viewModel.showAlert = true
+//    }
+    
     private func presentAlert(_ message: String) {
-        if viewModel.errorMessage == nil {
-            viewModel.alertMessage = "Data Sent Successfully"
-        } else {
-            viewModel.alertMessage = message
-        }
+        viewModel.alertMessage = message
         viewModel.showAlert = true
     }
+
+    
+    
     
  
 }
