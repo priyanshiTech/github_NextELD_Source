@@ -292,7 +292,7 @@ class DatabaseManager: DatabaseHandler {
         case .notEngineStopStatus:
             return status != AppConstants.engineOff
         case .specificDate(let date):
-            return startTime == date
+            return startTime < date
         case .login:
             return status == AppConstants.login
         }
@@ -868,8 +868,28 @@ class DatabaseManager: DatabaseHandler {
             }
             
         } else {
-            let logFromToday12AMtoCurrentTime = DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime())
-            logs.insert(logFromToday12AMtoCurrentTime, at: 0)
+            // When there is no record in selected Date but previous date record exist
+            if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.specificDate(date: startOfDay)]),
+               startOfDay > lastlog.startTime  {
+                if logs.isEmpty {
+                    let startOfToday = DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
+                    if startOfDay < startOfToday {
+                        let newlog = DutyLog(id: Int.random(in: -100...0), status: lastlog.status, startTime: currentStartOfDay, endTime: endOfDay)
+                        logs.insert(newlog, at: 0)
+                    } else {
+                        let newlog = DutyLog(id: -111, status: lastlog.status, startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime())
+                        logs.insert(newlog, at: 0)
+                    }
+                } else {
+                    let logFromToday12AMtoCurrentTime = DutyLog(id: Int.random(in: -200 ... -111), status: lastlog.status, startTime: currentStartOfDay, endTime: logs.first?.startTime ?? DateTimeHelper.currentDateTime())
+                    logs.insert(logFromToday12AMtoCurrentTime, at: 0)
+
+                }
+            } else {
+                // When there is no record in table
+                let logFromToday12AMtoCurrentTime = DutyLog(id: Int.random(in: -300 ... -201), status: DriverStatusType.offDuty.getName(), startTime: currentStartOfDay, endTime: DateTimeHelper.currentDateTime())
+                logs.insert(logFromToday12AMtoCurrentTime, at: 0)
+            }
         }
         return logs
     }
