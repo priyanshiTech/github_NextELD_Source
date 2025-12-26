@@ -59,12 +59,16 @@ struct TopBarView: View {
                 Button("Continue Drive") {
                     navManager.navigate(to: AppRoute.HomeFlow.continueDriveTableView)
                 }
+                
                 Button("Add Dvir List") {
                     navManager.navigate(to: AppRoute.HomeFlow.DvirDataListView)
                 }
                 
                 Button("Certify Log") {
                     navManager.navigate(to: AppRoute.HomeFlow.DatabaseCertifyView)
+                }
+                Button("Split Log") {
+                    navManager.navigate(to: AppRoute.HomeFlow.SplitShiftDBView)
                 }
                 
                 

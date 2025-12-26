@@ -181,6 +181,7 @@
 		AFBB59F82E4231800056A660 /* UpdateDvirModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F72E4231800056A660 /* UpdateDvirModel.swift */; };
 		AFBB59FA2E4233B10056A660 /* CurrentDT.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59F92E4233B10056A660 /* CurrentDT.swift */; };
 		AFBB59FC2E4233FB0056A660 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBB59FB2E4233FB0056A660 /* AppRoute.swift */; };
+		AFBCAF5C2EFE65C600DC20D4 /* SplitShiftViewDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBCAF5B2EFE65C600DC20D4 /* SplitShiftViewDB.swift */; };
 		AFBD12CF2E72A899003EA40F /* DvirResponceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD12CE2E72A899003EA40F /* DvirResponceModel.swift */; };
 		AFBD12D22E730357003EA40F /* AddVehicleForDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD12D12E730357003EA40F /* AddVehicleForDvir.swift */; };
 		AFC0386B2E0FF10600944204 /* CountDownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC0386A2E0FF10600944204 /* CountDownTimer.swift */; };
@@ -459,6 +460,7 @@
 		AFBB59F72E4231800056A660 /* UpdateDvirModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDvirModel.swift; sourceTree = "<group>"; };
 		AFBB59F92E4233B10056A660 /* CurrentDT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentDT.swift; sourceTree = "<group>"; };
 		AFBB59FB2E4233FB0056A660 /* AppRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
+		AFBCAF5B2EFE65C600DC20D4 /* SplitShiftViewDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitShiftViewDB.swift; sourceTree = "<group>"; };
 		AFBD12CE2E72A899003EA40F /* DvirResponceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirResponceModel.swift; sourceTree = "<group>"; };
 		AFBD12D12E730357003EA40F /* AddVehicleForDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVehicleForDvir.swift; sourceTree = "<group>"; };
 		AFC0386A2E0FF10600944204 /* CountDownTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownTimer.swift; sourceTree = "<group>"; };
@@ -679,6 +681,7 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFBCAF5A2EFE659D00DC20D4 /* SplitShiftView */,
 				CBE1984A2EFC764E00DDA94A /* Components */,
 				AF5EE7102EF3DAEF001AE01A /* VoilationboxView */,
 				AFFCF1E32EDCCADA00D548DF /* AppBlockView */,
@@ -1323,6 +1326,14 @@
 			path = "Terms&Condition";
 			sourceTree = "<group>";
 		};
+		AFBCAF5A2EFE659D00DC20D4 /* SplitShiftView */ = {
+			isa = PBXGroup;
+			children = (
+				AFBCAF5B2EFE65C600DC20D4 /* SplitShiftViewDB.swift */,
+			);
+			path = SplitShiftView;
+			sourceTree = "<group>";
+		};
 		AFBD12CD2E72A871003EA40F /* DVIRMultipartResponceModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -1755,6 +1766,7 @@
 				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
 				AFCC4CA52E4A24CC00629DE3 /* CompanyInfo.swift in Sources */,
 				CBFD7D3F2EDB14AB008353E8 /* HomeViewModel+DeviceOperation.swift in Sources */,
+				AFBCAF5C2EFE65C600DC20D4 /* SplitShiftViewDB.swift in Sources */,
 				CB29DA572EC7B44600269C93 /* DataBaseManagerClass+Recap.swift in Sources */,
 				AF2E0D282E8BC5B200172174 /* ContinueDriveView.swift in Sources */,
 				AF7951182E3BA7B5005FFFBF /* DVIRDataTableView.swift in Sources */,

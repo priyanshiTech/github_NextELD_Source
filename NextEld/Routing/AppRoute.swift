@@ -53,6 +53,7 @@ enum AppRoute: Hashable {
         case RecapHours(title: String)
         case continueDriveTableView
         case DatabaseCertifyView
+        case SplitShiftDBView
         case LogsDetails(title: String, entry: WorkEntry)
         case EyeViewData(title: String, entry: WorkEntry)
         case driverLogListView

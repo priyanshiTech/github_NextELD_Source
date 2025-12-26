@@ -1451,6 +1451,9 @@
         }
       }
     },
+    "No split shift logs found" : {
+
+    },
     "No vehicle conditions found." : {
       "localizations" : {
         "pa" : {
@@ -2048,6 +2051,15 @@
           }
         }
       }
+    },
+    "Split Log" : {
+
+    },
+    "Split shift logs will appear here" : {
+
+    },
+    "Split Sleep Logs" : {
+
     },
     "Start Scan" : {
       "localizations" : {

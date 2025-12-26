@@ -3,24 +3,29 @@ import SQLite3
 import SQLite
 
 extension DatabaseManager {
+    
     func insertSplitShiftLog(status: String, time: TimeInterval) {
         guard let db else { return }
-        let day = AppStorageHandler.shared.days
-        let shift = AppStorageHandler.shared.shift
-        let userId = AppStorageHandler.shared.driverId ??  0
+
+        let safeDay = AppStorageHandler.shared.days == 0 ? 1 : AppStorageHandler.shared.days
+        let safeShift = AppStorageHandler.shared.shift == 0 ? 1 : AppStorageHandler.shared.shift
+        let userId = AppStorageHandler.shared.driverId ?? 0
+
         do {
             let insert = splitShiftTable.insert(
                 self.status <- status,
                 self.splitTime <- Double(time),
-                self.day <- day,
-                self.shift <- shift,
+                self.day <- safeDay,
+                self.shift <- safeShift,
                 self.userId <- userId
             )
             try db.run(insert)
+            
         } catch {
-            // print("Error while inserting the value in split shift log table: \(error)")
+            // print("Insert SplitShift error")
         }
     }
+
     
     func getLastRecordForSplitShiftLog() -> SplitShiftLog? {
         
@@ -40,6 +45,38 @@ extension DatabaseManager {
             return nil
         }
     }
+    //MARK: -  to fetch All data
+    func getfetchAllSplitShiftLog() -> [SplitShiftLog] {
+
+        guard let db else { return [] }
+        var logs: [SplitShiftLog] = []
+
+        let currentUserId = AppStorageHandler.shared.driverId ?? 0
+
+        do {
+            let query = splitShiftTable
+                .filter(self.userId == currentUserId)
+                .order(self.id.desc)
+
+            for row in try db.prepare(query) {
+                logs.append(
+                    SplitShiftLog(
+                        id: Int(row[id]),
+                        status: row[status],
+                        splitTime: row[splitTime],
+                        day: row[day],
+                        shift: row[shift],
+                        userId: row[userId]
+                    )
+                )
+            }
+        } catch {
+            // print("Fetch SplitShift error")
+        }
+        return logs
+    }
+
+    
     
     func updateSplitDurationForID(_ id: Int64, _ duration: Double) {
         guard let db else { return }
@@ -60,4 +97,5 @@ extension DatabaseManager {
             // print("Error while deleting all split shift logs: \(error)")
         }
     }
+    
 }
