@@ -161,9 +161,10 @@ struct EyeViewData: View {
                         )
 
                         sectionGrid(
-                            headers: ["Engine Hours", "Home Terminal"],
+                            headers: ["Engine Hours", "Dot No" ,"Home Terminal"],
                             values: [
                                 d.engineHour ?? "0",
+                                d.dotNo ?? "NA",
                                 d.mainTerminalName ?? "NA"
                             ]
                         )

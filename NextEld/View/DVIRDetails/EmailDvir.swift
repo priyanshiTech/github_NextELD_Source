@@ -280,7 +280,9 @@ struct DvirListItemView: View {
                 
                 VStack(alignment: .leading, spacing: 6) {
                     // Date and Time
-                   Text("\(record.startTime.toLocalString(format: .dateOnlyFormat)) \(record.DvirTime)")
+                 //  Text("\(record.startTime.toLocalString(format: .dateOnlyFormat)) \(record.DvirTime)")
+                    Text(record.startTime.toLocalString(format: .defaultDateTime))
+
                         .fontWeight(.semibold)
                         .font(.headline)
                         .foregroundColor(Color(uiColor:.black))

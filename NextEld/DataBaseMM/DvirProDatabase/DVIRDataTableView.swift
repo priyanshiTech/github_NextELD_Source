@@ -142,7 +142,10 @@ struct DvirTableRow: View {
             TableCellDvirList(text: record.truckDefect, width: 200)
             TableCellDvirList(text: record.trailerDefect, width: 200)
             TableCellDvirList(text: record.vehicleCondition, width: 350)
-            TableCellDvirList(text: record.startTime.toLocalString(), width: 200)
+            TableCellDvirList(
+                text: record.startTime.toLocalString(format: .defaultDateTime),
+                width: 200
+            )
             TableCellDvirList(text: record.timestamp, width: 200)
             TableCellDvirList(text: "\(AppStorageHandler.shared.days)", width: 100)
             TableCellDvirList(text: "\(AppStorageHandler.shared.shift)", width: 60)
