@@ -893,77 +893,7 @@ class DatabaseManager: DatabaseHandler {
      //   }
         return logs
     }
-
-//    func fetchDutyEvents(for date: Date) -> [DutyLog] {
-//        let startOfDay = DateTimeHelper.startOfDay(for: date)
-//        let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
-//
-//        let dayLogs = fetchLogs(filterTypes: [.betweenDates(startDate: startOfDay, endDate: endOfDay)])
-//        var dutyLogs: [DutyLog] = dayLogs
-//            .map { DutyLog(id: Int($0.id ?? 0), status: $0.status, startTime: $0.startTime, endTime: $0.startTime) }
-//
-//        if let previousLog = fetchLastRecord(before: startOfDay) {
-//            dutyLogs.insert(
-//                DutyLog(id: Int(previousLog.id ?? 0), status: previousLog.status, startTime: startOfDay, endTime: startOfDay),
-//                at: 0
-//            )
-//        } else {
-//            dutyLogs.insert(
-//                DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: startOfDay, endTime: startOfDay),
-//                at: 0
-//            )
-//        }
-//
-//        if dutyLogs.isEmpty {
-//            dutyLogs = [
-//                DutyLog(id: -111, status: DriverStatusType.offDuty.getName(), startTime: startOfDay, endTime: startOfDay)
-//            ]
-//        }
-//
-//        return dutyLogs.sorted { $0.startTime < $1.startTime }
-//    }
 }
-
-    //MARK: - Fetch last recent Day & Shift from DB
-
-
-extension DatabaseManager {
-    //MARK: - Fetch last recent Day & Shift from DB
-//    func updateLastDayAndShift(for userIdValue: Int) {
-//        guard let db = db else { return }
-//        do {
-//            if let row = try db.pluck(
-//                driverLogs
-//                    .filter(userId == userIdValue)
-//                    .order(timestamp.desc)
-//                    .limit(1)
-//            ) {
-//                var fetchedDay = row[day]
-//                var fetchedShift = row[shift]
-//
-//                //  Default handling: agar 0 ya blank aaye to 1 set karo
-//                if fetchedDay == 0 { fetchedDay = 1 }
-//                if fetchedShift == 0 { fetchedShift = 1 }
-//
-//                // Save to properties
-//                self.lastDay = fetchedDay
-//                self.lastShift = fetchedShift
-//
-//                // print(" Last row → Day: \(fetchedDay), Shift: \(fetchedShift)")
-//            } else {
-//                // print(" No rows found for userId: \(userIdValue)")
-//                self.lastDay = 1
-//                self.lastShift = 1
-//            }
-//        } catch {
-//            // print(" Error fetching last day/shift: \(error)")
-//            self.lastDay = 1
-//            self.lastShift = 1
-//        }
-//    }
-}
-
- 
 
 extension DatabaseManager {
     func saveTimerLog(
@@ -1007,7 +937,6 @@ extension DatabaseManager {
             dutyType: dutyType,
             shift: AppStorageHandler.shared.shift,
             vehicle: AppStorageHandler.shared.vehicleNo ?? "",
-                //UserDefaults.standard.string(forKey: "truckNo") ?? "Null",
             odometer: SharedInfoManager.shared.odometer,
             engineHours: "\(SharedInfoManager.shared.engineHours)",
             location: address,
@@ -1021,8 +950,6 @@ extension DatabaseManager {
             notes: notes,
             serverId: nil,
             timestamp:timestamp,
-              //CurrentTimeHelperStamp.currentTimestamp,
-            // Int64(Date().timeIntervalSince1970),
             identifier: AppStorageHandler.shared.splitShiftIdentifier,
             remainingWeeklyTime: remainingWeeklyTime,
             remainingDriveTime: remainingDriveTime,

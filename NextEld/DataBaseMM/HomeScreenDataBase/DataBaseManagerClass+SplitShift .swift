@@ -6,9 +6,8 @@ extension DatabaseManager {
     
     func insertSplitShiftLog(status: String, time: TimeInterval) {
         guard let db else { return }
-
-        let safeDay = AppStorageHandler.shared.days == 0 ? 1 : AppStorageHandler.shared.days
-        let safeShift = AppStorageHandler.shared.shift == 0 ? 1 : AppStorageHandler.shared.shift
+        let safeDay = AppStorageHandler.shared.days
+        let safeShift = AppStorageHandler.shared.shift
         let userId = AppStorageHandler.shared.driverId ?? 0
 
         do {
@@ -50,13 +49,12 @@ extension DatabaseManager {
 
         guard let db else { return [] }
         var logs: [SplitShiftLog] = []
-
         let currentUserId = AppStorageHandler.shared.driverId ?? 0
 
         do {
             let query = splitShiftTable
                 .filter(self.userId == currentUserId)
-                .order(self.id.desc)
+                .order(self.id.asc)
 
             for row in try db.prepare(query) {
                 logs.append(
