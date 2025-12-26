@@ -184,6 +184,7 @@ struct SignatureCertifyView: View {
                         // time required always in format certifyDate+" 23:59:59"
 //                        let requiredDateInString = certifiedDate.toLocalString(format: .dateOnlyFormat) + " 23:59:59"
 //                        let requiredDate = requiredDateInString.asDate()
+                        
                         let certifiedDateTime = DateTimeHelper.endOfDay(for: certifiedDate)?.addingTimeInterval(-1)
                         certifyTimeStamp = String(Int(certifiedDateTime?.timeIntervalSince1970 ?? 0) * 1000)
                     }
@@ -236,6 +237,7 @@ struct SignatureCertifyView: View {
                         // Convert arrays to comma-separated strings for addCertifiedLog
                         let trailersString = trailerVM.trailers.isEmpty ? "None" : trailerVM.trailers.joined(separator: ", ")
                         let shippingDocsString = shippingVM.ShippingDoc.isEmpty ? "None" : shippingVM.ShippingDoc.joined(separator: ", ")
+                        let coDriverID = existingRecord?.coDriverID
                         
                         certifyVM.addCertifiedLog(
                             driverId: driverId,

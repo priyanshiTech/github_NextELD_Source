@@ -133,8 +133,21 @@ struct RulesView: View {
                     }
                 }
                 .padding()
+                Spacer()
+                
+                HStack {
+
+                    Image(systemName: "exclamationmark.circle.fill")
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.white, Color(uiColor: .wine)) // mark = white, circle = blue
+                        .font(.system(size: 20))
+                    
+                    Text("Please Contact your fleet Manager to change rules or to add exceptions")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+
+                } .padding()
             }
-            
             Spacer()
         }
         .navigationBarBackButtonHidden()

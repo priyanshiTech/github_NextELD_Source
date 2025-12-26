@@ -690,7 +690,7 @@ struct AddDvirScreenView: View  {
             updateDvirDataUsingCommonService(record: dvirRecord, dvirLogId: viewModel.driverID, appRootManager: appRootManager, completion: { success in
                 DispatchQueue.main.async {
                 if success {
-                    let successMsg = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
+                    let successMsg = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .defaultDateTime))"
                     viewModel.successMessage = successMsg
                     viewModel.alertType = .success(successMsg)
                 }
@@ -717,7 +717,9 @@ struct AddDvirScreenView: View  {
             uploadDvirDataUsingCommonService(record: dvirRecord, appRootManager: appRootManager, completion: { success in
                 DispatchQueue.main.async {
                     if success {
-                        let successMsg = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
+                      
+                        let successMsg = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))\nTime: \(record.DvirTime)"
+
                         viewModel.successMessage = successMsg
                         viewModel.alertType = .success(successMsg)
                     }
@@ -730,13 +732,7 @@ struct AddDvirScreenView: View  {
             // print("Insert notification posted")
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//            if isFromHome {
-//                navmanager.navigate(to: AppRoute.HomeFlow.Home)
-//            } else {
-//                navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
-//            }
-        }
+
     }
     
         //MARK: - load login data into swiftui

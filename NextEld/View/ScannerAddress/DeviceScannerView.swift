@@ -276,6 +276,7 @@ struct DeviceScannerView: View {
                     ContinueDriveTableView()
                 case .DatabaseCertifyView:
                     DatabaseCertifyView()
+           
                 case .driverLogListView:
                     DriverLogListView()
                 case .DvirDataListView:
@@ -288,6 +289,8 @@ struct DeviceScannerView: View {
                 case .PT30Connection:
                     PT30ConnectionView()
                
+                case .SplitShiftDBView:
+                    SplitShiftDBView()
                 }
             }
             .navigationDestination(for: ApplicationRoot.self) { root in

@@ -55,6 +55,7 @@ enum AppRoute: Hashable {
         case DatabaseCertifyView
         case LogsDetails(title: String, date: Date)
         case EyeViewData(title: String, date: Date)
+        case SplitShiftDBView
         case driverLogListView
         case DvirDataListView
         case DataTransferView
