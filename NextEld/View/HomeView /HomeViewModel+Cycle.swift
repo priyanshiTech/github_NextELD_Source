@@ -22,14 +22,15 @@ extension  HomeViewModel {
             return
         }
                 
-        
-        let nextDayAlertValue = UserDefaults.standard.string(forKey: AppConstants.nextDayAlert)
-        let uniqueValueForNextDayAlert = "nextday_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
-        if  check10HoursSleepOrOffDutyCompleted() && nextDayAlertValue != uniqueValueForNextDayAlert {
-            // next day popup show
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.changeDayAfter10HoursCompleted(uniqueValue: uniqueValueForNextDayAlert)
-                debugPrint("Next Day Shift Stared")
+        if isCycleTimeCompleted() == false { // when cycle is running
+            let nextDayAlertValue = UserDefaults.standard.string(forKey: AppConstants.nextDayAlert)
+            let uniqueValueForNextDayAlert = "nextday_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
+            if  check10HoursSleepOrOffDutyCompleted() && nextDayAlertValue != uniqueValueForNextDayAlert {
+                // next day popup show
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.changeDayAfter10HoursCompleted(uniqueValue: uniqueValueForNextDayAlert)
+                    debugPrint("Next Day Shift Stared")
+                }
             }
         }
     }

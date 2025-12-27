@@ -232,7 +232,7 @@ enum ViolationType: Hashable {
             
         case .onDutyViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDutyTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime1 ?? 0))
-            return " You have \(warning1.getMin()) minutes  left to complete your on-duty cycle for today"
+            return " You have \(warning1.getMin()) minutes left to complete your on-duty cycle for today"
             
         case .onContinueDriveViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime1 ?? 0))
@@ -240,7 +240,7 @@ enum ViolationType: Hashable {
             
         case .onDriveViolation:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime1 ?? 0))
-            return "You have \(warning1.getMin())minutes left to complete your  on-Drive cycle for today"
+            return "You have \(warning1.getMin()) minutes left to complete your  on-Drive cycle for today"
             
         case .cycleTimerViolation:
              let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime30MinTime) ?? 0))
@@ -255,16 +255,16 @@ enum ViolationType: Hashable {
         switch self {
             
         case .onDutyViolation:
-            return "Your Onduty time has exceeded  \(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0) hours"
+            return "Your Onduty time has exceeded \(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0) hours"
              
         case .onContinueDriveViolation:
-            return "Your continue drive time has exceeded  \(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0) hours"
+            return "Your continue drive time has exceeded \(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0) hours"
             
         case .onDriveViolation:
-            return "Your drive time has  exceeded  \(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0) hours"
+            return "Your drive time has exceeded \(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0) hours"
             
         case .cycleTimerViolation:
-            return "Your cycle time has  exceeded  \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
+            return "Your cycle time has exceeded \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
             
         case .none:
             return ""
@@ -456,6 +456,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
+    
     }
     
     
@@ -655,17 +656,20 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     func restoreAllTimersFromLastStatus() {
         
-        var lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift])
-        guard let latestLog = lastLog else {
-            if let lastRecordFromDB = DatabaseManager.shared.getLastRecordOfDriverLogs() {
-                lastLog = lastRecordFromDB
-                resetToInitialState(cycleTime: lastLog?.remainingWeeklyTime ?? 0)
+        var latestLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift])
+        
+        if latestLog == nil {
+            if let lastRecordFromDB = DatabaseManager.shared.getLastRecordOfDriverLogs(), lastRecordFromDB.shift == AppStorageHandler.shared.shift {
+                latestLog = lastRecordFromDB
+                resetToInitialState(cycleTime: latestLog?.remainingWeeklyTime ?? 0)
             } else {
                 resetToInitialState(isResetCycleTimer: true)
+                return
             }
-            return
         }
         
+        guard let latestLog else { return }
+            
         let elapsed = getElapsedTime(lastLog: latestLog)
         let status = DriverStatusType(fromName: latestLog.status) ?? .none
 
@@ -684,17 +688,16 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let sleepRemainingTime = adjusted(latestLog.remainingSleepTime, elapsed: elapsed, active: isSleep)
         let continueDriveRemainingTime = adjusted(Int(AppStorageHandler.shared.continueDriveTime ?? 0), elapsed: elapsed, active: isContDrv)
         var breakRemainingTime = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)
-        if cycleRemainingTime < 0 {
+        if AppStorageHandler.shared.is34HourStarted {
             breakRemainingTime = (34 * 60 * 60)
-            let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(cycleRemainingTime).addingTimeInterval(breakRemainingTime)
-            if AppStorageHandler.shared.is34HourStarted {
-                self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
+            breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
+            let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(breakRemainingTime)
+            self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
+        } else {
+            if (status == .offDuty || status == .sleep) {
+                breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
             }
         }
-        if (status == .offDuty || status == .sleep) {
-            breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
-        }
-        
         // Timers
         onDutyTimer               = CountdownTimer(startTime: onDutyRemainingTime)
         onDriveTimer              = CountdownTimer(startTime: onDriveRemainingTime)
@@ -848,7 +851,10 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey)
             self.violationDataArray.append(violationData)
             saveViolation(for: violationData, date: violationDate)
-            
+            if type == .cycleTimerViolation {
+                let time34Hour = TimeInterval(34 * 60 * 60)
+                resetBreakTime(from: time34Hour)
+            }
         }
         UserDefaults.standard.synchronize()
     }
@@ -1093,13 +1099,14 @@ extension HomeViewModel {
     }
     
     func showCycleMessage() {
-        guard let cycleTimer = cycleTimer, cycleTimer.remainingTime <= 0, (currentDriverStatus == .offDuty || currentDriverStatus == .sleep), !AppStorageHandler.shared.is34HourStarted else {
+        guard isCycleTimeCompleted(), (currentDriverStatus == .offDuty || currentDriverStatus == .sleep), !AppStorageHandler.shared.is34HourStarted else {
             return
         }
+        
         let time34Hour = TimeInterval(34 * 60 * 60)
+        resetBreakTime(from: time34Hour)
         let currentDateTime = DateTimeHelper.currentDateTime()
         let dateAfter34Hour = currentDateTime.addingTimeInterval(time34Hour)
-        resetBreakTime(from: time34Hour)
         self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
         AppStorageHandler.shared.is34HourStarted = true
     }
