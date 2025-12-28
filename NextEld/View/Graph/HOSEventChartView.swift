@@ -229,7 +229,7 @@ struct HOSEventsChart: View {
     private func calculateDurations() -> [String: TimeInterval] {
         var durations: [String: TimeInterval] = [:]
         for event in events {
-            let duration = event.event_end_time.timeIntervalSince(event.x)
+            var duration = event.event_end_time.timeIntervalSince(event.x)
             
             // Group Personal Use and Yard Move with OFF_DUTY
             let label: String
@@ -237,6 +237,9 @@ struct HOSEventsChart: View {
                 label = "OF"  // Group with OFF_DUTY
             } else {
                 label = getStatusLabel(event.dutyType)
+            }
+            if duration == 86399 {
+                duration = 86400
             }
             
             durations[label, default: 0] += duration

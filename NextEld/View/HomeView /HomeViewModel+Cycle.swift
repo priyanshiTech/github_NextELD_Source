@@ -67,7 +67,7 @@ extension  HomeViewModel {
     func changeDayAfter10HoursCompleted(uniqueValue: String) {
         showAlert(alertType: .nextDay)
         self.resetToInitialState()
-        self.saveTimerStateForStatus(status: AppConstants.nextDayAlertTitle, originType: .auto, note: "Next Day Started")
+      //  self.saveTimerStateForStatus(status: AppConstants.nextDayAlertTitle, originType: .auto, note: "Next Day Started")
         AppStorageHandler.shared.days += 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.nextDayAlert)
         calculateTimeWhenDaysIsGreaterThan8days() // When days greater than 8 days cycle
@@ -78,7 +78,7 @@ extension  HomeViewModel {
         showAlert(alertType: .shiftChange)
         cycleMessage = ""
         resetToInitialState(isResetCycleTimer: true)
-        self.saveTimerStateForStatus(status: AppConstants.shiftChangeAlertTitle, originType: .auto, note: "New Shift Started")
+      //  self.saveTimerStateForStatus(status: AppConstants.shiftChangeAlertTitle, originType: .auto, note: "New Shift Started")
         AppStorageHandler.shared.shift += 1
         AppStorageHandler.shared.days = 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.shiftChanged)

@@ -14,14 +14,12 @@ struct EyeViewData: View {
     @StateObject var viewModel = DriverStatusViewModel(networkManager: NetworkManager.shared)
     @StateObject private var homeVM : HomeViewModel = .init()
     var title: String
-    let entry: WorkEntry
     @State private var selectedDate: Date
     @State private var databaseLogs: [DriverLogModel] = []
   
-    init(title: String, entry: WorkEntry) {
+    init(title: String, date: Date) {
         self.title = title
-        self.entry = entry
-        self._selectedDate = State(initialValue: entry.date)
+        self._selectedDate = State(initialValue: date)
     }
 
 
@@ -279,8 +277,8 @@ struct EyeViewData: View {
         
         // Filter only violations (status contains "violation" or "warning")
         return logs.filter { log in
-            let status = log.status.lowercased()
-            return status.contains("voilation") || status.contains("warning")
+            let status = log.status
+            return status.contains(AppConstants.violation) || status.contains(AppConstants.warning)
         }.sorted { $0.startTime < $1.startTime }
     }
     
@@ -514,10 +512,8 @@ struct EyeViewData: View {
 
 // MARK: - Preview
 #Preview {
-    let sampleEntry = WorkEntry(date: Date(), hoursWorked: 8.5)
     let navManager = NavigationManager()
-    
-    return EyeViewData(title: "Daily Logs", entry: sampleEntry)
+    EyeViewData(title: "Daily Logs", date: Date())
         .environmentObject(navManager)
 }
 

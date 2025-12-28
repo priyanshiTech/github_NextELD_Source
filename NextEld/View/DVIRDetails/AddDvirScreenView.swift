@@ -135,7 +135,6 @@ struct AddDvirScreenView: View  {
                         }
                         
     private var trailerSection: some View {
-        
                         CardContainer {
                             Button(action: {
                                 navmanager.path.append(AppRoute.HomeFlow.trailerScreen(trailerVM: trailerVM))
@@ -157,7 +156,7 @@ struct AddDvirScreenView: View  {
                             }
                             .buttonStyle(PlainButtonStyle())
         }
-                        }
+}
 
     private var defectSection: some View {
         
@@ -334,8 +333,6 @@ struct AddDvirScreenView: View  {
                 .transition(.scale)
                 .zIndex(1)
             }
-
-     
 
             // MARK: - Defect Popup Overlay
             if viewModel.showPopup {

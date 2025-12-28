@@ -120,7 +120,7 @@ struct DeviceScannerView: View {
                     Button {
                         
                         Task {
-                            await deviceStatusVM.updateDeviceStatus(status: "Disconnected")
+                            _ = await deviceStatusVM.updateDeviceStatus(status: "Disconnected")
                             // Check if session expired - if yes, don't navigate anywhere else
                             if deviceStatusVM.isSessionExpired {
                                 // print(" Session expired detected - staying on SessionExpireUIView")
@@ -263,15 +263,15 @@ struct DeviceScannerView: View {
                     HoursRecap(tittle: title)
                 case .DataTransferView:
                     DataTransferInspectionView()
-                case .LogsDetails(let title, let entry):
-                    LogsDetails(title: title, entry: entry)
+                case .LogsDetails(let title, let date):
+                    LogsDetails(title: title, date: date)
                 case .AddDvirPriTrip:
                     EmailDvir(
                         tittle: "Email DVIR",
                         onSelect: { _ in }
                     )
-                case .EyeViewData(let title, let entry):
-                    EyeViewData(title: title, entry: entry)
+                case .EyeViewData(let title, let date):
+                    EyeViewData(title: title, date: date)
                 case .continueDriveTableView:
                     ContinueDriveTableView()
                 case .DatabaseCertifyView:

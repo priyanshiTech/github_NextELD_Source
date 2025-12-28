@@ -575,8 +575,8 @@ struct HomeScreenView: View {
         )
 
         return logs.filter { log in
-            let status = log.status.lowercased()
-            return status.contains("voilation") || status.contains("warning")
+            let status = log.status
+            return status.contains(AppConstants.violation) || status.contains(AppConstants.warning)
         }.sorted { $0.startTime < $1.startTime }
     }
 

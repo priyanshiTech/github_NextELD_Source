@@ -677,14 +677,14 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         var breakRemainingTime = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)
         if cycleRemainingTime < 0 {
             breakRemainingTime = (34 * 60 * 60)
-            let remainingTime = breakRemainingTime - elapsed
-            let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(remainingTime)
-            self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
+            let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(cycleRemainingTime).addingTimeInterval(breakRemainingTime)
+            if AppStorageHandler.shared.is34HourStarted {
+                self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
+            }
         }
         if (status == .offDuty || status == .sleep) {
             breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
         }
-        
         
         // Timers
         onDutyTimer               = CountdownTimer(startTime: onDutyRemainingTime)

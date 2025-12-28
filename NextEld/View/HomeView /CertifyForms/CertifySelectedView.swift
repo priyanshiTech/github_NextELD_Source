@@ -89,7 +89,7 @@ struct CertifySelectedView: View {
                                 navManager.navigate(
                                     to: AppRoute.HomeFlow.LogsDetails(
                                         title: "Daily Log",
-                                        entry: logsEntry
+                                        date: title.asDate(format: .dateOnlyFormat) ?? Date()
                                     )
                                 )
                             }

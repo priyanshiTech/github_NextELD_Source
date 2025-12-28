@@ -163,8 +163,7 @@ struct DailyLogView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                let selectedEntry = WorkEntry(date: log.date, hoursWorked: 0)
-                                    navManager.navigate(to: AppRoute.HomeFlow.LogsDetails(title: "Daily Log", entry: selectedEntry))
+                                navManager.navigate(to: AppRoute.HomeFlow.LogsDetails(title: "Daily Log", date: log.date))
                             }
 
                         let isCertified = isDateFullyCertified(log.date)

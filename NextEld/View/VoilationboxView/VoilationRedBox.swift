@@ -16,7 +16,6 @@ struct ViolationsSectionView: View {
     private var violationOnlyLogs: [DriverLogModel] {
         
         violations.filter {
-            //$0.status.lowercased().contains("Violation")
             $0.status == AppConstants.violation
         }
     }
@@ -79,7 +78,5 @@ struct ViolationBoxView: View {
 //        }
 //        return violation.status
 //    }
-    
-
 }
 

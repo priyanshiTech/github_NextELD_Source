@@ -104,8 +104,11 @@ struct DotInspection: View {
                         .font(.callout)
                     
                         Button(action: {
-                            let selectedEntry = WorkEntry(date: Date(), hoursWorked: 0)
-                            navManager.navigate(to: AppRoute.HomeFlow.LogsDetails(title: "Road Side Inspection", entry: selectedEntry))
+                            navManager.navigate(
+                                to: AppRoute.HomeFlow.LogsDetails(
+                                    title: "Road Side Inspection",
+                                    date: DateTimeHelper.currentDate().asDate(format: .dateOnlyFormat) ?? Date())
+                            )
                         }) {
                             Text("Review On Device")
                                 .fontWeight(.bold)

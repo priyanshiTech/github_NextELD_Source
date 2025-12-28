@@ -11,17 +11,15 @@ struct LogsDetails: View {
     
     @EnvironmentObject var navManager: NavigationManager
     var title: String
-    let entry: WorkEntry
     @State private var selectedDate: Date
     @State private var allLogs: [DriverLogModel] = []
     @State private var timerTick: Int = 0
     @State private var timer: Timer?
     @StateObject private var homeVM : HomeViewModel = .init()
 
-    init(title: String, entry: WorkEntry) {
+    init(title: String, date: Date) {
         self.title = title
-        self.entry = entry
-        self._selectedDate = State(initialValue: entry.date)
+        self._selectedDate = State(initialValue: date)
     }
     
     private var isSelectedDateToday: Bool {
@@ -65,7 +63,7 @@ struct LogsDetails: View {
                         CustomIconButton(iconName: "eye_fill_icon", title: "", action: {
                             navManager.navigate(to: AppRoute.HomeFlow.EyeViewData(
                                 title: "Daily Logs",
-                                entry: entry))
+                                date: selectedDate))
 
                         })
                     }
@@ -128,8 +126,8 @@ struct LogsDetails: View {
         )
         // Filter only violations (status contains "violation" or "warning")
         return logs.filter { log in
-            let status = log.status.lowercased()
-            return status.contains("voilation") || status.contains("warning")
+            let status = log.status
+            return status.contains(AppConstants.violation) || status.contains(AppConstants.warning)
         }.sorted { $0.startTime < $1.startTime }
     }
     
