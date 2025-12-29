@@ -96,14 +96,14 @@ struct DeviceSelectionPopup: View {
             }
             
             // Device 2 Checkmark
-            HStack {
-                Text("NT - 11")
-                Spacer()
-                Image(systemName: self.isChecked2 ? "checkmark.circle.fill" : "circle")
-                    .onTapGesture {
-                        self.isChecked2.toggle()
-                    }
-            }
+//            HStack {
+//                Text("NT - 11")
+//                Spacer()
+//                Image(systemName: self.isChecked2 ? "checkmark.circle.fill" : "circle")
+//                    .onTapGesture {
+//                        self.isChecked2.toggle()
+//                    }
+//            }
             
             // Connect Button
             Button(action: {

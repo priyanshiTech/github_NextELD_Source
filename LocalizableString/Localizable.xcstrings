@@ -1497,6 +1497,7 @@
       }
     },
     "NT - 11" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -2144,7 +2145,11 @@
         }
       }
     },
+    "The Current driver will be signed out and you will become Driver. Notice as per requirements from FMCSA" : {
+
+    },
     "The Current driver will be signed out and you will become Driver. Notice as per requirements from FMCSA and CCMTA" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {

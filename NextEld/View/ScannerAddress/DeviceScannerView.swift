@@ -81,16 +81,16 @@ struct DeviceScannerView: View {
                         
                     }
                     .padding()
-                    HStack {
-                        CheckboxButton()
-                        Text("NT - 11")
-                        Spacer()
-                        
-                        Button(action: {showScanner = true}, label: {
-                            Image("qr-scan")
-                                .padding()
-                        })
-                    }
+//                    HStack {
+//                        CheckboxButton()
+//                        Text("NT - 11")
+//                        Spacer()
+//                        
+//                        Button(action: {showScanner = true}, label: {
+//                            Image("qr-scan")
+//                                .padding()
+//                        })
+//                    }
                     .padding()
                     HStack{
                         Image("")

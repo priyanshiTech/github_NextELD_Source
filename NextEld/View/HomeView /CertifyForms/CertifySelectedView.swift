@@ -133,7 +133,7 @@ struct CertifySelectedView: View {
                 // MARK: - Form Tab Content"
                 if selectedTab == "Form" {
                     VStack(spacing: 10) {
-                        FormField(label: "Driver", value: .constant("\(AppStorageHandler.shared.driverName ?? "not found" )- \(AppStorageHandler.shared.driverId ?? 0)"), editable: false)
+                        FormField(label: "Driver", value: .constant("\(AppStorageHandler.shared.driverName ?? "not found" ) - \(AppStorageHandler.shared.driverId ?? 0)"), editable: false)
                         FormField(
                             label: "Vehicle",
                             value: $vehiclesc , // Direct binding
@@ -236,29 +236,27 @@ struct CertifySelectedView: View {
                 
                             let record = CertifyRecord(
                                 userID: "\(AppStorageHandler.shared.driverId ?? 0)",
-                              //  userName: AppStorageHandler.shared.UserName,
+                              //userName: AppStorageHandler.shared.UserName,
                                 userName: AppStorageHandler.shared.driverName ?? "not found",
                                 date: certifiedDate,
                                 shift: AppStorageHandler.shared.shift,
                                 selectedVehicle: vehiclesc,
                                 selectedTrailer: trailerValue,
                                 selectedShippingDoc: shippingValue,
-                             
-                                
-                               // selectedTrailer: SelectedTraller,
+                               //selectedTrailer: SelectedTraller,
                                 selectedCoDriver: selectedCoDriverName ?? "None",
                                 vehicleID: VechicleID,
                                 coDriverID: selectedCoID,
                                 syncStatus: syncstatus ?? 0,
-                                isCertify: "No"
+                                isCertify:   "No"
                             )
+                            
                             CertifyDatabaseManager.shared.saveRecord(record)
                             // Persist latest selections
                             AppStorageHandler.shared.vehicleNo = vehiclesc.isEmpty ? nil : vehiclesc
                             AppStorageHandler.shared.vehicleId = VechicleID ?? AppStorageHandler.shared.vehicleId
                             hasLoadedInitialData = false
                             loadInitialDataIfNeeded(force: true)
-                            
                             // Show success toast
                             showToast(message: "Data Saved", color: .green)
                             withAnimation(.easeInOut) {
@@ -278,7 +276,6 @@ struct CertifySelectedView: View {
                         .padding(.horizontal)
                         Spacer()
                     }
-     
                     .onAppear {
                         loadInitialDataIfNeeded()
                     }
