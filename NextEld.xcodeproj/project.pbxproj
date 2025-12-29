@@ -228,8 +228,6 @@
 		AFE5DFFD2E5345AB0069BE27 /* LogOutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE5DFFC2E5345AB0069BE27 /* LogOutModel.swift */; };
 		AFE5DFFF2E5349B20069BE27 /* LogOutAPiViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE5DFFE2E5349B20069BE27 /* LogOutAPiViewModel.swift */; };
 		AFEEDF822DE6DD06005675C2 /* HOSEventChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */; };
-		AFF3666A2E587A8F0068AC2D /* excel_eld_instruction.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */; };
-		AFF3666C2E587AA20068AC2D /* excel_Manual_ppt.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */; };
 		AFFC64A22DCE1EE2008D1CC0 /* AlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */; };
 		AFFCF1E52EDCCBEC00D548DF /* BlockAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFCF1E42EDCCBEC00D548DF /* BlockAppView.swift */; };
 		CB283E722E9D5C5100B431DD /* HomeViewModel+Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB283E712E9D5C4400B431DD /* HomeViewModel+Database.swift */; };
@@ -505,8 +503,6 @@
 		AFE5DFFC2E5345AB0069BE27 /* LogOutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutModel.swift; sourceTree = "<group>"; };
 		AFE5DFFE2E5349B20069BE27 /* LogOutAPiViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutAPiViewModel.swift; sourceTree = "<group>"; };
 		AFEEDF812DE6DD06005675C2 /* HOSEventChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HOSEventChartView.swift; sourceTree = "<group>"; };
-		AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = excel_eld_instruction.pdf; sourceTree = "<group>"; };
-		AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = excel_Manual_ppt.pdf; sourceTree = "<group>"; };
 		AFFC64A12DCE1EE2008D1CC0 /* AlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModifier.swift; sourceTree = "<group>"; };
 		AFFCF1E42EDCCBEC00D548DF /* BlockAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockAppView.swift; sourceTree = "<group>"; };
 		CB283E712E9D5C4400B431DD /* HomeViewModel+Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+Database.swift"; sourceTree = "<group>"; };
@@ -1554,10 +1550,8 @@
 		AFF366682E587A160068AC2D /* ProductGuide */ = {
 			isa = PBXGroup;
 			children = (
-				AFF366692E587A8F0068AC2D /* excel_eld_instruction.pdf */,
 				AF82B04E2ED4417200081803 /* all_star_instruction.pdf */,
 				AF82B04C2ED4415900081803 /* all_star_manual.pdf */,
-				AFF3666B2E587AA20068AC2D /* excel_Manual_ppt.pdf */,
 			);
 			path = ProductGuide;
 			sourceTree = "<group>";
@@ -1735,9 +1729,7 @@
 				AFB943112E029C5B00AD19D7 /* LaunchScreen.storyboard in Resources */,
 				AF04B1B12DE9839000A5F3D1 /* LocalizableEng.strings in Resources */,
 				AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */,
-				AFF3666C2E587AA20068AC2D /* excel_Manual_ppt.pdf in Resources */,
 				AF82B04D2ED4415900081803 /* all_star_manual.pdf in Resources */,
-				AFF3666A2E587A8F0068AC2D /* excel_eld_instruction.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

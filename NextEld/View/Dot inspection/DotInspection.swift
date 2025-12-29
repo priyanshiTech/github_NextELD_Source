@@ -18,12 +18,11 @@ struct DotInspection: View {
     var body: some View {
         
         VStack (spacing:0){
-            ZStack(alignment: .topLeading){
+            
                 Color(uiColor: .wine)
                     .edgesIgnoringSafeArea(.top)
-                    .frame(height:0)
+                    .frame(height:0.1)
                 
-            }
             HStack {
                 Button(action: {
                     navManager.goBack()
@@ -44,65 +43,15 @@ struct DotInspection: View {
             .frame(height: 40, alignment: .topLeading)
             Spacer(minLength: 20)
             VStack(alignment: .center, spacing: 20) {
-                
-                VStack{
-                    Text("Email logs for the 24-hour period and the previous day for one HOS cycle")
-                        .font(.body)
-                        .padding(.bottom)
-                    Text ("Email your logs in the pdf format")
-                        .foregroundColor(.gray)
-                        .font(.callout)
-                    
-                    
-                    Button(action: {
-                        navManager.navigate(to: AppRoute.HomeFlow.EmailLogs(title: "Road Side Inspection"))
-                    }) {
-                        Text("Email Logs")
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color(uiColor: .wine))
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                    }
-                    
-                    
-                }
-                
-                VStack(spacing: 10){
-                    Text("Send logs for the 24-hour period and the previous days for one HOS cycle")
-                        .font(.body)
-                    
-                    
-                    Text ("Send  your logs to the officer if they request")
-                        .foregroundColor(.gray)
-                        .font(.callout)
-                    
-                    
-                    Button(action: {
-                        // Data Transfer action
-                        navManager.navigate(to: AppRoute.HomeFlow.DataTransferView)
-                    }) {
-                        Text("Data Transfer")
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color(uiColor: .wine))
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                    }
-                }
-                
-                VStack (spacing:10){
+               
+                VStack {
                     
                     Text("Inspect logs for the 24-hour period and the previous days for men HOS cycle")
                         .font(.body)
                     
-                    
                     Text ("Select 'review ON Device'and give your Device to the Officer ")
                         .foregroundColor(.gray)
                         .font(.callout)
-                    
                         Button(action: {
 //                            navManager.navigate(
 //                                to: AppRoute.HomeFlow.LogsDetails(
@@ -125,34 +74,79 @@ struct DotInspection: View {
                                 .cornerRadius(8)
                         }
                     }
-                    VStack (spacing: 10){
-                        Text("Email DVIR for the 24-hour period and the previous day for one HOS cycle")
-                            .font(.body)
-                        
-                        
-                        Text ("Email  your logs to the officer if they request")
-                            .foregroundColor(.gray)
-                            .font(.callout)
-                        
-                        Button(action: {
-                            navManager.navigate(to: AppRoute.HomeFlow.DvirHostory(tittle: "Road Side Inspection"))
-                        }) {
-                            Text("Email Dvir")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color(uiColor: .wine))
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
-                        }
-                        Spacer()
+                
+                VStack(spacing: 10) {
+                    Text("Send logs for the 24-hour period and the previous days for one HOS cycle")
+                        .font(.body)
+                    
+                    Text ("Send  your logs to the officer if they request")
+                        .foregroundColor(.gray)
+                        .font(.callout)
+
+                    Button(action: {
+                        // Data Transfer action
+                        navManager.navigate(to: AppRoute.HomeFlow.DataTransferView)
+                    }) {
+                        Text("Data Transfer")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(uiColor: .wine))
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
                     }
                 }
-                .padding(.horizontal) // Equal leading/trailing padding
-                .padding(.bottom)
+               
+                           VStack (spacing: 10){
+                               Text("Email DVIR for the 24-hour period and the previous day for one HOS cycle")
+                                   .font(.body)
+                               
+                               
+                               Text ("Email  your logs to the officer if they request")
+                                   .foregroundColor(.gray)
+                                   .font(.callout)
+                               
+                               Button(action: {
+                                   navManager.navigate(to: AppRoute.HomeFlow.DvirHostory(tittle: "Road Side Inspection"))
+                               }) {
+                                   Text("Email Dvir")
+                                       .fontWeight(.bold)
+                                       .frame(maxWidth: .infinity)
+                                       .padding()
+                                       .background(Color(uiColor: .wine))
+                                       .foregroundColor(.white)
+                                       .cornerRadius(8)
+                               }
+                             
+                           }
                 
+                VStack{
+                    Text("Email logs for the 24-hour period and the previous day for one HOS cycle")
+                        .font(.body)
+                        .padding(.bottom)
+                    Text ("Email your logs in the pdf format")
+                        .foregroundColor(.gray)
+                        .font(.callout)
+                    
+                    Button(action: {
+                        navManager.navigate(to: AppRoute.HomeFlow.EmailLogs(title: "Road Side Inspection"))
+                    }) {
+                        Text("Email Logs")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(uiColor: .wine))
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                }
+                Spacer()
+                }
+                 .padding(.horizontal) // Equal leading/trailing padding
+                .padding(.bottom)
                 .padding()
-        }.navigationBarBackButtonHidden()
+        }
+        .navigationBarBackButtonHidden()
         
         
         }

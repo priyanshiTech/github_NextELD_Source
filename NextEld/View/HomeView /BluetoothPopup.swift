@@ -17,7 +17,7 @@ struct DeviceSelectorPopup: View {
     @Binding var isPresented: Bool
     var onConnect: () -> Void
 
-    let devices = ["PT30", "NT-11"]
+    let devices = ["PT30" /*"NT-11"*/]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {

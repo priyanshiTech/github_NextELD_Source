@@ -46,7 +46,7 @@ struct NewDriverLogin: View {
             .padding()
             .background(Color(uiColor: .wine).shadow(radius: 1))
             
-            Text("Next ELD")
+            Text("All Star Elogs")
             //Text("app_name")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -100,7 +100,7 @@ struct NewDriverLogin: View {
             }
             // Info
             HStack {
-                Text("The Current driver will be signed out and you will become Driver. Notice as per requirements from FMCSA and CCMTA")
+                Text("The Current driver will be signed out and you will become Driver. Notice as per requirements from FMCSA")
                     .font(.callout)
                     .bold()
                     .foregroundColor(.white)

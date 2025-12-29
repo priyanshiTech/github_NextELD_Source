@@ -179,30 +179,37 @@ struct SignatureCertifyView: View {
                     let isAlreadyCertified = existingRecord != nil
                     
                     var certifyTimeStamp  = currentTimestampMillis()
+
                     if !DateTimeHelper.calendar.isDateInToday(certifiedDate) {
-                        
-                        // time required always in format certifyDate+" 23:59:59"
-//                        let requiredDateInString = certifiedDate.toLocalString(format: .dateOnlyFormat) + " 23:59:59"
-//                        let requiredDate = requiredDateInString.asDate()
-                        
-                        let certifiedDateTime = DateTimeHelper.endOfDay(for: certifiedDate)?.addingTimeInterval(-1)
-                        certifyTimeStamp = String(Int(certifiedDateTime?.timeIntervalSince1970 ?? 0) * 1000)
+
+                        // time required always in format certifyDate + "23:59:59"
+
+                        let certifiedDateTime = DateTimeHelper
+                            .endOfDay(for: certifiedDate)?
+                            .addingTimeInterval(-1)
+
+                        certifyTimeStamp = String(
+                            Int(certifiedDateTime?.timeIntervalSince1970 ?? 0) * 1000
+                        )
                     }
-                    
-                    
+
+                    let finalCoDriverId = selectedCoDriverID ?? 0
+
                     if isAlreadyCertified {
                         // UPDATE API - Agar pehle se green/certified hai
                         print("UPDATE API called - Already certified (Green)")
+                        print("API certifiedDateTime:", certifyTimeStamp)
                         certifyVM.updateCertifiedLog(
                             driverId: "\(driverId)",
                             certifiedDate: certifiedDate.toLocalString(format: .dateOnlyFormat),
                             vehicleId: "\(AppStorageHandler.shared.vehicleId ?? 0)",
-                            coDriverId: "\(AppStorageHandler.shared.coDriverId ?? 0)",
+                            coDriverId: AppStorageHandler.shared.coDriverId.map { String($0) } ?? "",
                             trailers: trailerVM.trailers,
                             shippingDocs: shippingVM.ShippingDoc,
                             fileURL: fileURL,
                             tokenNo: tokenNo ?? "not Found",
-                            certifiedDateTime: "\(certifyTimeStamp)"
+                            certifiedDateTime: certifyTimeStamp,
+                           
                         ) { result in
                             DispatchQueue.main.async {
                                 isLoading = false
@@ -231,18 +238,18 @@ struct SignatureCertifyView: View {
                                 showAlert = true
                             }
                         }
+                        
                     } else {
                         // ADD API - Agar red/uncertified hai
                         print("ADD API called - Not certified yet (Red)")
                         // Convert arrays to comma-separated strings for addCertifiedLog
                         let trailersString = trailerVM.trailers.isEmpty ? "None" : trailerVM.trailers.joined(separator: ", ")
                         let shippingDocsString = shippingVM.ShippingDoc.isEmpty ? "None" : shippingVM.ShippingDoc.joined(separator: ", ")
-                        let coDriverID = existingRecord?.coDriverID
                         
                         certifyVM.addCertifiedLog(
                             driverId: driverId,
                             vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
-                            coDriverId: AppStorageHandler.shared.coDriverId ?? 0,
+                            coDriverId: finalCoDriverId,
                             trailers: trailersString,
                             shippingDocs: shippingDocsString,
                             certifiedDate: certifiedDate.toLocalString(format: .dateOnlyFormat),
