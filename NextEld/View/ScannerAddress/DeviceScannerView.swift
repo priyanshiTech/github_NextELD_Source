@@ -24,6 +24,7 @@ struct DeviceScannerView: View {
     @StateObject private var deviceStatusVM = DeviceStatusViewModel(
          networkManager: NetworkManager()
      )
+    
     @State private var selectedVehicleNumber: String = AppStorageHandler.shared.vehicleNo ?? ""
     @State private var selectedVehicleId: Int? = AppStorageHandler.shared.vehicleId
     @State private var isNewDriverLoggedIn: Bool = false
@@ -36,6 +37,7 @@ struct DeviceScannerView: View {
                         .frame(height:20)
                 }
                 HStack {
+                    
                     Button(action: {
                         
                         // navManager.navigate(to: AppRoute.vehicleFlow(.ADDVehicle))
@@ -64,7 +66,10 @@ struct DeviceScannerView: View {
                 Spacer()
                 VStack(alignment:.leading){
                     
-                    Text("Select your Device Type and Enter The ELD Mac address Listed On The Device")
+                    
+                  //  Text("Select your Device Type and Enter The ELD Mac address Listed On The Device")
+                    Text("Enter The ELD Mac address Listed On The Device")
+
                         .font(.system(size: 17))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.leading)

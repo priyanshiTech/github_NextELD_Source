@@ -1,0 +1,286 @@
+2025-12-29 14:03:08 +0000  Initial pipeline context: <IDEDistributionProcessingPipelineContext: 0x35cb936f0; archive(resolved)="<IDEArchive: 0x60002dfe7800>", distributionTask(resolved)="2", distributionDestination(resolved)="1", distributionMethod(resolved)="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team(resolved)="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	Chain (16, self inclusive):
+	<IDEDistributionProcessingPipelineContext: 0x35cb936f0; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionProcessingPipelineContext: 0x35cbec560; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0x360069140; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0x351464dc0; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0x358931050; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0x3587047d0; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0x35a3e46a0; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0x35abbf360; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0x351318730; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="<IDEProvisioningDisambiguatableBasicTeam: 0x600006d33b80; teamID='73277279HM', teamName='TRUCKER TRACE ELD LLC', teamType='Company', username='truckertraceeld@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0x3514740f0; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="(null)">
+	<IDEDistributionContext: 0x35a372300; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="(null)">
+	<IDEDistributionContext: 0x3513165a0; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="(null)">
+	<IDEDistributionContext: 0x35a1d0df0; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="<IDEDistributionMethodiOSAdHoc: 0x6000075191c0>", team="(null)">
+	<IDEDistributionContext: 0x1264ffdc0; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="(null)", team="(null)">
+	<IDEDistributionContext: 0x35a1c3350; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="(null)", team="(null)">
+	<IDEDistributionContext: 0x35a1c6c50; archive = "<IDEArchive: 0x60002dfe7800>", distributionMethod="(null)", team="(null)">
+</IDEDistributionProcessingPipelineContext: 0x35cb936f0>
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionCreateDestRootStep
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionCopyItemStep
+2025-12-29 14:03:08 +0000  Running /usr/bin/ditto '-V' '/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app' '/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app'
+2025-12-29 14:03:08 +0000  >>> Copying /Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app 
+2025-12-29 14:03:08 +0000  copying file ./_CodeSignature/CodeResources ... 
+2025-12-29 14:03:08 +0000  10531 bytes for ./_CodeSignature/CodeResources
+2025-12-29 14:03:08 +0000  copying file ./en.lproj/LocalizablePunjabi.strings ... 
+2025-12-29 14:03:08 +0000  25677 bytes for ./en.lproj/LocalizablePunjabi.strings
+2025-12-29 14:03:08 +0000  copying file ./pa.lproj/Localizable.strings ... 
+2025-12-29 14:03:08 +0000  17689 bytes for ./pa.lproj/Localizable.strings
+2025-12-29 14:03:08 +0000  copying file ./AppIcon60x60@2x.png ... 
+2025-12-29 14:03:08 +0000  28165 bytes for ./AppIcon60x60@2x.png
+2025-12-29 14:03:08 +0000  copying file ./all_star_instruction.pdf ... 
+2025-12-29 14:03:08 +0000  515029 bytes for ./all_star_instruction.pdf
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/UIViewController-oDw-wB-bEF.nib ... 
+2025-12-29 14:03:08 +0000  1761 bytes for ./Base.lproj/Main.storyboardc/UIViewController-oDw-wB-bEF.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/UIViewController-2B9-gU-diq.nib ... 
+2025-12-29 14:03:08 +0000  1086 bytes for ./Base.lproj/Main.storyboardc/UIViewController-2B9-gU-diq.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/oDw-wB-bEF-view-iX8-wG-EF1.nib ... 
+2025-12-29 14:03:08 +0000  18792 bytes for ./Base.lproj/Main.storyboardc/oDw-wB-bEF-view-iX8-wG-EF1.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/UIViewController-X43-HF-Dql.nib ... 
+2025-12-29 14:03:08 +0000  1084 bytes for ./Base.lproj/Main.storyboardc/UIViewController-X43-HF-Dql.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/2B9-gU-diq-view-RBB-6N-CMv.nib ... 
+2025-12-29 14:03:08 +0000  6509 bytes for ./Base.lproj/Main.storyboardc/2B9-gU-diq-view-RBB-6N-CMv.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/X43-HF-Dql-view-l2d-d8-pdt.nib ... 
+2025-12-29 14:03:08 +0000  10241 bytes for ./Base.lproj/Main.storyboardc/X43-HF-Dql-view-l2d-d8-pdt.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib ... 
+2025-12-29 14:03:08 +0000  11990 bytes for ./Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/UIViewController-ew1-J8-Zqk.nib ... 
+2025-12-29 14:03:08 +0000  1081 bytes for ./Base.lproj/Main.storyboardc/UIViewController-ew1-J8-Zqk.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/nwh-9c-kIe-view-4eq-Yx-mVc.nib ... 
+2025-12-29 14:03:08 +0000  3347 bytes for ./Base.lproj/Main.storyboardc/nwh-9c-kIe-view-4eq-Yx-mVc.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/ew1-J8-Zqk-view-MIu-Ld-7N0.nib ... 
+2025-12-29 14:03:08 +0000  5695 bytes for ./Base.lproj/Main.storyboardc/ew1-J8-Zqk-view-MIu-Ld-7N0.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/UIViewController-nwh-9c-kIe.nib ... 
+2025-12-29 14:03:08 +0000  1087 bytes for ./Base.lproj/Main.storyboardc/UIViewController-nwh-9c-kIe.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/Info.plist ... 
+2025-12-29 14:03:08 +0000  559 bytes for ./Base.lproj/Main.storyboardc/Info.plist
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/Main.storyboardc/DeviceListViewController.nib ... 
+2025-12-29 14:03:08 +0000  1536 bytes for ./Base.lproj/Main.storyboardc/DeviceListViewController.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib ... 
+2025-12-29 14:03:08 +0000  4978 bytes for ./Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib ... 
+2025-12-29 14:03:08 +0000  924 bytes for ./Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib
+2025-12-29 14:03:08 +0000  copying file ./Base.lproj/LaunchScreen.storyboardc/Info.plist ... 
+2025-12-29 14:03:08 +0000  258 bytes for ./Base.lproj/LaunchScreen.storyboardc/Info.plist
+2025-12-29 14:03:08 +0000  copying file ./eld_disclaimer 1.html ... 
+2025-12-29 14:03:08 +0000  4073 bytes for ./eld_disclaimer 1.html
+2025-12-29 14:03:08 +0000  copying file ./Assets.car ... 
+2025-12-29 14:03:08 +0000  19157696 bytes for ./Assets.car
+2025-12-29 14:03:08 +0000  copying file ./AppIcon76x76@2x~ipad.png ... 
+2025-12-29 14:03:08 +0000  42547 bytes for ./AppIcon76x76@2x~ipad.png
+2025-12-29 14:03:08 +0000  copying file ./DeviceInfoView.nib ... 
+2025-12-29 14:03:08 +0000  7215 bytes for ./DeviceInfoView.nib
+2025-12-29 14:03:08 +0000  copying file ./all_star_manual.pdf ... 
+2025-12-29 14:03:08 +0000  4235031 bytes for ./all_star_manual.pdf
+2025-12-29 14:03:08 +0000  copying file ./Frameworks/PacificTrack.framework/_CodeSignature/CodeResources ... 
+2025-12-29 14:03:08 +0000  1798 bytes for ./Frameworks/PacificTrack.framework/_CodeSignature/CodeResources
+2025-12-29 14:03:08 +0000  copying file ./Frameworks/PacificTrack.framework/PacificTrack ... 
+2025-12-29 14:03:08 +0000  1729072 bytes for ./Frameworks/PacificTrack.framework/PacificTrack
+2025-12-29 14:03:08 +0000  copying file ./Frameworks/PacificTrack.framework/Info.plist ... 
+2025-12-29 14:03:08 +0000  774 bytes for ./Frameworks/PacificTrack.framework/Info.plist
+2025-12-29 14:03:08 +0000  copying file ./embedded.mobileprovision ... 
+2025-12-29 14:03:08 +0000  12183 bytes for ./embedded.mobileprovision
+2025-12-29 14:03:08 +0000  copying file ./LocalizableEng.strings ... 
+2025-12-29 14:03:08 +0000  17869 bytes for ./LocalizableEng.strings
+2025-12-29 14:03:08 +0000  copying file ./Info.plist ... 
+2025-12-29 14:03:08 +0000  2570 bytes for ./Info.plist
+2025-12-29 14:03:08 +0000  copying file ./PkgInfo ... 
+2025-12-29 14:03:08 +0000  8 bytes for ./PkgInfo
+2025-12-29 14:03:08 +0000  copying file ./DashboardReportView.nib ... 
+2025-12-29 14:03:08 +0000  24568 bytes for ./DashboardReportView.nib
+2025-12-29 14:03:08 +0000  copying file ./NextEld ... 
+2025-12-29 14:03:08 +0000  4390560 bytes for ./NextEld
+2025-12-29 14:03:08 +0000  /usr/bin/ditto exited with 0
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionEmbedProfileStep
+2025-12-29 14:03:08 +0000  Skipping profile for item: <IDEDistributionItem: 0x6000253b9f20; bundleID='com.cdiazmo.pacifictrack.PacificTrack', path='<DVTFilePath:0x60002dfdca80:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x6000253ba7c0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x600024ce9380; name='Apple Distribution: TRUCKER TRACE ELD LLC (73277279HM)', hash='3BDDEB22F2279E73060C41B9D57BA8E23E779885', serialNumber='6C07B08AAE48957FC59D6D3024773D40', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2025-11-24 18:30:49 +0000''>', entitlements='(null)', teamID='73277279HM', identifier='com.cdiazmo.pacifictrack.PacificTrack', executablePath='<DVTFilePath:0x6000253e0180:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework/PacificTrack'>', hardenedRuntime='0'>'>
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionInfoPlistStep
+2025-12-29 14:03:08 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2025-12-29 14:03:08 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionAppThinningPlistStep
+2025-12-29 14:03:08 +0000  Skipping step: IDEDistributionAppThinningPlistStep because it said so
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionSymbolsStep
+2025-12-29 14:03:08 +0000  Skipping step: IDEDistributionSymbolsStep because it said so
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionAppThinningStep
+2025-12-29 14:03:08 +0000  Skipping step: IDEDistributionAppThinningStep because it said so
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionArchThinningStep
+2025-12-29 14:03:08 +0000  Item /Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework doesn't have the entitlement com.apple.developer.web-browser-engine.host enabled, returning ["arm64e"]
+2025-12-29 14:03:08 +0000  Archs to thin for item /Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework are ["arm64e"]
+2025-12-29 14:03:08 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app/Frameworks/PacificTrack.framework/PacificTrack' '-verify_arch' 'arm64e'
+2025-12-29 14:03:08 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 1
+2025-12-29 14:03:08 +0000  Skipping architecture thinning for item "PacificTrack" because arch "arm64e" wasn't found
+2025-12-29 14:03:08 +0000  Item /Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app doesn't have the entitlement com.apple.developer.web-browser-engine.host enabled, returning ["arm64e"]
+2025-12-29 14:03:08 +0000  Archs to thin for item /Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app are ["arm64e"]
+2025-12-29 14:03:08 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app/NextEld' '-verify_arch' 'arm64e'
+2025-12-29 14:03:08 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 1
+2025-12-29 14:03:08 +0000  Skipping architecture thinning for item "NextEld" because arch "arm64e" wasn't found
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionODRStep
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionStripXattrsStep
+2025-12-29 14:03:08 +0000  Skipping stripping extended attributes because the codesign step will strip them.
+2025-12-29 14:03:08 +0000  Skipping stripping extended attributes because the codesign step will strip them.
+2025-12-29 14:03:08 +0000  Processing step: IDEDistributionCodesignStep
+2025-12-29 14:03:08 +0000  Entitlements for <IDEDistributionItem: 0x6000253b9f20; bundleID='com.cdiazmo.pacifictrack.PacificTrack', path='<DVTFilePath:0x60002dfdca80:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x6000253ba7c0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x600024cd8a80; name='Apple Distribution: TRUCKER TRACE ELD LLC (73277279HM)', hash='3BDDEB22F2279E73060C41B9D57BA8E23E779885', serialNumber='6C07B08AAE48957FC59D6D3024773D40', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2025-11-24 18:30:49 +0000''>', entitlements='(null)', teamID='73277279HM', identifier='com.cdiazmo.pacifictrack.PacificTrack', executablePath='<DVTFilePath:0x6000253e0180:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework/PacificTrack'>', hardenedRuntime='0'>'>: {
+}
+2025-12-29 14:03:08 +0000  Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2025-12-29 14:03:08 +0000  Entitlements for <IDEDistributionItem: 0x6000253b9f20; bundleID='com.cdiazmo.pacifictrack.PacificTrack', path='<DVTFilePath:0x60002dfdca80:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x6000253ba7c0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x600024cd8a80; name='Apple Distribution: TRUCKER TRACE ELD LLC (73277279HM)', hash='3BDDEB22F2279E73060C41B9D57BA8E23E779885', serialNumber='6C07B08AAE48957FC59D6D3024773D40', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2025-11-24 18:30:49 +0000''>', entitlements='(null)', teamID='73277279HM', identifier='com.cdiazmo.pacifictrack.PacificTrack', executablePath='<DVTFilePath:0x6000253e0180:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework/PacificTrack'>', hardenedRuntime='0'>'> are: {
+}
+2025-12-29 14:03:08 +0000  Writing entitlements for <IDEDistributionItem: 0x6000253b9f20; bundleID='com.cdiazmo.pacifictrack.PacificTrack', path='<DVTFilePath:0x60002dfdca80:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x6000253ba7c0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x600024cd8a80; name='Apple Distribution: TRUCKER TRACE ELD LLC (73277279HM)', hash='3BDDEB22F2279E73060C41B9D57BA8E23E779885', serialNumber='6C07B08AAE48957FC59D6D3024773D40', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2025-11-24 18:30:49 +0000''>', entitlements='(null)', teamID='73277279HM', identifier='com.cdiazmo.pacifictrack.PacificTrack', executablePath='<DVTFilePath:0x6000253e0180:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/Frameworks/PacificTrack.framework/PacificTrack'>', hardenedRuntime='0'>'> to: /var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/entitlements~~~4wqB5F
+2025-12-29 14:03:08 +0000  invoking codesign: <NSConcreteTask: 0x60002d00f750; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    3BDDEB22F2279E73060C41B9D57BA8E23E779885,
+    "--entitlements",
+    "/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/entitlements~~~4wqB5F",
+    "--preserve-metadata=identifier,flags,runtime",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app/Frameworks/PacificTrack.framework"
+)'>
+2025-12-29 14:03:09 +0000  codesign output: /var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app/Frameworks/PacificTrack.framework: replacing existing signature
+/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app/Frameworks/PacificTrack.framework: signed bundle with Mach-O thin (arm64) [com.cdiazmo.pacifictrack.PacificTrack]
+2025-12-29 14:03:09 +0000  Entitlements for <IDEDistributionItem: 0x6000253ba400; bundleID='Inurum.Technology.EldTruckTrace', path='<DVTFilePath:0x6000253ec240:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x60001520a340; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x600024ceff00; name='Apple Distribution: TRUCKER TRACE ELD LLC (73277279HM)', hash='3BDDEB22F2279E73060C41B9D57BA8E23E779885', serialNumber='6C07B08AAE48957FC59D6D3024773D40', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2025-11-24 18:30:49 +0000''>', entitlements='{
+    "application-identifier" = "73277279HM.Inurum.Technology.EldTruckTrace";
+    "beta-reports-active" = 1;
+    "com.apple.developer.team-identifier" = 73277279HM;
+    "get-task-allow" = 0;
+}', teamID='73277279HM', identifier='Inurum.Technology.EldTruckTrace', executablePath='<DVTFilePath:0x6000253e0e40:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/NextEld'>', hardenedRuntime='0'>'>: {
+    "application-identifier" = "73277279HM.Inurum.Technology.EldTruckTrace";
+    "com.apple.developer.team-identifier" = 73277279HM;
+    "get-task-allow" = 0;
+}
+2025-12-29 14:03:09 +0000  Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2025-12-29 14:03:09 +0000  Entitlements for <IDEDistributionItem: 0x6000253ba400; bundleID='Inurum.Technology.EldTruckTrace', path='<DVTFilePath:0x6000253ec240:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x60001520a340; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x600024cd8a80; name='Apple Distribution: TRUCKER TRACE ELD LLC (73277279HM)', hash='3BDDEB22F2279E73060C41B9D57BA8E23E779885', serialNumber='6C07B08AAE48957FC59D6D3024773D40', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2025-11-24 18:30:49 +0000''>', entitlements='{
+    "application-identifier" = "73277279HM.Inurum.Technology.EldTruckTrace";
+    "beta-reports-active" = 1;
+    "com.apple.developer.team-identifier" = 73277279HM;
+    "get-task-allow" = 0;
+}', teamID='73277279HM', identifier='Inurum.Technology.EldTruckTrace', executablePath='<DVTFilePath:0x6000253e0e40:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/NextEld'>', hardenedRuntime='0'>'> are: {
+    "application-identifier" = "73277279HM.Inurum.Technology.EldTruckTrace";
+    "com.apple.developer.team-identifier" = 73277279HM;
+    "get-task-allow" = 0;
+}
+2025-12-29 14:03:09 +0000  Writing entitlements for <IDEDistributionItem: 0x6000253ba400; bundleID='Inurum.Technology.EldTruckTrace', path='<DVTFilePath:0x6000253ec240:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x60001520a340; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x600024cd8a80; name='Apple Distribution: TRUCKER TRACE ELD LLC (73277279HM)', hash='3BDDEB22F2279E73060C41B9D57BA8E23E779885', serialNumber='6C07B08AAE48957FC59D6D3024773D40', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2025-11-24 18:30:49 +0000''>', entitlements='{
+    "application-identifier" = "73277279HM.Inurum.Technology.EldTruckTrace";
+    "beta-reports-active" = 1;
+    "com.apple.developer.team-identifier" = 73277279HM;
+    "get-task-allow" = 0;
+}', teamID='73277279HM', identifier='Inurum.Technology.EldTruckTrace', executablePath='<DVTFilePath:0x6000253e0e40:'/Users/inurum9/Library/Developer/Xcode/Archives/2025-12-29/NextEld 29-12-25, 19.29.xcarchive/Products/Applications/NextEld.app/NextEld'>', hardenedRuntime='0'>'> to: /var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/entitlements~~~YGnC9N
+2025-12-29 14:03:09 +0000  invoking codesign: <NSConcreteTask: 0x6000156a2580; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    3BDDEB22F2279E73060C41B9D57BA8E23E779885,
+    "--entitlements",
+    "/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/entitlements~~~YGnC9N",
+    "--preserve-metadata=identifier,flags,runtime",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app"
+)'>
+2025-12-29 14:03:09 +0000  codesign output: /var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app: replacing existing signature
+/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app: signed app bundle with Mach-O thin (arm64) [Inurum.Technology.EldTruckTrace]
+2025-12-29 14:03:09 +0000  Processing step: IDEDistributionZipODRItemStep
+2025-12-29 14:03:09 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2025-12-29 14:03:09 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2025-12-29 14:03:09 +0000  Processing step: IDEDistributionCreateIPAStep
+2025-12-29 14:03:09 +0000  Running /usr/bin/ditto '-V' '-c' '-k' '--norsrc' '/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root' '/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Packages/NextEld.ipa'
+2025-12-29 14:03:09 +0000  >>> Copying /var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root 
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/_CodeSignature/CodeResources ... 
+2025-12-29 14:03:09 +0000  10531 bytes for ./Payload/NextEld.app/_CodeSignature/CodeResources
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/en.lproj/LocalizablePunjabi.strings ... 
+2025-12-29 14:03:09 +0000  25677 bytes for ./Payload/NextEld.app/en.lproj/LocalizablePunjabi.strings
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/pa.lproj/Localizable.strings ... 
+2025-12-29 14:03:09 +0000  17689 bytes for ./Payload/NextEld.app/pa.lproj/Localizable.strings
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/AppIcon60x60@2x.png ... 
+2025-12-29 14:03:09 +0000  28165 bytes for ./Payload/NextEld.app/AppIcon60x60@2x.png
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/all_star_instruction.pdf ... 
+2025-12-29 14:03:09 +0000  515029 bytes for ./Payload/NextEld.app/all_star_instruction.pdf
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-oDw-wB-bEF.nib ... 
+2025-12-29 14:03:09 +0000  1761 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-oDw-wB-bEF.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-2B9-gU-diq.nib ... 
+2025-12-29 14:03:09 +0000  1086 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-2B9-gU-diq.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/oDw-wB-bEF-view-iX8-wG-EF1.nib ... 
+2025-12-29 14:03:09 +0000  18792 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/oDw-wB-bEF-view-iX8-wG-EF1.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-X43-HF-Dql.nib ... 
+2025-12-29 14:03:09 +0000  1084 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-X43-HF-Dql.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/2B9-gU-diq-view-RBB-6N-CMv.nib ... 
+2025-12-29 14:03:09 +0000  6509 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/2B9-gU-diq-view-RBB-6N-CMv.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/X43-HF-Dql-view-l2d-d8-pdt.nib ... 
+2025-12-29 14:03:09 +0000  10241 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/X43-HF-Dql-view-l2d-d8-pdt.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib ... 
+2025-12-29 14:03:09 +0000  11990 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-ew1-J8-Zqk.nib ... 
+2025-12-29 14:03:09 +0000  1081 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-ew1-J8-Zqk.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/nwh-9c-kIe-view-4eq-Yx-mVc.nib ... 
+2025-12-29 14:03:09 +0000  3347 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/nwh-9c-kIe-view-4eq-Yx-mVc.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/ew1-J8-Zqk-view-MIu-Ld-7N0.nib ... 
+2025-12-29 14:03:09 +0000  5695 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/ew1-J8-Zqk-view-MIu-Ld-7N0.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-nwh-9c-kIe.nib ... 
+2025-12-29 14:03:09 +0000  1087 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/UIViewController-nwh-9c-kIe.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/Info.plist ... 
+2025-12-29 14:03:09 +0000  559 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/Info.plist
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/Main.storyboardc/DeviceListViewController.nib ... 
+2025-12-29 14:03:09 +0000  1536 bytes for ./Payload/NextEld.app/Base.lproj/Main.storyboardc/DeviceListViewController.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib ... 
+2025-12-29 14:03:09 +0000  4978 bytes for ./Payload/NextEld.app/Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib ... 
+2025-12-29 14:03:09 +0000  924 bytes for ./Payload/NextEld.app/Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Base.lproj/LaunchScreen.storyboardc/Info.plist ... 
+2025-12-29 14:03:09 +0000  258 bytes for ./Payload/NextEld.app/Base.lproj/LaunchScreen.storyboardc/Info.plist
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/eld_disclaimer 1.html ... 
+2025-12-29 14:03:09 +0000  4073 bytes for ./Payload/NextEld.app/eld_disclaimer 1.html
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Assets.car ... 
+2025-12-29 14:03:09 +0000  19157696 bytes for ./Payload/NextEld.app/Assets.car
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/AppIcon76x76@2x~ipad.png ... 
+2025-12-29 14:03:09 +0000  42547 bytes for ./Payload/NextEld.app/AppIcon76x76@2x~ipad.png
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/DeviceInfoView.nib ... 
+2025-12-29 14:03:09 +0000  7215 bytes for ./Payload/NextEld.app/DeviceInfoView.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/all_star_manual.pdf ... 
+2025-12-29 14:03:09 +0000  4235031 bytes for ./Payload/NextEld.app/all_star_manual.pdf
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Frameworks/PacificTrack.framework/_CodeSignature/CodeResources ... 
+2025-12-29 14:03:09 +0000  1798 bytes for ./Payload/NextEld.app/Frameworks/PacificTrack.framework/_CodeSignature/CodeResources
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Frameworks/PacificTrack.framework/PacificTrack ... 
+2025-12-29 14:03:09 +0000  1729072 bytes for ./Payload/NextEld.app/Frameworks/PacificTrack.framework/PacificTrack
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Frameworks/PacificTrack.framework/Info.plist ... 
+2025-12-29 14:03:09 +0000  774 bytes for ./Payload/NextEld.app/Frameworks/PacificTrack.framework/Info.plist
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/embedded.mobileprovision ... 
+2025-12-29 14:03:09 +0000  14640 bytes for ./Payload/NextEld.app/embedded.mobileprovision
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/LocalizableEng.strings ... 
+2025-12-29 14:03:09 +0000  17869 bytes for ./Payload/NextEld.app/LocalizableEng.strings
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/Info.plist ... 
+2025-12-29 14:03:09 +0000  2570 bytes for ./Payload/NextEld.app/Info.plist
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/PkgInfo ... 
+2025-12-29 14:03:09 +0000  8 bytes for ./Payload/NextEld.app/PkgInfo
+copying file ./Payload/NextEld.app/DashboardReportView.nib ... 
+2025-12-29 14:03:09 +0000  24568 bytes for ./Payload/NextEld.app/DashboardReportView.nib
+2025-12-29 14:03:09 +0000  copying file ./Payload/NextEld.app/NextEld ... 
+2025-12-29 14:03:09 +0000  4390480 bytes for ./Payload/NextEld.app/NextEld
+2025-12-29 14:03:09 +0000  /usr/bin/ditto exited with 0
+2025-12-29 14:03:09 +0000  Processing step: IDEDistributionAppStoreInformationStep
+2025-12-29 14:03:09 +0000  Skipping step: IDEDistributionAppStoreInformationStep because it said so
+2025-12-29 14:03:09 +0000  Processing step: IDEDistributionGenerateProcessedDistributionItems
+2025-12-29 14:03:09 +0000  IDEDistributionItem init <DVTFilePath:0x600031d8b330:'/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app/Frameworks/PacificTrack.framework'>
+2025-12-29 14:03:09 +0000  IDEDistributionItem init <DVTFilePath:0x600025c9c780:'/var/folders/5l/sktnkdw93j798bl866dpcbx40000gn/T/XcodeDistPipeline.~~~7HqWQJ/Root/Payload/NextEld.app'>
+2025-12-29 14:03:09 +0000  Processing step: IDEDistributionCreateManifestStep

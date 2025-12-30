@@ -937,6 +937,9 @@
         }
       }
     },
+    "Enter The ELD Mac address Listed On The Device" : {
+
+    },
     "error" : {
 
     },
@@ -1946,6 +1949,7 @@
       }
     },
     "Select your Device Type and Enter The ELD Mac address Listed On The Device" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {

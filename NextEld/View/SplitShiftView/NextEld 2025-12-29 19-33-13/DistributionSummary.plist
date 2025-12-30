@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NextEld.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>24</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>3BDDEB22F2279E73060C41B9D57BA8E23E779885</string>
+				<key>dateExpires</key>
+				<string>25/11/26</string>
+				<key>type</key>
+				<string>Apple Distribution</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>3BDDEB22F2279E73060C41B9D57BA8E23E779885</string>
+						<key>dateExpires</key>
+						<string>25/11/26</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>PacificTrack.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>73277279HM</string>
+						<key>name</key>
+						<string>TRUCKER TRACE ELD LLC</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>6.7.2</string>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>73277279HM.Inurum.Technology.EldTruckTrace</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>73277279HM</string>
+				<key>get-task-allow</key>
+				<false/>
+			</dict>
+			<key>name</key>
+			<string>NextEld.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>d80e6e2d-7056-46e3-8424-8c465ab93e47</string>
+				<key>dateExpires</key>
+				<string>25/11/26</string>
+				<key>name</key>
+				<string>iOS Team Ad Hoc Provisioning Profile: Inurum.Technology.EldTruckTrace</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>73277279HM</string>
+				<key>name</key>
+				<string>TRUCKER TRACE ELD LLC</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.5</string>
+		</dict>
+	</array>
+</dict>
+</plist>

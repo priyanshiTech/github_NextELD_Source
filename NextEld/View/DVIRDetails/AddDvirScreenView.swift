@@ -379,33 +379,34 @@ struct AddDvirScreenView: View  {
             case .validation(let message):
                 return Alert(
                     title: Text("Missing Information"),
-                    message: Text(viewModel.validationMessage),
+                    message: Text(message),
                     dismissButton: .default(Text("OK"))
                 )
+
             case .success(let message):
                 return Alert(
                     title: Text("Success"),
-                    message: Text(viewModel.successMessage),
+                    message: Text(message),
                     dismissButton: .default(Text("OK")) {
                         navmanager.goBack()
                     }
                 )
             }
         }
+
         
         .onAppear {
             Task { @MainActor in
                 self.address = await SyncViewModel().getLocation()
             }
             defectVM.appRootManager = appRootManager
+            
             Task {
                 let success = await defectVM.fetchDefects()
-                
                 if defectVM.isSessionExpired {
                     // print(" Session expired detected in AddDvirScreenView - staying on SessionExpireUIView")
                     return
                 }
-                
                 if !success, let error = defectVM.errorMessage {
                     // print(" Defect API error: \(error)")
                 }
@@ -437,6 +438,7 @@ struct AddDvirScreenView: View  {
         let previousVehicleID = vehicleVM.vehicleID
         
         if selectedRecord.id != nil {
+            
             viewModel.driverName = selectedRecord.UserName
             viewModel.odometer = selectedRecord.odometer ?? 000.0
             viewModel.Location = selectedRecord.location
@@ -490,18 +492,7 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Handle Add DVIR Button Tap
     private func handleAddDvirButtonTap() {
-        // print(" Add Dvir Button Clicked!")
-        // print(" Current form values:")
-        // print("   - Driver: \(viewModel.driverName)")
-        // print("   - Vehicle: \(vehicleVM.selectedVehicleNumber)")
-        // print("   - VehicleID: \(vehicleVM.vehicleID)")
-        // print("   - Truck Defect: \(trailerVM.truckDefectSelection ?? "nil")")
-        // print("   - Trailer Defect: \(trailerVM.trailerDefectSelection ?? "nil")")
-        // print("   - Notes: \(viewModel.notesText)")
-        // print("   - Condition: \(vehicleVM.selectedCondition ?? "nil")")
-        // print("   - Signature: \(viewModel.signatureImage != nil ? "Present" : "Missing")")
-        // print("   - Trailers: \(trailerVM.trailers)")
-        
+
         // Ensure login data is loaded
         if viewModel.driverName.isEmpty || viewModel.driverID.isEmpty {
             loadLoginData()
@@ -522,11 +513,10 @@ struct AddDvirScreenView: View  {
 
         // Validate form
         if let errorMessage = validateForm() {
-            // print(" Validation Failed: \(errorMessage)")
-            viewModel.validationMessage = errorMessage
-            viewModel.showValidationAlert = true
+            viewModel.alertType = .validation(errorMessage)
             return
         }
+
         // print(" Validation Passed - Proceeding to save")
         
         // Create working record with current form values
@@ -536,10 +526,12 @@ struct AddDvirScreenView: View  {
         var workingRecord: DvirRecord
         if let existingRecord = selectedRecord, let existingId = existingRecord.id {
             // Updating existing record
-            // print(" Updating existing record with ID: \(existingId)")
+ 
             workingRecord = existingRecord
             workingRecord.vehicleName = vehicleName.isEmpty ? existingRecord.vehicleName : vehicleName
             workingRecord.vechicleID = vehicleId
+            
+            
         } else {
             // Creating new record
             // print("➕Creating new record")
@@ -571,10 +563,7 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Save DVIR Record
     private func saveDvirRecord(workingRecord: DvirRecord) {
-        // print(" ========== SAVE DVIR RECORD ==========")
-        // print(" Validation Passed - Starting Database Save")
-        // print(" Working Record Vehicle: \(workingRecord.vehicleName)")
-        // print(" Working Record VehicleID: \(workingRecord.vechicleID)")
+
         
         let currentDay = viewModel.StartTime.isEmpty ? DateTimeHelper.currentDate() : viewModel.StartTime
         let currentTime = viewModel.Drivetime.isEmpty ? DateTimeHelper.currentTime() : viewModel.Drivetime
@@ -588,28 +577,19 @@ struct AddDvirScreenView: View  {
                 signatureData = jpegData
                 // print(" Signature converted to JPEG: \(jpegData.count) bytes")
             } else if let pngData = signatureImage.pngData() {
-                // Fallback to PNG if JPEG fails
+                //Fallback to PNG if JPEG fails
                 signatureData = pngData
-                // print(" Signature converted to PNG: \(pngData.count) bytes")
+                //print(" Signature converted to PNG: \(pngData.count) bytes")
             } else {
                 // print(" Failed to convert signature image to data")
             }
         } else {
             // print(" No signature image found")
         }
-        
-        // print(" Final Signature Data Size: \(signatureData?.count ?? 0) bytes")
-        // print(" Driver: \(viewModel.driverName)")
-        // print(" Vehicle: \(vehicleVM.selectedVehicleNumber.isEmpty ? (AppStorageHandler.shared.vehicleNo ?? "") : vehicleVM.selectedVehicleNumber)")
-        // print(" Truck Defect: \(trailerVM.truckDefectSelection ?? "No")")
-        // print(" Trailer Defect: \(trailerVM.trailerDefectSelection ?? "No")")
-        // print(" Trailers: \(trailerVM.trailers)")
-        // print(" Notes: \(viewModel.notesText)")
-        // print(" Condition: \(vehicleVM.selectedCondition ?? "None")")
+     
         
         let actualLocation = address.isEmpty ? viewModel.Location : address
-        // print(" Location from UserDefaults: \(viewModel.Location)")
-        // print(" Using Location: \(actualLocation)")
+    
         
         // Use workingRecord values if available, otherwise use form values
         let finalVehicleName = workingRecord.vehicleName.isEmpty 
@@ -622,7 +602,7 @@ struct AddDvirScreenView: View  {
         
         let isExistingRecord: Bool = workingRecord.id != nil
         
-        var record = DvirRecord(
+        let record = DvirRecord(
             id: workingRecord.id ?? existingRecord?.id,
             UserID: viewModel.driverID,
             UserName: viewModel.driverName,
@@ -665,71 +645,44 @@ struct AddDvirScreenView: View  {
         )
         
         if let existingId = workingRecord.id {
-            // Updating existing record
-            // print(" Updating existing record in database with ID: \(existingId)")
-            
-            
-//            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
-//            if allRecords.first(where: { $0.id == existingId }) != nil {
-//                // print(" Record updated successfully in database!")
-//                viewModel.successMessage = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
-//                viewModel.showSuccessAlert = true
-//            } else {
-//                // print(" Failed to verify record update in database")
-//            }
+        
             // print(" Calling update API...")
             DvirDatabaseManager.shared.updateRecord(record)
             updateDvirDataUsingCommonService(record: dvirRecord, dvirLogId: viewModel.driverID, appRootManager: appRootManager, completion: { success in
                 
                 if success {
-                    viewModel.successMessage = "DVIR Record Updated Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
-                    viewModel.showSuccessAlert = true
+                    DispatchQueue.main.async {
+                        self.viewModel.alertType = .success(
+                            "DVIR Record Updated Successfully!\n\nDriver: \(self.viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
+                        )
+                    }
                 }
-                
+  
             })
-         //   NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
-            // print(" Update notification posted")
+  
         } else {
-            // Inserting new record
-            // print("➕ Inserting new record to database...")            
-            
-//            let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
-//            if let savedRecord = allRecords.last {
-//          
-//                viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.DAY)"
-//                viewModel.showSuccessAlert = true
-//            } else {
-//                // print(" Failed to verify record insertion in database")
-//            }
-
             // print(" ========== CALLING dispatchadd_dvir_data API ==========")
             DvirDatabaseManager.shared.insertRecord(record)
             uploadDvirDataUsingCommonService(record: dvirRecord, appRootManager: appRootManager, completion: { success in
-                
+
                 if success {
-    
-                    viewModel.successMessage = "DVIR Record Saved Successfully!\n\nDriver: \(viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
-                    viewModel.showSuccessAlert = true
-                    
+                    DispatchQueue.main.async {
+                        self.viewModel.alertType = .success(
+                            "DVIR Record Saved Successfully!\n\nDriver: \(self.viewModel.driverName)\nVehicle: \(record.vehicleName)\nDate: \(record.startTime.toLocalString(format: .dateOnlyFormat))"
+                        )
+                    }
                 }
+
             })
-            // print(" API call initiated successfully!")
-       
-     //       NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
-            // print("Insert notification posted")
+             print("API call initiated successfully!")
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//            if isFromHome {
-//                navmanager.navigate(to: AppRoute.HomeFlow.Home)
-//            } else {
-//                navmanager.navigate(to: AppRoute.HomeFlow.AddDvirPriTrip)
-//            }
-        }
+ 
     }
     
         //MARK: - load login data into swiftui
     func loadLoginData() {
+        
         viewModel.driverName = AppStorageHandler.shared.driverName ?? "N/A"//UserDefaults.standard.string(forKey: "driverName") ?? "N/A"
         viewModel.Location = ""
         viewModel.companyName = AppStorageHandler.shared.company ?? ""
@@ -742,6 +695,7 @@ struct AddDvirScreenView: View  {
 
     // MARK: - Validation that returns custom error message
     func validateForm() -> String? {
+        
         if viewModel.driverName.isEmpty { return "Please enter Driver Name" }
         if viewModel.StartTime.isEmpty { return "Please enter Time" }
         if viewModel.Drivetime.isEmpty { return "Please enter Day" }
@@ -773,7 +727,7 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Update selectedRecord with vehicle information
     func updateSelectedRecordFromVehicle() {
-        // print("updateSelectedRecordFromVehicle called - selectedVehicleNumber: '\(vehicleVM.selectedVehicleNumber)', selectedVechicleID: \(vehicleVM.vehicleID)")
+
         
         guard !vehicleVM.selectedVehicleNumber.isEmpty && vehicleVM.vehicleID > 0 else {
             // print("Cannot update - selectedVehicleNumber is empty or ID is 0")
@@ -786,7 +740,7 @@ struct AddDvirScreenView: View  {
             selectedRecord = record
             // print(" Updated selectedRecord - vehicleName: '\(vehicleVM.selectedVehicleNumber)', vechicleID: \(vehicleVM.vehicleID)")
         } else {
-            // print(" selectedRecord is nil, creating new record")
+             print(" selectedRecord is nil, creating new record")
          
         }
     }
@@ -795,9 +749,12 @@ struct AddDvirScreenView: View  {
     func checkAndSetVehicleCondition() {
         if trailerVM.truckDefectSelection == "no" && trailerVM.trailerDefectSelection == "no" {
             vehicleVM.selectedCondition = "Vehicle Condition Satisfactory"
+            viewModel.notesText = "All Good"
+            
         }
         else if trailerVM.truckDefectSelection == "yes" || trailerVM.trailerDefectSelection == "yes" {
             vehicleVM.selectedCondition = nil
+            viewModel.notesText = ""
         }
     }
 
