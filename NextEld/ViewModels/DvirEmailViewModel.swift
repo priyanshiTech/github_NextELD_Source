@@ -10,7 +10,9 @@ import SwiftUI
 
 @MainActor
 class DVIRAPIViewModel: ObservableObject {
-    @Published var dvirResults: [String] = []   // Adjust type later if "result" contains objects
+ //   @Published var dvirResults: [String] = []   // Adjust type later if "result" contains objects
+    @Published var dvirResults: [DVIREmailModel] = []
+
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var successMessage: String?
@@ -53,7 +55,7 @@ class DVIRAPIViewModel: ObservableObject {
             // print(" Response token value: \(response.token)")
 
             // Check if token is false - session expired (check FIRST, before any other processing)
-            if response.token.lowercased() == "false" {
+            if response.token?.lowercased() == "false" {
                 // Session expired - token is false
                 SessionManagerClass.shared.clearToken()
                 isSessionExpired = true
@@ -64,15 +66,20 @@ class DVIRAPIViewModel: ObservableObject {
                 return false
             }
 
+            
+  
             // If token is true or valid, proceed with normal flow
             if response.status == "SUCCESS" {
                 
-                self.dvirResults = response.result ?? []
+                self.dvirResults = response.result
                 
-                self.successMessage = response.message
+                
+                self.successMessage = "DVIR Data Information Send Successfully"
+                //response.message
             } else {
                 self.errorMessage = response.message
             }
+            
 
         } catch {
             self.errorMessage = error.localizedDescription

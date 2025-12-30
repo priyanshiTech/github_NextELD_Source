@@ -15,10 +15,12 @@ struct CheckboxButton: View {
         Button(action: {
             isChecked.toggle()
         }) {
-            Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+           // Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+            Image(systemName: isChecked ? "checkmark.circle.fill" : "checkmark.circle.fill")
                 .resizable()
                 .frame(width: 20, height: 20)
-                .foregroundColor(isChecked ?  Color(uiColor: .wine) : .gray)
+                .foregroundColor(isChecked ?  Color(uiColor: .wine) : Color(uiColor: .wine))
+                //.foregroundColor(isChecked ?  Color(uiColor: .wine) : .gray)
         }
         .buttonStyle(PlainButtonStyle())
     }
