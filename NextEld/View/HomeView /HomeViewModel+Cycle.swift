@@ -29,8 +29,9 @@ extension  HomeViewModel {
                 // next day popup show
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     self.changeDayAfter10HoursCompleted(uniqueValue: uniqueValueForNextDayAlert)
-                    debugPrint("Next Day Shift Stared")
+                    debugPrint("Next Day Stared")
                 }
+                DatabaseManager.shared.deleteAllSplitShiftLogs()
             }
         }
     }

@@ -104,11 +104,17 @@ struct DotInspection: View {
                         .font(.callout)
                     
                         Button(action: {
+//                            navManager.navigate(
+//                                to: AppRoute.HomeFlow.LogsDetails(
+//                                    title: "Road Side Inspection",
+//                                    date: DateTimeHelper.currentDate().asDate(format: .dateOnlyFormat) ?? Date())
+//                            )
                             navManager.navigate(
-                                to: AppRoute.HomeFlow.LogsDetails(
-                                    title: "Road Side Inspection",
-                                    date: DateTimeHelper.currentDate().asDate(format: .dateOnlyFormat) ?? Date())
+                                to: AppRoute.HomeFlow.EyeViewData(title: "Road Side Inspection",
+                                                                  date: DateTimeHelper.currentDate().asDate(format: .dateOnlyFormat) ?? Date()
+                                                                 )
                             )
+                            
                         }) {
                             Text("Review On Device")
                                 .fontWeight(.bold)

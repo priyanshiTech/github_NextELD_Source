@@ -27,28 +27,36 @@ struct SplitShiftLog {
 extension HomeViewModel {
     
     func checkForSplitShift() {
+        let totalSleepTaken = calculateOffDutyAndSleepTime()
         let totalSleepRequired = AppStorageHandler.shared.onSleepTime ?? 0
         guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift]), (lastLog.status == AppConstants.onSleep || lastLog.status == AppConstants.offDuty) else {
             return
         }
+        
          if let lastSplitRecord = getLastRecordFromSplitShiftLog() {
              let alternateSplitType = getAlternateSplitType(duration: lastSplitRecord.splitTime)
              let alternateDuration = alternateSplitType.getSeconds()
-             if calculateOffDutyAndSleepTime() >= alternateDuration {
+             if totalSleepTaken >= alternateDuration {
+                 DatabaseManager.shared.updateIdentifier(uniqueId: lastLog.id ?? 0, identifier: 1)
                  // reset sleep time to alertnate remaining sleep
                  let remainingSleepTime = totalSleepRequired - alternateDuration
                  self.sleepTimer = CountdownTimer(startTime: remainingSleepTime)
                  updateSplitDuration(id: lastSplitRecord.id, duration: alternateDuration)
                  updateTimeAfterSplitShiftEnds()
-                 
+             } else {
+                 let shiftType = getSplitShiftType()
+                 if shiftType != .none {
+                     let remainingSleepTime = totalSleepRequired - shiftType.getSeconds()
+                     self.sleepTimer = CountdownTimer(startTime: remainingSleepTime)
+                     updateSplitDuration(id: lastSplitRecord.id, duration: shiftType.getSeconds())
+                 }
              }
          } else {
              let shiftType = getSplitShiftType()
              if shiftType != .none {
-                 
+                 DatabaseManager.shared.updateIdentifier(uniqueId: lastLog.id ?? 0, identifier: 1)
                  let remainingSleepTime = totalSleepRequired - shiftType.getSeconds()
                  self.sleepTimer = CountdownTimer(startTime: remainingSleepTime)
-                 AppStorageHandler.shared.splitShiftIdentifier = 1
                  saveSplitShiftRecord(for: shiftType, status: currentDriverStatus.getName())
              }
          }

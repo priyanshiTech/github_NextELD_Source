@@ -47,18 +47,22 @@ extension HomeViewModel {
     }
     
     func calculateTimeForSplitShift() -> (onDuty: Double, onDrive: Double) {
-        let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.splitShiftIdentifier])
+        let splitLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .splitShiftIdentifier], limit: 2)
+        
+        guard let firstLog = splitLogs.first, let last = splitLogs.last else {
+            return (0, 0)
+        }
+        let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: firstLog.startTime, endDate: last.startTime)])
+        
         var totalOnDutyTime: Double = 0
         var totalOnDriveTime: Double = 0
         for (i, log) in logs.enumerated() {
             let startDate = log.startTime
             let status = log.status
             
-            let endDate: Date
+            var endDate: Date = last.startTime
             if i + 1 < logs.count {
                 endDate = logs[i+1].startTime
-            } else {
-                endDate = DateTimeHelper.currentDateTime()
             }
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
@@ -67,9 +71,12 @@ extension HomeViewModel {
                 totalOnDutyTime += duration
             }
             
-            if status == AppConstants.onDuty {
+            if status == AppConstants.onDrive {
                 totalOnDriveTime += duration
             }
+            
+            debugPrint("total on duty split time: \(totalOnDutyTime)")
+            debugPrint("total on drive split time: \(totalOnDutyTime)")
         }
         return (totalOnDutyTime, totalOnDriveTime)
     }

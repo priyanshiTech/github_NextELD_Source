@@ -12,7 +12,7 @@ struct DataTransferInspectionView: View {
     
     @StateObject private var viewModel = DataTransferViewModel(networkManager: NetworkManager())
     @EnvironmentObject var navmanager : NavigationManager
-  
+    
     
     var body: some View {
         ZStack {
@@ -283,24 +283,20 @@ struct DataTransferInspectionView: View {
         }
     }
     
-//    private func presentAlert(_ message: String) {
-//        if viewModel.errorMessage == nil {
-//            viewModel.alertMessage = "Data Sent Successfully"
-//        } else {
-//            viewModel.alertMessage = message
-//        }
-//        viewModel.showAlert = true
-//    }
+    //    private func presentAlert(_ message: String) {
+    //        if viewModel.errorMessage == nil {
+    //            viewModel.alertMessage = "Data Sent Successfully"
+    //        } else {
+    //            viewModel.alertMessage = message
+    //        }
+    //        viewModel.showAlert = true
+    //    }
     
     private func presentAlert(_ message: String) {
         viewModel.alertMessage = message
         viewModel.showAlert = true
     }
-
     
-    
-    
- 
 }
 
 #Preview {

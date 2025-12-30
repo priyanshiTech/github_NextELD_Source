@@ -271,7 +271,7 @@ class DatabaseManager: DatabaseHandler {
         case .nextDayAlert:
             return status != AppConstants.nextDayAlertTitle
         case .splitShiftIdentifier:
-            return self.identifier == AppStorageHandler.shared.splitShiftIdentifier
+            return self.identifier == 1
         case .onDuty:
             return self.status == AppConstants.onDuty
         case .onDrive:
@@ -952,7 +952,7 @@ extension DatabaseManager {
             notes: notes,
             serverId: nil,
             timestamp:timestamp,
-            identifier: AppStorageHandler.shared.splitShiftIdentifier,
+            identifier: 0,
             remainingWeeklyTime: remainingWeeklyTime,
             remainingDriveTime: remainingDriveTime,
             remainingDutyTime: remainingDutyTime,

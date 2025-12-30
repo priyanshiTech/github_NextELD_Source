@@ -133,7 +133,7 @@
 		AFA691052E549CF80035D092 /* Webview.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA691042E549CF80035D092 /* Webview.swift */; };
 		AFA691072E54B04F0035D092 /* RecordUpdateInterface .swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA691062E54B04F0035D092 /* RecordUpdateInterface .swift */; };
 		AFA869412E4DC0AD0061A115 /* CertifyDriverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA869402E4DC0AD0061A115 /* CertifyDriverViewModel.swift */; };
-		AFA869432E4DFA820061A115 /* UserDefaultValueSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */; };
+		AFA869432E4DFA820061A115 /* AppStorageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA869422E4DFA820061A115 /* AppStorageHandler.swift */; };
 		AFA98C882E0152E400E87802 /* PacificTrack.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */; };
 		AFA98C892E0152E400E87802 /* PacificTrack.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AFA98C8C2E015FD200E87802 /* PT30BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C8B2E015FD200E87802 /* PT30BluetoothManager.swift */; };
@@ -412,7 +412,7 @@
 		AFA691042E549CF80035D092 /* Webview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Webview.swift; sourceTree = "<group>"; };
 		AFA691062E54B04F0035D092 /* RecordUpdateInterface .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecordUpdateInterface .swift"; sourceTree = "<group>"; };
 		AFA869402E4DC0AD0061A115 /* CertifyDriverViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifyDriverViewModel.swift; sourceTree = "<group>"; };
-		AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultValueSaved.swift; sourceTree = "<group>"; };
+		AFA869422E4DFA820061A115 /* AppStorageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStorageHandler.swift; sourceTree = "<group>"; };
 		AFA98C832E0146C200E87802 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AFA98C852E014F4F00E87802 /* PacificTrack.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = PacificTrack.xcframework; sourceTree = "<group>"; };
 		AFA98C8B2E015FD200E87802 /* PT30BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PT30BluetoothManager.swift; sourceTree = "<group>"; };
@@ -1464,7 +1464,7 @@
 				AFBB59F92E4233B10056A660 /* CurrentDT.swift */,
 				AFDFD4812E32301700F81B24 /* VoilationBox.swift */,
 				AFC1B55C2E1566E300C57620 /* KeyChainSwift.swift */,
-				AFA869422E4DFA820061A115 /* UserDefaultValueSaved.swift */,
+				AFA869422E4DFA820061A115 /* AppStorageHandler.swift */,
 				AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */,
 				AFDBF8932E5735A5002DB62D /* SharedManager.swift */,
 				CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */,
@@ -1779,7 +1779,7 @@
 				AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */,
 				AF66F7A12E4CAAEA009A13A0 /* Co-DriverModel.swift in Sources */,
 				AF7235052E55DC78009EAA9E /* VechicleModel.swift in Sources */,
-				AFA869432E4DFA820061A115 /* UserDefaultValueSaved.swift in Sources */,
+				AFA869432E4DFA820061A115 /* AppStorageHandler.swift in Sources */,
 				AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */,
 				AF72E4322DFD54B400626DC0 /* SignaturePad.swift in Sources */,
 				AF45BB752EB893BF00DDDB4D /* VehicleConditionViewModel.swift in Sources */,

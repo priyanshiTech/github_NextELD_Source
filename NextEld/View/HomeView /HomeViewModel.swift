@@ -251,21 +251,15 @@ enum ViolationType: Hashable {
     }
     
     func getViolationText() -> String {
-         
         switch self {
-            
         case .onDutyViolation:
             return "Your Onduty time has exceeded \(AppStorageHandler.shared.onDutyTime?.getHours() ?? 0) hours"
-             
         case .onContinueDriveViolation:
             return "Your continue drive time has exceeded \(AppStorageHandler.shared.continueDriveTime?.getHours() ?? 0) hours"
-            
         case .onDriveViolation:
             return "Your drive time has exceeded \(AppStorageHandler.shared.onDriveTime?.getHours() ?? 0) hours"
-            
         case .cycleTimerViolation:
-            return "Your cycle time has exceeded \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours()) hours"
-            
+            return "Your cycle time has exceeded \(Double(AppStorageHandler.shared.cycleTime ?? 0).getHours())/\(AppStorageHandler.shared.cycleDays ?? 0) hours"
         case .none:
             return ""
         }
@@ -407,6 +401,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         checkWhetherTheViolationAlreadyExists()
         restoreAllTimersFromLastStatus()
         validateScenarioInEveryMinute()
+        checkForSplitShift()
         timer
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
@@ -624,15 +619,15 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let elapsed = getElapsedTime(lastLog: lastRecord)
         let twoHrs = TimeInterval(60*60*2)
         
-        if status == .offDuty && elapsed < twoHrs  {
+        if (status == .offDuty || status == .sleep) && elapsed < twoHrs  {
             let onDutyRemainingTime = adjusted(lastRecord.remainingDutyTime, elapsed: elapsed, active: true)
             onDutyTimer = CountdownTimer(startTime: onDutyRemainingTime)
             onDutyTimer?.start()
-            if AppStorageHandler.shared.splitShiftIdentifier == 1 {
+            if let lastSplitRecord = getLastRecordFromSplitShiftLog() {
                 // split sleep case, reset to remaining sleep time
                 let shiftType = getSplitShiftType()
                 let remainingSleepTime = (AppStorageHandler.shared.onSleepTime ?? 0) - shiftType.getSeconds()
-                sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
+                sleepTimer = CountdownTimer(startTime: remainingSleepTime)
             } else {
                 // default sleep case, reset to 10 hours
                 sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))

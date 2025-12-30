@@ -549,7 +549,7 @@ struct HomeScreenView: View {
             case .sucessConfimration:
                 appRootManager.currentRoot = .login
             case .splitShiftEnds:
-                AppStorageHandler.shared.splitShiftIdentifier = 0
+               break 
             default:
                 break
             }
