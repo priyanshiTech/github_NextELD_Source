@@ -167,7 +167,7 @@ struct AddDvirScreenView: View  {
                                 DefectsSection(title: "Truck", selection: $trailerVM.truckDefectSelection, onSelectNoDefect: {
                                     alreadycheckAndSetVehicleCondition()
                                 }) {
-                                    if trailerVM.truckDefectSelection == nil || trailerVM.truckDefectSelection?.lowercased() == "no" {
+                                    if trailerVM.truckDefectSelection == nil || trailerVM.truckDefectSelection?.lowercased() == "none" {
                                         trailerVM.truckDefectSelection = "yes"
                                     }
                                     viewModel.popupType = "Truck"
@@ -178,7 +178,7 @@ struct AddDvirScreenView: View  {
                                 DefectsSection(title: "Trailer", selection: $trailerVM.trailerDefectSelection, onSelectNoDefect: {
                                     alreadycheckAndSetVehicleCondition()
                                 }) {
-                                    if trailerVM.trailerDefectSelection == nil || trailerVM.trailerDefectSelection?.lowercased() == "no" {
+                                    if trailerVM.trailerDefectSelection == nil || trailerVM.trailerDefectSelection?.lowercased() == "none" {
                                         trailerVM.trailerDefectSelection = "yes"
                                     }
                                     viewModel.popupType = "Trailer"
@@ -448,8 +448,8 @@ struct AddDvirScreenView: View  {
             viewModel.odometer = selectedRecord.odometer ?? 000.0
             viewModel.Location = selectedRecord.location
             viewModel.notesText = selectedRecord.notes
-            trailerVM.truckDefectSelection = selectedRecord.truckDefect.isEmpty ? "no" : selectedRecord.truckDefect
-            trailerVM.trailerDefectSelection = selectedRecord.trailerDefect.isEmpty ? "no" : selectedRecord.trailerDefect
+            trailerVM.truckDefectSelection = selectedRecord.truckDefect.isEmpty ? "none" : selectedRecord.truckDefect
+            trailerVM.trailerDefectSelection = selectedRecord.trailerDefect.isEmpty ? "none" : selectedRecord.trailerDefect
             // Use DAY for date and DvirTime for time (same as shown in EmailDvir list)
             viewModel.StartTime = selectedRecord.startTime.toLocalString()//selectedRecord.DAY.isEmpty ? DateTimeHelper.currentDate() : selectedRecord.DAY
             viewModel.Drivetime = selectedRecord.DvirTime.isEmpty ? DateTimeHelper.currentTime() : selectedRecord.DvirTime
@@ -550,8 +550,8 @@ struct AddDvirScreenView: View  {
                 DvirTime: viewModel.Drivetime,
                 odometer: viewModel.odometer,
                 location: viewModel.Location,
-                truckDefect: trailerVM.truckDefectSelection ?? "No",
-                trailerDefect: trailerVM.trailerDefectSelection ?? "No",
+                truckDefect: trailerVM.truckDefectSelection ?? "none",
+                trailerDefect: trailerVM.trailerDefectSelection ?? "none",
                 vehicleCondition: vehicleVM.selectedCondition ?? "None",
                 notes: viewModel.notesText,
                 vehicleName: vehicleName,
@@ -617,8 +617,8 @@ struct AddDvirScreenView: View  {
             DvirTime: currentTime,
             odometer: viewModel.odometer,
             location: actualLocation,
-            truckDefect: trailerVM.truckDefectSelection ?? "No",
-            trailerDefect: trailerVM.trailerDefectSelection ?? "No",
+            truckDefect: trailerVM.truckDefectSelection ?? "none",
+            trailerDefect: trailerVM.trailerDefectSelection ?? "none",
             vehicleCondition: vehicleVM.selectedCondition ?? "None",
             notes: viewModel.notesText,
             vehicleName: finalVehicleName,
@@ -634,8 +634,8 @@ struct AddDvirScreenView: View  {
             driverId: viewModel.driverDVIRId,
             dateTime: record.startTime.toLocalString(),
             locationDvir: actualLocation,
-            truckDefect: trailerVM.truckDefectSelection ?? "no",
-            trailerDefect: trailerVM.trailerDefectSelection ?? "no",
+            truckDefect: trailerVM.truckDefectSelection ?? "none",
+            trailerDefect: trailerVM.trailerDefectSelection ?? "none",
             notes: viewModel.notesText,
             vehicleCondition: vehicleVM.selectedCondition ?? "None",
             companyName: viewModel.companyName,
@@ -720,7 +720,6 @@ struct AddDvirScreenView: View  {
             return "Please select a Vehicle"
         }
         
-        if (trailerVM.trailers.first ?? "").isEmpty { return "Please select a Trailer" }
         if trailerVM.truckDefectSelection == nil { return "Please select Truck Defect status" }
         if trailerVM.trailerDefectSelection == nil { return "Please select Trailer Defect status" }
         if viewModel.notesText.isEmpty { return "Please enter Notes" }
@@ -753,7 +752,7 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Check and set Vehicle Condition based on defects
     func checkAndSetVehicleCondition() {
-        if trailerVM.truckDefectSelection == "no" && trailerVM.trailerDefectSelection == "no" {
+        if trailerVM.truckDefectSelection == "none" && trailerVM.trailerDefectSelection == "none" {
             vehicleVM.selectedCondition = "Vehicle Condition Satisfactory"
             viewModel.notesText = "All Good"
             

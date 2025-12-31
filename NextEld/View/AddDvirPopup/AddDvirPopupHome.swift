@@ -40,12 +40,35 @@ struct AddDvirPopup: View {
                 // Header
                 
                 HStack {
-                    Button(action: {  navManager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: currentRecord)) }) {
+//                    Button(action: {  navManager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: currentRecord)) }) {
+//                        Text("Edit")
+//                            .fontWeight(.bold)
+//                            .foregroundColor(.green)
+//                            .font(.title3)
+//                           
+//                    }
+                    
+                    
+                    
+                    Button {
+                        //  Close popup
+                        isPresented = false
+                        //  Navigate after slight delay (smooth transition)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            navManager.path.append(
+                                AppRoute.HomeFlow.AddDvirScreenView(
+                                    vm: trailerVM,
+                                    selectedRecord: currentRecord
+                                )
+                            )
+                        }
+                       
+                        
+                    } label: {
                         Text("Edit")
                             .fontWeight(.bold)
                             .foregroundColor(.green)
                             .font(.title3)
-                           
                     }
                    
                     Spacer()
