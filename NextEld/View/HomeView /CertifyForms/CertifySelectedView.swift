@@ -11,8 +11,6 @@ struct CertifySelectedView: View {
     
     // MARK: - States
     @State private var selectedTab = "Form"
-    @State private var trailer = ""
-    @State private var shippingDocs = "docwriting"
     @State private var coDriver = "none"
     @State private var selectedCoDriverName: String? = nil
     @State private var selectedCoID: Int? = nil
@@ -26,9 +24,8 @@ struct CertifySelectedView: View {
     @Binding var vehiclesc: String
     @Binding var VechicleID: Int?
     @EnvironmentObject var navManager: NavigationManager
-    //@EnvironmentObject var trailerVM: TrailerViewModel
     @StateObject private var trailerVM = TrailerViewModel()
-    @StateObject var shippingVM = ShippingDocViewModel()
+    @StateObject  private var shippingVM = ShippingDocViewModel()
     @State private var selectedCoDriverEmail: String = "" //Hidden Email
     @State private var certifiedDate: Date = Date()
     @State private var isCertified: Bool = false
@@ -197,7 +194,7 @@ struct CertifySelectedView: View {
                             editable: true
                         )
                         {
-                            navManager.path.append(AppRoute.HomeFlow.ShippingDocment(shippingVM: shippingVM))
+                            navManager.path.append(AppRoute.HomeFlow.ShippingDocment(shippingVM: self.shippingVM))
                         }
 
                         FormField(
@@ -216,13 +213,11 @@ struct CertifySelectedView: View {
  
                         Button(action: {
                             // Allow save even if trailer is "None"
-                            if !isTrailerAndShippingValid() {
-                                  showToast(
-                                      message: "Missing Trailer or Shipping Docs",
-                                      color: .red
-                                  )
-                                  return
-                              }
+                            if let errorMessage = trailerShippingErrorMessage() {
+                                showToast(message: errorMessage, color: .red)
+                                return
+                            }
+
                             //MARK:  add a check both are filled or not
                             let trailerValue =
                                   trailerVM.trailers.isEmpty
@@ -313,12 +308,9 @@ struct CertifySelectedView: View {
                     .environmentObject(shippingVM)
                     .transition(.slide)
                 }
-
-
-                
                 Spacer()
             }
-            .navigationBarBackButtonHidden()
+            .navigationBarBackButtonHidden()   
             
             .edgesIgnoringSafeArea(.top)
             
@@ -367,7 +359,7 @@ struct CertifySelectedView: View {
         }
     }
     //MARK: -  check validation
-    private func isTrailerAndShippingValid() -> Bool {
+    private func trailerShippingErrorMessage() -> String? {
 
         let trailerIsInvalid =
             trailerVM.trailers.isEmpty ||
@@ -383,9 +375,16 @@ struct CertifySelectedView: View {
                  .lowercased() == "none"
             }
 
-        //  even individula is mising showing  → INVALID
-        return !(trailerIsInvalid || shippingIsInvalid)
+        if trailerIsInvalid && shippingIsInvalid {
+            return "Missing Trailer & Shipping Docs"
+        } else if trailerIsInvalid {
+            return "Missing Trailer"
+        } else if shippingIsInvalid {
+            return "Missing Shipping Docs"
+        }
+        return nil
     }
+
 
 
     // MARK: - Toast Function
@@ -430,9 +429,7 @@ struct CertifySelectedView: View {
             } else {
                 trailerVM.trailers = []
             }
-            // Load shipping docs from database - preserve user's current changes if they exist
-            if shippingVM.ShippingDoc.isEmpty {
-                // Only load from database if shippingVM is empty (preserve user's changes)
+  
                 if record.selectedShippingDoc != "None" && !record.selectedShippingDoc.isEmpty {
                     shippingVM.ShippingDoc = record.selectedShippingDoc
                         .split(separator: ",")
@@ -442,9 +439,7 @@ struct CertifySelectedView: View {
                 } else {
                     shippingVM.ShippingDoc = []
                 }
-            } else {
-                SelectedSheeping = shippingVM.ShippingDoc.joined(separator: ", ")
-            }
+
             selectedCoDriverName = record.selectedCoDriver != "None" ? record.selectedCoDriver : nil
             coDriver = record.selectedCoDriver
             selectedCoID = record.coDriverID

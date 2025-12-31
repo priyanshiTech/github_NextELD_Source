@@ -18,15 +18,15 @@ struct DefectsSection: View {
     var body: some View {
         VStack(spacing: 10) {
             Button(action: {
-                selection = "no"
+                selection = "none"
                 onSelectNoDefect?()
             }) {
-                defectButton(label: "No Defects", isSelected: selection == "no")
+                defectButton(label: "No Defects", isSelected: selection == "none")
             }
             Button(action: onSelectDefect) {
                 defectButton(
                     label: "Has Defects",
-                    isSelected: selection != nil && selection != "no"
+                    isSelected: selection != nil && selection != "none"
                 )
             }
         }
