@@ -294,7 +294,7 @@ struct AddDvirScreenView: View  {
                 addDvirButton
             }
         
-
+            
             .onAppear {
                 // print(" AddDvirScreenView - onAppear called")
                 loadRecordData()
@@ -371,6 +371,11 @@ struct AddDvirScreenView: View  {
                     .environmentObject(vehicleVM)
                     .transition(.scale)
             }
+            
+            if viewModel.isLoading {
+                LoadingView()
+            }
+
         }
         .navigationBarBackButtonHidden()
   
@@ -644,12 +649,14 @@ struct AddDvirScreenView: View  {
             fileDVir: signatureData
         )
         
+        viewModel.isLoading = true
+        
         if let existingId = workingRecord.id {
         
             // print(" Calling update API...")
             DvirDatabaseManager.shared.updateRecord(record)
             updateDvirDataUsingCommonService(record: dvirRecord, dvirLogId: viewModel.driverID, appRootManager: appRootManager, completion: { success in
-                
+                viewModel.isLoading = false
                 if success {
                     DispatchQueue.main.async {
                         self.viewModel.alertType = .success(
@@ -664,7 +671,7 @@ struct AddDvirScreenView: View  {
             // print(" ========== CALLING dispatchadd_dvir_data API ==========")
             DvirDatabaseManager.shared.insertRecord(record)
             uploadDvirDataUsingCommonService(record: dvirRecord, appRootManager: appRootManager, completion: { success in
-
+                viewModel.isLoading = false
                 if success {
                     DispatchQueue.main.async {
                         self.viewModel.alertType = .success(
@@ -674,7 +681,6 @@ struct AddDvirScreenView: View  {
                 }
 
             })
-             print("API call initiated successfully!")
         }
         
  

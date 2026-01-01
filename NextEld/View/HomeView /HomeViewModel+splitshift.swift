@@ -64,7 +64,7 @@ extension HomeViewModel {
     
     func updateTimeAfterSplitShiftEnds() {
         let splitWorkTime = calculateTimeForSplitShift()
-        let onDutyTime = splitWorkTime.onDuty
+        let onDutyTime = splitWorkTime.onDuty + splitWorkTime.onDrive
         let onDriveTime = splitWorkTime.onDrive
         
         let remainingOnDutyTime = (AppStorageHandler.shared.onDutyTime ?? onDutyTime) - onDutyTime

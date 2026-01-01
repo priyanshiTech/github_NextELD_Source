@@ -689,6 +689,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(breakRemainingTime)
             self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
         } else {
+            self.cycleMessage = ""
             if (status == .offDuty || status == .sleep) {
                 breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
             }
@@ -1095,6 +1096,7 @@ extension HomeViewModel {
     
     func showCycleMessage() {
         guard isCycleTimeCompleted(), (currentDriverStatus == .offDuty || currentDriverStatus == .sleep), !AppStorageHandler.shared.is34HourStarted else {
+            cycleMessage = ""
             return
         }
         
