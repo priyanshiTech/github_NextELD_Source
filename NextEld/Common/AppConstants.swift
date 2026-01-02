@@ -2,8 +2,8 @@
 struct AppConstants {
     
     static let onDuty = "OnDuty"
-    static let onDrive = "OnDrive"
-    static let onSleep = "OnSleep"
+    static let onDrive = "Drive"
+    static let onSleep = "Sleep"
     static let weeklyCycle = "Weekly"
     static let offDuty = "OffDuty"
     static let personalUse = "PersonalUse"
