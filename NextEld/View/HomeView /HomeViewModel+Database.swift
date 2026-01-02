@@ -47,9 +47,9 @@ extension HomeViewModel {
     }
     
     func calculateTimeForSplitShift() -> (onDuty: Double, onDrive: Double) {
-        let splitLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .splitShiftIdentifier], limit: 2)
+        let splitLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .splitShiftIdentifier], order: [DatabaseManager.shared.startTime.desc], limit: 2)
         
-        guard let firstLog = splitLogs.first, let last = splitLogs.last else {
+        guard let firstLog = splitLogs.last, let last = splitLogs.first else { // reverse order 
             return (0, 0)
         }
         let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.betweenDates(startDate: firstLog.startTime, endDate: last.startTime)])

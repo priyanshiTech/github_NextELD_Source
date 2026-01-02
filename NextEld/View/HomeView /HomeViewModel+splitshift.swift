@@ -79,7 +79,7 @@ extension HomeViewModel {
         if currentDriverStatus == .onDrive {
             startTimers(for: [.onDrive, .cycleTimer, .onDuty])
         }
-        DatabaseManager.shared.deleteAllSplitShiftLogs()
+//        DatabaseManager.shared.deleteAllSplitShiftLogs()
         showAlert(alertType: .splitShiftEnds)
       
     }
