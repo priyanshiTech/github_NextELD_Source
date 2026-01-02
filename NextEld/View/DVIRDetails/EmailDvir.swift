@@ -16,11 +16,7 @@ struct EmailDvir: View {
     @StateObject var trailerVM: TrailerViewModel = .init()
     
     //MARK: - remove placeholder multiple value  filteredRecords
-    
-//    var filteredRecords: [DvirRecord] {
-//        let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
-//        return allRecords
-//    }
+
     
     var filteredRecords: [DvirRecord] {
         let allRecords = DvirDatabaseManager.shared.fetchAllRecords()
@@ -198,11 +194,11 @@ struct DvirListItemView: View {
     private var hasDefects: Bool {
         // Check if truck has defects (comma-separated list, "yes", or defect name)
         let truckDefectValue = record.truckDefect.trimmingCharacters(in: .whitespaces).lowercased()
-        let hasTruckDefects = truckDefectValue != "no" && !truckDefectValue.isEmpty && truckDefectCount > 0
+        let hasTruckDefects = truckDefectValue != "none" && !truckDefectValue.isEmpty && truckDefectCount > 0
         
         // Check if trailer has defects (comma-separated list, "yes", or defect name)
         let trailerDefectValue = record.trailerDefect.trimmingCharacters(in: .whitespaces).lowercased()
-        let hasTrailerDefects = trailerDefectValue != "no" && !trailerDefectValue.isEmpty && trailerDefectCount > 0
+        let hasTrailerDefects = trailerDefectValue != "none" && !trailerDefectValue.isEmpty && trailerDefectCount > 0
         
         // Check if vehicleCondition indicates defects (Unsatisfactory)
         let isUnsatisfactory = record.vehicleCondition.lowercased().contains("unsatisfactory")
@@ -215,7 +211,7 @@ struct DvirListItemView: View {
         let defectValue = record.truckDefect.trimmingCharacters(in: .whitespaces)
         
         // If "no" or empty, no defects
-        if defectValue.lowercased() == "no" || defectValue.isEmpty {
+        if defectValue.lowercased() == "none" || defectValue.isEmpty {
             return 0
         }
         
@@ -223,7 +219,7 @@ struct DvirListItemView: View {
         if defectValue.contains(",") {
             let defects = defectValue.split(separator: ",")
                 .map { $0.trimmingCharacters(in: .whitespaces) }
-                .filter { !$0.isEmpty && $0.lowercased() != "yes" && $0.lowercased() != "no" }
+                .filter { !$0.isEmpty && $0.lowercased() != "yes" && $0.lowercased() != "none" }
             return defects.count
         }
         
@@ -244,7 +240,7 @@ struct DvirListItemView: View {
         let defectValue = record.trailerDefect.trimmingCharacters(in: .whitespaces)
         
         // If "no" or empty, no defects
-        if defectValue.lowercased() == "no" || defectValue.isEmpty {
+        if defectValue.lowercased() == "none" || defectValue.isEmpty {
             return 0
         }
         
@@ -252,7 +248,7 @@ struct DvirListItemView: View {
         if defectValue.contains(",") {
             let defects = defectValue.split(separator: ",")
                 .map { $0.trimmingCharacters(in: .whitespaces) }
-                .filter { !$0.isEmpty && $0.lowercased() != "yes" && $0.lowercased() != "no" }
+                .filter { !$0.isEmpty && $0.lowercased() != "yes" && $0.lowercased() != "none" }
             return defects.count
         }
         
