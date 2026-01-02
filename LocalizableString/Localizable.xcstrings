@@ -16,6 +16,7 @@
       }
     },
     " / %lld Days" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -48,6 +49,9 @@
       }
     },
     " The user manual, instruction sheet, and malfunction instructions can be in electronic form. This is in accordance with the Federal Register titled Regulatory Guidance Concerning Electronic Signatures and Documents (76 FR 411)." : {
+
+    },
+    "/%lld Days Remaining" : {
 
     },
     "%@" : {
