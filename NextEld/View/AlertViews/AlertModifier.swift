@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct CustomPopupAlert: View {
+    
     var title: String
     var message: String
     var onOK: () -> Void
@@ -85,7 +86,7 @@ struct StatusDetailsPopup: View {
                         
                         Button(action: onClose) {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.gray)
+                                .foregroundColor(.red)
                                 .padding(8)
                         }
                     }
@@ -106,37 +107,52 @@ struct StatusDetailsPopup: View {
                             .foregroundColor(Color(uiColor: .wine))
                             .font(.body)
                     } else {
-                        Text("Fetching location...")
+                        Text("NA")
                             .foregroundColor(.gray)
                             .font(.body)
                     }
                 }
                 
-                VStack(alignment: .leading, spacing: 8) {
+                HStack( spacing: 8) {
                     Text("Current Odometer:")
                         .foregroundColor(.gray)
                         .font(.subheadline)
                     
-                    Text("0.00")
+                    Text("0")
                         .foregroundColor( Color(uiColor: .wine))
                         .font(.body)
                 }
                 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Note")
-                        .font(.title3)
-                        .bold()
-                    // .padding()
+                HStack( spacing: 8) {
+                    Text("Engine Hours:")
+                        .foregroundColor(.gray)
+                        .font(.subheadline)
                     
-                    TextField("Enter note", text: $note)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .border( Color(uiColor: .wine),width: 1)
-                        .frame(height: 40)
-                        .cornerRadius(5)
-                        .padding()
-                    
-                    
+                    Text("0")
+                        .foregroundColor( Color(uiColor: .wine))
+                        .font(.body)
                 }
+                
+                VStack(alignment: .leading, spacing: 6) {
+          
+                    TextField("Enter note", text: $note)
+                           .padding(.horizontal, 12)
+                           .frame(height: 44)
+                           .frame(maxWidth: .infinity)
+                           .background(Color.white)
+                           .overlay(
+                               RoundedRectangle(cornerRadius: 8)
+                                   .stroke(Color(uiColor: .wine), lineWidth: 1)
+                           )
+                    
+                    if statusTitle.lowercased() == "sleep" {
+                        Text("NOTE:  Split time will work with 7:3 & 8:2 ratio")
+                            .font(.caption)
+                            .foregroundColor(.green)
+                            .padding(.leading, 5)
+                    }
+                    
+                }.padding(.horizontal, 16)
                 
                 Button(action: {
                     onSubmit(note)
