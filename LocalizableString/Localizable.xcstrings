@@ -126,7 +126,11 @@
         }
       }
     },
+    "0" : {
+
+    },
     "0.00" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -881,6 +885,9 @@
         }
       }
     },
+    "Engine Hours:" : {
+
+    },
     "Enter a UserName" : {
       "localizations" : {
         "pa" : {
@@ -1010,6 +1017,7 @@
       }
     },
     "Fetching location..." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1396,6 +1404,9 @@
         }
       }
     },
+    "NA" : {
+
+    },
     "Next" : {
       "localizations" : {
         "pa" : {
@@ -1474,6 +1485,7 @@
 
     },
     "Note" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1482,6 +1494,9 @@
           }
         }
       }
+    },
+    "NOTE:  Split time will work with 7:3 & 8:2 ratio" : {
+
     },
     "Note: If you want to update eld device, mobile battery should be charge atleast 30% or plugin charger." : {
       "localizations" : {
