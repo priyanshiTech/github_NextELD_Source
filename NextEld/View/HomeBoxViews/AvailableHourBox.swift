@@ -66,7 +66,6 @@ struct AvailableHoursView: View {
                         } else if type == .sleepTimer {
                             TimeBox(timer: homeViewModel.sleepTimer!, type: type, title: type.getName())
                         }
-
                         
                     }
                    

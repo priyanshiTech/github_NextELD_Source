@@ -60,6 +60,9 @@ struct StatusView: View {
                         StatusCheckBox(
                             isClick: type == selectedDriverStatus,
                             labelText: type.getName(),
+                            
+                           // labelText: type.displayNameForCircle(),
+
                             onTap: {
                                 onDriveStatusSelection(type)                           }
                         )

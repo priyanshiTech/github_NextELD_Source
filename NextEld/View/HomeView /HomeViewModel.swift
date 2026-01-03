@@ -98,6 +98,10 @@ enum DriverStatusType: Hashable, CaseIterable {
     case yardMode
     case none
     
+    //MARK: - ui shows
+    
+    
+   
     func getName() -> String {
         
         var title = ""
@@ -122,6 +126,17 @@ enum DriverStatusType: Hashable, CaseIterable {
         return title
     }
     
+    func displayNameForCircle() -> String {
+        switch self {
+        case .onDrive:
+            return "Drive"
+        case .sleep:
+            return "Sleep"
+        default:
+            return getName()   // baaki same
+        }
+    }
+
     init?(fromName name: String) {
         let normalized = name
             .replacingOccurrences(of: "-", with: "_")

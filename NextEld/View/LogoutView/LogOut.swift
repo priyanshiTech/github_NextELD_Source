@@ -23,7 +23,7 @@ struct LogOutPopup: View {
 
             VStack(spacing: 20) {
                 HStack {
-                    Text("Your current status is:")
+                    Text("Your current status is")
                     Text(currentStatus)
                         .foregroundColor(Color(uiColor: .wine))
                         //.underline()

@@ -28,13 +28,11 @@ struct EmailDvir: View {
         }
     }
     
-
     
     var body: some View {
             
             VStack(spacing: 0) {
            
-                
                 // MARK: - Header
                 HStack {
                     Button(action: {

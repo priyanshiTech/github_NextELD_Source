@@ -46,6 +46,17 @@
 		AF45BB752EB893BF00DDDB4D /* VehicleConditionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB742EB893BF00DDDB4D /* VehicleConditionViewModel.swift */; };
 		AF45BB782EB8968600DDDB4D /* VehicleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB772EB8968600DDDB4D /* VehicleModel.swift */; };
 		AF45BB7B2EB8AAE800DDDB4D /* vehicleCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB7A2EB8AAE800DDDB4D /* vehicleCondition.swift */; };
+		AF47506A2F08E85D00726F27 /* continue_driving_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750602F08E85D00726F27 /* continue_driving_violation_punjabi.m4a */; };
+		AF47506B2F08E85D00726F27 /* weekily_warning_15min.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750662F08E85D00726F27 /* weekily_warning_15min.m4a */; };
+		AF47506C2F08E85D00726F27 /* ideal_msg.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750612F08E85D00726F27 /* ideal_msg.m4a */; };
+		AF47506D2F08E85D00726F27 /* onduty_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750642F08E85D00726F27 /* onduty_violation_punjabi.m4a */; };
+		AF47506E2F08E85D00726F27 /* ondrive_warning_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750632F08E85D00726F27 /* ondrive_warning_punjabi.m4a */; };
+		AF47506F2F08E85D00726F27 /* onduty_warning_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750652F08E85D00726F27 /* onduty_warning_punjabi.m4a */; };
+		AF4750702F08E85D00726F27 /* weekly_warning_30min.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750682F08E85D00726F27 /* weekly_warning_30min.m4a */; };
+		AF4750712F08E85D00726F27 /* ondrive_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750622F08E85D00726F27 /* ondrive_violation_punjabi.m4a */; };
+		AF4750722F08E85D00726F27 /* weekly_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750672F08E85D00726F27 /* weekly_violation_punjabi.m4a */; };
+		AF4750732F08E85D00726F27 /* continue_drive_warning_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF47505F2F08E85D00726F27 /* continue_drive_warning_punjabi.m4a */; };
+		AF4750742F08E85D00726F27 /* AudioPlayingFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF47505D2F08E85D00726F27 /* AudioPlayingFiles.swift */; };
 		AF58BFD82E69C7CE00F0E765 /* SignatureAddDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */; };
 		AF5EE7122EF3DB07001AE01A /* VoilationRedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5EE7112EF3DB07001AE01A /* VoilationRedBox.swift */; };
 		AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */; };
@@ -324,6 +335,17 @@
 		AF45BB742EB893BF00DDDB4D /* VehicleConditionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleConditionViewModel.swift; sourceTree = "<group>"; };
 		AF45BB772EB8968600DDDB4D /* VehicleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleModel.swift; sourceTree = "<group>"; };
 		AF45BB7A2EB8AAE800DDDB4D /* vehicleCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vehicleCondition.swift; sourceTree = "<group>"; };
+		AF47505D2F08E85D00726F27 /* AudioPlayingFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayingFiles.swift; sourceTree = "<group>"; };
+		AF47505F2F08E85D00726F27 /* continue_drive_warning_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = continue_drive_warning_punjabi.m4a; sourceTree = "<group>"; };
+		AF4750602F08E85D00726F27 /* continue_driving_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = continue_driving_violation_punjabi.m4a; sourceTree = "<group>"; };
+		AF4750612F08E85D00726F27 /* ideal_msg.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ideal_msg.m4a; sourceTree = "<group>"; };
+		AF4750622F08E85D00726F27 /* ondrive_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ondrive_violation_punjabi.m4a; sourceTree = "<group>"; };
+		AF4750632F08E85D00726F27 /* ondrive_warning_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ondrive_warning_punjabi.m4a; sourceTree = "<group>"; };
+		AF4750642F08E85D00726F27 /* onduty_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = onduty_violation_punjabi.m4a; sourceTree = "<group>"; };
+		AF4750652F08E85D00726F27 /* onduty_warning_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = onduty_warning_punjabi.m4a; sourceTree = "<group>"; };
+		AF4750662F08E85D00726F27 /* weekily_warning_15min.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekily_warning_15min.m4a; sourceTree = "<group>"; };
+		AF4750672F08E85D00726F27 /* weekly_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekly_violation_punjabi.m4a; sourceTree = "<group>"; };
+		AF4750682F08E85D00726F27 /* weekly_warning_30min.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekly_warning_30min.m4a; sourceTree = "<group>"; };
 		AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureAddDvir.swift; sourceTree = "<group>"; };
 		AF5EE7112EF3DB07001AE01A /* VoilationRedBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoilationRedBox.swift; sourceTree = "<group>"; };
 		AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashModel.swift; sourceTree = "<group>"; };
@@ -853,6 +875,32 @@
 			path = VehicleConditionPopup;
 			sourceTree = "<group>";
 		};
+		AF47505E2F08E85D00726F27 /* AudioPlaying */ = {
+			isa = PBXGroup;
+			children = (
+				AF47505D2F08E85D00726F27 /* AudioPlayingFiles.swift */,
+			);
+			path = AudioPlaying;
+			sourceTree = "<group>";
+		};
+		AF4750692F08E85D00726F27 /* AudioVoilation */ = {
+			isa = PBXGroup;
+			children = (
+				AF47505E2F08E85D00726F27 /* AudioPlaying */,
+				AF47505F2F08E85D00726F27 /* continue_drive_warning_punjabi.m4a */,
+				AF4750602F08E85D00726F27 /* continue_driving_violation_punjabi.m4a */,
+				AF4750612F08E85D00726F27 /* ideal_msg.m4a */,
+				AF4750622F08E85D00726F27 /* ondrive_violation_punjabi.m4a */,
+				AF4750632F08E85D00726F27 /* ondrive_warning_punjabi.m4a */,
+				AF4750642F08E85D00726F27 /* onduty_violation_punjabi.m4a */,
+				AF4750652F08E85D00726F27 /* onduty_warning_punjabi.m4a */,
+				AF4750662F08E85D00726F27 /* weekily_warning_15min.m4a */,
+				AF4750672F08E85D00726F27 /* weekly_violation_punjabi.m4a */,
+				AF4750682F08E85D00726F27 /* weekly_warning_30min.m4a */,
+			);
+			path = AudioVoilation;
+			sourceTree = "<group>";
+		};
 		AF58BFD62E69C7B100F0E765 /* SignatureViewADDDvir */ = {
 			isa = PBXGroup;
 			children = (
@@ -1298,6 +1346,7 @@
 		AFB943512E02D3B000AD19D7 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				AF4750692F08E85D00726F27 /* AudioVoilation */,
 				AF97AFA62E2B664D009F1B06 /* InternateValidity */,
 				AFB943522E02D3FD00AD19D7 /* APIClient */,
 			);
@@ -1729,6 +1778,16 @@
 				AF04B1B12DE9839000A5F3D1 /* LocalizableEng.strings in Resources */,
 				AF44AAB72F03ADF6006D8AED /* all_star_instruction.pdf in Resources */,
 				AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */,
+				AF47506A2F08E85D00726F27 /* continue_driving_violation_punjabi.m4a in Resources */,
+				AF47506B2F08E85D00726F27 /* weekily_warning_15min.m4a in Resources */,
+				AF47506C2F08E85D00726F27 /* ideal_msg.m4a in Resources */,
+				AF47506D2F08E85D00726F27 /* onduty_violation_punjabi.m4a in Resources */,
+				AF47506E2F08E85D00726F27 /* ondrive_warning_punjabi.m4a in Resources */,
+				AF47506F2F08E85D00726F27 /* onduty_warning_punjabi.m4a in Resources */,
+				AF4750702F08E85D00726F27 /* weekly_warning_30min.m4a in Resources */,
+				AF4750712F08E85D00726F27 /* ondrive_violation_punjabi.m4a in Resources */,
+				AF4750722F08E85D00726F27 /* weekly_violation_punjabi.m4a in Resources */,
+				AF4750732F08E85D00726F27 /* continue_drive_warning_punjabi.m4a in Resources */,
 				AF82B04D2ED4415900081803 /* all_star_manual.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1755,6 +1814,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF72E4312DFD54B400626DC0 /* DataRow.swift in Sources */,
+				AF4750742F08E85D00726F27 /* AudioPlayingFiles.swift in Sources */,
 				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
 				AFCC4CA52E4A24CC00629DE3 /* CompanyInfo.swift in Sources */,
 				CBFD7D3F2EDB14AB008353E8 /* HomeViewModel+DeviceOperation.swift in Sources */,

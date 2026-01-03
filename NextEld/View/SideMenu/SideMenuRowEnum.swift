@@ -103,7 +103,6 @@ enum SideMenuRowType: Int, CaseIterable{
             return "Settings"
         case .support:
             return "Support"
-     
         case .FirmWareUpdate:
             return "FirmWare Update"
         case .logout:

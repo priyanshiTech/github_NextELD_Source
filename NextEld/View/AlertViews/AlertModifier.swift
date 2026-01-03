@@ -145,7 +145,7 @@ struct StatusDetailsPopup: View {
                                    .stroke(Color(uiColor: .wine), lineWidth: 1)
                            )
                     
-                    if statusTitle.lowercased() == "sleep" {
+                    if statusTitle.lowercased() == "OnSleep" {
                         Text("NOTE:  Split time will work with 7:3 & 8:2 ratio")
                             .font(.caption)
                             .foregroundColor(.green)
