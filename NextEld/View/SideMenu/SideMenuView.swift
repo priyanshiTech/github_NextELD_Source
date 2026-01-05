@@ -28,12 +28,8 @@ struct SideMenuView: View {
                 .padding(.horizontal, 16)
             
             UniversalScrollView {
-                
-                
-                  
 
                     ForEach(SideMenuRowType.allCases, id: \.self) { row in
-                        
                         RowView(
                             isSelected: selectedSideMenuTab == row.rawValue,
                             imageName: row.iconName,

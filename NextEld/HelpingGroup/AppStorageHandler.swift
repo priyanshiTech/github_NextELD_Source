@@ -108,6 +108,7 @@ struct AppStorageHandler {
         dvirLogId = nil
         
     }
+
 }
 
 extension Notification.Name {
