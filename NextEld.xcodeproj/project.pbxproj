@@ -154,6 +154,8 @@
 		AFA98C952E017C1F00E87802 /* DeviceManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C942E017C1F00E87802 /* DeviceManagerView.swift */; };
 		AFA98C972E017F6700E87802 /* StoreEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C962E017F6700E87802 /* StoreEventView.swift */; };
 		AFA98C992E01826100E87802 /* FrimWareUpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */; };
+		AFAABC3E2F0D0674003A7311 /* BleConnectionBoxview.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAABC3D2F0D0674003A7311 /* BleConnectionBoxview.swift */; };
+		AFAABC412F0D22E4003A7311 /* Malfunction&dataDignosis.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAABC402F0D22E4003A7311 /* Malfunction&dataDignosis.swift */; };
 		AFB6A25F2EF0191A004D3C82 /* DefectSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB6A25E2EF0191A004D3C82 /* DefectSection.swift */; };
 		AFB7511B2E97C20900A4B65F /* Extension + View.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB7511A2E97C20900A4B65F /* Extension + View.swift */; };
 		AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943082E029A7900AD19D7 /* TrackerPeripheral.swift */; };
@@ -442,6 +444,8 @@
 		AFA98C942E017C1F00E87802 /* DeviceManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManagerView.swift; sourceTree = "<group>"; };
 		AFA98C962E017F6700E87802 /* StoreEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreEventView.swift; sourceTree = "<group>"; };
 		AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrimWareUpdateModel.swift; sourceTree = "<group>"; };
+		AFAABC3D2F0D0674003A7311 /* BleConnectionBoxview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleConnectionBoxview.swift; sourceTree = "<group>"; };
+		AFAABC402F0D22E4003A7311 /* Malfunction&dataDignosis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Malfunction&dataDignosis.swift"; sourceTree = "<group>"; };
 		AFB6A25E2EF0191A004D3C82 /* DefectSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefectSection.swift; sourceTree = "<group>"; };
 		AFB7511A2E97C20900A4B65F /* Extension + View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + View.swift"; sourceTree = "<group>"; };
 		AFB943082E029A7900AD19D7 /* TrackerPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerPeripheral.swift; sourceTree = "<group>"; };
@@ -699,6 +703,7 @@
 		108FF82D2DC89C6F0051671B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AFAABC3F2F0D22AA003A7311 /* Malfunction */,
 				AFBCAF5A2EFE659D00DC20D4 /* SplitShiftView */,
 				CBE1984A2EFC764E00DDA94A /* Components */,
 				AF5EE7102EF3DAEF001AE01A /* VoilationboxView */,
@@ -1092,6 +1097,7 @@
 				AF9024902E93DD920005F0D7 /* AvailableHourBox.swift */,
 				AF9024912E93DD920005F0D7 /* StatusBox&StatusButton.swift */,
 				AF9024922E93DD920005F0D7 /* TopbarView.swift */,
+				AFAABC3D2F0D0674003A7311 /* BleConnectionBoxview.swift */,
 			);
 			path = HomeBoxViews;
 			sourceTree = "<group>";
@@ -1183,6 +1189,14 @@
 				AFB943072E02999F00AD19D7 /* PTPOLD */,
 			);
 			path = PT30Group;
+			sourceTree = "<group>";
+		};
+		AFAABC3F2F0D22AA003A7311 /* Malfunction */ = {
+			isa = PBXGroup;
+			children = (
+				AFAABC402F0D22E4003A7311 /* Malfunction&dataDignosis.swift */,
+			);
+			path = Malfunction;
 			sourceTree = "<group>";
 		};
 		AFB943072E02999F00AD19D7 /* PTPOLD */ = {
@@ -1816,6 +1830,7 @@
 				AF72E4312DFD54B400626DC0 /* DataRow.swift in Sources */,
 				AF4750742F08E85D00726F27 /* AudioPlayingFiles.swift in Sources */,
 				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
+				AFAABC412F0D22E4003A7311 /* Malfunction&dataDignosis.swift in Sources */,
 				AFCC4CA52E4A24CC00629DE3 /* CompanyInfo.swift in Sources */,
 				CBFD7D3F2EDB14AB008353E8 /* HomeViewModel+DeviceOperation.swift in Sources */,
 				AFBCAF5C2EFE65C600DC20D4 /* SplitShiftViewDB.swift in Sources */,
@@ -2001,6 +2016,7 @@
 				AF9E84302EC3425F00CF40E5 /* SessionExpireUIView.swift in Sources */,
 				106586132DCCE182003CE502 /* Extension + colour.swift in Sources */,
 				AF1073582EB52C0200C3CE0E /* ImagePickerController.swift in Sources */,
+				AFAABC3E2F0D0674003A7311 /* BleConnectionBoxview.swift in Sources */,
 				108FF8022DC895E10051671B /* NextEldApp.swift in Sources */,
 				AFB943332E029CD300AD19D7 /* DeviceListViewController.swift in Sources */,
 				AFA691032E54682A0035D092 /* DefectViewModel.swift in Sources */,

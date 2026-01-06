@@ -109,6 +109,9 @@
         }
       }
     },
+    "%lf" : {
+
+    },
     "%lld Defects" : {
       "localizations" : {
         "pa" : {
@@ -130,6 +133,7 @@
       }
     },
     "0" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {

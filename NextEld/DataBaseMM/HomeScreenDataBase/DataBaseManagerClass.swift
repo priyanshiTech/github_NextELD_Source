@@ -1012,4 +1012,53 @@ extension DatabaseManager {
     }
 }
 
+//MARK: -  for saved preferance in Malfunction
+
+extension DatabaseManager {
+
+    func saveEngineSyncEvent(
+        status: String,
+        message: String
+    ) {
+
+        let now = Date()
+        let timestamp = Int64(now.timeIntervalSince1970 * 1000)
+
+        let log = DriverLogModel(
+            id: nil,
+            status: status,                      //  important
+            startTime: now,
+            userId: AppStorageHandler.shared.driverId ?? 0,
+            day: AppStorageHandler.shared.days,
+            isVoilations: "NO",
+            dutyType: "System Generated",
+            shift: AppStorageHandler.shared.shift,
+            vehicle: AppStorageHandler.shared.vehicleNo ?? "",
+            odometer: SharedInfoManager.shared.odometer,
+            engineHours: "\(SharedInfoManager.shared.engineHours)",
+            location: "",
+            lat: SharedInfoManager.shared.lattitude,
+            long: SharedInfoManager.shared.longitude,
+            origin: "ELD",
+            isSynced: false,
+            vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
+            trailers: "",
+            notes: message,
+            serverId: nil,
+            timestamp: timestamp,
+            identifier: 0,
+            remainingWeeklyTime: nil,
+            remainingDriveTime: nil,
+            remainingDutyTime: nil,
+            remainingSleepTime: nil,
+            breaktimerRemaning: nil,
+            lastSleepTime: 0,
+            isSplit: 0,
+            engineStatus: "Off",
+            isSystemGenerated: 1              // REQUIRED
+        )
+
+        insertLog(from: log)
+    }
+}
 

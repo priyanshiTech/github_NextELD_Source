@@ -118,7 +118,7 @@ struct StatusDetailsPopup: View {
                         .foregroundColor(.gray)
                         .font(.subheadline)
                     
-                    Text("0")
+                    Text("\(SharedInfoManager.shared.odometer)")
                         .foregroundColor( Color(uiColor: .wine))
                         .font(.body)
                 }
@@ -128,7 +128,7 @@ struct StatusDetailsPopup: View {
                         .foregroundColor(.gray)
                         .font(.subheadline)
                     
-                    Text("0")
+                    Text("\(SharedInfoManager.shared.engineHours)")
                         .foregroundColor( Color(uiColor: .wine))
                         .font(.body)
                 }
