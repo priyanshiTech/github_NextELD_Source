@@ -17,7 +17,7 @@ struct HomeScreenView: View {
     @EnvironmentObject var navManager: NavigationManager
     @StateObject private var viewModel = RefreshViewModel()
     //MARK: - data Diagnosys
-    private let engineMonitor = EngineSyncMonitor()
+   // private let engineMonitor = EngineSyncMonitor()  //6 january
 
 
     
@@ -119,13 +119,13 @@ struct HomeScreenView: View {
                                 }
                             }
                             .animation(.easeInOut, value: SharedInfoManager.shared.isDeviceConnected)
-                            //MARK: -  MArk Engine Dignostic in every seconds
-                            .onAppear {
-                                           engineMonitor.startMonitoring()
-                                       }
-                                       .onDisappear {
-                                           engineMonitor.stopMonitoring()
-                                       }
+                            //MARK: -  MArk Engine Dignostic in every seconds   6 january in progress
+//                            .onAppear {
+//                                           engineMonitor.startMonitoring()
+//                                       }
+//                                       .onDisappear {
+//                                           engineMonitor.stopMonitoring()
+//                                       }
 
                             //UserDefaults.standard.string(forKey: "truckNo"),
                             VehicleInfoView(

@@ -30,6 +30,8 @@ enum FilterType {
     case shift
     case notSync
     case engineStatus
+    case odometer
+    case engineHours
     case notEngineStartStatus
     case notEngineStopStatus
     case specificDate(date: Date)
@@ -106,8 +108,8 @@ class DatabaseManager: DatabaseHandler {
     let dutyType = Expression<String>("dutyType")
     let shift = Expression<Int>("shift")
     let vehicleName = Expression<String>("vehicleName") //instead of vehicle
-    let odometer = Expression<Double>("odometer")
-    let engineHours = Expression<String>("engineHours")
+    var odometer = Expression<Double>("odometer")
+    var engineHours = Expression<String>("engineHours")
     let location = Expression<String>("location")
     let lat = Expression<Double>("lat")
     let long = Expression<Double>("long")
@@ -295,6 +297,10 @@ class DatabaseManager: DatabaseHandler {
             return startTime < date
         case .login:
             return status == AppConstants.login
+        case .odometer:
+            return odometer ==  0.0// temperory base 6 january
+        case .engineHours:
+            return  odometer ==  0.0//
         }
     }
     

@@ -42,7 +42,8 @@ struct AppStorageHandler {
     @AppStorage("exempt") var exempt: String?
     @AppStorage("disclaimerRead") var disclaimerRead:Int?
     @AppStorage("isDeviceConnected") var isDeviceConnected: Bool = false
-    
+    @AppStorage("odometer") var odometerValue: Double?
+    @AppStorage("engineHour") var engineHours: Double?
     
     // MARK: - Warning Timer
     @AppStorage("breakTime") var breakTime: Int?
