@@ -565,8 +565,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             checkedOffDutyTimeIsLessThan2Hour()
             checkForSplitShift()
             timerTypes = [.onDuty, .cycleTimer]
-            if previousStatus == .onDrive {
-                resetContinueDriveTimeWhenMoveFromOnDrvieToOnDuty()
+            if previousStatus == .onDrive || restoreBreakTimerRunning {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer]
             }
 
@@ -574,17 +573,13 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             checkedOffDutyTimeIsLessThan2Hour()
             checkForSplitShift()
             if isTimerRunning(.breakTimer) {
-                breakTimer?.reset(startTime: breakTimer?.startDuration ?? 0)
+                resetBreakTime()
                 breakTimer?.stop()
             }
             
             timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
             
         case .sleep:
-//            timerTypes = [.sleepTimer]
-//            if restoreBreakTimerRunning {
-//                timerTypes.append(.breakTimer)
-//            }
             timerTypes = [.breakTimer, .sleepTimer]
 
         case .offDuty:
@@ -595,14 +590,18 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
         case .yardMode:
             timerTypes = [.cycleTimer, .onDuty]
-
+            if previousStatus == .onDrive {
+                timerTypes = [.breakTimer , .onDuty, .cycleTimer]
+            }
         case .none:
             timerTypes = []
         }
-       
+        
         if saveLogsToDatabase {
+            check30MinBreakCompleted()
             saveTimerStateForStatus(status: status.getName(), originType: .driver, note: note)
         }
+        
         startTimers(for: timerTypes)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {[weak self] in
             self?.loadEventsFromDatabase()
@@ -675,13 +674,19 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let isSleep   = (status == .sleep)
         let isCycle   = !(status == .offDuty || status == .sleep)
         let isContDrv = (status == .onDrive)
-        let isBreak   = TimeInterval(latestLog.breaktimerRemaning ?? 0) > 0 && status != .onDrive
+        let isBreak   = (status != .onDrive)
 
         let onDutyRemainingTime = adjusted(latestLog.remainingDutyTime, elapsed: elapsed, active: isOnDuty)
         let onDriveRemainingTime = adjusted(latestLog.remainingDriveTime, elapsed: elapsed, active: isDrive)
         let cycleRemainingTime = adjusted(latestLog.remainingWeeklyTime, elapsed: elapsed, active: isCycle)
         let sleepRemainingTime = adjusted(latestLog.remainingSleepTime, elapsed: elapsed, active: isSleep)
-        let continueDriveRemainingTime = adjusted(Int(AppStorageHandler.shared.continueDriveTime ?? 0), elapsed: elapsed, active: isContDrv)
+        
+        // continue drive logic
+        let threeHourDiff = Int(3 * 60 * 60)
+        let remainingContinueDrive = Int(latestLog.remainingDriveTime ?? 0) - threeHourDiff
+        let continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: isContDrv)
+        
+        
         var breakRemainingTime = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)
         if AppStorageHandler.shared.is34HourStarted {
             breakRemainingTime = (34 * 60 * 60)
@@ -690,8 +695,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
         } else {
             self.cycleMessage = ""
-            if (status == .offDuty || status == .sleep) {
+            if (status == .offDuty || status == .sleep || status == .onDuty) {
                 breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
+                
             }
         }
         // Timers
@@ -701,6 +707,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         sleepTimer                = CountdownTimer(startTime: sleepRemainingTime)
         continueDriveTimer        = CountdownTimer(startTime: continueDriveRemainingTime)
         breakTimer                = CountdownTimer(startTime: breakRemainingTime)
+       
         
 
       //  setupTimerCallbacks()

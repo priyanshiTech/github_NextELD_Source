@@ -66,6 +66,11 @@ extension  HomeViewModel {
         return totalSleep
     }
     
+    func resetContinueDriveAfter30MinBreak() {
+        resetBreakTime()
+        resetContinueDriveTimeWhenMoveFromOnDrvieToOnDuty()
+    }
+    
     func changeDayAfter10HoursCompleted(uniqueValue: String) {
         showAlert(alertType: .nextDay)
         self.resetToInitialState()
@@ -106,4 +111,17 @@ extension  HomeViewModel {
         return calculatedSleepTaken >= TimeInterval(totalSleepAllowed)
     }
     
+    func check30MinBreakCompleted() {
+        let thirtyMinute = TimeInterval(30 * 60)
+        guard let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs() else { return }
+        let status = lastlog.status
+        let elapsed = getElapsedTime(lastLog: lastlog)
+        if status == AppConstants.onDuty  || status == AppConstants.offDuty || status == AppConstants.onSleep {
+            if elapsed > thirtyMinute {
+                resetContinueDriveAfter30MinBreak()
+            } else { 
+                resetBreakTime()
+            }
+        }
+    }
 }
