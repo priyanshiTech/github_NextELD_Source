@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct EyeViewData: View {
     
    // @State var tittle: String
@@ -206,10 +207,7 @@ struct EyeViewData: View {
                                 )
                             }
                         }
-                        
-//                        sectionSmallGridHeader(
-//                            smallheaders: ["user ID", "UserName","Date", "IsCertifed","Codriver"]
-//                        )
+
                         if !certifyLogs.isEmpty {
                              ForEach(certifyLogs.indices, id: \.self) { index in
                                  let log = certifyLogs[index]

@@ -121,7 +121,7 @@ struct DriverLogHeader: View {
         HStack(spacing: 5) {
             
             TableCell(text: "ID", width: 50,isHeader: true)
-            TableCell(text: "Status", width: 230,isHeader: true)
+            TableCell(text: "Status", width: 350,isHeader: true)
             TableCell(text: "Start Time", width: 260,isHeader: true)
             TableCell(text: "UserID", width: 100,isHeader: true)
             TableCell(text: "Day", width: 100,isHeader: true)
@@ -160,7 +160,7 @@ struct DriverLogRow: View {
 
         HStack(spacing: 5) {
             TableCell(text: "\(log.id ?? -1)", width: 50)
-            TableCell(text: log.status, width: 230 )
+            TableCell(text: log.status, width: 350 )
             TableCell(text: log.startTime.toLocalString(), width: 260)
             TableCell(text: "\(AppStorageHandler.shared.driverId ?? 0)", width: 100)
             TableCell(text: "\(log.day)", width: 100)

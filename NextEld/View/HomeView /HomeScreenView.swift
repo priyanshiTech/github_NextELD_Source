@@ -15,9 +15,9 @@ struct HomeScreenView: View {
     @StateObject var trailerVM: TrailerViewModel = .init()
     @StateObject private var driverWorkviewModel = DriverWorkingViewModel()
     @EnvironmentObject var navManager: NavigationManager
-    @StateObject private var viewModel = RefreshViewModel()
+    @StateObject private var refreshViewModel = RefreshViewModel()
     //MARK: - data Diagnosys
-   // private let engineMonitor = EngineSyncMonitor()  //6 january
+    private let engineMonitor = EngineSyncMonitor()  //6 january
 
 
     
@@ -120,14 +120,25 @@ struct HomeScreenView: View {
                             }
                             .animation(.easeInOut, value: SharedInfoManager.shared.isDeviceConnected)
                             //MARK: -  MArk Engine Dignostic in every seconds   6 january in progress
-//                            .onAppear {
-//                                           engineMonitor.startMonitoring()
-//                                       }
-//                                       .onDisappear {
-//                                           engineMonitor.stopMonitoring()
-//                                       }
+                            .onAppear {
+                                // Only start if device already connected
+                                if SharedInfoManager.shared.isDeviceConnected {
+                                    engineMonitor.startMonitoring()
+                                }
+                            }
+                            .onDisappear {
+                                engineMonitor.stopMonitoring()
+                            }
+                            .onChange(of: SharedInfoManager.shared.isDeviceConnected) { isConnected in
+                                if isConnected {
+                                    engineMonitor.startMonitoring()
+                                } else {
+                                    engineMonitor.stopMonitoring()
+                                }
+                            }
 
-                            //UserDefaults.standard.string(forKey: "truckNo"),
+
+                          //  UserDefaults.standard.string(forKey: "truckNo"),
                             VehicleInfoView(
                                 GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
                                 trailer: trailerVM.getTrailerValue()
@@ -291,15 +302,19 @@ struct HomeScreenView: View {
                         .allowsHitTesting(false)
                     
                     CustomPopupAlert(
-                        
+
                         title: "Refresh Log",
                         message: "You have some records to update, do you want to update?",
                         onOK: {
-                            
+                            isManualSyncInProgress = true
+                            showPendingSyncPopup = false
+                            syncPopupContext = nil
                             homeVM.handleSyncPopupConfirmation()
                         },
+
                         onCancel: {
                             isManualSyncInProgress = false
+                            
                         syncPopupContext = nil
                             showPendingSyncPopup = false
                         },
@@ -441,19 +456,17 @@ struct HomeScreenView: View {
                 }
             }
         }
+
         
-        // Set alert type when sync confirmation is triggered
         .onChange(of: homeVM.showSyncconfirmation) { newValue in
             guard newValue else { return }
-//            homeVM.showSyncconfirmation = false
-//            if hasPendingUnsyncedLogs() {
-//                syncPopupContext = .manualRefresh
-//                showPendingSyncPopup = true
-//            } else {
-//                scheduleRefreshAlert()
-//            }
-                homeVM.handleSyncPopupConfirmation()
+
+            homeVM.showSyncconfirmation = false
+            syncPopupContext = .manualRefresh
+            showPendingSyncPopup = true   //  REQUIRED
+           
         }
+
         
         // Set alert type when delete confirmation is triggered
         .onChange(of: showDeleteConfirm) { newValue in
@@ -559,7 +572,7 @@ struct HomeScreenView: View {
             case .refresh:
                 //MARK: -  Call refresh API
                 Task {
-                    await viewModel.refresh()
+                    await refreshViewModel.refresh()
                 }
             case .deleteLogs:
                 

@@ -427,6 +427,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                     
                     // Sync offline data
                     await self?.syncViewModel.syncOfflineData()
+                  
                     let certifySuccess = await self?.certifySyncViewModel.syncCertifiedOfflineLogs()
                     if certifySuccess == false {
                         print(" Certified offline logs sync failed: \(self?.certifySyncViewModel.syncMessage ?? "Unknown error")")
