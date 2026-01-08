@@ -74,7 +74,6 @@ extension  HomeViewModel {
     func changeDayAfter10HoursCompleted(uniqueValue: String) {
         showAlert(alertType: .nextDay)
         self.resetToInitialState()
-      //  self.saveTimerStateForStatus(status: AppConstants.nextDayAlertTitle, originType: .auto, note: "Next Day Started")
         TimeBox.updateDayNotification.send() // update day count on cycle timer
         AppStorageHandler.shared.days += 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.nextDayAlert)
@@ -86,7 +85,6 @@ extension  HomeViewModel {
         showAlert(alertType: .shiftChange)
         cycleMessage = ""
         resetToInitialState(isResetCycleTimer: true)
-      //  self.saveTimerStateForStatus(status: AppConstants.shiftChangeAlertTitle, originType: .auto, note: "New Shift Started")
         AppStorageHandler.shared.shift += 1
         AppStorageHandler.shared.days = 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.shiftChanged)

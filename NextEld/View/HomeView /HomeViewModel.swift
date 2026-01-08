@@ -682,10 +682,17 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let sleepRemainingTime = adjusted(latestLog.remainingSleepTime, elapsed: elapsed, active: isSleep)
         
         // continue drive logic
-        let threeHourDiff = Int(3 * 60 * 60)
-        let remainingContinueDrive = Int(latestLog.remainingDriveTime ?? 0) - threeHourDiff
-        let continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: isContDrv)
-        
+        let remainingContinueDrive = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
+        var continueDriveRemainingTime = TimeInterval(0)
+        if status == .onDrive {
+            continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: true)
+        } else {
+         //   if elapsed > TimeInterval(30*60) {
+                continueDriveRemainingTime = TimeInterval(remainingContinueDrive)
+//            } else {
+//                
+//            }
+        }
         
         var breakRemainingTime = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)
         if AppStorageHandler.shared.is34HourStarted {
