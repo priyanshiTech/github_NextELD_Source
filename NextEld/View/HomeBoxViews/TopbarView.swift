@@ -70,6 +70,9 @@ struct TopBarView: View {
                 Button("Split Log") {
                     navManager.navigate(to: AppRoute.HomeFlow.SplitShiftDBView)
                 }
+                Button("Device Data") {
+                    navManager.navigate(to: AppRoute.HomeFlow.DeviceDataView)
+                }
                 
                 
             } label: {

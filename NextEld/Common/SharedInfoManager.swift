@@ -19,7 +19,6 @@ class SharedInfoManager {
     var odometer = 0.0
     var engineHours = 0.0
     var isDeviceConnected: Bool = false
-    
     var centralManager: CBCentralManager?
     private init() {
         

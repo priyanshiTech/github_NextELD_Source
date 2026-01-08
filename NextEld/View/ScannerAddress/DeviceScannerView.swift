@@ -296,6 +296,9 @@ struct DeviceScannerView: View {
                
                 case .SplitShiftDBView:
                     SplitShiftDBView()
+                    
+                case .DeviceDataView:
+                    DeviceDataTableView()
                 }
             }
             .navigationDestination(for: ApplicationRoot.self) { root in

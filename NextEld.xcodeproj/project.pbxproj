@@ -139,6 +139,8 @@
 		AF9E842A2EC3198500CF40E5 /* DataTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9E84292EC3198500CF40E5 /* DataTransferModel.swift */; };
 		AF9E842C2EC31CD100CF40E5 /* DataTransferViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9E842B2EC31CD100CF40E5 /* DataTransferViewModel.swift */; };
 		AF9E84302EC3425F00CF40E5 /* SessionExpireUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9E842F2EC3425F00CF40E5 /* SessionExpireUIView.swift */; };
+		AFA6621E2F0FCA020052FB07 /* DeviceDataDbManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6621D2F0FCA020052FB07 /* DeviceDataDbManager.swift */; };
+		AFA662202F0FD4F40052FB07 /* DeviceDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6621F2F0FD4F40052FB07 /* DeviceDataView.swift */; };
 		AFA691012E5465ED0035D092 /* DefectAPicalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA691002E5465ED0035D092 /* DefectAPicalling.swift */; };
 		AFA691032E54682A0035D092 /* DefectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA691022E54682A0035D092 /* DefectViewModel.swift */; };
 		AFA691052E549CF80035D092 /* Webview.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA691042E549CF80035D092 /* Webview.swift */; };
@@ -429,6 +431,8 @@
 		AF9E84292EC3198500CF40E5 /* DataTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferModel.swift; sourceTree = "<group>"; };
 		AF9E842B2EC31CD100CF40E5 /* DataTransferViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferViewModel.swift; sourceTree = "<group>"; };
 		AF9E842F2EC3425F00CF40E5 /* SessionExpireUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionExpireUIView.swift; sourceTree = "<group>"; };
+		AFA6621D2F0FCA020052FB07 /* DeviceDataDbManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataDbManager.swift; sourceTree = "<group>"; };
+		AFA6621F2F0FD4F40052FB07 /* DeviceDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataView.swift; sourceTree = "<group>"; };
 		AFA691002E5465ED0035D092 /* DefectAPicalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefectAPicalling.swift; sourceTree = "<group>"; };
 		AFA691022E54682A0035D092 /* DefectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefectViewModel.swift; sourceTree = "<group>"; };
 		AFA691042E549CF80035D092 /* Webview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Webview.swift; sourceTree = "<group>"; };
@@ -1165,6 +1169,15 @@
 			path = DataTransferModel;
 			sourceTree = "<group>";
 		};
+		AFA6621C2F0FC5950052FB07 /* DeviceDataDB */ = {
+			isa = PBXGroup;
+			children = (
+				AFA6621D2F0FCA020052FB07 /* DeviceDataDbManager.swift */,
+				AFA6621F2F0FD4F40052FB07 /* DeviceDataView.swift */,
+			);
+			path = DeviceDataDB;
+			sourceTree = "<group>";
+		};
 		AFA690FF2E5465D80035D092 /* DefectAPI */ = {
 			isa = PBXGroup;
 			children = (
@@ -1474,6 +1487,7 @@
 		AFC535552E0D5D5700AD10C9 /* DataBaseMM */ = {
 			isa = PBXGroup;
 			children = (
+				AFA6621C2F0FC5950052FB07 /* DeviceDataDB */,
 				AF2E0D242E8BBFA000172174 /* ContinueDrive  */,
 				AF66F78E2E4C6344009A13A0 /* DataBaseForCertify */,
 				AF7951172E3BA7B5005FFFBF /* DvirProDatabase */,
@@ -1892,6 +1906,7 @@
 				AFE5DFFF2E5349B20069BE27 /* LogOutAPiViewModel.swift in Sources */,
 				CB283E722E9D5C5100B431DD /* HomeViewModel+Database.swift in Sources */,
 				AF910B5F2E14009100BCC9E9 /* VoilationsAlert's.swift in Sources */,
+				AFA6621E2F0FCA020052FB07 /* DeviceDataDbManager.swift in Sources */,
 				AFFCF1E52EDCCBEC00D548DF /* BlockAppView.swift in Sources */,
 				AF66F7A62E4CD00F009A13A0 /* CertifySignatureModel.swift in Sources */,
 				AF72E43D2DFD54B400626DC0 /* EyeViewData.swift in Sources */,
@@ -1912,6 +1927,7 @@
 				AF72E4412DFD54B400626DC0 /* HoursRecap.swift in Sources */,
 				AFBB59F82E4231800056A660 /* UpdateDvirModel.swift in Sources */,
 				AFC381772E29067B006FD4E1 /* OfflineSavingDataModel.swift in Sources */,
+				AFA662202F0FD4F40052FB07 /* DeviceDataView.swift in Sources */,
 				AF72E4612DFD845800626DC0 /* QRScanner.swift in Sources */,
 				AF72E4422DFD54B400626DC0 /* DailyLogView.swift in Sources */,
 				AF72E4432DFD54B400626DC0 /* HomeScreenView.swift in Sources */,
