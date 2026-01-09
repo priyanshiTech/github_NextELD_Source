@@ -395,7 +395,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []
-    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     
     init() {
         checkWhetherTheViolationAlreadyExists()
@@ -820,7 +820,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             self.violationDataArray.append(violationData)
             saveViolation(for: violationData, date: violationDate)
             UserDefaults.standard.setValue(uniqueValueForViolation15min, forKey: violationKey + "_15min")
-        } else if remainingTime <= 0 && uniqueValueForViolation != lastViolationDateValue {
+        } else if remainingTime < 0 && uniqueValueForViolation != lastViolationDateValue {
             // This two condition will work when remaining time directly goes to <= 0
             if lastViolationDate30MinValue != uniqueValueForViolation30Min {
                 var violationData = ViolationData()
@@ -874,7 +874,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         if let onDutyTimer, (currentDriverStatus == .onDrive || currentDriverStatus == .onDuty || currentDriverStatus == .yardMode) {
             onChangeRemaingTime(type: .onDuty, remainigTime: onDutyTimer.remainingTime)
         }
-        if let cycleTimer, (currentDriverStatus == .onDrive || currentDriverStatus == .onDuty || currentDriverStatus == .yardMode) {
+        if let cycleTimer {
            // cycleMessageDisplay = cycleTimer.remainingTime <= 0
             onChangeRemaingTime(type: .cycleTimer, remainigTime: cycleTimer.remainingTime)
         }
@@ -940,11 +940,11 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func isLogVerify(dateTime: Date) -> Bool {
         let startOfDay = DateTimeHelper.calendar.startOfDay(for: dateTime)
         let endOfDay = DateTimeHelper.calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? Date()
-        let currentDay = AppStorageHandler.shared.days
-        
-        if currentDay == 1 {
-            return true
-        } else {
+//        let currentDay = AppStorageHandler.shared.days
+//        
+//        if currentDay == 1 {
+//            return true
+//        } else {
             
             // check whether the certify table have data or not
             let record = CertifyDatabaseManager.shared.getLastRecordOfCertifyLogs(
@@ -963,7 +963,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 }
             }
             return recordExist
-        }
+     //   }
     }
 
     

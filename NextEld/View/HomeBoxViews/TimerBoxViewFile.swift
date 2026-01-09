@@ -7,11 +7,14 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 struct TimeBox: View {
     @ObservedObject var timer: CountdownTimer  = .init(startTime: 0)
+    static let updateDayNotification: PassthroughSubject<Void, Never> = .init()
     let type: TimerType
     let title: LocalizedStringKey
+    @State private var cycleDays = ""
 //    @ObservedObject var timer: CountdownTimer
     
     var body: some View {
@@ -25,7 +28,7 @@ struct TimeBox: View {
                                 .foregroundColor(.white)
                                 .bold()
                             +
-                            Text("/\((AppStorageHandler.shared.cycleDays ?? 0) - AppStorageHandler.shared.days) Days Remaining")
+                            Text(cycleDays)
                                 .foregroundColor(.white)
                                 .font(.caption2)
                         )
@@ -47,6 +50,12 @@ struct TimeBox: View {
                 }
             }
         }
+        .onAppear {
+          cycleDays = "/\((AppStorageHandler.shared.cycleDays ?? 0) - AppStorageHandler.shared.days) Days Remaining"
+        }
+        .onReceive(TimeBox.updateDayNotification, perform: { value in
+            cycleDays = "/\((AppStorageHandler.shared.cycleDays ?? 0) - AppStorageHandler.shared.days) Days Remaining"
+        })
         .frame(height: 35)
         .padding()
         .background(Color(uiColor: .wine))

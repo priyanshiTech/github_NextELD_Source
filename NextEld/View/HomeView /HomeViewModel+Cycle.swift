@@ -70,6 +70,7 @@ extension  HomeViewModel {
         showAlert(alertType: .nextDay)
         self.resetToInitialState()
       //  self.saveTimerStateForStatus(status: AppConstants.nextDayAlertTitle, originType: .auto, note: "Next Day Started")
+        TimeBox.updateDayNotification.send() // update day count on cycle timer
         AppStorageHandler.shared.days += 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.nextDayAlert)
         calculateTimeWhenDaysIsGreaterThan8days() // When days greater than 8 days cycle
