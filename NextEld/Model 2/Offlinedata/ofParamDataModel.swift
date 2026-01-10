@@ -18,6 +18,29 @@ struct SyncRequest: Codable {
     var splitLog: SplllitLogss? = nil
 }
 
+//MARK: - for Device data
+struct EldLogData : Codable {
+    let id : String?
+    let clientId : Int?
+    let coolantTemp : String?
+    let dateTime : String?
+    let driverId : String?
+    let engineHours : Double?
+    let fuelTankTemp : Int?
+    let latLong : String?
+    let mac : String?
+    let model : String?
+    let odometer : String?
+    let oilTemp : Int?
+    let rpm : Int?
+    let serialNo : String?
+    let speed : Int?
+    let utcDateTime : Int?
+    let vehicleId : String?
+    let version : String?
+    let vin : String?
+}
+
 
 struct DriveringStatusData : Codable {
     let appVersion : String?
