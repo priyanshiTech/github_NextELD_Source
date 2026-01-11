@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct EyeViewData: View {
     
    // @State var tittle: String
@@ -16,6 +17,7 @@ struct EyeViewData: View {
     var title: String
     @State private var selectedDate: Date
     @State private var databaseLogs: [DriverLogModel] = []
+    @State private var certifyLogs: [CertifyRecord] = []
   
     init(title: String, date: Date) {
         self.title = title
@@ -188,7 +190,7 @@ struct EyeViewData: View {
                         )
                         
                         // Display all entries from database
-                        if !databaseLogs.isEmpty {
+                       if !databaseLogs.isEmpty {
                             ForEach(databaseLogs.indices, id: \.self) { index in
                                 let log = databaseLogs[index]
                                 sectionSmallGridRow(
@@ -205,7 +207,31 @@ struct EyeViewData: View {
                                 )
                             }
                         }
+
+                        if !certifyLogs.isEmpty {
+                             ForEach(certifyLogs.indices, id: \.self) { index in
+                                 let log = certifyLogs[index]
+                                 sectionSmallGridRow(
+                                     smallvalues: [
+                                       //  DateTimeHelper.formatDatabaseDateTime((log.startTime))   /* formatDateTime*/,
+                                      
+                                      
+                                         log.userID,
+                                         log.userName,
+                                         DateTimeHelper.formatDateOnly(log.date),
+                                         log.isCertify,
+                                         log.selectedCoDriver
+
+                                 
+                                     ]
+                                 )
+                             }
+                         }
+
                     }
+
+                    
+    
                 } else if let error = viewModel.errorMessage {
                     VStack(spacing: 12) {
                         Image(systemName: "exclamationmark.triangle")
@@ -241,6 +267,7 @@ struct EyeViewData: View {
             // print(" EyeViewData: Starting to fetch driver data...")
             await fetchDriverData()
             loadDatabaseLogs()
+            loadOnlyCertifyLogs()
             // print(" EyeViewData: Fetch completed")
             // print("   isLoading: \(viewModel.isLoading)")
             // print("   hasData: \(viewModel.data != nil)")
@@ -283,6 +310,21 @@ struct EyeViewData: View {
         }.sorted { $0.startTime < $1.startTime }
     }
     
+    //MARK: -  fetch vertify Logs
+    private func loadOnlyCertifyLogs() {
+        let calendar = Calendar.current
+
+        certifyLogs = CertifyDatabaseManager.shared
+            .fetchAllRecords()
+            .filter {
+                calendar.isDate($0.date, inSameDayAs: selectedDate)
+            }
+            .sorted { $0.date < $1.date }
+    }
+
+  
+
+
     
     private var logsForSelectedDate: [DriverLogModel] {
         let startDate = DateTimeHelper.startOfDay(for: selectedDate)
@@ -342,6 +384,10 @@ struct EyeViewData: View {
         
         return events
     }
+    
+    
+    //MARK: -  to show  certifyLogView
+    
     
     func nextLogCalculation() -> Date {
         let selectedDateIsInTodaysDate = DateTimeHelper.currentCalendar.isDateInToday(selectedDate)
@@ -448,9 +494,6 @@ struct EyeViewData: View {
     EyeViewData(title: "Daily Logs", date: Date())
         .environmentObject(navManager)
 }
-
-
-
 
 
 

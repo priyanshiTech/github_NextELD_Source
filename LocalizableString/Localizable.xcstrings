@@ -4,19 +4,8 @@
     "" : {
 
     },
-    "  The user is Manual  , instruction sheet, and malfunction instruction Sheet can be in electronic form. this is accordance with fedral register titled Regulatory Guidance Concerning Electronic Signature and Documents (76 FR 411)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\nਉਪਭੋਗਤਾ ਮੈਨੂਅਲ, ਹਦਾਇਤ ਸ਼ੀਟ, ਅਤੇ ਖਰਾਬੀ ਨਿਰਦੇਸ਼ ਸ਼ੀਟ ਇਲੈਕਟ੍ਰਾਨਿਕ ਰੂਪ ਵਿੱਚ ਹੋ ਸਕਦੀ ਹੈ। ਇਹ ਫੈਡਰਲ ਰਜਿਸਟਰ ਦੇ ਅਨੁਸਾਰ ਹੈ ਜਿਸਦਾ ਸਿਰਲੇਖ ਹੈ ਰੈਗੂਲੇਟਰੀ ਗਾਈਡੈਂਸ ਕੰਸਰਨਿੰਗ ਇਲੈਕਟ੍ਰਾਨਿਕ ਦਸਤਖਤ ਅਤੇ ਦਸਤਾਵੇਜ਼ (76 FR 411)।"
-          }
-        }
-      }
-    },
     " / %lld Days" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -27,7 +16,7 @@
       }
     },
     " %@" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -38,7 +27,7 @@
       }
     },
     " In additional the above the above , a supply of blank  driver's records of duty status (RODS) graph - grids sufficient  to records the driver's duty status and other related information for a minimum of 8 days must be Onboard the commercisl motor Vechicle (CMV)" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -49,10 +38,25 @@
       }
     },
     " The user manual, instruction sheet, and malfunction instructions can be in electronic form. This is in accordance with the Federal Register titled Regulatory Guidance Concerning Electronic Signatures and Documents (76 FR 411)." : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਯੂਜ਼ਰ ਮੈਨੂਅਲ, ਹਦਾਇਤ ਸ਼ੀਟ, ਅਤੇ ਖਰਾਬੀ ਸੰਬੰਧੀ ਹਦਾਇਤਾਂ ਇਲੈਕਟ੍ਰਾਨਿਕ ਰੂਪ ਵਿੱਚ ਹੋ ਸਕਦੀਆਂ ਹਨ। ਇਹ ਫੈਡਰਲ ਰਜਿਸਟਰ ਦੇ ਅਨੁਸਾਰ ਹੈ ਜਿਸਦਾ ਸਿਰਲੇਖ ਰੈਗੂਲੇਟਰੀ ਗਾਈਡੈਂਸ ਕੰਸਰਨਿੰਗ ਇਲੈਕਟ੍ਰਾਨਿਕ ਦਸਤਖਤਾਂ ਅਤੇ ਦਸਤਾਵੇਜ਼ਾਂ (76 FR 411) ਹੈ।"
+          }
+        }
+      }
     },
     "/%lld Days Remaining" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਬਾਕੀ ਦਿਨ"
+          }
+        }
+      }
     },
     "%@" : {
       "localizations" : {
@@ -106,6 +110,9 @@
         }
       }
     },
+    "%lf" : {
+
+    },
     "%lld Defects" : {
       "localizations" : {
         "pa" : {
@@ -127,10 +134,18 @@
       }
     },
     "0" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0"
+          }
+        }
+      }
     },
     "0.00" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -251,7 +266,14 @@
       }
     },
     "All Star Elogs" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਆਲ ਸਟਾਰ ਈਲੋਗਸ"
+          }
+        }
+      }
     },
     "are you sure you want to refersh your logs" : {
       "extractionState" : "manual",
@@ -329,7 +351,7 @@
         "pa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\nਰੱਦ ਕਰੋ"
+            "value" : "ਰੱਦ ਕਰੋ"
           }
         }
       }
@@ -444,6 +466,17 @@
         }
       }
     },
+    "Company Info" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਕੰਪਨੀ ਦੀ ਜਾਣਕਾਰੀ"
+          }
+        }
+      }
+    },
     "Company Information" : {
       "localizations" : {
         "pa" : {
@@ -465,7 +498,7 @@
       }
     },
     "CONNECT" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -486,7 +519,14 @@
       }
     },
     "Connected" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਜੁੜਿਆ"
+          }
+        }
+      }
     },
     "Connected Now" : {
       "localizations" : {
@@ -623,7 +663,18 @@
         "pa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ਰੋਜ਼ਾਨਾ ਲੌਗਸ"
+            "value" : "\"ਰੋਜ਼ਾਨਾ-ਲਾਗ\""
+          }
+        }
+      }
+    },
+    "daily_logs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "दैनिक लॉग्स"
           }
         }
       }
@@ -739,7 +790,14 @@
       }
     },
     "Drive Mode Active" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਡਰਾਈਵ ਮੋਡ ਕਿਰਿਆਸ਼ੀਲ"
+          }
+        }
+      }
     },
     "Driver Logs" : {
       "localizations" : {
@@ -761,6 +819,17 @@
         }
       }
     },
+    "Dvir - Pri Trip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਡੀਵੀਰ - ਪ੍ਰਾਈ ਟ੍ਰਿਪ"
+          }
+        }
+      }
+    },
     "DVIR Records" : {
       "localizations" : {
         "pa" : {
@@ -771,8 +840,26 @@
         }
       }
     },
+    "dvir_pre_trip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "डीवीआईआर - प्री ट्रिप"
+          }
+        }
+      }
+    },
     "Edit" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸੰਪਾਦਿਤ ਕਰੋ"
+          }
+        }
+      }
     },
     "eld connection" : {
       "extractionState" : "manual",
@@ -886,7 +973,14 @@
       }
     },
     "Engine Hours:" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਇੰਜਣ ਦੇ ਘੰਟੇ:"
+          }
+        }
+      }
     },
     "Enter a UserName" : {
       "localizations" : {
@@ -949,7 +1043,14 @@
       }
     },
     "Enter The ELD Mac address Listed On The Device" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਡਿਵਾਈਸ ਤੇ ਸੂਚੀਬੱਧ ELD ਮੈਕ ਪਤਾ ਦਰਜ ਕਰੋ"
+          }
+        }
+      }
     },
     "error" : {
 
@@ -975,7 +1076,7 @@
       }
     },
     "Excel Eld" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -986,7 +1087,7 @@
       }
     },
     "Excel ELD" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1012,17 +1113,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ਡਾਟਾ ਪ੍ਰਾਪਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
-          }
-        }
-      }
-    },
-    "Fetching location..." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ਟਿਕਾਣਾ ਪ੍ਰਾਪਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
           }
         }
       }
@@ -1198,7 +1288,25 @@
       }
     },
     "In addition to the above, a supply of blank driver’s Records of Duty Status (RODS) graph grids, sufficient to record the driver’s duty status and other related information for a minimum of 8 days, must be onboard the commercial motor vehicle (CMV)." : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਉਪਰੋਕਤ ਤੋਂ ਇਲਾਵਾ, ਕਮਰਸ਼ੀਅਲ ਮੋਟਰ ਵਾਹਨ (CMV) ਵਿੱਚ ਖਾਲੀ ਡਰਾਈਵਰ ਦੇ ਡਿਊਟੀ ਸਟੇਟਸ ਰਿਕਾਰਡ (RODS) ਗ੍ਰਾਫ ਗਰਿੱਡ ਦੀ ਸਪਲਾਈ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ, ਜੋ ਘੱਟੋ-ਘੱਟ 8 ਦਿਨਾਂ ਲਈ ਡਰਾਈਵਰ ਦੀ ਡਿਊਟੀ ਸਥਿਤੀ ਅਤੇ ਹੋਰ ਸੰਬੰਧਿਤ ਜਾਣਕਾਰੀ ਨੂੰ ਰਿਕਾਰਡ ਕਰਨ ਲਈ ਕਾਫ਼ੀ ਹੈ।"
+          }
+        }
+      }
+    },
+    "Information-Pocket" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਜਾਣਕਾਰੀ-ਜੇਬ"
+          }
+        }
+      }
     },
     "Inspect logs for the 24-hour period and the previous days for men HOS cycle" : {
       "localizations" : {
@@ -1230,7 +1338,7 @@
         }
       }
     },
-    "Key" : {
+    "Key 2" : {
       "extractionState" : "manual"
     },
     "language" : {
@@ -1485,7 +1593,7 @@
 
     },
     "Note" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1519,7 +1627,7 @@
       }
     },
     "NT - 11" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1550,7 +1658,7 @@
       }
     },
     "Ok" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -1581,6 +1689,23 @@
         }
       }
     },
+    "OnDrive" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnDrive"
+          }
+        },
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਡਰਾਈਵ 'ਤੇ"
+          }
+        }
+      }
+    },
     "OnDuty" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1588,6 +1713,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ਆਨਡਿਊਟੀ"
+          }
+        }
+      }
+    },
+    "OnSleep" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਆਨ ਸਲੀਪ"
           }
         }
       }
@@ -1670,21 +1806,17 @@
       }
     },
     "Please Contact your fleet Manager to change rules or to add exceptions" : {
-
-    },
-    "Please display required logs as per FMCSA" : {
-
-    },
-    "Please display required logs as per FMCSA and CCATM" : {
-      "extractionState" : "stale",
       "localizations" : {
-        "pa" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ਕਿਰਪਾ ਕਰਕੇ FMCSA ਅਤੇ CCATM ਦੇ ਅਨੁਸਾਰ ਲੋੜੀਂਦੇ ਲੌਗ ਪ੍ਰਦਰਸ਼ਿਤ ਕਰੋ।"
+            "value" : "Please Contact your fleet Manager to change rules or to add exceptions"
           }
         }
       }
+    },
+    "Please display required logs as per FMCSA" : {
+
     },
     "Please enter a valid Username and password." : {
       "localizations" : {
@@ -1829,6 +1961,12 @@
     },
     "Rules" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rules"
+          }
+        },
         "pa" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1968,7 +2106,7 @@
       }
     },
     "Select your Device Type and Enter The ELD Mac address Listed On The Device" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -2068,6 +2206,23 @@
         }
       }
     },
+    "settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "setting"
+          }
+        },
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸੈਟਿੰਗਾਂ"
+          }
+        }
+      }
+    },
     "SIGN-IN AGAIN" : {
       "localizations" : {
         "pa" : {
@@ -2147,6 +2302,17 @@
         }
       }
     },
+    "Sync" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸਿੰਕ"
+          }
+        }
+      }
+    },
     "Terms & Privacy Policy" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2172,7 +2338,7 @@
 
     },
     "The Current driver will be signed out and you will become Driver. Notice as per requirements from FMCSA and CCMTA" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
@@ -2483,23 +2649,12 @@
       }
     },
     "Version - %@" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ਵਰਜਨ - %@"
-          }
-        }
-      }
-    },
-    "Version - OS/02/May" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ਸੰਸਕਰਣ - OS/02/ਮਈ"
           }
         }
       }
@@ -2545,7 +2700,14 @@
       }
     },
     "Violations -" : {
-
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਉਲੰਘਣਾਵਾਂ -"
+          }
+        }
+      }
     },
     "We'll Send a sms for User Name" : {
       "localizations" : {
@@ -2577,6 +2739,23 @@
         }
       }
     },
+    "YardMove" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YardMove"
+          }
+        },
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਯਾਰਡਮੂਵ"
+          }
+        }
+      }
+    },
     "You have been logged out and logged-in on another device" : {
       "localizations" : {
         "pa" : {
@@ -2587,12 +2766,23 @@
         }
       }
     },
-    "Your current status is:" : {
+    "Your current status is" : {
       "localizations" : {
         "pa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ਤੁਹਾਡੀ ਮੌਜੂਦਾ ਸਥਿਤੀ ਇਹ ਹੈ:"
+            "value" : "ਤੁਹਾਡੀ ਮੌਜੂਦਾ ਸਥਿਤੀ ਇਹ ਹੈ"
+          }
+        }
+      }
+    },
+    "Your current status is:" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਤੁਹਾਡੀ ਮੌਜੂਦਾ ਸਥਿਤੀ ਇਹ ਹੈ"
           }
         }
       }

@@ -16,7 +16,19 @@ class SyncViewModel: ObservableObject {
     @discardableResult
     func syncOfflineData() async -> Bool {
         
-        let unsyncedLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.notSync, .warning, .nextDayAlert], addWarningAndViolation: true)
+       // let unsyncedLogs = DatabaseManager.shared.fetchLogs(filterTypes: [.notSync, .warning, .nextDayAlert], addWarningAndViolation: true)
+        let unsyncedLogs = DatabaseManager.shared
+            .fetchLogs(
+                filterTypes: [.notSync, .warning, .nextDayAlert],
+                addWarningAndViolation: true
+            )
+            .filter { log in
+                let status = log.status.trimmingCharacters(in: .whitespacesAndNewlines)
+                    .lowercased()
+                
+                return status != "login" && status != "logout"
+            }
+
 
         guard !unsyncedLogs.isEmpty else {
             // print(" No unsynced logs found. All data already synced!")
@@ -188,52 +200,3 @@ class SyncViewModel: ObservableObject {
 
 
 
-
-
-
-
-
-
-
-
-
-//*//        let driveringStatusData = unsyncedLogs.map { log in
-//            DriveringStatusData(
-//                appVersion: "12.0",
-//                clientId: 1,
-//                currentLocation: log.location,
-//                customLocation: log.location,
-//                dateTime: log.startTime,
-//                days: log.day,
-//                driverId: log.userId,
-
-
-
-
-
-//                engineHour: log.engineHours,
-//                engineStatus: log.engineStatus,
-//                identifier: log.identifier,
-//                isSplit: log.isSplit,
-//                isVoilation: log.isVoilations,
-//                lastOnSleepTime: Int(log.lastSleepTime) ?? 0,
-//                lattitude: log.lat,
-//                localId: "\(log.id ?? 0)",
-//                logType: log.dutyType,
-//                longitude: log.long,
-//                note: log.notes,
-//                odometer: Int(log.odometer),
-//                origin: log.origin,
-//                osVersion: "iOS - \(UIDevice.current.systemVersion)",
-//                remainingDriveTime: Int(log.remainingDriveTime ?? "0") ?? 0,
-//                remainingDutyTime: Int(log.remainingDutyTime ?? "0") ?? 0,
-//                remainingSleepTime: Int(log.remainingSleepTime ?? "0") ?? 0,
-//                remainingWeeklyTime: Int(log.remainingWeeklyTime ?? "0") ?? 0,
-//                shift: log.shift,
-//                status: log.status,
-//                utcDateTime: log.timestamp,
-//
-//                vehicleId: "\(log.vehicleId)"
-//            )
-//        }
-//*//

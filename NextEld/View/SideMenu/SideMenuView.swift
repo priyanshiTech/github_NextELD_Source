@@ -28,12 +28,8 @@ struct SideMenuView: View {
                 .padding(.horizontal, 16)
             
             UniversalScrollView {
-                
-                
-                  
 
                     ForEach(SideMenuRowType.allCases, id: \.self) { row in
-                        
                         RowView(
                             isSelected: selectedSideMenuTab == row.rawValue,
                             imageName: row.iconName,
@@ -101,7 +97,7 @@ func handleSelection(_ row: SideMenuRowType) {
        case .DvirPriTrip:
            navmanager.path.append(AppRoute.HomeFlow.AddDvirPriTrip)
        case . DotInspection:
-           navmanager.path.append(AppRoute.HomeFlow.DotInspection(tittle: "road Side inspection"))
+           navmanager.path.append(AppRoute.HomeFlow.DotInspection(tittle: "Road Side inspection"))
        case .coDriver:
            navmanager.path.append(AppRoute.HomeFlow.CoDriverLogin)
        case .Vehicle:

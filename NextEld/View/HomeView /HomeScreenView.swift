@@ -15,7 +15,11 @@ struct HomeScreenView: View {
     @StateObject var trailerVM: TrailerViewModel = .init()
     @StateObject private var driverWorkviewModel = DriverWorkingViewModel()
     @EnvironmentObject var navManager: NavigationManager
-    @StateObject private var viewModel = RefreshViewModel()
+    @StateObject private var refreshViewModel = RefreshViewModel()
+    //MARK: - data Diagnosys
+    private let engineMonitor = EngineSyncMonitor()  //6 january
+
+
     
 
     @State private var labelValue = ""
@@ -34,7 +38,7 @@ struct HomeScreenView: View {
     @State private var syncPopupContext: SyncPopupContext? = nil
     @State private var showLogoutStatusAlert = false
 
-    //MARK: - Daily violation tracking
+   
     
 
     //MARK: -  Show Alert Drive Before 30 min / 15 MIn
@@ -89,10 +93,52 @@ struct HomeScreenView: View {
                                     .foregroundColor(.red)
                                     .multilineTextAlignment(.center)
                             }
-                            Text(SharedInfoManager.shared.isDeviceConnected ? "Connected": "Disconnected")
-                                .font(.title2)
-                                .foregroundColor(SharedInfoManager.shared.isDeviceConnected ? .green : .red)
-                            //UserDefaults.standard.string(forKey: "truckNo"),
+                            
+                            
+//                            Text(SharedInfoManager.shared.isDeviceConnected ? "Connected": "Disconnected")
+//                                .font(.title2)
+//                                .foregroundColor(SharedInfoManager.shared.isDeviceConnected ? .green : .red)
+//                            
+//                            BleConnectionBoxview(deviceName: "PT30-U", macAddress: "E0:09:DC:C3:7F:48")
+                            
+                            
+                            VStack(spacing: 10) {
+
+                                // Connection status text (always visible)
+                                Text(SharedInfoManager.shared.isDeviceConnected ? "Connected" : "Disconnected")
+                                    .font(.title2)
+                                    .foregroundColor(SharedInfoManager.shared.isDeviceConnected ? .green : .red)
+
+                                //  Show popup ONLY when device is connected
+                                if SharedInfoManager.shared.isDeviceConnected {
+                                    BleConnectionBoxview(
+                                        deviceName: "PT30-U",
+                                        macAddress: "E0:09:DC:C3:7F:48"
+                                    )
+                                    .transition(.opacity)
+                                }
+                            }
+                            .animation(.easeInOut, value: SharedInfoManager.shared.isDeviceConnected)
+                            //MARK: -  MArk Engine Dignostic in every seconds   6 january in progress
+                            .onAppear {
+                                // Only start if device already connected
+                                if SharedInfoManager.shared.isDeviceConnected {
+                                    engineMonitor.startMonitoring()
+                                }
+                            }
+                            .onDisappear {
+                                engineMonitor.stopMonitoring()
+                            }
+                            .onChange(of: SharedInfoManager.shared.isDeviceConnected) { isConnected in
+                                if isConnected {
+                                    engineMonitor.startMonitoring()
+                                } else {
+                                    engineMonitor.stopMonitoring()
+                                }
+                            }
+
+
+                          //  UserDefaults.standard.string(forKey: "truckNo"),
                             VehicleInfoView(
                                 GadiNo: AppStorageHandler.shared.vehicleNo ?? "Not Found",
                                 trailer: trailerVM.getTrailerValue()
@@ -256,15 +302,19 @@ struct HomeScreenView: View {
                         .allowsHitTesting(false)
                     
                     CustomPopupAlert(
-                        
+
                         title: "Refresh Log",
                         message: "You have some records to update, do you want to update?",
                         onOK: {
-                            
+                            isManualSyncInProgress = true
+                            showPendingSyncPopup = false
+                            syncPopupContext = nil
                             homeVM.handleSyncPopupConfirmation()
                         },
+
                         onCancel: {
                             isManualSyncInProgress = false
+                            
                         syncPopupContext = nil
                             showPendingSyncPopup = false
                         },
@@ -406,19 +456,17 @@ struct HomeScreenView: View {
                 }
             }
         }
+
         
-        // Set alert type when sync confirmation is triggered
         .onChange(of: homeVM.showSyncconfirmation) { newValue in
             guard newValue else { return }
-//            homeVM.showSyncconfirmation = false
-//            if hasPendingUnsyncedLogs() {
-//                syncPopupContext = .manualRefresh
-//                showPendingSyncPopup = true
-//            } else {
-//                scheduleRefreshAlert()
-//            }
-                homeVM.handleSyncPopupConfirmation()
+
+            homeVM.showSyncconfirmation = false
+            syncPopupContext = .manualRefresh
+            showPendingSyncPopup = true   //  REQUIRED
+           
         }
+
         
         // Set alert type when delete confirmation is triggered
         .onChange(of: showDeleteConfirm) { newValue in
@@ -524,7 +572,7 @@ struct HomeScreenView: View {
             case .refresh:
                 //MARK: -  Call refresh API
                 Task {
-                    await viewModel.refresh()
+                    await refreshViewModel.refresh()
                 }
             case .deleteLogs:
                 

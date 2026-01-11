@@ -27,13 +27,12 @@ struct EmailDvir: View {
             return t1 > t2
         }
     }
-
+    
     
     var body: some View {
             
             VStack(spacing: 0) {
            
-                
                 // MARK: - Header
                 HStack {
                     Button(action: {

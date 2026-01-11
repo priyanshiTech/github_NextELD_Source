@@ -14,6 +14,9 @@ extension String {
         return LocalizedStringKey(self)
     }
     
+
+
+    
     func asTimeInterval() -> TimeInterval {
         let isNegative = self.hasPrefix("-")
         let cleanString = isNegative ? String(self.dropFirst()) : self
@@ -27,6 +30,9 @@ extension String {
         let timeInterval = TimeInterval(hours * 3600 + minutes * 60 + seconds)
         return isNegative ? -timeInterval : timeInterval
     }
+    
+
 }
+
 
 

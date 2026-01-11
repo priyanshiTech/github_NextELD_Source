@@ -11,7 +11,7 @@ import SwiftUI
 struct AvailableHoursView: View {
     @EnvironmentObject var navmanager: NavigationManager
     @ObservedObject var homeViewModel: HomeViewModel
-    private var timerTypes: [TimerType] = [.onDuty, .onDrive, .cycleTimer, .sleepTimer]
+    private var timerTypes: [TimerType] = [.onDrive ,.onDuty, .cycleTimer, .sleepTimer]
     let columns = [
         GridItem(.flexible(), spacing: 2),
             GridItem(.flexible(), spacing: 2)
@@ -53,11 +53,11 @@ struct AvailableHoursView: View {
                
                 LazyVGrid(columns: columns, spacing: 2) {
                     ForEach(timerTypes, id: \.self) { type in
-                        if type == .onDrive {
-                            TimeBox(timer: homeViewModel.onDriveTimer!, type: type, title: type.getName())
+                        if type == .onDuty {
                             
-                        } else if type == .onDuty {
                             TimeBox(timer: homeViewModel.onDutyTimer!, type: type, title: type.getName())
+                        } else if type == .onDrive {
+                            TimeBox(timer: homeViewModel.onDriveTimer!, type: type, title: type.getName())
                            
                         } else if type == .cycleTimer
                         {
@@ -66,7 +66,6 @@ struct AvailableHoursView: View {
                         } else if type == .sleepTimer {
                             TimeBox(timer: homeViewModel.sleepTimer!, type: type, title: type.getName())
                         }
-
                         
                     }
                    

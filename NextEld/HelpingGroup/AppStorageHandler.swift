@@ -42,7 +42,8 @@ struct AppStorageHandler {
     @AppStorage("exempt") var exempt: String?
     @AppStorage("disclaimerRead") var disclaimerRead:Int?
     @AppStorage("isDeviceConnected") var isDeviceConnected: Bool = false
-    
+    @AppStorage("odometer") var odometerValue: Double?
+    @AppStorage("engineHour") var engineHours: Double?
     
     // MARK: - Warning Timer
     @AppStorage("breakTime") var breakTime: Int?
@@ -53,6 +54,8 @@ struct AppStorageHandler {
     @AppStorage("warningBreakTime1") var warningBreakTime1: Int?
     @AppStorage("warningBreakTime2") var warningBreakTime2: Int?
     @AppStorage("is34HourStarted") var is34HourStarted: Bool = false
+    @AppStorage("isBreakTimeRunning") var isBreakTimeRunning: Bool = false
+    @AppStorage("isContinueDriveTimeRunning") var isContinueDriveTimeRunning: Bool = false
     //MARK: -  for saving a data to Add dvir
     @AppStorage("dvirLogId") var dvirLogId: String?
 
@@ -108,6 +111,7 @@ struct AppStorageHandler {
         dvirLogId = nil
         
     }
+
 }
 
 extension Notification.Name {

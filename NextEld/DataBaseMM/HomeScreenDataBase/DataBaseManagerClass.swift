@@ -30,6 +30,8 @@ enum FilterType {
     case shift
     case notSync
     case engineStatus
+    case odometer
+    case engineHours
     case notEngineStartStatus
     case notEngineStopStatus
     case specificDate(date: Date)
@@ -106,8 +108,8 @@ class DatabaseManager: DatabaseHandler {
     let dutyType = Expression<String>("dutyType")
     let shift = Expression<Int>("shift")
     let vehicleName = Expression<String>("vehicleName") //instead of vehicle
-    let odometer = Expression<Double>("odometer")
-    let engineHours = Expression<String>("engineHours")
+    var odometer = Expression<Double>("odometer")
+    var engineHours = Expression<String>("engineHours")
     let location = Expression<String>("location")
     let lat = Expression<Double>("lat")
     let long = Expression<Double>("long")
@@ -295,6 +297,10 @@ class DatabaseManager: DatabaseHandler {
             return startTime < date
         case .login:
             return status == AppConstants.login
+        case .odometer:
+            return odometer ==  0.0// temperory base 6 january
+        case .engineHours:
+            return  odometer ==  0.0//
         }
     }
     
@@ -1012,4 +1018,53 @@ extension DatabaseManager {
     }
 }
 
+//MARK: -  for saved preferance in Malfunction
+
+extension DatabaseManager {
+
+    func saveEngineSyncEvent(
+        status: String,
+        message: String
+    ) {
+
+        let now = Date()
+        let timestamp = Int64(now.timeIntervalSince1970 * 1000)
+
+        let log = DriverLogModel(
+            id: nil,
+            status: status,                      //  important
+            startTime: now,
+            userId: AppStorageHandler.shared.driverId ?? 0,
+            day: AppStorageHandler.shared.days,
+            isVoilations: "NO",
+            dutyType: "System Generated",
+            shift: AppStorageHandler.shared.shift,
+            vehicle: AppStorageHandler.shared.vehicleNo ?? "",
+            odometer: SharedInfoManager.shared.odometer,
+            engineHours: "\(SharedInfoManager.shared.engineHours)",
+            location: "",
+            lat: SharedInfoManager.shared.lattitude,
+            long: SharedInfoManager.shared.longitude,
+            origin: "ELD",
+            isSynced: false,
+            vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
+            trailers: "",
+            notes: message,
+            serverId: nil,
+            timestamp: timestamp,
+            identifier: 0,
+            remainingWeeklyTime: nil,
+            remainingDriveTime: nil,
+            remainingDutyTime: nil,
+            remainingSleepTime: nil,
+            breaktimerRemaning: nil,
+            lastSleepTime: 0,
+            isSplit: 0,
+            engineStatus: "Off",
+            isSystemGenerated: 1              // REQUIRED
+        )
+
+        insertLog(from: log)
+    }
+}
 

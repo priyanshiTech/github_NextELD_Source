@@ -118,7 +118,7 @@ struct StatusDetailsPopup: View {
                         .foregroundColor(.gray)
                         .font(.subheadline)
                     
-                    Text("0")
+                    Text("\(SharedInfoManager.shared.odometer)")
                         .foregroundColor( Color(uiColor: .wine))
                         .font(.body)
                 }
@@ -128,7 +128,7 @@ struct StatusDetailsPopup: View {
                         .foregroundColor(.gray)
                         .font(.subheadline)
                     
-                    Text("0")
+                    Text("\(SharedInfoManager.shared.engineHours)")
                         .foregroundColor( Color(uiColor: .wine))
                         .font(.body)
                 }
@@ -145,7 +145,7 @@ struct StatusDetailsPopup: View {
                                    .stroke(Color(uiColor: .wine), lineWidth: 1)
                            )
                     
-                    if statusTitle.lowercased() == "sleep" {
+                    if statusTitle.lowercased() == "OnSleep" {
                         Text("NOTE:  Split time will work with 7:3 & 8:2 ratio")
                             .font(.caption)
                             .foregroundColor(.green)

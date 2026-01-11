@@ -34,6 +34,12 @@ class RefreshViewModel: ObservableObject {
                 .getRefershAlldata,
                 body: requestBody
             )
+            
+            DatabaseManager.shared.deleteAllLogs()
+            ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+            DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
+            CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+            
             self.loginResponse = response
             applyRefreshResponse(response)
             isLoading = false

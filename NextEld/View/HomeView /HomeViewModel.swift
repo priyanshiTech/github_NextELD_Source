@@ -98,6 +98,10 @@ enum DriverStatusType: Hashable, CaseIterable {
     case yardMode
     case none
     
+    //MARK: - ui shows
+    
+    
+   
     func getName() -> String {
         
         var title = ""
@@ -122,6 +126,17 @@ enum DriverStatusType: Hashable, CaseIterable {
         return title
     }
     
+    func displayNameForCircle() -> String {
+        switch self {
+        case .onDrive:
+            return "Drive"
+        case .sleep:
+            return "Sleep"
+        default:
+            return getName()   // baaki same
+        }
+    }
+
     init?(fromName name: String) {
         let normalized = name
             .replacingOccurrences(of: "-", with: "_")
@@ -395,7 +410,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []
-    let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
     init() {
         checkWhetherTheViolationAlreadyExists()
@@ -412,6 +427,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                     
                     // Sync offline data
                     await self?.syncViewModel.syncOfflineData()
+                  
                     let certifySuccess = await self?.certifySyncViewModel.syncCertifiedOfflineLogs()
                     if certifySuccess == false {
                         print(" Certified offline logs sync failed: \(self?.certifySyncViewModel.syncMessage ?? "Unknown error")")
@@ -433,7 +449,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 self?.hadleDeviceValues(notification: notification)
             })
             .store(in: &cancellable)
-        
    }
     
     deinit {
@@ -453,7 +468,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         checkForViolation()
     
     }
-    
     
     func stopTimers(for types: [TimerType]) {
         for type in types {
@@ -556,7 +570,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func setDriverStatus(status: DriverStatusType, restoreBreakTimerRunning: Bool = false, note: String? = nil, saveLogsToDatabase: Bool = false) {
         let previousStatus = currentDriverStatus
         currentDriverStatus = status
-
+        AppStorageHandler.shared.isContinueDriveTimeRunning = false
         var timerTypes: [TimerType] = []
 
         switch status {
@@ -566,6 +580,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             checkForSplitShift()
             timerTypes = [.onDuty, .cycleTimer]
             if previousStatus == .onDrive || restoreBreakTimerRunning {
+                
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer]
             }
 
@@ -576,7 +591,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 resetBreakTime()
                 breakTimer?.stop()
             }
-            
             timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
             
         case .sleep:
@@ -595,6 +609,12 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             }
         case .none:
             timerTypes = []
+        }
+        
+        AppStorageHandler.shared.isBreakTimeRunning = timerTypes.contains(.breakTimer)
+        
+        if currentDriverStatus == .onDrive || previousStatus == .onDrive {
+            AppStorageHandler.shared.isContinueDriveTimeRunning = true
         }
         
         if saveLogsToDatabase {
@@ -673,40 +693,44 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let isOnDuty  = (status == .onDuty) || isDrive || isYardMove
         let isSleep   = (status == .sleep)
         let isCycle   = !(status == .offDuty || status == .sleep)
-        let isContDrv = (status == .onDrive)
-        let isBreak   = (status != .onDrive)
+        
 
         let onDutyRemainingTime = adjusted(latestLog.remainingDutyTime, elapsed: elapsed, active: isOnDuty)
         let onDriveRemainingTime = adjusted(latestLog.remainingDriveTime, elapsed: elapsed, active: isDrive)
         let cycleRemainingTime = adjusted(latestLog.remainingWeeklyTime, elapsed: elapsed, active: isCycle)
+        
         let sleepRemainingTime = adjusted(latestLog.remainingSleepTime, elapsed: elapsed, active: isSleep)
         
         // continue drive logic
         let remainingContinueDrive = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
-        var continueDriveRemainingTime = TimeInterval(0)
-        if status == .onDrive {
-            continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: true)
-        } else {
-         //   if elapsed > TimeInterval(30*60) {
-                continueDriveRemainingTime = TimeInterval(remainingContinueDrive)
-//            } else {
-//                
-//            }
-        }
+        
+        var continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: AppStorageHandler.shared.isContinueDriveTimeRunning)
+//        if status == .onDrive {
+//            continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: true)
+//        } else {
+//         //   if elapsed > TimeInterval(30*60) {
+//                continueDriveRemainingTime = TimeInterval(remainingContinueDrive)
+////            } else {
+////
+////            }
+//        }
+        
         
         var breakRemainingTime = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)
-        if AppStorageHandler.shared.is34HourStarted {
-            breakRemainingTime = (34 * 60 * 60)
+        let isBreak = AppStorageHandler.shared.isBreakTimeRunning
+       // if (status == .offDuty || status == .sleep) {
             breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
-            let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(breakRemainingTime)
+    //    }
+        
+        if AppStorageHandler.shared.is34HourStarted {
+            let total34Hour = (34 * 60 * 60)
+            let remainingTimeFrom34Hour = adjusted(Int(total34Hour), elapsed: elapsed, active: isBreak)
+            let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(remainingTimeFrom34Hour)
             self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
         } else {
             self.cycleMessage = ""
-            if (status == .offDuty || status == .sleep || status == .onDuty) {
-                breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
-                
-            }
         }
+        
         // Timers
         onDutyTimer               = CountdownTimer(startTime: onDutyRemainingTime)
         onDriveTimer              = CountdownTimer(startTime: onDriveRemainingTime)
@@ -714,7 +738,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         sleepTimer                = CountdownTimer(startTime: sleepRemainingTime)
         continueDriveTimer        = CountdownTimer(startTime: continueDriveRemainingTime)
         breakTimer                = CountdownTimer(startTime: breakRemainingTime)
-       
         
 
       //  setupTimerCallbacks()
@@ -776,98 +799,182 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         case .breakTimer:
             break
         case .sleepTimer:
-            
             break
         case .none:
             break
         }
     }
     
-    func checkViolation(for warning1: TimeInterval, for warning2: TimeInterval, remainingTime: TimeInterval, type: ViolationType, violationKey: String) {
 
-        // Check if we've already shown this warning/violation today
+    func checkViolation(
+        for warning1: TimeInterval,
+        for warning2: TimeInterval,
+        remainingTime: TimeInterval,
+        type: ViolationType,
+        violationKey: String
+    ) {
+
         let lastViolationDateValue = UserDefaults.standard.string(forKey: violationKey)
         let lastViolationDate15minValue = UserDefaults.standard.string(forKey: violationKey + "_15min")
         let lastViolationDate30MinValue = UserDefaults.standard.string(forKey: violationKey + "_30min")
+
         let uniqueValueForViolation = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
         let uniqueValueForViolation30Min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_30min"
         let uniqueValueForViolation15min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_15min"
-        
-        debugPrint("remainingTime-----------------------(\(remainingTime))")
-        debugPrint("Current Value--------->\(uniqueValueForViolation)")
-        debugPrint("\(violationKey)-------->\(lastViolationDateValue ?? "nil")")
-        debugPrint("\(violationKey + "_15min")-------->\(lastViolationDate15minValue ?? "nil")")
-        debugPrint("\(violationKey + "_30min")-------->\(lastViolationDate30MinValue ?? "nil")")
-        debugPrint("-----------------------")
-        
+
         guard lastViolationDate30MinValue != uniqueValueForViolation30Min ||
               lastViolationDate15minValue != uniqueValueForViolation15min ||
               uniqueValueForViolation != lastViolationDateValue else {
-            print("Already violation shown for \(violationKey) shift \(AppStorageHandler.shared.shift) day \(AppStorageHandler.shared.days)")
-            return
-        }
-        
-        guard let violationDate = remainingTime < 0 ? DateTimeHelper.calendar.date(byAdding: .second, value: Int(remainingTime), to: DateTimeHelper.currentDateTime()) : DateTimeHelper.currentDateTime() else {
             return
         }
 
-        if  remainingTime < warning1 && remainingTime > warning2 && lastViolationDate30MinValue != uniqueValueForViolation30Min {
+        guard let violationDate = remainingTime < 0
+                ? DateTimeHelper.calendar.date(byAdding: .second,
+                    value: Int(remainingTime),
+                    to: DateTimeHelper.currentDateTime())
+                : DateTimeHelper.currentDateTime()
+        else { return }
+
+        //  30 MIN WARNING
+        if remainingTime < warning1 &&
+            remainingTime > warning2 &&
+            lastViolationDate30MinValue != uniqueValueForViolation30Min {
+
             var violationData = ViolationData()
             violationData.violationType = type
-            violationData.thirtyMinWarning = true // 30 min warning
+            violationData.thirtyMinWarning = true
             self.violationDataArray.append(violationData)
-            UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
+
+            //  AUDIO
+            playAudio(for: type, kind: .warning30)
+
+            UserDefaults.standard.setValue(uniqueValueForViolation30Min,
+                                           forKey: violationKey + "_30min")
             saveViolation(for: violationData, date: violationDate)
-        } else if remainingTime <= warning2 && remainingTime > 0 && lastViolationDate15minValue != uniqueValueForViolation15min {
+        }
+
+        //  15 MIN WARNING
+        else if remainingTime <= warning2 &&
+                remainingTime > 0 &&
+                lastViolationDate15minValue != uniqueValueForViolation15min {
+
             if lastViolationDate30MinValue != uniqueValueForViolation30Min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
                 self.violationDataArray.append(violationData)
-                saveViolation(for: violationData, date: DateTimeHelper.get15MinBeforeDate(date: violationDate))
-                UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
+
+                playAudio(for: type, kind: .warning30)
+
+                saveViolation(for: violationData,
+                              date: DateTimeHelper.get15MinBeforeDate(date: violationDate))
+                UserDefaults.standard.setValue(uniqueValueForViolation30Min,
+                                               forKey: violationKey + "_30min")
             }
-            
+
             var violationData = ViolationData()
             violationData.violationType = type
-            violationData.fifteenMinWarning = true // 15 min warning
+            violationData.fifteenMinWarning = true
             self.violationDataArray.append(violationData)
+
+            playAudio(for: type, kind: .warning15)
+
             saveViolation(for: violationData, date: violationDate)
-            UserDefaults.standard.setValue(uniqueValueForViolation15min, forKey: violationKey + "_15min")
-        } else if remainingTime < 0 && uniqueValueForViolation != lastViolationDateValue {
-            // This two condition will work when remaining time directly goes to <= 0
+            UserDefaults.standard.setValue(uniqueValueForViolation15min,
+                                           forKey: violationKey + "_15min")
+        }
+
+        //  FINAL VIOLATION
+        else if remainingTime < 0 &&
+                uniqueValueForViolation != lastViolationDateValue {
+
             if lastViolationDate30MinValue != uniqueValueForViolation30Min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
                 self.violationDataArray.append(violationData)
-                saveViolation(for: violationData, date: DateTimeHelper.get30MinBeforeDate(date: violationDate))
-                UserDefaults.standard.setValue(uniqueValueForViolation30Min, forKey: violationKey + "_30min")
+
+                playAudio(for: type, kind: .warning30)  //MARK:-  voice play
+
+                saveViolation(for: violationData,
+                              date: DateTimeHelper.get30MinBeforeDate(date: violationDate))
+                UserDefaults.standard.setValue(uniqueValueForViolation30Min,
+                                               forKey: violationKey + "_30min")
             }
-            
+
             if lastViolationDate15minValue != uniqueValueForViolation15min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.fifteenMinWarning = true
                 self.violationDataArray.append(violationData)
-                saveViolation(for: violationData, date: DateTimeHelper.get15MinBeforeDate(date: violationDate))
-                UserDefaults.standard.setValue(uniqueValueForViolation15min, forKey: violationKey + "_15min")
+
+                playAudio(for: type, kind: .warning15) //MARK:-  voice play
+
+                saveViolation(for: violationData,
+                              date: DateTimeHelper.get15MinBeforeDate(date: violationDate))
+                UserDefaults.standard.setValue(uniqueValueForViolation15min,
+                                               forKey: violationKey + "_15min")
             }
-            
-            // Violation
+
             var violationData = ViolationData()
             violationData.violationType = type
             violationData.violation = true
-            UserDefaults.standard.setValue(uniqueValueForViolation, forKey: violationKey)
             self.violationDataArray.append(violationData)
+
+            playAudio(for: type, kind: .violation) //MARK:-  voice play
+
+            UserDefaults.standard.setValue(uniqueValueForViolation,
+                                           forKey: violationKey)
             saveViolation(for: violationData, date: violationDate)
-            if type == .cycleTimerViolation {
-                let time34Hour = TimeInterval(34 * 60 * 60)
-                resetBreakTime(from: time34Hour)
-            }
         }
+
         UserDefaults.standard.synchronize()
     }
+
+    enum AudioKind {
+        case warning30
+        case warning15
+        case violation
+    }
+    //MARK: -  Audio Function
+
+    func playAudio(for type: ViolationType, kind: AudioKind) {
+        switch (type, kind) {
+            
+            
+            
+        case (.onDriveViolation, .warning15):
+            AudioWarningManager.shared.playWarningAudio(fileName: "ondrive_warning_punjabi")
+            
+        case (.onDriveViolation, .violation):
+            AudioWarningManager.shared.playWarningAudio(fileName: "ondrive_violation_punjabi")
+            
+        case (.onContinueDriveViolation, .warning15):
+            AudioWarningManager.shared.playWarningAudio(fileName: "continue_drive_warning_punjabi")
+            
+        case (.onContinueDriveViolation, .violation):
+            AudioWarningManager.shared.playWarningAudio(fileName: "continue_driving_violation_punjabi")
+            
+        case (.onDutyViolation, .warning15):
+            AudioWarningManager.shared.playWarningAudio(fileName: "onduty_warning_punjabi")
+            
+        case (.onDutyViolation, .violation):
+            AudioWarningManager.shared.playWarningAudio(fileName: "onduty_violation_punjabi")
+            
+        case (.cycleTimerViolation, .warning15):
+            AudioWarningManager.shared.playWarningAudio(fileName: "weekly_warning_15min")
+            
+        case (.cycleTimerViolation, .violation):
+            AudioWarningManager.shared.playWarningAudio(fileName: "weekly_violation_punjabi")
+
+            
+            
+            
+        default:
+            break
+        }
+    }
+    
     
     // Reset Break Time if Break time is less than 30 min
     func checkWheterBreakTimeIsOver(previousStatus: DriverStatusType) {
@@ -1115,11 +1222,13 @@ extension HomeViewModel {
         }
         
         let time34Hour = TimeInterval(34 * 60 * 60)
-        resetBreakTime(from: time34Hour)
+        resetBreakTime()
         let currentDateTime = DateTimeHelper.currentDateTime()
         let dateAfter34Hour = currentDateTime.addingTimeInterval(time34Hour)
         self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
         AppStorageHandler.shared.is34HourStarted = true
     }
+    
 }
+
 
