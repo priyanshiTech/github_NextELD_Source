@@ -76,7 +76,7 @@ extension HomeViewModel {
             }
             
             debugPrint("total on duty split time: \(totalOnDutyTime.getHours())")
-            debugPrint("total on drive split time: \(totalOnDutyTime.getHours())")
+            debugPrint("total on drive split time: \(totalOnDriveTime.getHours())")
         }
         return (totalOnDutyTime, totalOnDriveTime)
     }

@@ -46,6 +46,7 @@ extension HomeViewModel {
              } else {
                  let shiftType = getSplitShiftType()
                  if shiftType != .none {
+                     DatabaseManager.shared.updateIdentifier(uniqueId: lastLog.id ?? 0, identifier: 1)
                      let remainingSleepTime = totalSleepRequired - shiftType.getSeconds()
                      self.sleepTimer = CountdownTimer(startTime: remainingSleepTime)
                      updateSplitDuration(id: lastSplitRecord.id, duration: shiftType.getSeconds())
@@ -67,7 +68,7 @@ extension HomeViewModel {
         let splitWorkTime = calculateTimeForSplitShift()
         let onDutyTime = splitWorkTime.onDuty + splitWorkTime.onDrive
         let onDriveTime = splitWorkTime.onDrive
-        
+        debugPrint("used time between sleep onDuty: \(onDutyTime.getHours()) onDrive: \(onDriveTime.getHours())")
         let remainingOnDutyTime = (AppStorageHandler.shared.onDutyTime ?? onDutyTime) - onDutyTime
         let remainingOnDriveTime = (AppStorageHandler.shared.onDriveTime ?? onDriveTime) - onDriveTime
         
@@ -80,7 +81,6 @@ extension HomeViewModel {
         if currentDriverStatus == .onDrive {
             startTimers(for: [.onDrive, .cycleTimer, .onDuty])
         }
-        showAlert(alertType: .splitShiftEnds)
       
     }
     
