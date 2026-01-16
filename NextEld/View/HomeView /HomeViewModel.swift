@@ -570,7 +570,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func setDriverStatus(status: DriverStatusType, restoreBreakTimerRunning: Bool = false, note: String? = nil, saveLogsToDatabase: Bool = false) {
         let previousStatus = currentDriverStatus
         currentDriverStatus = status
-        AppStorageHandler.shared.isContinueDriveTimeRunning = false
+   //     AppStorageHandler.shared.isContinueDriveTimeRunning = false
         var timerTypes: [TimerType] = []
 
         switch status {
@@ -611,11 +611,11 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             timerTypes = []
         }
         
-        AppStorageHandler.shared.isBreakTimeRunning = timerTypes.contains(.breakTimer)
-        
-        if currentDriverStatus == .onDrive || previousStatus == .onDrive {
-            AppStorageHandler.shared.isContinueDriveTimeRunning = true
-        }
+//        AppStorageHandler.shared.isBreakTimeRunning = timerTypes.contains(.breakTimer)
+//        
+//        if currentDriverStatus == .onDrive || previousStatus == .onDrive {
+//            AppStorageHandler.shared.isContinueDriveTimeRunning = true
+//        }
         
         if saveLogsToDatabase {
             check30MinBreakCompleted()
@@ -670,7 +670,10 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     func restoreAllTimersFromLastStatus() {
         
-        var latestLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift])
+        let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .shift], order: [DatabaseManager.shared.startTime.desc], limit: 2)
+        var latestLog = logs.first
+        var secondLog = logs.last
+        //getLastRecordOfDriverLogs(filterTypes: [.day, .shift])
         
         if latestLog == nil {
             if let lastRecordFromDB = DatabaseManager.shared.getLastRecordOfDriverLogs(), lastRecordFromDB.shift == AppStorageHandler.shared.shift {
@@ -682,7 +685,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             }
         }
         
-        guard let latestLog else { return }
+        guard let latestLog, let secondLog else { return }
             
         let elapsed = getElapsedTime(lastLog: latestLog)
         let status = DriverStatusType(fromName: latestLog.status) ?? .none
@@ -702,25 +705,26 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let sleepRemainingTime = adjusted(latestLog.remainingSleepTime, elapsed: elapsed, active: isSleep)
         
         // continue drive logic
+        var isBreak = false
         let remainingContinueDrive = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
-        
-        var continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: AppStorageHandler.shared.isContinueDriveTimeRunning)
-//        if status == .onDrive {
-//            continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: true)
-//        } else {
-//         //   if elapsed > TimeInterval(30*60) {
-//                continueDriveRemainingTime = TimeInterval(remainingContinueDrive)
-////            } else {
-////
-////            }
-//        }
-        
-        
         var breakRemainingTime = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)
-        let isBreak = AppStorageHandler.shared.isBreakTimeRunning
-       // if (status == .offDuty || status == .sleep) {
-            breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
-    //    }
+        var continueDriveRemainingTime: TimeInterval
+        if secondLog.status == AppConstants.onDrive {
+            let secondLogElapsed = abs(latestLog.startTime.timeIntervalSince(secondLog.startTime).rounded())
+            continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: secondLogElapsed, active: true)
+            isBreak = true
+        } else if status == .onDrive {
+            continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: true)
+        } else {
+            continueDriveRemainingTime = TimeInterval(remainingContinueDrive)
+        }
+        
+        breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
+        
+//        let isBreak = AppStorageHandler.shared.isBreakTimeRunning
+//        if (status == .offDuty || status == .sleep) {
+//            
+//        }
         
         if AppStorageHandler.shared.is34HourStarted {
             let total34Hour = (34 * 60 * 60)
