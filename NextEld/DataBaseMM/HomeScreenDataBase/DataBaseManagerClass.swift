@@ -138,7 +138,6 @@ class DatabaseManager: DatabaseHandler {
             let path = docDir.appendingPathComponent("local.db").path
             db = try Connection(path)
             // print("*__________ SQLite DB path: \(path)")
-
             createTable()
             createSplitShiftTable()
         } catch {
@@ -365,7 +364,6 @@ class DatabaseManager: DatabaseHandler {
         } catch {
             // print("Erooorrrooororor-------------- Fetch Error: \(error)")
         }
-        
         // Remove duplicates: Keep only one entry per status + startTime combination
         // Since logs are already ordered by startTime.desc, first occurrence is most recent
         // Use time window (2 seconds) to catch near-duplicates

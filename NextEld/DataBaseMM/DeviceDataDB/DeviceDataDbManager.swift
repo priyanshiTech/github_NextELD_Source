@@ -137,7 +137,6 @@ class DeviceDataDbManager {
                 deviceCoolantTemp <- model.coolantTemp,
                 deviceFuelTankTemp <- model.fuelTankTemp
             )
-            
             try db?.run(insert)
             print("Device data saved")
             

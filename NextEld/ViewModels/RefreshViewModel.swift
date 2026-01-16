@@ -26,8 +26,8 @@ class RefreshViewModel: ObservableObject {
             employeeId: AppStorageHandler.shared.driverId ?? 0,
             tokenNo: AppStorageHandler.shared.authToken ?? "",
         )
+        
 
-        // print("Request Body: \(requestBody)")
 
         do {
             let response: TokenModelLog = try await NetworkManager.shared.post(
@@ -43,7 +43,7 @@ class RefreshViewModel: ObservableObject {
             self.loginResponse = response
             applyRefreshResponse(response)
             isLoading = false
-            
+     
             // Broadcast refresh success
             NotificationCenter.default.post(
                 name: .refreshCompleted,
@@ -198,6 +198,41 @@ class RefreshViewModel: ObservableObject {
         if let warningBreak2 = result.rules?.first?.warningBreakTime2 {
             AppStorageHandler.shared.warningBreakTime2 = warningBreak2
         }
+        //Save Shift
+        if let shiftValue = response.result?.driverLog?.first?.shift {
+            AppStorageHandler.shared.shift = shiftValue
+        }
+        
+        if let dateIs =  response.result?.driverLog?.first?.days{
+            AppStorageHandler.shared.days = dateIs
+           
+        }
+        
+        if let firstLog = response.result?.driverCertifiedLog?.first,
+           let coDriverId = firstLog.coDriverId {
+            AppStorageHandler.shared.coDriverId = coDriverId
+        }
+        
+            if let voilation = response.result?.driverLog?.first?.isVoilation{
+           UserDefaults.standard.set(voilation , forKey: "isVoilation")
+            }
+        
+            if let  trailer  =  response.result?.driverLog?.first?.trailers{
+            UserDefaults.standard.set(trailer, forKey: "trailer")
+            }
+        
+        // MARK: - Personal Use / Yard Move / Exempt flags
+        if let personalUseFlag = response.result?.personalUse {
+            AppStorageHandler.shared.personalUseActive = personalUseFlag
+        }
+        
+        if let yardMoveFlag = response.result?.yardMoves {
+            AppStorageHandler.shared.yardMovesActive = yardMoveFlag
+        }
+        
+        if let exemptFlag = response.result?.exempt {
+            AppStorageHandler.shared.exempt = exemptFlag
+        }
         
         // Feature flags
         AppStorageHandler.shared.personalUseActive = result.personalUse
@@ -209,10 +244,41 @@ class RefreshViewModel: ObservableObject {
         if let logs = result.driverLog, !logs.isEmpty {
             DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
         }
+        //MARK: - Logout /Login data saved
+            let logs = response.result?.driverLog ?? []
+            // Save logs to DB
+            if !logs.isEmpty {
+                DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
+            }
+            
+            // MARK: - Save Login/Logout Logs to Database
+        if var loginLogoutLogs = response.result?.loginLogoutLog {
+                loginLogoutLogs.removeLast()
+                DatabaseManager.shared.saveLoginLogoutLogsToSQLite(from: loginLogoutLogs)
+                //print("Saved \(loginLogoutLogs.count) login/logout logs to database")
+        }
+            // MARK: - Save Server DVIR Records from Login Response
+        if let dvirLogs = response.result?.driverDvirLog, !dvirLogs.isEmpty {
+
+            let dictArray = dvirLogs.map { $0.toDictionary() }
+
+            DvirDatabaseManager.shared.saveServerDvirRecords(from: dictArray)
+        }
+
+
+
     }
 }
 
 extension Notification.Name {
     static let refreshStarted = Notification.Name("refreshStarted")
     static let refreshCompleted = Notification.Name("refreshCompleted")
+}
+
+extension Encodable {
+    func toDictionary() -> [String: Any]? {
+        guard let data = try? JSONEncoder().encode(self) else { return nil }
+        return (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
+    }
+
 }

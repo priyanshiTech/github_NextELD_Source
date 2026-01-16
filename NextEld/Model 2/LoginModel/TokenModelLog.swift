@@ -102,4 +102,41 @@ struct DvirLogItem: Decodable {
 }
 
 
+extension DvirLogItem {
+
+    func toDictionary() -> [String: Any] {
+        return [
+            "_id": _id ?? "",
+            "tokenNo": tokenNo ?? "",
+            "fromDate": fromDate ?? "",
+            "toDate": toDate ?? "",
+            "email": email ?? "",
+            "clientId": clientId ?? 0,
+            "dvirLogId": dvirLogId ?? "",
+            "driverId": driverId ?? 0,
+            "driverName": driverName ?? "",
+            "dateTime": dateTime ?? "",
+            "lDateTime": lDateTime ?? 0,
+            "location": location ?? "",
+            "truckDefect": truckDefect ?? [],
+            "trailerDefect": trailerDefect ?? [],
+            "trailer": trailer ?? [],
+            "truckDefectImage": truckDefectImage ?? "",
+            "trailerDefectImage": trailerDefectImage ?? "",
+            "notes": notes ?? "",
+            "vehicleCondition": vehicleCondition ?? "",
+            "driverSignFile": driverSignFile ?? "",
+            "companyName": companyName ?? "",
+            "odometer": odometer ?? 0.0,
+            "engineHour": engineHour ?? "",
+            "vehicleId": vehicleId ?? 0,
+            "vehicleNo": vehicleNo ?? "",
+            "vin": vin ?? "",
+            "timezoneName": timezoneName ?? "",
+            "timezoneOffSet": timezoneOffSet ?? "",
+            "timestamp": timestamp ?? "",
+            "receivedTimestamp": receivedTimestamp ?? 0
+        ]
+    }
+}
 
