@@ -73,7 +73,6 @@ final class EngineSyncMonitor {
         currentEngineHours: Double
     ) {
         let odometerMiles = kilometersToMiles(currentOdometerKM)
-
         //  Fetch previous values from DB
         let previousOdometerMiles = getPreviousOdometerFromDB()
         let previousEngineHours = getPreviousEngineHoursFromDB()
