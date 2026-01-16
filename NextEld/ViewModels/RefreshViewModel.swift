@@ -36,9 +36,9 @@ class RefreshViewModel: ObservableObject {
             )
             
             DatabaseManager.shared.deleteAllLogs()
-            ContinueDriveDBManager.shared.deleteAllContinueDriveData()
-            DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
-            CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+          //  ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+          //  DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
+           // CertifyDatabaseManager.shared.deleteAllCertifyRecords()
             
             self.loginResponse = response
             applyRefreshResponse(response)
@@ -204,6 +204,7 @@ class RefreshViewModel: ObservableObject {
         AppStorageHandler.shared.yardMovesActive = result.yardMoves
         AppStorageHandler.shared.exempt = result.exempt
         
+         let driverDvirLog: [DvirLogItem]?
         // Save driver logs to database
         if let logs = result.driverLog, !logs.isEmpty {
             DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
