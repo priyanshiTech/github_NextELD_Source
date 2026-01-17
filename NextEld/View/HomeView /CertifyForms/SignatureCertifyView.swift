@@ -30,6 +30,8 @@ struct SignatureCertifyView: View {
     @EnvironmentObject var appRootManager: AppRootManager
     @StateObject private var networkMonitor = InternateNetworkConnectivity.shared
     @StateObject private var certifyVM = CertifyDriverViewModel()
+    @State private var savedSignatureImage: UIImage? = nil
+
 
     // UI state
     @State private var showAlert = false
@@ -68,15 +70,35 @@ struct SignatureCertifyView: View {
                 .font(.headline)
                 .padding(.leading)
 
-            SignaturePad(path: $signaturePath)
-                .frame(height: 250)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray, lineWidth: 2)
-                )
-                .padding(.horizontal)
+//            SignaturePad(path: $signaturePath)
+//                .frame(height: 250)
+//                .background(Color.white)
+//                .clipShape(RoundedRectangle(cornerRadius: 10))
+//                .overlay(
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .stroke(Color.gray, lineWidth: 2)
+//                )
+//                .padding(.horizontal)
+            if let savedImage = savedSignatureImage {
+                Image(uiImage: savedImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 250)
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(10)
+                    .padding(.horizontal)
+            } else {
+                SignaturePad(path: $signaturePath)
+                    .frame(height: 250)
+                    .background(Color.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.gray, lineWidth: 2)
+                    )
+                    .padding(.horizontal)
+            }
+
 
             Text("I hereby certify that my data entries and my record of duty status for this 24 hour period are true and correct")
                 .font(.subheadline)
@@ -87,8 +109,23 @@ struct SignatureCertifyView: View {
 
             HStack(spacing: 16) {
                 Button("Clear Signature") {
+                
                     signaturePath = Path()
+
+                     savedSignatureImage = nil
+
+                 
+                    guard let driverId = AppStorageHandler.shared.driverId else { return }
+                    let fileManager = FileManager.default
+                    let documentsDirectory = fileManager.urls(
+                        for: .documentDirectory,
+                        in: .userDomainMask
+                    ).first!
+
+                    let fileURL = documentsDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
+                    try? fileManager.removeItem(at: fileURL)
                 }
+
                 .frame(maxWidth: .infinity)
                 .padding()
                 .bold()
@@ -114,7 +151,7 @@ struct SignatureCertifyView: View {
                     }
                     
                     // 2) Signature validation
-                    guard !signaturePath.isEmpty else {
+                    guard !signaturePath.isEmpty || savedSignatureImage != nil else {
                         alertTitle = "Signature Required"
                         alertMessage = "Please provide a signature."
                         showAlert = true
@@ -122,8 +159,23 @@ struct SignatureCertifyView: View {
                     }
                     
                     // 3) Render signature to image
+                   // let size = CGSize(width: 300, height: 250)
+                   // let image = renderSignatureAsImage(path: signaturePath, size: size)
                     let size = CGSize(width: 300, height: 250)
-                    let image = renderSignatureAsImage(path: signaturePath, size: size)
+
+                    let image: UIImage
+
+                    if let saved = savedSignatureImage, signaturePath.isEmpty {
+                        //  Reuse already saved signature
+                        image = saved
+                    } else {
+                        //  New signature drawn by user
+                        image = renderSignatureAsImage(
+                            path: signaturePath,
+                            size: size
+                        )
+                    }
+
                     guard let imageData = image.jpegData(compressionQuality: 0.8) else {
                         alertTitle = "Error"
                         alertMessage = "Failed to convert signature."
@@ -140,18 +192,26 @@ struct SignatureCertifyView: View {
                     }
                     
                     let tokenNo = AppStorageHandler.shared.authToken
-                    let tempDirectory = FileManager.default.temporaryDirectory
-                    let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
+//                    let tempDirectory = FileManager.default.temporaryDirectory
+//                    let fileURL = tempDirectory.appendingPathComponent("\(driverId)_sign_1.jpg")
                     
-                    do {
-                        try imageData.write(to: fileURL)
-                    } catch {
-                        alertTitle = "Error"
-                        alertMessage = "Failed to save signature file."
-                        showAlert = true
-                        return
-                    }
-                    
+//                    do {
+//                        try imageData.write(to: fileURL)
+//                    } catch {
+//                        alertTitle = "Error"
+//                        alertMessage = "Failed to save signature file."
+//                        showAlert = true
+//                        return
+//                    }
+                    let filePath = saveSignatureImage(
+                        image: image,
+                        driverId: driverId,
+                        signatureName: "_sign_1.jpg"
+                    )
+
+                    let fileURL = URL(fileURLWithPath: filePath)
+
+
                     // --- Mark record as Certified, but syncStatus = 0 initially
 //                    CertifyDatabaseManager.shared.updateCertifyStatus(
 //                        for: certifiedDate,
@@ -285,6 +345,23 @@ struct SignatureCertifyView: View {
                                 showAlert = true
                             }
                         }
+                        
+                        //MARK:-
+                        let image = renderSignatureAsImage(
+                            path: signaturePath,
+                            size: CGSize(width: 300, height: 250)
+                        )
+
+                        let path = saveSignatureImage(
+                            image: image,
+                            driverId: driverId,
+                            signatureName: "_sign_1.jpg"
+                        )
+                        savedSignatureImage = image  //assign it to state so UI updates
+                       
+
+                        print("Saved at:", path)
+
                     }
 //
                     
@@ -320,7 +397,68 @@ struct SignatureCertifyView: View {
         } message: {
             Text(alertMessage)
         }
+        
+        //MARk show image
+        .onAppear {
+            guard let driverId = AppStorageHandler.shared.driverId else { return }
+
+            if let image = loadSignatureImage(
+                driverId: driverId,
+                signatureName: "_sign_1.jpg"
+            ) {
+                savedSignatureImage = image   // show image directly
+            }
+        }
+
     }
+    
+    func saveSignatureImage(
+        image: UIImage,
+        driverId: Int,
+        signatureName: String = "_signature.jpg"
+    ) -> String {
+
+        guard let imageData = image.jpegData(compressionQuality: 1.0) else {
+            return ""
+        }
+
+        let fileManager = FileManager.default
+
+        // iOS equivalent of getExternalFilesDir(null)
+        let directory = fileManager.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        ).first!
+
+        let fileURL = directory.appendingPathComponent("\(driverId)\(signatureName)")
+
+        do {
+            try imageData.write(to: fileURL, options: .atomic)
+            return fileURL.path
+        } catch {
+            print(" Failed to save signature:", error)
+            return ""
+        }
+    }
+
+    
+    
+    //mark load image
+    func loadSignatureImage(
+        driverId: Int,
+        signatureName: String = "_signature.jpg"
+    ) -> UIImage? {
+
+        let directory = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        ).first!
+
+        let fileURL = directory.appendingPathComponent("\(driverId)\(signatureName)")
+
+        return UIImage(contentsOfFile: fileURL.path)
+    }
+
 }
 
 
@@ -386,31 +524,5 @@ func renderSignatureAsImage(path: Path, size: CGSize) -> UIImage {
 extension Notification.Name {
     static let certifyUpdated = Notification.Name("certifyUpdated")
 }
-
-
-
-
-
-// 1) Form validation
-//                    guard isFormValid else {
-//                        alertTitle = "Incomplete Form"
-//                        alertMessage = "Please fill the form first."
-//                        showAlert = true
-//                        return
-//                    }
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
