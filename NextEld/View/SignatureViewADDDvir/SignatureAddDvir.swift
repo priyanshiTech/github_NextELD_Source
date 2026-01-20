@@ -51,12 +51,7 @@ struct SignatureAddDvir: View {
                 }
                 .padding(.horizontal)
 
-                // Certification Text
-                Text("I hereby certify that my data entries are true and correct")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
+
 
                 // Action Buttons
                 HStack(spacing: 14) {

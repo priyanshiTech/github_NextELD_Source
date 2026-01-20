@@ -347,10 +347,10 @@ struct SignatureCertifyView: View {
                         }
                         
                         //MARK:-
-                        let image = renderSignatureAsImage(
-                            path: signaturePath,
-                            size: CGSize(width: 300, height: 250)
-                        )
+//                        let image = renderSignatureAsImage(
+//                            path: signaturePath,
+//                            size: CGSize(width: 300, height: 250)
+//                        )
 
                         let path = saveSignatureImage(
                             image: image,
@@ -359,13 +359,9 @@ struct SignatureCertifyView: View {
                         )
                         savedSignatureImage = image  //assign it to state so UI updates
                        
-
                         print("Saved at:", path)
-
                     }
 //
-                    
-                   
 
                 }) {
                     Text(isLoading ? "Please wait..." : "Agree")
@@ -381,7 +377,7 @@ struct SignatureCertifyView: View {
             }
             .padding(.horizontal)
 
-            Spacer()
+            Spacer() 
         }
         .transition(.slide)
         .alert(alertTitle, isPresented: $showAlert) {

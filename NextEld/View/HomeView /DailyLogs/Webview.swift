@@ -24,7 +24,7 @@ struct WebView: UIViewRepresentable {
             webView.load(URLRequest(url: url))
         }
     }
-    
+      
     func makeCoordinator() -> Coordinator {
         Coordinator(isLoading: $isLoading)
     }

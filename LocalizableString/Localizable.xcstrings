@@ -1271,6 +1271,7 @@
       }
     },
     "I hereby certify that my data entries are true and correct" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {
