@@ -680,8 +680,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .shift], order: [DatabaseManager.shared.startTime.desc], limit: 2)
         var latestLog = logs.first
         var secondLog = logs.last
-        //getLastRecordOfDriverLogs(filterTypes: [.day, .shift])
-        
+        if logs.count == 1 { secondLog = nil }
+            
         if latestLog == nil {
             if let lastRecordFromDB = DatabaseManager.shared.getLastRecordOfDriverLogs(), lastRecordFromDB.shift == AppStorageHandler.shared.shift {
                 latestLog = lastRecordFromDB
@@ -692,7 +692,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             }
         }
         
-        guard let latestLog, let secondLog else { return }
+        guard let latestLog else { return }
             
         let elapsed = getElapsedTime(lastLog: latestLog)
         let status = DriverStatusType(fromName: latestLog.status) ?? .none
@@ -716,7 +716,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let remainingContinueDrive = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
         var breakRemainingTime = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)
         var continueDriveRemainingTime: TimeInterval
-        if secondLog.status == AppConstants.onDrive {
+        if let secondLog, secondLog.status == AppConstants.onDrive {
             let secondLogElapsed = abs(latestLog.startTime.timeIntervalSince(secondLog.startTime).rounded())
             continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: secondLogElapsed, active: true)
             isBreak = true
