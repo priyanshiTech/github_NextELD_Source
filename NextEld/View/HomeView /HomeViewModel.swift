@@ -638,11 +638,18 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let elapsed = getElapsedTime(lastLog: lastRecord)
         let twoHrs = TimeInterval(60*60*2)
         
+        // off duty or sleep less than 2 hours will be adjusted from cycle and onDuty time
         if (status == .offDuty || status == .sleep) && elapsed < twoHrs  {
+            
             let onDutyRemainingTime = adjusted(lastRecord.remainingDutyTime, elapsed: elapsed, active: true)
             onDutyTimer = CountdownTimer(startTime: onDutyRemainingTime)
             onDutyTimer?.start()
-            if let lastSplitRecord = getLastRecordFromSplitShiftLog() {
+            
+            let cycleTime = adjusted(lastRecord.remainingWeeklyTime, elapsed: elapsed, active: true)
+            cycleTimer = CountdownTimer(startTime: cycleTime)
+            cycleTimer?.start()
+            
+            if let _ = getLastRecordFromSplitShiftLog() {
                 // split sleep case, reset to remaining sleep time
                 let shiftType = getSplitShiftType()
                 let remainingSleepTime = (AppStorageHandler.shared.onSleepTime ?? 0) - shiftType.getSeconds()
@@ -834,8 +841,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
         guard let violationDate = remainingTime < 0
                 ? DateTimeHelper.calendar.date(byAdding: .second,
-                    value: Int(remainingTime),
-                    to: DateTimeHelper.currentDateTime())
+                    value: Int(remainingTime+1),
+                                               to: DateTimeHelper.currentDateTime())
                 : DateTimeHelper.currentDateTime()
         else { return }
 
