@@ -36,9 +36,9 @@ class RefreshViewModel: ObservableObject {
             )
             
             DatabaseManager.shared.deleteAllLogs()
-          //  ContinueDriveDBManager.shared.deleteAllContinueDriveData()
-          //  DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
-           // CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+            ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+            DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
+            CertifyDatabaseManager.shared.deleteAllCertifyRecords()
             
             self.loginResponse = response
             applyRefreshResponse(response)
@@ -234,6 +234,11 @@ class RefreshViewModel: ObservableObject {
             AppStorageHandler.shared.exempt = exemptFlag
         }
         
+        if let firstLog = response.result?.driverCertifiedLog?.first,
+           let coDriverId = firstLog.coDriverId {
+            AppStorageHandler.shared.coDriverId = coDriverId
+        }
+        
         // Feature flags
         AppStorageHandler.shared.personalUseActive = result.personalUse
         AppStorageHandler.shared.yardMovesActive = result.yardMoves
@@ -259,10 +264,21 @@ class RefreshViewModel: ObservableObject {
         }
             // MARK: - Save Server DVIR Records from Login Response
         if let dvirLogs = response.result?.driverDvirLog, !dvirLogs.isEmpty {
+            
 
             let dictArray = dvirLogs.map { $0.toDictionary() }
 
             DvirDatabaseManager.shared.saveServerDvirRecords(from: dictArray)
+        }
+        // MARK: - Save Server Certify Records from Login Response 
+        if let driverCertifiedLog = response.result?.driverCertifiedLog, !driverCertifiedLog.isEmpty {
+            
+            let dictCertifyArray =  driverCertifiedLog.map { $0.toDictionaryCertify() }
+            
+            CertifyDatabaseManager.shared.saveServerCertifyRecords(from: dictCertifyArray)
+            // print(" Saved \(driverCertifiedLog.count) certify records from login API to database")
+        } else {
+             print("  No driverCertifiedLog found in login response or array is empty")
         }
 
 

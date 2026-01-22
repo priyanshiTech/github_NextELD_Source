@@ -8,11 +8,6 @@
 import Foundation
 import SwiftUI
 
-//class TrailerViewModel: ObservableObject {
-//    @Published var trailers: [String] = []
-//}
-
-
 class TrailerViewModel: ObservableObject, Hashable, Equatable {
     @Published  var selectedTrailer = ""
     @Published  var truckDefectSelection: String? = nil
@@ -74,11 +69,45 @@ class TrailerViewModel: ObservableObject, Hashable, Equatable {
     }
 }
 
-
-class ShippingDocViewModel: ObservableObject, Equatable, Hashable {
-    @Published var ShippingDoc: [String] = []
-    @Published private var inputText = ""
-    @Published  var showError = false
+class ShippingDocViewModel: ObservableObject, Hashable, Equatable {
+    @Published  var selectedTrailer = ""
+    @Published  var truckDefectSelection: String? = nil
+    @Published  var trailerDefectSelection: String? = nil
+    @Published var ShippingDoc: [String] = [] {
+        didSet {
+            saveshipping()
+        }
+    }
+    
+    private let shippingKey = "savedshipping"
+    
+    init() {
+        loadshippings()
+    }
+    
+    // MARK: - Add shipping
+    func addShpping(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        ShippingDoc.append(trimmed)
+    }
+    
+    // MARK: - Remove shipping
+    func removeshipping(_ name: String) {
+        ShippingDoc.removeAll { $0 == name }
+    }
+    
+    // MARK: - Save shipping to UserDefaults
+    private func saveshipping() {
+        UserDefaults.standard.set(ShippingDoc, forKey: shippingKey)
+    }
+    
+    // MARK: - Load shipping from UserDefaults
+    private func loadshippings() {
+        if let saved = UserDefaults.standard.array(forKey: shippingKey) as? [String] {
+            ShippingDoc = saved
+        }
+    }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(ShippingDoc)
@@ -88,6 +117,20 @@ class ShippingDocViewModel: ObservableObject, Equatable, Hashable {
         return lhs.ShippingDoc == rhs.ShippingDoc
     }
 }
+
+//class ShippingDocViewModel: ObservableObject, Equatable, Hashable {
+//    @Published var ShippingDoc: [String] = []
+//    @Published private var inputText = ""
+//    @Published  var showError = false
+//    
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(ShippingDoc)
+//    }
+//    
+//    static func == (lhs: ShippingDocViewModel, rhs: ShippingDocViewModel) -> Bool {
+//        return lhs.ShippingDoc == rhs.ShippingDoc
+//    }
+//}
 
 import SwiftUI
 

@@ -75,7 +75,6 @@ import SwiftUI
                 body: requestBody
             )
 
-
             //  Update certify table as synced
             response.result.forEach { item in
                 CertifyDatabaseManager.shared.updateCertifyStatus(

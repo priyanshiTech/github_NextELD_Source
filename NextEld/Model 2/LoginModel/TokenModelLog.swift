@@ -140,3 +140,25 @@ extension DvirLogItem {
     }
 }
 
+extension DriverCertifiedLog {
+
+    func toDictionaryCertify() -> [String: Any] {
+        return [
+            "_id": _id ?? "",
+            "driverId": driverId ?? 0,
+            "driverName": driverName ?? "",
+            "vehicleId": vehicleId ?? 0,
+            "vehicleName": vehicleName ?? "",
+            "trailers": trailers ?? [],
+            "shippingDocs": shippingDocs ?? [],
+            "coDriverId": coDriverId ?? 0,
+            "coDriverName": coDriverName ?? "",
+            "certifiedSignature": certifiedSignature ?? "",
+            "certifiedDate": certifiedDate ?? "",
+            "lCertifiedDate": lCertifiedDate ?? 0,
+            "certifiedDateTime": certifiedDateTime ?? 0,
+            "certifiedAt": certifiedAt ?? 0,
+            "addedTimestamp": addedTimestamp ?? 0
+        ]
+    }
+}

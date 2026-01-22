@@ -1,9 +1,9 @@
-////
-////  Webview.swift
-////  NextEld
-////
-////  Created by priyanshi  on 19/08/25.
-////
+//
+//  Webview.swift
+//  NextEld
+//
+//  Created by priyanshi  on 19/08/25.
+
 //
 import Foundation
 import SwiftUI
@@ -24,7 +24,7 @@ struct WebView: UIViewRepresentable {
             webView.load(URLRequest(url: url))
         }
     }
-    
+      
     func makeCoordinator() -> Coordinator {
         Coordinator(isLoading: $isLoading)
     }
