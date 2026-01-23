@@ -76,13 +76,13 @@ class MultipartAPIService {
                 if let jsonData = responseString.data(using: .utf8),
                    let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
                     // print("📥 Parsed Error Response:")
-                    if let message = json["message"] as? String {
+                    if json["message"] is String {
                         // print("   Message: \(message)")
                     }
-                    if let error = json["error"] as? String {
+                    if json["error"] is String {
                         // print("   Error: \(error)")
                     }
-                    if let path = json["path"] as? String {
+                    if json["path"] is String {
                         // print("   Path: \(path)")
                     }
                 }
@@ -106,7 +106,7 @@ class MultipartAPIService {
             }
         }.resume()
         
-        // print("📤 Upload task resumed")
+        // print(" Upload task resumed")
     }
 
     private func createBody(fields: [String: Any], files: [MultipartFile], boundary: String) -> Data {

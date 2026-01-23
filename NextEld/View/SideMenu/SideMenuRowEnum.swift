@@ -109,7 +109,8 @@ enum SideMenuRowType: Int, CaseIterable{
             return  "Logout"
 
         case .version:
-            return "Version \(UIDevice.current.systemVersion) "
+           // return "Version \(UIDevice.current.systemVersion) "
+            return "Version: \(AppInfo.version)"
        
         case .Sync:
             return "Sync"

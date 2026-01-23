@@ -411,6 +411,11 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    //For 5 second service
+    private let fiveSecondTimer = Timer
+        .publish(every: 5, on: .main, in: .common).autoconnect()
+      
+
     
     init() {
         checkWhetherTheViolationAlreadyExists()

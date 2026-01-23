@@ -70,10 +70,12 @@ class TrailerViewModel: ObservableObject, Hashable, Equatable {
 }
 
 class ShippingDocViewModel: ObservableObject, Hashable, Equatable {
-    @Published  var selectedTrailer = ""
-    @Published  var truckDefectSelection: String? = nil
-    @Published  var trailerDefectSelection: String? = nil
+    
+    @Published var selectedTrailer = ""
+    @Published var truckDefectSelection: String? = nil
+    @Published var trailerDefectSelection: String? = nil
     @Published var ShippingDoc: [String] = [] {
+        
         didSet {
             saveshipping()
         }
