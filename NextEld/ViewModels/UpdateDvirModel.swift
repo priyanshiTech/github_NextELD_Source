@@ -119,7 +119,7 @@ func updateDvirDataUsingCommonService(record: DvirRecordRequestModel, dvirLogId:
                         if let jsonData = responseString.data(using: .utf8),
                            let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
                            let tokenValue = (json["token"] as? String)?.lowercased(), tokenValue == "false" {
-                            SessionManagerClass.shared.clearToken()
+                            
                             // print(" Session expired detected during DVIR update")
                             // print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
                             appRootManager?.currentRoot = .SessionExpireUIView

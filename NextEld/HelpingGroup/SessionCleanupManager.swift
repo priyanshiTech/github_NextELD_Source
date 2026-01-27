@@ -11,13 +11,13 @@ enum SessionCleanupManager {
     
     static func clearAllPersistentData() {
         // Clear authentication artifacts
-        SessionManagerClass.shared.clearToken()
-        KeychainHelper.shared.deleteToken()
+        
+       // KeychainHelper.shared.deleteToken()
         
         // Remove auxiliary UserDefaults flags that might be set outside AppStorage
-        let defaults = UserDefaults.standard
-        defaults.set(false, forKey: "isLoggedIn")
-        defaults.synchronize()
+//        let defaults = UserDefaults.standard
+//        defaults.set(false, forKey: "isLoggedIn")
+//        defaults.synchronize()
         
         // Purge local databases
         DatabaseManager.shared.deleteAllLogs()

@@ -47,7 +47,7 @@ class APILogoutViewModel: ObservableObject {
 
             // print(" Logout API Response token: \(response.token ?? "nil")")
 //            if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
-//                SessionManagerClass.shared.clearToken()
+//                
 //                isSessionExpired = true
 //                // print("  Session expired detected during logout - navigating to SessionExpireUIView")
 //                appRootManager?.currentRoot = .SessionExpireUIView

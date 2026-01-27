@@ -123,7 +123,7 @@ struct LoginScreen: View {
                         
                         Task {
                             let success = await loginVM.login(email: UserName, password: password)
-                            if success && SessionManagerClass.shared.isLoggedIn() {
+                            if success && AppStorageHandler.shared.authToken != nil {
                                 
                                 await viewModel.callLoginLogUpdateAPI()
                                 handlePostLoginNavigation()

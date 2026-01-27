@@ -87,8 +87,8 @@ class LoginViewModel: ObservableObject {
                 // print(" Token received: \(token)")
                 
                 //Save token in Keychain / UserDefaults
-                SessionManagerClass.shared.saveToken(token)
-                UserDefaults.standard.set(token, forKey: "authToken")
+              //  SessionManagerClass.shared.saveToken(token)
+                AppStorageHandler.shared.authToken = token
                 UserDefaults.standard.set(email, forKey: "userEmail")
                 //MARK: -  Save employeeid
                 

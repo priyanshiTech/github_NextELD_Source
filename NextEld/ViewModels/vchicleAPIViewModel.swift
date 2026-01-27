@@ -59,7 +59,7 @@ class VehicleInfoViewModel: ObservableObject {
             // Check if token is false - session expired (check FIRST, before any other processing)
             if response.token.lowercased() == "false" {
                 // Session expired - token is false
-                SessionManagerClass.shared.clearToken()
+                
                 isSessionExpired = true
                 appRootManager?.currentRoot = .SessionExpireUIView
                 // print("  Session expired - token is false, navigating to SessionExpireUIView")

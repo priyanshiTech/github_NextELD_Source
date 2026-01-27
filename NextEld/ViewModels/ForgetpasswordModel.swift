@@ -42,7 +42,7 @@ final class ForgetPasswordViewModel: ObservableObject {
             // print(" Message: \(response.message)")
             // print(" Token value: \(response.token ?? "nil")")
             if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
-                SessionManagerClass.shared.clearToken()
+                
                 isSessionExpired = true
                 // print(" Session expired detected in ForgetPasswordViewModel")
                 appRootManager?.currentRoot = .SessionExpireUIView

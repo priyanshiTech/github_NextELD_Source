@@ -70,8 +70,6 @@ class RefreshViewModel: ObservableObject {
         guard let result = response.result else { return }
         
         if let token = response.token {
-            SessionManagerClass.shared.saveToken(token)
-            UserDefaults.standard.set(token, forKey: "authToken")
             AppStorageHandler.shared.authToken = token
         }
         

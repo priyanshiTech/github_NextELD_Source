@@ -69,7 +69,7 @@ import SwiftUI
 
             //  Token expiry
 //            if response.token?.lowercased() == "false" {
-            //                SessionManagerClass.shared.clearToken()
+            //                
 //                syncMessage = "Session expired"
 //                return false
 //            }

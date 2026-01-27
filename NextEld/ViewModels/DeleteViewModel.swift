@@ -24,7 +24,7 @@ class DeleteViewModel: ObservableObject {
             
  //        print(" Delete API Response token: \(response.token ?? "nil")")
 //            if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
-//                SessionManagerClass.shared.clearToken()
+//                
 //                isSessionExpired = true
 //                // print(" Session expired detected during delete")
 //                // print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")

@@ -410,21 +410,26 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     //Create #P
     var cancellable: Set<AnyCancellable> = []
-    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    let apiCallTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    let serviceTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     
     init() {
         checkWhetherTheViolationAlreadyExists()
         restoreAllTimersFromLastStatus()
         validateScenarioInEveryMinute()
         checkForSplitShift()
-        timer
+        serviceTimer
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.validateScenarioInEveryMinute()
                 self?.addIntermediateLogs()
-                
+            }
+            .store(in: &cancellable)
+        
+        apiCallTimer
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
                 Task { @MainActor in
-                    
                     // Sync offline data
                     await self?.syncViewModel.syncOfflineData()
                   
@@ -556,7 +561,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         AppStorageHandler.shared.shift = 1
         AppStorageHandler.shared.days = 1
         //  Clear SessionManager token
-        SessionManagerClass.shared.clearToken()
+        
         currentDriverStatus = .offDuty
         AppStorageHandler.shared.deleteAll()
         DatabaseManager.shared.deleteAllLogs()                          //Clears driverLogs and splitShiftTable
@@ -1159,7 +1164,7 @@ extension HomeViewModel {
         if success {
 //            UserDefaults.standard.set(false, forKey: "isLoggedIn")
 //            ["userEmail","authToken","driverName","\(AppStorageHandler.shared.timeZone)","timezoneOffSet"].forEach(UserDefaults.standard.removeObject)
-            SessionManagerClass.shared.clearToken()
+            
         }
         return success
     }

@@ -74,7 +74,7 @@ struct AppStorageHandler {
         driverName = nil
         UserName = nil
         driverId = nil
-     //   authToken = nil
+        authToken = nil
         vehicleId = nil
         vehicleNo = nil
         origin = nil

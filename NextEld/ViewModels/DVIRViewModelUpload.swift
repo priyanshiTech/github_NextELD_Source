@@ -202,7 +202,7 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
                     if let jsonData = responseString.data(using: .utf8),
                        let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
                         if let tokenValue = (json["token"] as? String)?.lowercased(), tokenValue == "false" {
-                            SessionManagerClass.shared.clearToken()
+                            
                             // print(" Session expired detected during DVIR upload")
                             // print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")
                             appRootManager?.currentRoot = .SessionExpireUIView

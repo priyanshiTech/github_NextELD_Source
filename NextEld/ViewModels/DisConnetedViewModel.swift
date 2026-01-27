@@ -58,7 +58,7 @@ class DeviceStatusViewModel: ObservableObject {
             
             } else  if response.token.lowercased() == "false" {
                 // Session expired - token is false
-                SessionManagerClass.shared.clearToken()
+                
                 isSessionExpired = true
                 // print("  Session expired detected - token is false")
                 // print("  appRootManager is \(appRootManager != nil ? "set" : "nil")")

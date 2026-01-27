@@ -86,7 +86,7 @@ struct SplashView: View {
         // Reset navigation path to prevent stale state
         navManager.reset()
         
-        if let savedToken = SessionManagerClass.shared.getToken(), !savedToken.isEmpty, AppStorageHandler.shared.driverId != nil {
+        if let savedToken = AppStorageHandler.shared.authToken, !savedToken.isEmpty, AppStorageHandler.shared.driverId != nil {
             Task { @MainActor in
                 // Add timeout to prevent hanging (5 seconds max)
                 let apiTask = Task {

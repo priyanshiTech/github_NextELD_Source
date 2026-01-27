@@ -43,7 +43,7 @@ class APITokenUpdateViewModel: ObservableObject {
             // Check if token is false - session expired
             if let tokenValue = response.token, tokenValue.lowercased() == "false" {
                 // Session expired - token is false
-                SessionManagerClass.shared.clearToken()
+                
                 isSessionExpired = true
                 appRootManager?.currentRoot = .SessionExpireUIView
                 // print("  Session expired - token is false, navigating to SessionExpireUIView")

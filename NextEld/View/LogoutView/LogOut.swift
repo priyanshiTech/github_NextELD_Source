@@ -92,7 +92,7 @@ struct LogOut: View {
                                 }
                                 if success {
                                     isPresented = false
-                                    SessionManagerClass.shared.clearToken()
+                                    
                                     appRootManager.currentRoot = .splashScreen
                                 } else if !logoutVM.apiMessage.isEmpty {
                                      print(" Logout API message: \(logoutVM.apiMessage)")

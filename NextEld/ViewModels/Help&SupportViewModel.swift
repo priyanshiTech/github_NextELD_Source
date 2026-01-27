@@ -52,7 +52,7 @@ class SupportViewModel: ObservableObject {
             )
             // print(" Support API Response token: \(response.token ?? "nil")")
             if let tokenValue = response.token?.lowercased(), tokenValue == "false" {
-                SessionManagerClass.shared.clearToken()
+                
                 isSessionExpired = true
                 // print(" Session expired detected in SupportViewModel")
                 // print(" appRootManager is \(appRootManager != nil ? "set" : "nil")")

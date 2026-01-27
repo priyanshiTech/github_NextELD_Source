@@ -10,7 +10,7 @@ struct NewDriverLogin: View {
     
     @EnvironmentObject var navManager: NavigationManager
     @EnvironmentObject var appRootManager: AppRootManager
-    @EnvironmentObject var session: SessionManager
+//    @EnvironmentObject var session: SessionManager
     @StateObject var loginVM = LoginViewModel()
     @StateObject private var viewModel = APILoginLogViewModel()
     @StateObject private var logoutVM = APILogoutViewModel()
@@ -117,7 +117,7 @@ struct NewDriverLogin: View {
                 
                 Task {
                     // Step 1: First check if someone is logged in - Logout old user with all data
-                    if SessionManagerClass.shared.isLoggedIn() {
+                    if AppStorageHandler.shared.authToken != nil {
                         // print(" Old user logged in, calling logout API...")
                         // Logout current user before logging in new one
                         logoutVM.appRootManager = appRootManager
@@ -143,7 +143,7 @@ struct NewDriverLogin: View {
                     let success = await loginVM.login(email: UserText, password: password)
                     
                     // Step 3: Check if login was successful
-                    if success && SessionManagerClass.shared.isLoggedIn() {
+                    if success && AppStorageHandler.shared.authToken != nil {
                         // print(" Login successful! Calling loginLogUpdate API...")
                         
                         // Step 4: Call loginLogUpdate API

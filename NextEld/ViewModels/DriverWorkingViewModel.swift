@@ -41,7 +41,7 @@ final class DriverWorkingViewModel: ObservableObject {
             // print(" Message: \(response.message)")
             // print(" Token value: \(response.token ?? "nil")")
             if response.token.lowercased() == "false" {
-                SessionManagerClass.shared.clearToken()
+                
                 isSessionExpired = true
                 // print(" Session expired detected in ForgetUsernameViewModel")
                 appRootManager?.currentRoot = .SessionExpireUIView

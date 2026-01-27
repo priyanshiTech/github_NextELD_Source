@@ -205,7 +205,6 @@
 		AFC1B5562E154A6500C57620 /* ForgetpasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */; };
 		AFC1B5582E155BA100C57620 /* forgetUserNmeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5572E155BA100C57620 /* forgetUserNmeModel.swift */; };
 		AFC1B55A2E155BFA00C57620 /* ForgetNmeModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5592E155BFA00C57620 /* ForgetNmeModelView.swift */; };
-		AFC1B55D2E1566E300C57620 /* KeyChainSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B55C2E1566E300C57620 /* KeyChainSwift.swift */; };
 		AFC1B5602E15671300C57620 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = AFC1B55F2E15671300C57620 /* KeychainSwift */; };
 		AFC381742E290180006FD4E1 /* OfflineSavingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC381732E290180006FD4E1 /* OfflineSavingData.swift */; };
 		AFC381772E29067B006FD4E1 /* OfflineSavingDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC381762E29067B006FD4E1 /* OfflineSavingDataModel.swift */; };
@@ -236,7 +235,6 @@
 		AFD90C8D2E50907800C56528 /* GlobalVariableclass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */; };
 		AFDBB1792E03FAC000D4A2CA /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */; };
 		AFDBF8942E5735A5002DB62D /* SharedManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDBF8932E5735A5002DB62D /* SharedManager.swift */; };
-		AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */; };
 		AFDEF7242E4B18AE00BEB2B1 /* Help&SupportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDEF7232E4B18AE00BEB2B1 /* Help&SupportViewModel.swift */; };
 		AFDEF7272E4B1B3E00BEB2B1 /* SupportModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDEF7262E4B1B3E00BEB2B1 /* SupportModel.swift */; };
 		AFDFD4822E32301700F81B24 /* VoilationBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDFD4812E32301700F81B24 /* VoilationBox.swift */; };
@@ -251,6 +249,7 @@
 		CB4D817E2ECA803A00590F62 /* DisclamerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4D817C2ECA803A00590F62 /* DisclamerView.swift */; };
 		CB4D81802ECA846D00590F62 /* DataBaseManagerClass+SplitShift .swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4D817F2ECA846D00590F62 /* DataBaseManagerClass+SplitShift .swift */; };
 		CB4D81822ECA86E400590F62 /* HomeViewModel+splitshift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4D81812ECA86E400590F62 /* HomeViewModel+splitshift.swift */; };
+		CB8A64CA2F29470300374724 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CB8A64C92F29470300374724 /* KeychainSwift */; };
 		CB99EBD12EA2CA5B0062AC9A /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD02EA2C3420062AC9A /* Double+Extension.swift */; };
 		CB99EBD32EA3E58A0062AC9A /* HomeViewModel+Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */; };
 		CBBC96FE2EC6235D0049E376 /* SessionCleanupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */; };
@@ -498,7 +497,6 @@
 		AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetpasswordModel.swift; sourceTree = "<group>"; };
 		AFC1B5572E155BA100C57620 /* forgetUserNmeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = forgetUserNmeModel.swift; sourceTree = "<group>"; };
 		AFC1B5592E155BFA00C57620 /* ForgetNmeModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetNmeModelView.swift; sourceTree = "<group>"; };
-		AFC1B55C2E1566E300C57620 /* KeyChainSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainSwift.swift; sourceTree = "<group>"; };
 		AFC381732E290180006FD4E1 /* OfflineSavingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineSavingData.swift; sourceTree = "<group>"; };
 		AFC381762E29067B006FD4E1 /* OfflineSavingDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineSavingDataModel.swift; sourceTree = "<group>"; };
 		AFC381792E290A3B006FD4E1 /* ofParamDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ofParamDataModel.swift; sourceTree = "<group>"; };
@@ -527,7 +525,6 @@
 		AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariableclass.swift; sourceTree = "<group>"; };
 		AFDBB1782E03FAC000D4A2CA /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		AFDBF8932E5735A5002DB62D /* SharedManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedManager.swift; sourceTree = "<group>"; };
-		AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerClass.swift; sourceTree = "<group>"; };
 		AFDEF7232E4B18AE00BEB2B1 /* Help&SupportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Help&SupportViewModel.swift"; sourceTree = "<group>"; };
 		AFDEF7262E4B1B3E00BEB2B1 /* SupportModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportModel.swift; sourceTree = "<group>"; };
 		AFDFD4812E32301700F81B24 /* VoilationBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoilationBox.swift; sourceTree = "<group>"; };
@@ -564,6 +561,7 @@
 			files = (
 				AFC1B5602E15671300C57620 /* KeychainSwift in Frameworks */,
 				AFC535542E0D5B8A00AD10C9 /* SQLite in Frameworks */,
+				CB8A64CA2F29470300374724 /* KeychainSwift in Frameworks */,
 				AFA98C882E0152E400E87802 /* PacificTrack.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1536,10 +1534,8 @@
 			children = (
 				AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */,
 				AFC0386A2E0FF10600944204 /* CountDownTimer.swift */,
-				AFDCB8072E1532EB0089BFFE /* SessionManagerClass.swift */,
 				AFBB59F92E4233B10056A660 /* CurrentDT.swift */,
 				AFDFD4812E32301700F81B24 /* VoilationBox.swift */,
-				AFC1B55C2E1566E300C57620 /* KeyChainSwift.swift */,
 				AFA869422E4DFA820061A115 /* AppStorageHandler.swift */,
 				AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */,
 				AFDBF8932E5735A5002DB62D /* SharedManager.swift */,
@@ -1780,8 +1776,8 @@
 			);
 			mainGroup = 108FF7F52DC895E10051671B;
 			packageReferences = (
-				AF29AE602EDDD12800CDE4FA /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				AF29AE612EDDD16200CDE4FA /* XCRemoteSwiftPackageReference "SQLite" */,
+				CB8A64C82F29470300374724 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 			);
 			productRefGroup = 108FF7FF2DC895E10051671B /* Products */;
 			projectDirPath = "";
@@ -1941,7 +1937,6 @@
 				CBE1984C2EFC766200DDA94A /* LoadingView.swift in Sources */,
 				AFC1B5582E155BA100C57620 /* forgetUserNmeModel.swift in Sources */,
 				CBFF19D52ED2070B005A4012 /* SharedInfoManager.swift in Sources */,
-				AFC1B55D2E1566E300C57620 /* KeyChainSwift.swift in Sources */,
 				AF45BB782EB8968600DDDB4D /* VehicleModel.swift in Sources */,
 				AFB943202E029CA100AD19D7 /* UIViewControllerEventsDelegate.swift in Sources */,
 				1009E35B2DCB22EB002E3D13 /* CheckBoxView.swift in Sources */,
@@ -2059,7 +2054,6 @@
 				10CA6EC32DCC9BA8003B265C /* Reuseable  Label.swift in Sources */,
 				CB4D81822ECA86E400590F62 /* HomeViewModel+splitshift.swift in Sources */,
 				AF72350D2E560567009EAA9E /* MacAddressViewModel.swift in Sources */,
-				AFDCB8082E1532EB0089BFFE /* SessionManagerClass.swift in Sources */,
 				AF0EC3302EEDB09400F21FE2 /* DvirOfflineViewModel.swift in Sources */,
 				AFCB43672E2F978100363BB6 /* DeleteModelAPI.swift in Sources */,
 				108FF8302DC8A8BA0051671B /* LoginScreen.swift in Sources */,
@@ -2493,14 +2487,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AF29AE602EDDD12800CDE4FA /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 24.0.0;
-			};
-		};
 		AF29AE612EDDD16200CDE4FA /* XCRemoteSwiftPackageReference "SQLite" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
@@ -2525,6 +2511,14 @@
 				minimumVersion = 0.15.4;
 			};
 		};
+		CB8A64C82F29470300374724 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2537,6 +2531,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AFC535522E0D5B8A00AD10C9 /* XCRemoteSwiftPackageReference "SQLite" */;
 			productName = SQLite;
+		};
+		CB8A64C92F29470300374724 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB8A64C82F29470300374724 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
