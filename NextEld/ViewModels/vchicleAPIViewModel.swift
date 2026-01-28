@@ -40,7 +40,7 @@ class VehicleInfoViewModel: ObservableObject {
         // print(" API Endpoint: \(API.Endpoint.VchicleList.url)")
 
         let requestBody = VehicleInfoRequest(
-            vehicleId: AppStorageHandler.shared.vehicleId ?? 0,
+            vehicleId:  0,
             clientId: AppStorageHandler.shared.clientId ?? 0,
             driverId: AppStorageHandler.shared.driverId ?? 1,
             tokenNo: AppStorageHandler.shared.authToken ?? "",

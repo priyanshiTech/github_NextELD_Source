@@ -233,9 +233,12 @@ struct HOSEventsChart: View {
             
             // Group Personal Use and Yard Move with OFF_DUTY
             let label: String
-            if event.dutyType == .personalUse || event.dutyType == .yardMode {
-                label = "OF"  // Group with OFF_DUTY
-            } else {
+            if event.dutyType == .personalUse {
+                label = "OFF"  // Group with OFF_DUTY
+            } else if event.dutyType == .yardMode {
+                label = "ON"   //  FIX
+            }
+            else {
                 label = getStatusLabel(event.dutyType)
             }
             if duration == 86399 {
@@ -267,7 +270,7 @@ struct HOSEventsChart: View {
         case .onDrive: return "D"
         case .sleep: return "SB"
         case .offDuty: return "OFF"
-        default: return "OF"
+        default: return "OFF"
         }
     }
     

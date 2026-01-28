@@ -40,6 +40,8 @@
 		AF24F36C2E966796000E4909 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF24F36B2E966796000E4909 /* RootView.swift */; };
 		AF2E0D262E8BBFCE00172174 /* ContinueDriveDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2E0D252E8BBFCE00172174 /* ContinueDriveDB.swift */; };
 		AF2E0D282E8BC5B200172174 /* ContinueDriveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2E0D272E8BC5B200172174 /* ContinueDriveView.swift */; };
+		AF2E63312F29E79100F2BE17 /* KeychainAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2E63302F29E79100F2BE17 /* KeychainAccess.swift */; };
+		AF2E63332F29E80C00F2BE17 /* SessionManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2E63322F29E80C00F2BE17 /* SessionManagerClass.swift */; };
 		AF3A59362EB4F48F007A438F /* UploadDefectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A59352EB4F48F007A438F /* UploadDefectView.swift */; };
 		AF44AAB72F03ADF6006D8AED /* all_star_instruction.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AF44AAB62F03ADF6006D8AED /* all_star_instruction.pdf */; };
 		AF45BB712EB61A8600DDDB4D /* addDefectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB702EB61A8600DDDB4D /* addDefectViewModel.swift */; };
@@ -333,6 +335,8 @@
 		AF24F36B2E966796000E4909 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		AF2E0D252E8BBFCE00172174 /* ContinueDriveDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueDriveDB.swift; sourceTree = "<group>"; };
 		AF2E0D272E8BC5B200172174 /* ContinueDriveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueDriveView.swift; sourceTree = "<group>"; };
+		AF2E63302F29E79100F2BE17 /* KeychainAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainAccess.swift; sourceTree = "<group>"; };
+		AF2E63322F29E80C00F2BE17 /* SessionManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerClass.swift; sourceTree = "<group>"; };
 		AF3A59352EB4F48F007A438F /* UploadDefectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDefectView.swift; sourceTree = "<group>"; };
 		AF44AAB62F03ADF6006D8AED /* all_star_instruction.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = all_star_instruction.pdf; sourceTree = "<group>"; };
 		AF45BB702EB61A8600DDDB4D /* addDefectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addDefectViewModel.swift; sourceTree = "<group>"; };
@@ -1540,6 +1544,8 @@
 				AFD90C8C2E50907800C56528 /* GlobalVariableclass.swift */,
 				AFDBF8932E5735A5002DB62D /* SharedManager.swift */,
 				CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */,
+				AF2E63302F29E79100F2BE17 /* KeychainAccess.swift */,
+				AF2E63322F29E80C00F2BE17 /* SessionManagerClass.swift */,
 			);
 			path = HelpingGroup;
 			sourceTree = "<group>";
@@ -1877,6 +1883,7 @@
 				CBBC97012EC6278B0049E376 /* DataBaseManagerClass.swift in Sources */,
 				AF72E4362DFD54B400626DC0 /* ToggleRow.swift in Sources */,
 				AF72E4372DFD54B400626DC0 /* LogsDetails.swift in Sources */,
+				AF2E63312F29E79100F2BE17 /* KeychainAccess.swift in Sources */,
 				AFA98C932E017BCB00E87802 /* PT30Devicedata.swift in Sources */,
 				AF72E4382DFD54B400626DC0 /* HalfScreenMapView.swift in Sources */,
 				AFB943412E029D3100AD19D7 /* AppConfig.swift in Sources */,
@@ -2052,6 +2059,7 @@
 				AF66F7932E4C7B26009A13A0 /* ShippingDocView.swift in Sources */,
 				AFC3CF992DE5C4A100D83558 /* AddVichleMode.swift in Sources */,
 				10CA6EC32DCC9BA8003B265C /* Reuseable  Label.swift in Sources */,
+				AF2E63332F29E80C00F2BE17 /* SessionManagerClass.swift in Sources */,
 				CB4D81822ECA86E400590F62 /* HomeViewModel+splitshift.swift in Sources */,
 				AF72350D2E560567009EAA9E /* MacAddressViewModel.swift in Sources */,
 				AF0EC3302EEDB09400F21FE2 /* DvirOfflineViewModel.swift in Sources */,
@@ -2257,7 +2265,7 @@
 				CODE_SIGN_ENTITLEMENTS = NextEld/NextEld.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: GURSHRAN GILL (NBA3ZC78V3)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 52;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NextEld/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -2311,7 +2319,7 @@
 				CODE_SIGN_ENTITLEMENTS = NextEld/NextEld.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution: TRUCKER TRACE ELD LLC (73277279HM)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 52;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NextEld/Preview Content\"";
 				DEVELOPMENT_TEAM = "";

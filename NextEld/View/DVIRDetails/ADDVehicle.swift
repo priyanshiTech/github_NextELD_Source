@@ -124,13 +124,13 @@ struct ADDVehicle: View {
             let success = await vehicleVM.fetchVehicleInfo()
             
             if vehicleVM.isSessionExpired {
-                // print(" Session expired detected in ADDVehicle - staying on SessionExpireUIView")
+                print(" Session expired detected in ADDVehicle - staying on SessionExpireUIView")
                 return
             }
             
             if success {
-                // print("API se aaye vehicles: \(vehicleVM.vehicles.map{$0.vehicleNo})")
-                // print("API se aaye vehicles ID Number : \(vehicleVM.vehicles.map{$0.vehicleId})")
+                 print("API se aaye vehicles: \(vehicleVM.vehicles.map{$0.vehicleNo})")
+                 print("API se aaye vehicles ID Number : \(vehicleVM.vehicles.map{$0.vehicleId})")
             }
         }
         
