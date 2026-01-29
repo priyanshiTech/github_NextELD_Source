@@ -694,6 +694,7 @@
       }
     },
     "Data Transfer Type" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pa" : {
           "stringUnit" : {

@@ -147,31 +147,32 @@ struct DataTransferInspectionView: View {
                         }
                     }
                     .padding(.horizontal)
+                    
                     // Data Transfer Type Field
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Data Transfer Type")
-                            .font(.caption)
-                            .foregroundColor(Color(uiColor:.black))
-                        Button(action: {
-                            viewModel.showDataTransferTypePicker = true
-                        }) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Data Transfer Type")
-                                    .foregroundColor(Color(uiColor:.black))
-                                Text(viewModel.dataTransferType)
-                                    .font(.caption)
-                                    .foregroundColor(Color(uiColor:.gray))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-                            .background(Color(uiColor:.white))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                            )
-                        }
-                    }
-                    .padding(.horizontal)
+//                    VStack(alignment: .leading, spacing: 8) {
+//                        Text("Data Transfer Type")
+//                            .font(.caption)
+//                            .foregroundColor(Color(uiColor:.black))
+//                        Button(action: {
+//                            viewModel.showDataTransferTypePicker = true
+//                        }) {
+//                            VStack(alignment: .leading, spacing: 4) {
+//                                Text("Data Transfer Type")
+//                                    .foregroundColor(Color(uiColor:.black))
+//                                Text(viewModel.dataTransferType)
+//                                    .font(.caption)
+//                                    .foregroundColor(Color(uiColor:.gray))
+//                            }
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//                            .padding()
+//                            .background(Color(uiColor:.white))
+//                            .overlay(
+//                                RoundedRectangle(cornerRadius: 8)
+//                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+//                            )
+//                        }
+//                    }
+                //    .padding(.horizontal)
                     
                     // Email Field
                     VStack(alignment: .leading, spacing: 8) {
