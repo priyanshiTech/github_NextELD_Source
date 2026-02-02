@@ -12,7 +12,7 @@ import SwiftUI
 struct StatusView: View {
 
     @State private var selectedDriverStatus: DriverStatusType = .offDuty
-    private var driverStatusTypes: Array<DriverStatusType> = [.onDuty, .onDrive, .offDuty, .sleep]
+    private var driverStatusTypes: Array<DriverStatusType> = [.onDuty, .onDrive, .offDuty, .onsleep]
     let columns = [
         GridItem(.flexible(minimum: 100, maximum: 120), spacing: 80),
         GridItem(.flexible(minimum: 100, maximum: 120), spacing: 80)

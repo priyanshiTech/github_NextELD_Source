@@ -15,7 +15,7 @@ struct HOSEvent: Identifiable {
             return .orange
         case .onDrive:
             return .green
-        case .sleep:
+        case .onsleep:
             return .gray
         case .personalUse:
             return .orange
@@ -110,7 +110,7 @@ struct DutyLinePathView: View {
         switch dutyType {
         case .onDuty: return "ON"
         case .onDrive: return "D"
-        case .sleep: return "SB"
+        case .onsleep: return "SB"
         case .offDuty: return "OF"
         default: return "OF"
         }
@@ -268,7 +268,7 @@ struct HOSEventsChart: View {
         switch dutyType {
         case .onDuty: return "ON"
         case .onDrive: return "D"
-        case .sleep: return "SB"
+        case .onsleep: return "SB"
         case .offDuty: return "OFF"
         default: return "OFF"
         }

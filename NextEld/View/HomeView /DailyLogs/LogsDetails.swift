@@ -283,7 +283,7 @@ struct LogsDetails: View {
         case "drive", "driving", "ondrive", "on-drive", "on_drive":
             return .onDrive
         case "sleep", "sleeper", "on_sleep", "on-sleep":
-            return .sleep
+            return .onsleep
         case "personal_use", "personaluse", "personal conveyance":
             return .personalUse
         case "yardmove", "yard_move", "yard":

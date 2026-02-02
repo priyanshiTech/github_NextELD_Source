@@ -3,7 +3,7 @@ import Foundation
 extension  HomeViewModel {
     // Show the next day dialog once sleep exceed to 10 hours
     func showNextShiftAlert() {
-        guard currentDriverStatus == .offDuty || currentDriverStatus == .sleep else {
+        guard currentDriverStatus == .offDuty || currentDriverStatus == .onsleep else {
             return
         }
         // check whether 34 hours completed or not
@@ -45,7 +45,7 @@ extension  HomeViewModel {
         guard !allLogs.isEmpty,
                 let status = allLogs.last?.status,
                 let driverStatus = DriverStatusType(fromName: status),
-              (driverStatus == .sleep || driverStatus == .offDuty) else {
+              (driverStatus == .onsleep || driverStatus == .offDuty) else {
             debugPrint("calculateOffDutyAndSleepTime: No logs found in database")
             return 0
         }
@@ -56,7 +56,7 @@ extension  HomeViewModel {
         for log in sortedLogs {
             let duration = getElapsedTime(lastLog: log)
             let status = DriverStatusType(fromName: log.status) ?? .none
-            if status == .sleep || status == .offDuty {
+            if status == .onsleep || status == .offDuty {
                 totalSleep = duration
             } else {
                 break // for other status will break the loop

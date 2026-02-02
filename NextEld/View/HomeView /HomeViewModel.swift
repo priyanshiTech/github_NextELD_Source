@@ -93,7 +93,7 @@ enum DriverStatusType: Hashable, CaseIterable {
     case onDuty
     case offDuty
     case onDrive
-    case sleep
+    case onsleep
     case personalUse
     case yardMode
     case none
@@ -118,7 +118,7 @@ enum DriverStatusType: Hashable, CaseIterable {
             title = AppConstants.personalUse
         case .yardMode:
             title = AppConstants.yardMove
-        case .sleep:
+        case .onsleep:
             title = AppConstants.onSleep
         case .none:
             return ""
@@ -130,7 +130,7 @@ enum DriverStatusType: Hashable, CaseIterable {
         switch self {
         case .onDrive:
             return "Drive"
-        case .sleep:
+        case .onsleep:
             return "Sleep"
         default:
             return getName()   // baaki same
@@ -151,7 +151,7 @@ enum DriverStatusType: Hashable, CaseIterable {
         case "on_drive", "ondrive", "drive", "driving":
             self = .onDrive
         case "sleep", "sleeper", "on_sleep", "onsleep":
-            self = .sleep
+            self = .onsleep
         case "personal_use", "personaluse", "personal_conveyance":
             self = .personalUse
         case "yard_mode", "yardmode", "yard_move", "yardmove":
@@ -170,7 +170,7 @@ enum DriverStatusType: Hashable, CaseIterable {
             case AppConstants.yardMove:
                 self = .yardMode
             case AppConstants.onSleep:
-                self = .sleep
+                self = .onsleep
             default:
                 return nil
             }
@@ -598,7 +598,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             }
             timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
             
-        case .sleep:
+        case .onsleep:
             timerTypes = [.breakTimer, .sleepTimer]
 
         case .offDuty:
@@ -644,7 +644,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let twoHrs = TimeInterval(60*60*2)
         
         // off duty or sleep less than 2 hours will be adjusted from cycle and onDuty time
-        if (status == .offDuty || status == .sleep) && elapsed < twoHrs  {
+        if (status == .offDuty || status == .onsleep) && elapsed < twoHrs  {
             
             let onDutyRemainingTime = adjusted(lastRecord.remainingDutyTime, elapsed: elapsed, active: true)
             onDutyTimer = CountdownTimer(startTime: onDutyRemainingTime)
@@ -675,7 +675,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     
     func resetBreakTime(from timeInterval: TimeInterval = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)) {
         breakTimer = CountdownTimer(startTime: timeInterval)
-        if currentDriverStatus == .offDuty || currentDriverStatus == .sleep {
+        if currentDriverStatus == .offDuty || currentDriverStatus == .onsleep {
             breakTimer?.start()
         }
     }
@@ -709,8 +709,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let isYardMove = (status == .yardMode)
         let isDrive   = (status == .onDrive)
         let isOnDuty  = (status == .onDuty) || isDrive || isYardMove
-        let isSleep   = (status == .sleep)
-        let isCycle   = !(status == .offDuty || status == .sleep)
+        let isSleep   = (status == .onsleep)
+        let isCycle   = !(status == .offDuty || status == .onsleep)
         
 
         let onDutyRemainingTime = adjusted(latestLog.remainingDutyTime, elapsed: elapsed, active: isOnDuty)
@@ -1176,7 +1176,7 @@ extension HomeViewModel {
     func handleLogoutRequest() {
         presentSideMenu = false
         // Allow logout from Off Duty or Sleep status
-        if currentDriverStatus == .offDuty || currentDriverStatus == .sleep {
+        if currentDriverStatus == .offDuty || currentDriverStatus == .onsleep {
             showLogoutPopup = true
         } else {
             // Show alert popup for other statuses (On Duty, On Drive, etc.)
@@ -1236,7 +1236,7 @@ extension HomeViewModel {
     }
     
     func showCycleMessage() {
-        guard isCycleTimeCompleted(), (currentDriverStatus == .offDuty || currentDriverStatus == .sleep), !AppStorageHandler.shared.is34HourStarted else {
+        guard isCycleTimeCompleted(), (currentDriverStatus == .offDuty || currentDriverStatus == .onsleep), !AppStorageHandler.shared.is34HourStarted else {
             cycleMessage = ""
             return
         }
