@@ -505,7 +505,8 @@ struct HomeScreenView: View {
         
                  .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
                   homeVM.saveTimerStateForStatus(status: homeVM.currentDriverStatus.getName(), originType: .driver, note: "")
-                     
+                     AppStorageHandler.shared.remainingContinueDriveTime = Int(homeVM.continueDriveTimer?.remainingTime ?? 0)
+                     AppStorageHandler.shared.remainingBreakTime = Int(homeVM.breakTimer?.remainingTime ?? 0)
                   }
         
         .onReceive(driverWorkingTimer) { _ in
@@ -584,7 +585,7 @@ struct HomeScreenView: View {
                             return
                         }
                         if success {
-                            homeVM.deleteAllAppData()
+                           
                             homeVM.showAlert(alertType: .sucessConfimration)
                         } else if !deleteViewModel.apiMessage.isEmpty {
                             // print(" Delete API message: \(deleteViewModel.apiMessage)")
@@ -595,6 +596,7 @@ struct HomeScreenView: View {
                 }
                 break
             case .sucessConfimration:
+                homeVM.deleteAllAppData()
                 appRootManager.currentRoot = .login
             case .splitShiftEnds:
                break 

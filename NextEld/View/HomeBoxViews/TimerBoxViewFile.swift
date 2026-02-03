@@ -51,10 +51,19 @@ struct TimeBox: View {
             }
         }
         .onAppear {
-          cycleDays = "/\((AppStorageHandler.shared.cycleDays ?? 0) - AppStorageHandler.shared.days) Days Remaining"
+            if AppStorageHandler.shared.days > AppStorageHandler.shared.cycleDays ?? 0 {
+                cycleDays = "0 Days Remaining"
+            } else {
+                cycleDays = "/\((AppStorageHandler.shared.cycleDays ?? 0) - AppStorageHandler.shared.days) Days Remaining"
+            }
+          
         }
         .onReceive(TimeBox.updateDayNotification, perform: { value in
-            cycleDays = "/\((AppStorageHandler.shared.cycleDays ?? 0) - AppStorageHandler.shared.days) Days Remaining"
+            if AppStorageHandler.shared.days > AppStorageHandler.shared.cycleDays ?? 0 {
+                cycleDays = "0 Days Remaining"
+            } else {
+                cycleDays = "/\((AppStorageHandler.shared.cycleDays ?? 0) - AppStorageHandler.shared.days) Days Remaining"
+            }
         })
         .frame(height: 35)
         .padding()

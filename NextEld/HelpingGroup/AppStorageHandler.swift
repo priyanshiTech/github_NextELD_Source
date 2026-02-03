@@ -54,8 +54,8 @@ struct AppStorageHandler {
     @AppStorage("warningBreakTime1") var warningBreakTime1: Int?
     @AppStorage("warningBreakTime2") var warningBreakTime2: Int?
     @AppStorage("is34HourStarted") var is34HourStarted: Bool = false
-//    @AppStorage("isBreakTimeRunning") var isBreakTimeRunning: Bool = false
-//    @AppStorage("isContinueDriveTimeRunning") var isContinueDriveTimeRunning: Bool = false
+    @AppStorage("remainingBreakTime") var remainingBreakTime: Int = 0
+    @AppStorage("remainingBreakTime") var remainingContinueDriveTime: Int = 0
     //MARK: -  for saving a data to Add dvir
     @AppStorage("dvirLogId") var dvirLogId: String?
 
@@ -109,9 +109,10 @@ struct AppStorageHandler {
         warningBreakTime2 = nil
         is34HourStarted = false
         dvirLogId = nil
+        remainingBreakTime = 0
+        remainingContinueDriveTime = 0
         
     }
-
 }
 
 extension Notification.Name {

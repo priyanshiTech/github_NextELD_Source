@@ -134,14 +134,15 @@ class LoginViewModel: ObservableObject {
                     // print(" Saved to cycle Time: \(cycleTime)")
                 }
                 
-                if let cycleDays = response.result?.rules?.first?.cycleDays{
+                if let cycleDays = response.result?.rules?.first?.cycleDays {
                    // UserDefaults.standard.set(cycleDays, forKey: "cycleDays")
                     AppStorageHandler.shared.cycleDays = cycleDays
                 }
                 
-                if let cycleRestartTime = response.result?.rules?.first?.cycleDays{
+                if let cycleRestartTime = response.result?.rules?.first?.cycleRestartTime {
                     //UserDefaults.standard.set(cycleRestartTime, forKey: "cycleRestartTime")
-                    AppStorageHandler.shared.cycleRestartTime = cycleRestartTime }
+                    AppStorageHandler.shared.cycleRestartTime = cycleRestartTime
+                }
                 
                 if let onDutyTime = response.result?.rules?.first?.onDutyTime{
                       

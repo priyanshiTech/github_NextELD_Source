@@ -109,17 +109,11 @@ extension  HomeViewModel {
         return calculatedSleepTaken >= TimeInterval(totalSleepAllowed)
     }
     
-    func check30MinBreakCompleted() {
-        let thirtyMinute = TimeInterval(30 * 60)
-        guard let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs() else { return }
-        let status = lastlog.status
-        let elapsed = getElapsedTime(lastLog: lastlog)
-        if status == AppConstants.onDuty  || status == AppConstants.offDuty || status == AppConstants.onSleep {
-            if elapsed > thirtyMinute {
-                resetContinueDriveAfter30MinBreak()
-            } else { 
-                resetBreakTime()
-            }
+    func check30MinBreakCompleted(status: DriverStatusType) {
+        if (breakTimer?.remainingTime ?? 0) <= 0 {
+            resetContinueDriveAfter30MinBreak()
+        } else if status == .onDrive {
+            resetBreakTime()
         }
     }
 }

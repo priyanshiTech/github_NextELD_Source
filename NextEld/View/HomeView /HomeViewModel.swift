@@ -380,7 +380,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     @Published var sleepTimer: CountdownTimer? = nil
     @Published var onDriveTimer: CountdownTimer? = nil
     @Published var continueDriveTimer: CountdownTimer? = nil
-    @Published var breakTime: CountdownTimer? = nil
     @Published var refreshView: UUID = UUID()
     
     // Flag used in Home screen
@@ -471,7 +470,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
-    
     }
     
     func stopTimers(for types: [TimerType]) {
@@ -548,6 +546,10 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         } else if cycleTime != 0 {
             cycleTimer = CountdownTimer(startTime: TimeInterval(cycleTime))
         }
+        
+        AppStorageHandler.shared.remainingContinueDriveTime = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
+        
+        AppStorageHandler.shared.remainingBreakTime = AppStorageHandler.shared.breakTime ?? 0
         currentDriverStatus = .offDuty
         self.loadEventsFromDatabase()
        // setupTimerCallbacks()
@@ -592,10 +594,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         case .onDrive:
             checkedOffDutyTimeIsLessThan2Hour()
             checkForSplitShift()
-            if isTimerRunning(.breakTimer) {
-                resetBreakTime()
-                breakTimer?.stop()
-            }
+            
             timerTypes = [.cycleTimer, .onDuty, .continueDrive, .onDrive]
             
         case .onsleep:
@@ -623,7 +622,15 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 //        }
         
         if saveLogsToDatabase {
-            check30MinBreakCompleted()
+            
+            AppStorageHandler.shared.remainingContinueDriveTime = Int(continueDriveTimer?.remainingTime ?? 0)
+            
+            if status == .onDrive {
+                AppStorageHandler.shared.remainingBreakTime = Int(AppStorageHandler.shared.breakTime ?? 0)
+            } else {
+                AppStorageHandler.shared.remainingBreakTime = Int(breakTimer?.remainingTime ?? 0)
+            }
+            check30MinBreakCompleted(status: status)
             saveTimerStateForStatus(status: status.getName(), originType: .driver, note: note)
         }
         
@@ -670,11 +677,14 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     // # changes by priyanshi - compact + safe version
     
     func resetContinueDriveTimeWhenMoveFromOnDrvieToOnDuty() {
+        AppStorageHandler.shared.remainingContinueDriveTime = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
         continueDriveTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.continueDriveTime ?? 0))
     }
     
     func resetBreakTime(from timeInterval: TimeInterval = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)) {
+        breakTimer?.stop()
         breakTimer = CountdownTimer(startTime: timeInterval)
+        AppStorageHandler.shared.remainingBreakTime = Int(timeInterval)
         if currentDriverStatus == .offDuty || currentDriverStatus == .onsleep {
             breakTimer?.start()
         }
@@ -685,10 +695,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         
         let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .shift], order: [DatabaseManager.shared.startTime.desc], limit: 2)
         var latestLog = logs.first
-        var secondLog = logs.last
        
-
-     //   if logs.count == 1 { secondLog = nil }
             
         if latestLog == nil {
             if let lastRecordFromDB = DatabaseManager.shared.getLastRecordOfDriverLogs(), lastRecordFromDB.shift == AppStorageHandler.shared.shift {
@@ -720,27 +727,24 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let sleepRemainingTime = adjusted(latestLog.remainingSleepTime, elapsed: elapsed, active: isSleep)
         
         // continue drive logic
-        var isBreak = false
-        let remainingContinueDrive = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
-        var breakRemainingTime = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)
-        var continueDriveRemainingTime: TimeInterval
+        var remainingContinueDrive: Int
+        let isBreak = (status == .offDuty || status == .onsleep)
         
-        if let secondLog, secondLog.status == AppConstants.onDrive {
-            let secondLogElapsed = abs(latestLog.startTime.timeIntervalSince(secondLog.startTime).rounded())
-            continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: secondLogElapsed, active: true)
-            isBreak = true
-        } else if status == .onDrive {
-            continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: true)
+        if AppStorageHandler.shared.remainingContinueDriveTime > 0 {
+            remainingContinueDrive = Int(AppStorageHandler.shared.remainingContinueDriveTime)
         } else {
-            continueDriveRemainingTime = TimeInterval(remainingContinueDrive)
+            remainingContinueDrive = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
         }
         
-        breakRemainingTime = adjusted(Int(breakRemainingTime), elapsed: elapsed, active: isBreak)
-        
-//        let isBreak = AppStorageHandler.shared.isBreakTimeRunning
-//        if (status == .offDuty || status == .sleep) {
-//            
-//        }
+        var remainingBreakTime: Int
+        if AppStorageHandler.shared.remainingBreakTime > 0 {
+            remainingBreakTime = Int(AppStorageHandler.shared.remainingBreakTime)
+        } else {
+            remainingBreakTime = Int(AppStorageHandler.shared.breakTime ?? 0)
+        }
+         
+        let continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: isDrive)
+        let breakRemainingTime = adjusted(Int(remainingBreakTime), elapsed: elapsed, active: isBreak)
         
         if AppStorageHandler.shared.is34HourStarted {
             let total34Hour = (34 * 60 * 60)
@@ -905,7 +909,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         }
 
         //  FINAL VIOLATION
-        else if remainingTime < 0 &&
+        else if remainingTime < -15 &&
                 uniqueValueForViolation != lastViolationDateValue {
 
             if lastViolationDate30MinValue != uniqueValueForViolation30Min {
@@ -1229,7 +1233,7 @@ extension HomeViewModel {
     }
     
     func showAlert(alertType: AlertType) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.alertType = alertType
             self.showAlertOnHomeScreen = true
         }
