@@ -565,11 +565,13 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         //  Clear SessionManager token
         
         currentDriverStatus = .offDuty
+        resetToInitialState()
         AppStorageHandler.shared.deleteAll()
         DatabaseManager.shared.deleteAllLogs()                          //Clears driverLogs and splitShiftTable
         ContinueDriveDBManager.shared.deleteAllContinueDriveData()
         DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
         CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+        UserDefaults.standard.synchronize()
         // print(" All app data deleted successfully")
         
     }
@@ -693,9 +695,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
     func restoreAllTimersFromLastStatus() {
         
-        let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .shift], order: [DatabaseManager.shared.startTime.desc], limit: 2)
+        let logs = DatabaseManager.shared.fetchLogs(filterTypes: [.day, .shift], order: [DatabaseManager.shared.startTime.desc], limit: 1)
         var latestLog = logs.first
-       
+        
             
         if latestLog == nil {
             if let lastRecordFromDB = DatabaseManager.shared.getLastRecordOfDriverLogs(), lastRecordFromDB.shift == AppStorageHandler.shared.shift {
@@ -703,13 +705,15 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 resetToInitialState(cycleTime: latestLog?.remainingWeeklyTime ?? 0)
             } else {
                 resetToInitialState(isResetCycleTimer: true)
-                return
             }
+            return
         }
         
         guard let latestLog else { return }
             
         let elapsed = getElapsedTime(lastLog: latestLog)
+       
+        
         let status = DriverStatusType(fromName: latestLog.status) ?? .none
 
         // Active flags
@@ -909,7 +913,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         }
 
         //  FINAL VIOLATION
-        else if remainingTime < -15 &&
+        else if remainingTime < -5 &&
                 uniqueValueForViolation != lastViolationDateValue {
 
             if lastViolationDate30MinValue != uniqueValueForViolation30Min {
@@ -1233,7 +1237,7 @@ extension HomeViewModel {
     }
     
     func showAlert(alertType: AlertType) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.alertType = alertType
             self.showAlertOnHomeScreen = true
         }

@@ -197,14 +197,7 @@ class RefreshViewModel: ObservableObject {
             AppStorageHandler.shared.warningBreakTime2 = warningBreak2
         }
         //Save Shift
-        if let shiftValue = response.result?.driverLog?.first?.shift {
-            AppStorageHandler.shared.shift = shiftValue
-        }
-        
-        if let dateIs =  response.result?.driverLog?.first?.days{
-            AppStorageHandler.shared.days = dateIs
-           
-        }
+    
         
         if let firstLog = response.result?.driverCertifiedLog?.first,
            let coDriverId = firstLog.coDriverId {

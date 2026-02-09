@@ -12,10 +12,11 @@ extension  HomeViewModel {
         if check34HoursSleepOrOffDutyCompleted() {
             if shiftChangeAlertValue != uniqueValueForShiftChange {
                 // Shift change
+                AppStorageHandler.shared.is34HourStarted = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     self.changeShiftAfter34HoursComplete(uniqueValue: uniqueValueForShiftChange)
                 }
-                AppStorageHandler.shared.is34HourStarted = false
+                
                 debugPrint("34 hour completed...")
             }
             
@@ -27,7 +28,7 @@ extension  HomeViewModel {
             let uniqueValueForNextDayAlert = "nextday_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
             if  check10HoursSleepOrOffDutyCompleted() && nextDayAlertValue != uniqueValueForNextDayAlert {
                 // next day popup show
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     self.changeDayAfter10HoursCompleted(uniqueValue: uniqueValueForNextDayAlert)
                     debugPrint("Next Day Stared")
                 }
@@ -72,27 +73,30 @@ extension  HomeViewModel {
     }
     
     func changeDayAfter10HoursCompleted(uniqueValue: String) {
-        showAlert(alertType: .nextDay)
         self.resetToInitialState()
+        
         TimeBox.updateDayNotification.send() // update day count on cycle timer
         AppStorageHandler.shared.days += 1
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.nextDayAlert)
+        UserDefaults.standard.synchronize()
         calculateTimeWhenDaysIsGreaterThan8days() // When days greater than 8 days cycle
-        
+        showAlert(alertType: .nextDay)
     }
     
     func changeShiftAfter34HoursComplete(uniqueValue: String) {
-        showAlert(alertType: .shiftChange)
         cycleMessage = ""
-        resetToInitialState(isResetCycleTimer: true)
+        AppStorageHandler.shared.is34HourStarted = false
         AppStorageHandler.shared.shift += 1
         AppStorageHandler.shared.days = 1
+        resetToInitialState(isResetCycleTimer: true)
         UserDefaults.standard.setValue(uniqueValue, forKey: AppConstants.shiftChanged)
         UserDefaults.standard.synchronize()
+        
+        showAlert(alertType: .shiftChange)
     }
     
     func isCycleTimeCompleted() -> Bool {
-        return (cycleTimer?.remainingTime ?? 0) <= 0
+        return (cycleTimer?.remainingTime ?? 0) <= -5
     }
     
     
@@ -100,13 +104,13 @@ extension  HomeViewModel {
         let shiftChangeSleepTotalSeconds = AppStorageHandler.shared.cycleRestartTime ?? 0 // 34 hours
         let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
         // print("Total sleep taken: \(shiftChangeSleepTotalSeconds) - \(calculatedSleepTaken)")
-        return calculatedSleepTaken >= TimeInterval(shiftChangeSleepTotalSeconds)// return true if calculatedSleepTaken > shiftChangeSleepTotalSeconds
+        return calculatedSleepTaken > TimeInterval(shiftChangeSleepTotalSeconds)// return true if calculatedSleepTaken > shiftChangeSleepTotalSeconds
     }
     
     func check10HoursSleepOrOffDutyCompleted() -> Bool {
         let totalSleepAllowed = AppStorageHandler.shared.onSleepTime ?? 0
         let calculatedSleepTaken = self.calculateOffDutyAndSleepTime()
-        return calculatedSleepTaken >= TimeInterval(totalSleepAllowed)
+        return calculatedSleepTaken > TimeInterval(totalSleepAllowed)
     }
     
     func check30MinBreakCompleted(status: DriverStatusType) {

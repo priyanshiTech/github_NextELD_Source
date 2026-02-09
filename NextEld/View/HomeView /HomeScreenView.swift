@@ -585,7 +585,7 @@ struct HomeScreenView: View {
                             return
                         }
                         if success {
-                           
+                            homeVM.deleteAllAppData()
                             homeVM.showAlert(alertType: .sucessConfimration)
                         } else if !deleteViewModel.apiMessage.isEmpty {
                             // print(" Delete API message: \(deleteViewModel.apiMessage)")
@@ -596,7 +596,6 @@ struct HomeScreenView: View {
                 }
                 break
             case .sucessConfimration:
-                homeVM.deleteAllAppData()
                 appRootManager.currentRoot = .login
             case .splitShiftEnds:
                break 

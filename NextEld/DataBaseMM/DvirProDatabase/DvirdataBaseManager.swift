@@ -547,6 +547,9 @@ extension DvirDatabaseManager {
            
         }
         
+        let shift = serverRecord["shift"] as? Int ?? 0
+        let day = serverRecord["days"] as? Int ?? 0
+        
         
         // Create DvirRecord
         let record = DvirRecord(
@@ -554,8 +557,8 @@ extension DvirDatabaseManager {
             UserID: "\(driverId)",
             UserName: driverName,
             startTime: dateTimeString.asDate() ?? Date(),
-            DAY: AppStorageHandler.shared.days,
-            Shift: AppStorageHandler.shared.shift, // Default shift
+            DAY: day,
+            Shift: shift, // Default shift
             DvirTime: "",
             odometer: odometer,
             location: location,

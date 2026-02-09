@@ -201,15 +201,9 @@ class LoginViewModel: ObservableObject {
 
                 
                 //Save Shift
-                if let shiftValue = response.result?.driverLog?.first?.shift {
-                    AppStorageHandler.shared.shift = shiftValue
-                    // print(" Saved shift: \(shiftValue)")
-                }
+            
                 
-                if let dateIs =  response.result?.driverLog?.first?.days{
-                    AppStorageHandler.shared.days = dateIs
-                    // print(" Saved current day: \(dateIs)")
-                }
+              
                 
                 if let firstLog = response.result?.driverCertifiedLog?.first,
                    let coDriverId = firstLog.coDriverId {
@@ -349,7 +343,6 @@ class LoginViewModel: ObservableObject {
                 // MARK: - Save Server DVIR Records from Login Response
                 if let driverDvirLog = driverDvirLogArray, !driverDvirLog.isEmpty {
                     DvirDatabaseManager.shared.saveServerDvirRecords(from: driverDvirLog)
-                    let savedRecords = DvirDatabaseManager.shared.fetchAllRecords()
                     // print(" Total records in database after save: \(savedRecords.count)")
                                                    // Post notification to refresh EmailDvir list
                 //    NotificationCenter.default.post(name: NSNotification.Name("DVIRRecordUpdated"), object: nil)
