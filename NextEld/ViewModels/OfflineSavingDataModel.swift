@@ -43,8 +43,8 @@ class SyncViewModel: ObservableObject {
             let safeLatitude = SharedInfoManager.shared.lattitude
             let safeLongitude = SharedInfoManager.shared.longitude
             
-            let voilation = log.isVoilations == "YES" ? "1" : "0"
-            let safeLogType = voilation == "0" ? "log" : (log.dutyType)
+            let violation = log.isVoilations == "YES" ? "1" : "0"
+            let safeLogType = violation == "0" ? "log" : (log.dutyType)
 
 ////
             return DriveringStatusData(
@@ -59,7 +59,7 @@ class SyncViewModel: ObservableObject {
                 engineStatus: log.engineStatus,
                 identifier: log.identifier,
                 isSplit: log.isSplit,
-                isVoilation: voilation,
+                isVoilation: violation,
                 lastOnSleepTime: Int(log.lastSleepTime),
                 lattitude: safeLatitude,
                 localId: "\(log.id ?? 0)",

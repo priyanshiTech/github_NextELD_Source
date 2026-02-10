@@ -82,7 +82,6 @@ struct BlockAppView: View {
         }
         .onDisappear {
             // If the view disappears while the view model still thinks it is shown,
-            // ensure we reset the block flag so navigation can re-trigger later.
             if homeViewModel.showBlockScreen {
                 homeViewModel.unBlockScreen()
             }
