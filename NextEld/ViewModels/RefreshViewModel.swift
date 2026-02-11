@@ -204,8 +204,8 @@ class RefreshViewModel: ObservableObject {
             AppStorageHandler.shared.coDriverId = coDriverId
         }
         
-            if let voilation = response.result?.driverLog?.first?.isVoilation{
-           UserDefaults.standard.set(voilation , forKey: "isVoilation")
+            if let violation = response.result?.driverLog?.first?.isVoilation{
+           UserDefaults.standard.set(violation , forKey: "isVoilation")
             }
         
             if let  trailer  =  response.result?.driverLog?.first?.trailers{
