@@ -262,7 +262,7 @@ class LoginViewModel: ObservableObject {
                     }
                 
                     if let violation = response.result?.driverLog?.first?.isVoilation{
-                   UserDefaults.standard.set(violation , forKey: "isVoilation")
+                        UserDefaults.standard.set(violation , forKey: "isVoilation")
                     // print(" Saved voilation: \(voilation)")
                     }
                 

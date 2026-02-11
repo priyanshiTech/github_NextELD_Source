@@ -5,15 +5,14 @@ extension HomeViewModel {
     
     func saveTimerStateForStatus(status: String, originType: OriginType, note: String? = nil, date: Date? = nil) {
         
-        let driverStatus = DriverStatusType(fromName: status) ?? .offDuty
-        let dutyTypeValue = driverStatus.getName()
+        let driverStatus = DriverStatusType(fromName: status)?.getName() ?? status
         let startTime = date ?? DateTimeHelper.currentDateTime()
         let originDescription = originType.description
         
         DatabaseManager.shared.saveTimerLog(
             status: status,
             startTime: startTime,
-            dutyType: driverStatus.getName(),
+            dutyType: driverStatus,
             remainingWeeklyTime: Int(cycleTimer?.remainingTime ?? 0),
             remainingDriveTime: Int(onDriveTimer?.remainingTime ?? 0),
             remainingDutyTime: Int(onDutyTimer?.remainingTime ?? 0),
