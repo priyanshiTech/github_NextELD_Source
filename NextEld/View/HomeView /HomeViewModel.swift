@@ -410,7 +410,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     let apiCallTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
-    let serviceTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    let serviceTimer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     
     init() {
         checkWhetherTheViolationAlreadyExists()
@@ -470,6 +470,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
+        
     }
     
     func stopTimers(for types: [TimerType]) {
@@ -610,18 +611,12 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
         case .yardMode:
             timerTypes = [.cycleTimer, .onDuty]
-            if previousStatus == .onDrive {
+            if restoreBreakTimerRunning {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer]
             }
         case .none:
             timerTypes = []
         }
-        
-//        AppStorageHandler.shared.isBreakTimeRunning = timerTypes.contains(.breakTimer)
-//        
-//        if currentDriverStatus == .onDrive || previousStatus == .onDrive {
-//            AppStorageHandler.shared.isContinueDriveTimeRunning = true
-//        }
         
         if saveLogsToDatabase {
             
@@ -630,6 +625,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             if status == .onDrive {
                 AppStorageHandler.shared.remainingBreakTime = Int(AppStorageHandler.shared.breakTime ?? 0)
             } else {
+                
                 AppStorageHandler.shared.remainingBreakTime = Int(breakTimer?.remainingTime ?? 0)
             }
             check30MinBreakCompleted(status: status)
@@ -721,7 +717,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let isDrive   = (status == .onDrive)
         let isOnDuty  = (status == .onDuty) || isDrive || isYardMove
         let isSleep   = (status == .onsleep)
-        let isCycle   = !(status == .offDuty || status == .onsleep)
+        let isCycle   = !(status == .offDuty || status == .onsleep || status == .personalUse)
         
 
         let onDutyRemainingTime = adjusted(latestLog.remainingDutyTime, elapsed: elapsed, active: isOnDuty)
@@ -732,17 +728,19 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         
         // continue drive logic
         var remainingContinueDrive: Int
-        let isBreak = (status == .offDuty || status == .onsleep)
         
-        if AppStorageHandler.shared.remainingContinueDriveTime > 0 {
+        
+        if AppStorageHandler.shared.remainingContinueDriveTime < Int(AppStorageHandler.shared.continueDriveTime ?? 0) {
             remainingContinueDrive = Int(AppStorageHandler.shared.remainingContinueDriveTime)
         } else {
             remainingContinueDrive = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
         }
         
         var remainingBreakTime: Int
-        if AppStorageHandler.shared.remainingBreakTime > 0 {
+        var isBreak = false
+        if AppStorageHandler.shared.remainingBreakTime < Int(AppStorageHandler.shared.breakTime ?? 0) {
             remainingBreakTime = Int(AppStorageHandler.shared.remainingBreakTime)
+            isBreak = true
         } else {
             remainingBreakTime = Int(AppStorageHandler.shared.breakTime ?? 0)
         }
@@ -913,7 +911,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         }
 
         //  FINAL VIOLATION
-        else if remainingTime < -5 &&
+        else if remainingTime < 0 &&
                 uniqueValueForViolation != lastViolationDateValue {
 
             if lastViolationDate30MinValue != uniqueValueForViolation30Min {
@@ -1014,17 +1012,16 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     }
     
     func checkForViolation() {
-        if let continueDriveTimer, currentDriverStatus == .onDrive {
+        if let continueDriveTimer {
             onChangeRemaingTime(type: .continueDrive, remainigTime: continueDriveTimer.remainingTime)
         }
-        if let onDriveTimer, currentDriverStatus == .onDrive {
+        if let onDriveTimer {
             onChangeRemaingTime(type: .onDrive, remainigTime: onDriveTimer.remainingTime)
         }
-        if let onDutyTimer, (currentDriverStatus == .onDrive || currentDriverStatus == .onDuty || currentDriverStatus == .yardMode) {
+        if let onDutyTimer {
             onChangeRemaingTime(type: .onDuty, remainigTime: onDutyTimer.remainingTime)
         }
         if let cycleTimer {
-           // cycleMessageDisplay = cycleTimer.remainingTime <= 0
             onChangeRemaingTime(type: .cycleTimer, remainigTime: cycleTimer.remainingTime)
         }
     }
