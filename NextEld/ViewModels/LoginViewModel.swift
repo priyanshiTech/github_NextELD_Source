@@ -217,18 +217,18 @@ class LoginViewModel: ObservableObject {
 //                    }
                 
                 //Save Latitude
-                    if let latitude = response.result?.driverLog?.first?.lattitude {
-                    //UserDefaults.standard.set(latitude, forKey: "lattitude")
-                        SharedInfoManager.shared.lattitude = latitude
-                    // print(" Saved latitude: \(latitude)")
-                    }
+//                    if let latitude = response.result?.driverLog?.first?.lattitude {
+//                    //UserDefaults.standard.set(latitude, forKey: "lattitude")
+//                        SharedInfoManager.shared.lattitude = latitude
+//                    // print(" Saved latitude: \(latitude)")
+//                    }
                 
                 //Save Longitude
-                    if let longitude = response.result?.driverLog?.first?.longitude {
-                   // UserDefaults.standard.set(longitude, forKey: "longitude")
-                        SharedInfoManager.shared.longitude = longitude
-                    // print(" Saved longitude: \(longitude)")
-                    }
+//                    if let longitude = response.result?.driverLog?.first?.longitude {
+//                   // UserDefaults.standard.set(longitude, forKey: "longitude")
+//                        SharedInfoManager.shared.longitude = longitude
+//                    // print(" Saved longitude: \(longitude)")
+//                    }
                 
                     if let DutyType =  response.result?.driverLog?.first?.logType{
                     //UserDefaults.standard.set(DutyType , forKey: "logType")

@@ -153,7 +153,7 @@ extension HomeViewModel {
         let isEngineStartEntryRequired = isEngineStartStatusLogRequired()
         let isEngineOffEntryRequired = isEngineOffStatusLogRequired()
         
-        if rpm >= 500, isEngineStartEntryRequired {
+        if rpm > 500, isEngineStartEntryRequired {
             self.saveTimerStateForStatus(status: AppConstants.engineOn, originType: .auto)
             print("Engine On...")
         }
@@ -164,7 +164,7 @@ extension HomeViewModel {
     }
     
     func isEngineStartStatusLogRequired() ->  Bool {
-        guard let logs = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.engineStatus]) else {
+        guard let logs = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.engineStatus], applyBaseFilter: false) else {
             return true
         }
         if logs.status == AppConstants.engineOn {
@@ -176,7 +176,7 @@ extension HomeViewModel {
     }
     
     func isEngineOffStatusLogRequired() ->  Bool {
-        guard let logs = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.engineStatus]) else {
+        guard let logs = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.engineStatus], applyBaseFilter: false) else {
             return false
         }
         if logs.status == AppConstants.engineOff {
