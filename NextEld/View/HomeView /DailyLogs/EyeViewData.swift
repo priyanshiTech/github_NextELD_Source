@@ -85,7 +85,7 @@ struct EyeViewData: View {
                             headers: ["Driver Name", "Driver ID", "Driver License", "Driver License State"],
                             values: [
                                 d.driverName ?? "NA",
-                                d.email ?? "NA",
+                                String(d.driverId ?? 0),
                                 d.cdlNo ?? "NA",
                                 d.stateName ?? "NA"
                             ]
@@ -146,8 +146,8 @@ struct EyeViewData: View {
                             values: [
                                 d.truckNo ?? "NA",
                                 d.vin ?? "",
-                                "\(d.odometer ?? 0)",
-                                "\(d.distance ?? 0)"
+                                String(d.odometer ?? 0),
+                                String(d.distance ?? 0)
                             ]
                         )
                         sectionGrid(
@@ -365,7 +365,6 @@ struct EyeViewData: View {
         
         let logs = DatabaseManager.shared.fetchDutyEventsForToday(currentDate: selectedDate)
        // logs.sort { $0.startTime < $1.startTime }
-
         let events = logs.enumerated().map { index, log in
             let status = DriverStatusType(fromName: log.status) ?? .offDuty
             var endDate = nextLogCalculation()
@@ -381,14 +380,10 @@ struct EyeViewData: View {
                 dutyType: status
             )
         }
-        
         return events
     }
     
-    
     //MARK: -  to show  certifyLogView
-    
-    
     func nextLogCalculation() -> Date {
         let selectedDateIsInTodaysDate = DateTimeHelper.currentCalendar.isDateInToday(selectedDate)
         if selectedDateIsInTodaysDate {
@@ -397,7 +392,6 @@ struct EyeViewData: View {
             return DateTimeHelper.endOfDay(for: selectedDate)?.addingTimeInterval(-1) ?? DateTimeHelper.currentDateTime()
         }
     }
-
         //MARK: -  Reusable Section Grid
         @ViewBuilder
         func sectionGrid(headers: [String], values: [String]) -> some View {
@@ -427,7 +421,6 @@ struct EyeViewData: View {
                 Divider()
             }
         }
-        
         //MARK: - For samll Details
         
         func sectionSmallGrid(smallheaders: [String], smallvalues: [String]) -> some View {
@@ -456,7 +449,6 @@ struct EyeViewData: View {
         Divider()
     }
 }
-        
         //MARK: - Small Grid Header Only
         func sectionSmallGridHeader(smallheaders: [String]) -> some View {
             VStack(spacing: 0) {
@@ -471,7 +463,6 @@ struct EyeViewData: View {
                 .background(Color.gray.opacity(0.2))
             }
         }
-        
         //MARK: - Small Grid Row Only
         func sectionSmallGridRow(smallvalues: [String]) -> some View {
             VStack(spacing: 0) {
@@ -494,6 +485,7 @@ struct EyeViewData: View {
     EyeViewData(title: "Daily Logs", date: Date())
         .environmentObject(navManager)
 }
+
 
 
 
