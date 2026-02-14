@@ -710,16 +710,16 @@ class DatabaseManager: DatabaseHandler {
         }
         
         // Prevent continuous Engine ON/OFF spam logs
-        if model.status == AppConstants.engineOn || model.status == AppConstants.engineOff {
-
-            if let lastLog = getLastRecordOfDriverLogs(filterTypes: [.user]) {
-
-                if lastLog.status == model.status {
-                    print(" Duplicate engine status ignored:", model.status)
-                    return
-                }
-            }
-        }
+//        if model.status == AppConstants.engineOn || model.status == AppConstants.engineOff {
+//
+//            if let lastLog = getLastRecordOfDriverLogs(filterTypes: [.user]) {
+//
+//                if lastLog.status == model.status {
+//                    print(" Duplicate engine status ignored:", model.status)
+//                    return
+//                }
+//            }
+//        }
 
     }
     
