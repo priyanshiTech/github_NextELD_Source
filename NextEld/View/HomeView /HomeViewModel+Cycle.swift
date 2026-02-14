@@ -96,7 +96,7 @@ extension  HomeViewModel {
     }
     
     func isCycleTimeCompleted() -> Bool {
-        return (cycleTimer?.remainingTime ?? 0) <= -5
+        return (cycleTimer?.remainingTime ?? 0) < 0
     }
     
     
@@ -114,7 +114,7 @@ extension  HomeViewModel {
     }
     
     func check30MinBreakCompleted(status: DriverStatusType) {
-        if (breakTimer?.remainingTime ?? 0) <= 0 {
+        if (breakTimer?.remainingTime ?? 0) < 0 {
             resetContinueDriveAfter30MinBreak()
         } else if status == .onDrive {
             resetBreakTime()

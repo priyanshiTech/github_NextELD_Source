@@ -38,7 +38,7 @@ extension DatabaseManager {
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
             
-            if status == AppConstants.onDuty || status == AppConstants.onDrive {
+            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
                 dutySeconds += duration
             }
             else if status == AppConstants.offDuty {
@@ -89,7 +89,7 @@ extension DatabaseManager {
                 
                 let duration = max(0, endDate.timeIntervalSince(startDate))
                 
-                if status == AppConstants.onDuty || status == AppConstants.onDrive {
+                if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
                     dutySeconds += duration
                 }
                 else if status == AppConstants.offDuty {
@@ -133,7 +133,7 @@ extension DatabaseManager {
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
             
-            if status == AppConstants.onDuty || status == AppConstants.onDrive {
+            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
                 dutySeconds += duration
             }
             else if status == AppConstants.offDuty {
