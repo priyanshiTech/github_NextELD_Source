@@ -85,7 +85,7 @@ struct EyeViewData: View {
                             headers: ["Driver Name", "Driver ID", "Driver License", "Driver License State"],
                             values: [
                                 d.driverName ?? "NA",
-                                String(d.driverId ?? 0),
+                                d.companyDriverId ?? "NA",
                                 d.cdlNo ?? "NA",
                                 d.stateName ?? "NA"
                             ]
@@ -134,9 +134,9 @@ struct EyeViewData: View {
                             ]
                         )
                         sectionGrid(
-                            headers: ["24 Period Starting Time", "Data Dig. Indicators", "Device Malfn. Indicators"],
+                            headers: [/*"24 Period Starting Time"*/ "Data Dig. Indicators", "Device Malfn. Indicators"],
                             values: [
-                                d.periodStartingTime ?? "00:00",
+                                //d.periodStartingTime ?? "00:00",
                                 d.diagnosticIndicator ?? "NA",
                                 d.malfunctionIndicator ?? "NA"
                             ]
