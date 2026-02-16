@@ -18,7 +18,7 @@ extension DatabaseManager {
         }
         
         if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.specificDate(date: startOfDay)]),
-            (lastlog.status != AppConstants.onSleep || lastlog.status != AppConstants.offDuty),
+           (lastlog.status == AppConstants.onDuty || lastlog.status == AppConstants.onDrive || lastlog.status == AppConstants.yardMove || lastlog.status == AppConstants.personalUse),
            startOfDay > lastlog.startTime  {
             logsForDay.append((startOfDay, lastlog.status))
         }
@@ -74,7 +74,7 @@ extension DatabaseManager {
             }
             
             if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.specificDate(date: startOfDay)]),
-                (lastlog.status != AppConstants.onSleep || lastlog.status != AppConstants.offDuty),
+               (lastlog.status == AppConstants.onDuty || lastlog.status == AppConstants.onDrive || lastlog.status == AppConstants.yardMove || lastlog.status == AppConstants.personalUse),
                startOfDay > lastlog.startTime  {
                 logsForDay.append((startOfDay, lastlog.status))
             }
@@ -126,7 +126,8 @@ extension DatabaseManager {
             return (log.startTime, log.status)
         }
             
-        if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.specificDate(date: startOfToday)]), (lastlog.status ==  AppConstants.onDuty || lastlog.status ==  AppConstants.onDrive) {
+        if let lastlog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.specificDate(date: startOfToday)]),
+           (lastlog.status == AppConstants.onDuty || lastlog.status == AppConstants.onDrive || lastlog.status == AppConstants.yardMove || lastlog.status == AppConstants.personalUse) {
             logsForDay.append((startOfToday, lastlog.status))
         }
         let sortedLogs = logsForDay.sorted(by: { $0.0 < $1.0 })

@@ -656,17 +656,18 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let status = DriverStatusType(fromName: lastRecord.status) else {
             return
         }
-        let elapsed = getElapsedTime(lastLog: lastRecord)
+
         let twoHrs = TimeInterval(60*60*2)
+        let totalSleep = calculateOffDutyAndSleepTime()
         
         // off duty or sleep less than 2 hours will be adjusted from cycle and onDuty time
-        if (status == .offDuty || status == .onsleep) && elapsed < twoHrs  {
+        if (status == .offDuty || status == .onsleep) && totalSleep < twoHrs  {
             
-            let onDutyRemainingTime = adjusted(lastRecord.remainingDutyTime, elapsed: elapsed, active: true)
+            let onDutyRemainingTime = adjusted(lastRecord.remainingDutyTime, elapsed: totalSleep, active: true)
             onDutyTimer = CountdownTimer(startTime: onDutyRemainingTime)
             onDutyTimer?.start()
             
-            let cycleTime = adjusted(lastRecord.remainingWeeklyTime, elapsed: elapsed, active: true)
+            let cycleTime = adjusted(lastRecord.remainingWeeklyTime, elapsed: totalSleep, active: true)
             cycleTimer = CountdownTimer(startTime: cycleTime)
             cycleTimer?.start()
             
@@ -679,6 +680,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 // default sleep case, reset to 10 hours
                 sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
             }
+            
+            DatabaseManager.shared.updateValues(id: lastRecord.id ?? 0, remainingCycleTime: cycleTime, remainingOnDutyTime: onDutyRemainingTime)
         }
     }
 
