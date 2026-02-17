@@ -585,13 +585,28 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
         switch status {
 
-        case .onDuty:
+       /* case .onDuty:
             checkedOffDutyTimeIsLessThan2Hour()
             checkForSplitShift()
             timerTypes = [.onDuty, .cycleTimer]
             if previousStatus == .onDrive {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer]
+            }*/
+            
+        case .onDuty:
+            checkedOffDutyTimeIsLessThan2Hour()
+            checkForSplitShift()
+
+            timerTypes = [.onDuty, .cycleTimer]
+
+            // Always handle break timer properly
+            if previousStatus == .onDrive ||
+               previousStatus == .offDuty ||
+               restoreBreakTimerRunning {
+
+                timerTypes.insert(.breakTimer, at: 0)
             }
+
 
         case .onDrive:
             checkedOffDutyTimeIsLessThan2Hour()
