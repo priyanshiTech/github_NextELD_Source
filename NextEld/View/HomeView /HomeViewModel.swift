@@ -589,8 +589,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             checkedOffDutyTimeIsLessThan2Hour()
             checkForSplitShift()
             timerTypes = [.onDuty, .cycleTimer]
-            if previousStatus == .onDrive || restoreBreakTimerRunning {
-                
+            if previousStatus == .onDrive {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer]
             }
 
@@ -611,11 +610,12 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
         case .yardMode:
             timerTypes = [.cycleTimer, .onDuty]
-            if restoreBreakTimerRunning {
-                timerTypes = [.breakTimer , .onDuty, .cycleTimer]
-            }
         case .none:
             timerTypes = []
+        }
+        
+        if restoreBreakTimerRunning, !timerTypes.contains(.breakTimer) {
+            timerTypes.append(.breakTimer)
         }
         
         if saveLogsToDatabase {

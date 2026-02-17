@@ -171,20 +171,20 @@ final class EngineSyncMonitor {
 
         os_log("%@", log: .default, type: .error, message)
 
-        DatabaseManager.shared.saveEngineSyncEvent(
-            status: status,
-            message: message
-        )
+//        DatabaseManager.shared.saveEngineSyncEvent(
+//            status: status,
+//            message: message
+//        )
 
-        NotificationCenter.default.post(
-            name: .engineSyncEvent,
-            object: nil,
-            userInfo: [
-                "status": status,
-                "message": message,
-                "timestamp": timestamp
-            ]
-        )
+//        NotificationCenter.default.post(
+//            name: .engineSyncEvent,
+//            object: nil,
+//            userInfo: [
+//                "status": status,
+//                "message": message,
+//                "timestamp": timestamp
+//            ]
+//        )
     }
 
     // MARK: - odometer  convert kilometerHelpers
