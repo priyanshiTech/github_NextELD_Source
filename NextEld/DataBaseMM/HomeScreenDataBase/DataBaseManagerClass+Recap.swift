@@ -41,7 +41,7 @@ extension DatabaseManager {
             if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
                 dutySeconds += duration
             }
-            else if status == AppConstants.offDuty || status == AppConstants.onSleep {
+            else if (status == AppConstants.offDuty || status == AppConstants.onSleep) && !(i == logsForDay.count - 1) {
                 // optional split rule: short off-duty counts as duty
                 if duration < (2 * 3600) {
                     dutySeconds += duration
@@ -92,7 +92,7 @@ extension DatabaseManager {
                 if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
                     dutySeconds += duration
                 }
-                else if status == AppConstants.offDuty || status == AppConstants.onSleep {
+                else if (status == AppConstants.offDuty || status == AppConstants.onSleep) && !(i == logsForDay.count - 1) {
                     // optional split rule: short off-duty counts as duty
                     if duration < (2 * 3600) {
                         dutySeconds += duration
@@ -136,7 +136,7 @@ extension DatabaseManager {
             if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
                 dutySeconds += duration
             }
-            else if status == AppConstants.offDuty || status == AppConstants.onSleep {
+            else if (status == AppConstants.offDuty || status == AppConstants.onSleep) && !(i == logsForDay.count - 1) {
                 // optional split rule: short off-duty counts as duty
                 if duration < (2 * 3600) {
                     dutySeconds += duration
@@ -175,10 +175,10 @@ extension DatabaseManager {
             }
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
-            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.yardMove {
+            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.yardMove || status == AppConstants.personalUse {
                 dutySeconds += duration
             }
-            else if status == AppConstants.offDuty || status == AppConstants.onSleep {
+            else if (status == AppConstants.offDuty || status == AppConstants.onSleep) && !(i == logsForDay.count - 1) {
                 // optional split rule: short off-duty counts as duty
                 if duration < (2 * 3600) {
                     dutySeconds += duration
@@ -187,6 +187,8 @@ extension DatabaseManager {
 //            if status == AppConstants.onDuty || status == AppConstants.onDrive {
 //                dutySeconds += duration
 //            }
+            
+            print("duration===",duration)
         }
         
         let cycleTime = max(0, cycleLimit - dutySeconds)
