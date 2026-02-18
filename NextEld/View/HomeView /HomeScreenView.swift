@@ -506,6 +506,7 @@ struct HomeScreenView: View {
                  .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
                   homeVM.saveTimerStateForStatus(status: homeVM.currentDriverStatus.getName(), originType: .driver, note: "")
                      AppStorageHandler.shared.remainingContinueDriveTime = Int(homeVM.continueDriveTimer?.remainingTime ?? 0)
+                     print("remainingContinueDriveTime===4", AppStorageHandler.shared.remainingContinueDriveTime)
                      AppStorageHandler.shared.remainingBreakTime = Int(homeVM.breakTimer?.remainingTime ?? 0)
                   }
         

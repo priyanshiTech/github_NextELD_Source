@@ -162,6 +162,7 @@ class RefreshViewModel: ObservableObject {
         }
         
         if let continueDrive = result.rules?.first?.continueDriveTime {
+            print("ContinueDriveTime===7", continueDrive )
             AppStorageHandler.shared.continueDriveTime = Double(continueDrive)
         }
         

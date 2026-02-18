@@ -61,6 +61,7 @@ class APILogoutViewModel: ObservableObject {
                 self.employeeId = response.result?.employeeId ?? 0
                 self.loginDateTime = response.result?.loginDateTime ?? 0
                 self.logoutDateTime = response.result?.logoutDateTime ?? 0
+                deleteAllAppDataOnLogout()
                 return true
             } else {
                 self.apiMessage = response.message ?? "Failed"
@@ -71,5 +72,23 @@ class APILogoutViewModel: ObservableObject {
             self.apiMessage = "Error: \(error.localizedDescription)"
             return false
         }
+    }
+    
+    
+    func deleteAllAppDataOnLogout(){
+        
+        SharedInfoManager.shared.centralManager?.stopScan()
+        
+        //  Clear SessionManager token
+        AppStorageHandler.shared.deleteAll()
+        DatabaseManager.shared.deleteAllLogs()                          //Clears driverLogs and
+        ContinueDriveDBManager.shared.deleteAllContinueDriveData()
+        DvirDatabaseManager.shared.deleteAllRecordsForDvirDataBase()
+        CertifyDatabaseManager.shared.deleteAllCertifyRecords()
+        AppStorageHandler.shared.shift = 1
+        AppStorageHandler.shared.days = 1
+        UserDefaults.standard.synchronize()
+        // print(" All app data deleted successfully")
+        
     }
 }

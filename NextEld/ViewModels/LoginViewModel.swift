@@ -164,6 +164,7 @@ class LoginViewModel: ObservableObject {
                 
                 if let continueDriveTime =  response.result?.rules?.first?.continueDriveTime{
                     //UserDefaults.standard.set(continueDriveTime, forKey: "continueDriveTime")
+                    print("ContinueDriveTime===6", continueDriveTime )
                     AppStorageHandler.shared.continueDriveTime = Double(continueDriveTime)
                 }
                 
@@ -331,6 +332,8 @@ class LoginViewModel: ObservableObject {
                 let logs = response.result?.driverLog ?? []
                 // Save logs to DB
                 if !logs.isEmpty {
+                    AppStorageHandler.shared.days = logs.first?.days ?? 0
+                    AppStorageHandler.shared.shift = logs.first?.shift ?? 0
                     DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
                 }
                 

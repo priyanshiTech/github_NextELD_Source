@@ -196,6 +196,7 @@ class ContinueDriveDBManager {
         }
         do {
             try db.run(continueDriveTable.delete())
+            try db.run("DELETE FROM sqlite_sequence WHERE name = 'continueDriveTable'")
             // print(" All Continue Drive data deleted")
         } catch {
             // print(" Delete All Continue Drive Data Error: \(error)")

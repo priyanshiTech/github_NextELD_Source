@@ -549,6 +549,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         }
         
         AppStorageHandler.shared.remainingContinueDriveTime = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
+        print("continueDriveTime===1", AppStorageHandler.shared.continueDriveTime ?? 0)
+        print("remainingContinueDriveTime===1", AppStorageHandler.shared.remainingContinueDriveTime)
         
         AppStorageHandler.shared.remainingBreakTime = AppStorageHandler.shared.breakTime ?? 0
         currentDriverStatus = .offDuty
@@ -612,21 +614,23 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         case .none:
             timerTypes = []
         }
-        
         if restoreBreakTimerRunning, !timerTypes.contains(.breakTimer) {
             timerTypes.append(.breakTimer)
         }
-        
         if saveLogsToDatabase {
-            
-            AppStorageHandler.shared.remainingContinueDriveTime = Int(continueDriveTimer?.remainingTime ?? 0)
-            
-            if status == .onDrive {
-                AppStorageHandler.shared.remainingBreakTime = Int(AppStorageHandler.shared.breakTime ?? 0)
-            } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                AppStorageHandler.shared.remainingContinueDriveTime = Int(self.continueDriveTimer?.remainingTime ?? 0)
                 
-                AppStorageHandler.shared.remainingBreakTime = Int(breakTimer?.remainingTime ?? 0)
+                print("ContinueDriveTime===2", AppStorageHandler.shared.continueDriveTime ?? 0)
+                print("remainingContinueDriveTime===2", AppStorageHandler.shared.remainingContinueDriveTime)
+                if status == .onDrive {
+                    AppStorageHandler.shared.remainingBreakTime = Int(AppStorageHandler.shared.breakTime ?? 0)
+                } else {
+                    AppStorageHandler.shared.remainingBreakTime = Int(self.breakTimer?.remainingTime ?? 0)
+                    self.breakTimer?.start()
+                }
             }
+            
             check30MinBreakCompleted(status: status)
             saveTimerStateForStatus(status: status.getName(), originType: .driver, note: note)
         }
@@ -676,6 +680,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func resetContinueDriveTimeWhenMoveFromOnDrvieToOnDuty() {
         AppStorageHandler.shared.remainingContinueDriveTime = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
         continueDriveTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.continueDriveTime ?? 0))
+        print("continueDriveTime===3", AppStorageHandler.shared.continueDriveTime ?? 0)
+        print("remainingContinueDriveTime===3", AppStorageHandler.shared.remainingContinueDriveTime)
     }
     
     func resetBreakTime(from timeInterval: TimeInterval = TimeInterval(AppStorageHandler.shared.breakTime ?? 0)) {
@@ -731,8 +737,10 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         
         if AppStorageHandler.shared.remainingContinueDriveTime < Int(AppStorageHandler.shared.continueDriveTime ?? 0) {
             remainingContinueDrive = Int(AppStorageHandler.shared.remainingContinueDriveTime)
+            print("remainingContinueDrive===5", AppStorageHandler.shared.remainingContinueDriveTime)
         } else {
             remainingContinueDrive = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
+            print("continueDriveTime===5", AppStorageHandler.shared.continueDriveTime ?? 0)
         }
         
         var remainingBreakTime: Int
