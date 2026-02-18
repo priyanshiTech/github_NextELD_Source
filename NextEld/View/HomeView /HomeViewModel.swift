@@ -579,7 +579,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         
     }
     
-    func setDriverStatus(status: DriverStatusType, restoreBreakTimerRunning: Bool = false, note: String? = nil, saveLogsToDatabase: Bool = false) {
+    func setDriverStatus(status: DriverStatusType, note: String? = nil, saveLogsToDatabase: Bool = false) {
         let previousStatus = currentDriverStatus
         currentDriverStatus = status
    //     AppStorageHandler.shared.isContinueDriveTimeRunning = false
@@ -614,9 +614,10 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         case .none:
             timerTypes = []
         }
-        if restoreBreakTimerRunning, !timerTypes.contains(.breakTimer) {
+        if AppStorageHandler.shared.remainingBreakTime < Int(AppStorageHandler.shared.breakTime ?? 0) && !timerTypes.contains(.breakTimer) {
             timerTypes.append(.breakTimer)
         }
+
         if saveLogsToDatabase {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 AppStorageHandler.shared.remainingContinueDriveTime = Int(self.continueDriveTimer?.remainingTime ?? 0)
@@ -627,7 +628,10 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                     AppStorageHandler.shared.remainingBreakTime = Int(AppStorageHandler.shared.breakTime ?? 0)
                 } else {
                     AppStorageHandler.shared.remainingBreakTime = Int(self.breakTimer?.remainingTime ?? 0)
-                    self.breakTimer?.start()
+
+                    if timerTypes.contains(.breakTimer) {
+                        self.breakTimer?.start()
+                    }
                 }
             }
             
@@ -776,7 +780,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
       //  setupTimerCallbacks()
 
         // Resume
-        setDriverStatus(status: status, restoreBreakTimerRunning: isBreak)
+        setDriverStatus(status: status)
     }
 
     func adjusted(_ value: Int?, elapsed: TimeInterval, active: Bool) -> TimeInterval {
