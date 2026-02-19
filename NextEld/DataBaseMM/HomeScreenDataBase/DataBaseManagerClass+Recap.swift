@@ -41,7 +41,7 @@ extension DatabaseManager {
             if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
                 dutySeconds += duration
             }
-            else if status == AppConstants.offDuty {
+            else if status == AppConstants.offDuty || status == AppConstants.onSleep {
                 // optional split rule: short off-duty counts as duty
                 if duration < (2 * 3600) {
                     dutySeconds += duration
@@ -92,7 +92,7 @@ extension DatabaseManager {
                 if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
                     dutySeconds += duration
                 }
-                else if status == AppConstants.offDuty {
+                else if status == AppConstants.offDuty || status == AppConstants.onSleep {
                     // optional split rule: short off-duty counts as duty
                     if duration < (2 * 3600) {
                         dutySeconds += duration
@@ -136,7 +136,7 @@ extension DatabaseManager {
             if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
                 dutySeconds += duration
             }
-            else if status == AppConstants.offDuty {
+            else if status == AppConstants.offDuty || status == AppConstants.onSleep {
                 // optional split rule: short off-duty counts as duty
                 if duration < (2 * 3600) {
                     dutySeconds += duration
@@ -175,10 +175,18 @@ extension DatabaseManager {
             }
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
-            
-            if status == AppConstants.onDuty || status == AppConstants.onDrive {
+            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.yardMove {
                 dutySeconds += duration
             }
+            else if status == AppConstants.offDuty || status == AppConstants.onSleep {
+                // optional split rule: short off-duty counts as duty
+                if duration < (2 * 3600) {
+                    dutySeconds += duration
+                }
+            }
+//            if status == AppConstants.onDuty || status == AppConstants.onDrive {
+//                dutySeconds += duration
+//            }
         }
         
         let cycleTime = max(0, cycleLimit - dutySeconds)

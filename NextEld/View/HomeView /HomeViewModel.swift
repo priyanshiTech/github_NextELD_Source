@@ -625,6 +625,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 print("ContinueDriveTime===2", AppStorageHandler.shared.continueDriveTime ?? 0)
                 print("remainingContinueDriveTime===2", AppStorageHandler.shared.remainingContinueDriveTime)
                 if status == .onDrive {
+                    self.breakTimer?.stop()
                     AppStorageHandler.shared.remainingBreakTime = Int(AppStorageHandler.shared.breakTime ?? 0)
                 } else {
                     AppStorageHandler.shared.remainingBreakTime = Int(self.breakTimer?.remainingTime ?? 0)
