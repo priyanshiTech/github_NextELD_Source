@@ -619,7 +619,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         }
 
         if saveLogsToDatabase {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                guard let self else { return }
                 AppStorageHandler.shared.remainingContinueDriveTime = Int(self.continueDriveTimer?.remainingTime ?? 0)
                 
                 print("ContinueDriveTime===2", AppStorageHandler.shared.continueDriveTime ?? 0)
@@ -634,9 +635,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                         self.breakTimer?.start()
                     }
                 }
+                check30MinBreakCompleted(status: status)
             }
-            
-            check30MinBreakCompleted(status: status)
             saveTimerStateForStatus(status: status.getName(), originType: .driver, note: note)
         }
         
@@ -685,6 +685,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     func resetContinueDriveTimeWhenMoveFromOnDrvieToOnDuty() {
         AppStorageHandler.shared.remainingContinueDriveTime = Int(AppStorageHandler.shared.continueDriveTime ?? 0)
         continueDriveTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.continueDriveTime ?? 0))
+        if currentDriverStatus == .onDrive {
+            continueDriveTimer?.start()
+        }
         print("continueDriveTime===3", AppStorageHandler.shared.continueDriveTime ?? 0)
         print("remainingContinueDriveTime===3", AppStorageHandler.shared.remainingContinueDriveTime)
     }
