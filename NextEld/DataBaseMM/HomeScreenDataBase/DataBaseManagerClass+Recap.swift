@@ -4,6 +4,7 @@ extension DatabaseManager {
     
     func getRecapeAfterSevenDays() -> WorkEntry? {
         var dutySeconds: TimeInterval = 0
+        var sleepDuration: TimeInterval = 0
         let calendar = DateTimeHelper.calendar
         let today = DateTimeHelper.currentDateTime()
         let dayValue = -(AppStorageHandler.shared.cycleDays ?? 0)
@@ -38,13 +39,17 @@ extension DatabaseManager {
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
             
-            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
+            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.yardMove || status == AppConstants.personalUse {
+                
+                // checking the continuous sleep or offduty
+                if sleepDuration < (2 * 3600) {
+                    dutySeconds += sleepDuration
+                }
                 dutySeconds += duration
-            }
-            else if (status == AppConstants.offDuty || status == AppConstants.onSleep) && !(i == logsForDay.count - 1) {
-                // optional split rule: short off-duty counts as duty
-                if duration < (2 * 3600) {
-                    dutySeconds += duration
+                sleepDuration = 0
+            } else if (status == AppConstants.offDuty || status == AppConstants.onSleep) {
+                if i != (logsForDay.count - 1) {
+                    sleepDuration += duration
                 }
             }
         }
@@ -58,6 +63,7 @@ extension DatabaseManager {
         var results: [WorkEntry] = []
         for offset in (1..<totalCycle) {
             var dutySeconds: TimeInterval = 0
+            var sleepDuration: TimeInterval = 0
             let dayOffset = offset - totalCycle
             guard let day = calendar.date(byAdding: .day, value: dayOffset, to: today) else { continue }
             let startOfDay = calendar.startOfDay(for: day)
@@ -89,13 +95,17 @@ extension DatabaseManager {
                 
                 let duration = max(0, endDate.timeIntervalSince(startDate))
                 
-                if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
+                if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.yardMove || status == AppConstants.personalUse {
+                    
+                    // checking the continuous sleep or offduty
+                    if sleepDuration < (2 * 3600) {
+                        dutySeconds += sleepDuration
+                    }
                     dutySeconds += duration
-                }
-                else if (status == AppConstants.offDuty || status == AppConstants.onSleep) && !(i == logsForDay.count - 1) {
-                    // optional split rule: short off-duty counts as duty
-                    if duration < (2 * 3600) {
-                        dutySeconds += duration
+                    sleepDuration = 0
+                } else if (status == AppConstants.offDuty || status == AppConstants.onSleep) {
+                    if i != (logsForDay.count - 1) {
+                        sleepDuration += duration
                     }
                 }
             }
@@ -109,6 +119,7 @@ extension DatabaseManager {
     func getTodaysWork() -> (totalWorkedToday: TimeInterval, remainingWorkedToday: TimeInterval) {
         let OnDutyTodayTotalTime = TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0)
         var dutySeconds: TimeInterval = 0
+        var sleepDuration: TimeInterval = 0
         let allLogs = fetchLogs(filterTypes: [.getTodayRecord])
         let startOfToday =  DateTimeHelper.startOfDay(for: DateTimeHelper.currentDateTime())
         var logsForDay = allLogs.compactMap { log -> (Date, String)? in
@@ -133,15 +144,20 @@ extension DatabaseManager {
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
             
-            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.personalUse || status == AppConstants.yardMove {
+            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.yardMove || status == AppConstants.personalUse {
+                
+                // checking the continuous sleep or offduty
+                if sleepDuration < (2 * 3600) {
+                    dutySeconds += sleepDuration
+                }
                 dutySeconds += duration
-            }
-            else if (status == AppConstants.offDuty || status == AppConstants.onSleep) && !(i == logsForDay.count - 1) {
-                // optional split rule: short off-duty counts as duty
-                if duration < (2 * 3600) {
-                    dutySeconds += duration
+                sleepDuration = 0
+            } else if (status == AppConstants.offDuty || status == AppConstants.onSleep) {
+                if i != (logsForDay.count - 1) {
+                    sleepDuration += duration
                 }
             }
+            
         }
         let dutyTime = max(0, OnDutyTodayTotalTime - dutySeconds)
         
@@ -162,6 +178,7 @@ extension DatabaseManager {
         .sorted { $0.0 < $1.0 }
         
         var dutySeconds: TimeInterval = 0
+        var sleepDuration: TimeInterval = 0
         
         for (i, log) in logsForDay.enumerated() {
             let startDate = log.0
@@ -176,18 +193,18 @@ extension DatabaseManager {
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
             if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.yardMove || status == AppConstants.personalUse {
+                
+                // checking the continuous sleep or offduty
+                if sleepDuration < (2 * 3600) {
+                    dutySeconds += sleepDuration
+                }
                 dutySeconds += duration
-            }
-            else if (status == AppConstants.offDuty || status == AppConstants.onSleep) && !(i == logsForDay.count - 1) {
-                // optional split rule: short off-duty counts as duty
-                if duration < (2 * 3600) {
-                    dutySeconds += duration
+                sleepDuration = 0
+            } else if (status == AppConstants.offDuty || status == AppConstants.onSleep) {
+                if i != (logsForDay.count - 1) {
+                    sleepDuration += duration
                 }
             }
-//            if status == AppConstants.onDuty || status == AppConstants.onDrive {
-//                dutySeconds += duration
-//            }
-            
             print("duration===",duration)
         }
         
