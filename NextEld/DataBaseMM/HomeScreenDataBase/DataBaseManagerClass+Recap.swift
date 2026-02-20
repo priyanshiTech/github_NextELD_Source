@@ -192,6 +192,10 @@ extension DatabaseManager {
             }
             
             let duration = max(0, endDate.timeIntervalSince(startDate))
+            
+            // cycle time include onDuty, onDrive, yardMove, personalUse
+            // When offduty or sleep or together is < 2 hour count in cycle and onduty
+            
             if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.yardMove || status == AppConstants.personalUse {
                 
                 // checking the continuous sleep or offduty
@@ -201,6 +205,7 @@ extension DatabaseManager {
                 dutySeconds += duration
                 sleepDuration = 0
             } else if (status == AppConstants.offDuty || status == AppConstants.onSleep) {
+                // if last record is offduty will not check < 2hour condition
                 if i != (logsForDay.count - 1) {
                     sleepDuration += duration
                 }
