@@ -1005,9 +1005,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         case (.cycleTimerViolation, .violation):
             AudioWarningManager.shared.playWarningAudio(fileName: "weekly_violation_punjabi")
 
-            
-            
-            
         default:
             break
         }

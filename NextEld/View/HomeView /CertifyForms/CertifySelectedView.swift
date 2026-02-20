@@ -292,7 +292,7 @@ struct CertifySelectedView: View {
                         certifiedDate: certifiedDate
                     ) {
                         // Callback when certification is done
-                        self.isCertify = "Yes"
+                        self.isCertify = "Certified"
                         
                         // optional: re-fetch to confirm
                         let all = CertifyDatabaseManager.shared.fetchAllRecords()

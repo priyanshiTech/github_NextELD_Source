@@ -114,6 +114,7 @@ struct DefectRowView: View {
     let onUpload: () -> Void
     
     var body: some View {
+        
         HStack {
             Text(defectText)
                 .foregroundColor(.gray)

@@ -26,7 +26,7 @@ final class EngineSyncMonitor {
 
     // MARK: - Thresholds
     private let DIAGNOSTIC_THRESHOLD: TimeInterval = 5          // 5 seconds
-    private let MALFUNCTION_THRESHOLD: TimeInterval = 2   // 30 minutes
+    private let MALFUNCTION_THRESHOLD: TimeInterval = 2          // 30 minutes
     private let MONITOR_INTERVAL: TimeInterval = 5              // Check every 5 seconds
 
     // MARK: - State
