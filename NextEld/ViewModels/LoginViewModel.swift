@@ -331,10 +331,15 @@ class LoginViewModel: ObservableObject {
             //MARK: - Logout /Login data saved
                 let logs = response.result?.driverLog ?? []
                 // Save logs to DB
-                if !logs.isEmpty {
-                    AppStorageHandler.shared.days = logs.first?.days ?? 0
-                    AppStorageHandler.shared.shift = logs.first?.shift ?? 0
+            if !logs.isEmpty, let first = logs.first {
+                    let safeDay = first.days == 0 ? 1 : first.days
+                    let safeShift = first.shift == 0 ? 1 : first.shift
+                    AppStorageHandler.shared.days =  safeDay ?? 1
+                    AppStorageHandler.shared.shift = safeShift ?? 1
                     DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
+                }else {
+                    AppStorageHandler.shared.days = 1
+                    AppStorageHandler.shared.shift = 1
                 }
                 
                 // MARK: - Save Login/Logout Logs to Database

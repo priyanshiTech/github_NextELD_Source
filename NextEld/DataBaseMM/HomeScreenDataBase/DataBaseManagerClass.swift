@@ -554,6 +554,8 @@ class DatabaseManager: DatabaseHandler {
                     dutyType = log.logType ?? ""
                 }
             }
+            
+            
             let model = DriverLogModel(
                 id: nil,
                 status: log.status ?? "",

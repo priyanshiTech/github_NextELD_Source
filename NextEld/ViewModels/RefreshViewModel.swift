@@ -236,16 +236,19 @@ class RefreshViewModel: ObservableObject {
         AppStorageHandler.shared.yardMovesActive = result.yardMoves
         AppStorageHandler.shared.exempt = result.exempt
         
-         let driverDvirLog: [DvirLogItem]?
-        // Save driver logs to database
-        if let logs = result.driverLog, !logs.isEmpty {
-            DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
-        }
+         
         //MARK: - Logout /Login data saved
             let logs = response.result?.driverLog ?? []
             // Save logs to DB
-            if !logs.isEmpty {
+        if !logs.isEmpty, let first = logs.first {
+                let safeDay = first.days == 0 ? 1 : first.days
+                let safeShift = first.shift == 0 ? 1 : first.shift
+                AppStorageHandler.shared.days =  safeDay ?? 1
+                AppStorageHandler.shared.shift = safeShift ?? 1
                 DatabaseManager.shared.saveDriverLogsToSQLite(from: logs)
+            } else {
+                AppStorageHandler.shared.days = 1
+                AppStorageHandler.shared.shift = 1
             }
             
             // MARK: - Save Login/Logout Logs to Database
