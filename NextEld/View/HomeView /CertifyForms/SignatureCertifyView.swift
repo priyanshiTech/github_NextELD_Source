@@ -282,7 +282,7 @@ struct SignatureCertifyView: View {
                                     alertMessage = apiMessage.isEmpty ? "Certification updated successfully." : apiMessage
                                     CertifyDatabaseManager.shared.updateCertifyStatus(
                                         for: certifiedDate,
-                                        isCertify: "Yes",
+                                        isCertify: "Certified",
                                         syncStatus: 1
                                     )
                                     navigateToBaCK = true
@@ -291,7 +291,7 @@ struct SignatureCertifyView: View {
                                     alertMessage = err.localizedDescription
                                     CertifyDatabaseManager.shared.updateCertifyStatus(
                                         for: certifiedDate,
-                                        isCertify: "Yes",
+                                        isCertify: "Certified",
                                         syncStatus: 0
                                     )
                                 }
@@ -321,15 +321,14 @@ struct SignatureCertifyView: View {
                             DispatchQueue.main.async {
                                 isLoading = false
                                 if certifyVM.isSessionExpired {
-                                    return
-                                }
+                                    return }
                                 switch result {
                                 case .success(let apiMessage):
                                     alertTitle = "Success"
                                     alertMessage = apiMessage.isEmpty ? "Certified successfully." : apiMessage
                                     CertifyDatabaseManager.shared.updateCertifyStatus(
                                         for: certifiedDate,
-                                        isCertify: "Yes",
+                                        isCertify: "Certified",
                                         syncStatus: 1
                                     )
                                     navigateToBaCK = true

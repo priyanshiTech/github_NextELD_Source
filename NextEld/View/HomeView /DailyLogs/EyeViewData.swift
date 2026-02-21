@@ -185,49 +185,104 @@ struct EyeViewData: View {
                         
 
                         // Display header once
-                        sectionSmallGridHeader(
-                            smallheaders: ["Time", "Status","Location","Origin","OdoMeter","Engine Hours","Notes"]
-                        )
+//                        sectionSmallGridHeader(
+//                            smallheaders: ["Time", "Status","Location","Origin","OdoMeter","Engine Hours","Notes"]
+//                        )
                         
                         // Display all entries from database
-                       if !databaseLogs.isEmpty {
-                            ForEach(databaseLogs.indices, id: \.self) { index in
-                                let log = databaseLogs[index]
+//                       if !databaseLogs.isEmpty {
+//                            ForEach(databaseLogs.indices, id: \.self) { index in
+//                                let log = databaseLogs[index]
+//                                sectionSmallGridRow(
+//                                    smallvalues: [
+//                                        DateTimeHelper.formatDatabaseDateTime((log.startTime))   /* formatDateTime*/,
+//                                        log.status,
+//                                        log.location.isEmpty ? "NA" : log.location,
+//                                        log.origin.isEmpty ? "NA" : log.origin,
+//                                        "\(log.odometer)",
+//                                        log.engineHours.isEmpty ? "0" : log.engineHours,
+//                                       // log.engineStatus.isEmpty ? "NA" : log.engineStatus,
+//                                        log.notes.isEmpty ? "" : log.notes
+//                                    ]
+//                                )
+//                            }
+//                        }
+                        
+                        
+//                        if !certifyLogs.isEmpty {
+//
+//                       
+//                            ForEach(certifyLogs.indices, id: \.self) { index in
+//                                let log = certifyLogs[index]
+//
+//                                sectionSmallGridRow(
+//                                    smallvalues: [
+//                                        DateTimeHelper.formatDateOnly(log.date),
+//                                        log.isCertify
+//                                    ]
+//                                )
+//                            }
+//                        }
+                        var combinedLogs: [UnifiedLog] {
+                            
+                            let normalLogs = databaseLogs.map { log in
+                                UnifiedLog(
+                                    date: log.startTime,
+                                    status: log.status,
+                                    location: log.location.isEmpty ? "NA" : log.location,
+                                    origin: log.origin.isEmpty ? "NA" : log.origin,
+                                    odometer: "\(log.odometer)",
+                                    engineHours: log.engineHours.isEmpty ? "0.0" : log.engineHours,
+                                    notes: log.notes
+                                )
+                            }
+                            
+                            let certifiedLogs = certifyLogs.map { log in
+                                UnifiedLog(
+                                    date: log.date,
+                                    status: "Certified",
+                                    location: "",
+                                    origin: "",
+                                    odometer: "",
+                                    engineHours: "",
+                                    notes: ""
+                                )
+                            }
+                            
+                            return (normalLogs + certifiedLogs)
+                                .sorted { $0.date > $1.date }   // Latest first
+                        }
+
+                        // Header
+                        sectionSmallGridHeader(
+                            smallheaders: [
+                                "Time",
+                                "Status",
+                                "Location",
+                                "Origin",
+                                "OdoMeter",
+                                "Engine Hours",
+                                "Notes"
+                            ]
+                        )
+
+                        // Rows
+                        if !combinedLogs.isEmpty {
+                            ForEach(combinedLogs) { log in
+                                
                                 sectionSmallGridRow(
                                     smallvalues: [
-                                        DateTimeHelper.formatDatabaseDateTime((log.startTime))   /* formatDateTime*/,
+                                        DateTimeHelper.formatDatabaseDateTime(log.date),
                                         log.status,
-                                        log.location.isEmpty ? "NA" : log.location,
-                                        log.origin.isEmpty ? "NA" : log.origin,
-                                        "\(log.odometer)",
-                                        log.engineHours.isEmpty ? "0" : log.engineHours,
-                                       // log.engineStatus.isEmpty ? "NA" : log.engineStatus,
-                                        log.notes.isEmpty ? "" : log.notes
+                                        log.location,
+                                        log.origin,
+                                        log.odometer,
+                                        log.engineHours,
+                                        log.notes
                                     ]
                                 )
                             }
                         }
-
-                        if !certifyLogs.isEmpty {
-                             ForEach(certifyLogs.indices, id: \.self) { index in
-                                 let log = certifyLogs[index]
-                                 sectionSmallGridRow(
-                                     smallvalues: [
-                                       //  DateTimeHelper.formatDatabaseDateTime((log.startTime))   /* formatDateTime*/,
-                                      
-                                      
-                                         log.userID,
-                                         log.userName,
-                                         DateTimeHelper.formatDateOnly(log.date),
-                                         log.isCertify,
-                                         log.selectedCoDriver
-
-                                 
-                                     ]
-                                 )
-                             }
-                         }
-
                     }
 
                     
@@ -488,7 +543,16 @@ struct EyeViewData: View {
 
 
 
-
+struct UnifiedLog: Identifiable {
+    let id = UUID()
+    let date: Date
+    let status: String
+    let location: String
+    let origin: String
+    let odometer: String
+    let engineHours: String
+    let notes: String
+}
 
 
 

@@ -52,7 +52,7 @@ struct DailyLogView: View {
     }
     //MARK: - Check if a date is fully certified (date exists + isSynced = 1 + isLogCertified = "Yes")
     private func isDateFullyCertified(_ logDate: Date) -> Bool {
-        return certifiedRecords.filter( { $0.date == logDate }).first?.isCertify == "Yes"
+        return certifiedRecords.filter( { $0.date == logDate }).first?.isCertify == "Certified"
         
 //        let formatter = DateFormatter()
 //        formatter.dateFormat = "dd-MM-yyyy"

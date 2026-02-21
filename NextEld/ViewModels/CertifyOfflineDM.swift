@@ -79,7 +79,7 @@ import SwiftUI
             response.result.forEach { item in
                 CertifyDatabaseManager.shared.updateCertifyStatus(
                     for: Int64(item.localId) ?? 0,
-                    isCertify: "Yes",
+                    isCertify: "Certified",
                     syncStatus: 1
                 )
             }
