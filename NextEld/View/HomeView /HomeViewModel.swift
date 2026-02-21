@@ -1108,7 +1108,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             let record = CertifyDatabaseManager.shared.getLastRecordOfCertifyLogs(
                 filterTypes: [.userId, .specificDate(date: dateTime)]
             )
-            let recordExist = record != nil && record?.isCertify == "Yes"
+            let recordExist = record != nil && record?.isCertify == "Certified"
             if !recordExist {
                 // check whether the driver table have data or not
                 if let _ = DatabaseManager.shared.getLastRecordOfDriverLogs(
