@@ -7,6 +7,7 @@ struct SignatureAddDvir: View {
 
     @Binding var isPresented: Bool
     @Binding var points: [CGPoint]
+    @State private var showToast = false
     var onSave: (UIImage) -> Void
 
     var body: some View {
@@ -71,6 +72,13 @@ struct SignatureAddDvir: View {
                     }
 
                     Button {
+                        // Check if signature exists (at least one valid point)
+                        let validPoints = points.filter { !$0.isStrokeBreak }
+
+                        if validPoints.isEmpty {
+                            showToast = true
+                            return
+                        }
                         let image = signatureToImage(
                             points: points,
                             size: CGSize(width: 320, height: 160)
@@ -95,6 +103,27 @@ struct SignatureAddDvir: View {
             .shadow(color: .black.opacity(0.2), radius: 12)
             .frame(maxWidth: 360)
             .padding(.horizontal)
+            
+            
+            if showToast {
+                VStack {
+                    Spacer()
+                    Text("Signature Required")
+                        .foregroundColor(.black)
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .padding(.bottom, 40)
+                        .transition(.move(edge: .bottom))
+                }
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        withAnimation {
+                            showToast = false
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ enum ViolationBoxType {
         case .warning:
             return "Warning"
         case .violation:
-            return "Violation"
+            return "Voilation"
         }
     }
 }
