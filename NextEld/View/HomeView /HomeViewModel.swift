@@ -611,6 +611,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
         case .yardMode:
             timerTypes = [.cycleTimer, .onDuty]
+            if previousStatus == .onDrive {
+                timerTypes = [.breakTimer , .onDuty, .cycleTimer]
+            }
         case .none:
             timerTypes = []
         }
