@@ -15,7 +15,7 @@ struct AddDvirScreenView: View  {
     @StateObject var navManager: NavigationManager = NavigationManager()
     @StateObject var trailerVM: TrailerViewModel = .init()
     @StateObject var vehicleVM: VehicleConditionViewModel = .init()
-   // @StateObject var DVClocationManager: DeviceLocationManager = .init()
+    // @StateObject var DVClocationManager: DeviceLocationManager = .init()
     @StateObject var viewModel = AddDvirScreenViewModel()
     // "Truck" or "Trailer"
     @StateObject var defectVM = DefectAPIViewModel(networkManager: NetworkManager())
@@ -39,45 +39,45 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Computed Views
     private var topStrip: some View {
-                ZStack(alignment: .topLeading) {
-                    Color(UIColor.wine)
-                        .edgesIgnoringSafeArea(.top)
-                        .frame(height: 10)
-        }
-                }
-                
-    private var headerView: some View {
-                ZStack(alignment: .top) {
-                    Color.white
-                        .frame(height: 52)
-                        .shadow(color: Color(uiColor:.black).opacity(0.2), radius: 4, x: 0, y: 4)
-                    
-                    HStack {
-                        Button(action: {
-                            navmanager.goBack()
-                }) {
-                            Image(systemName: "arrow.left")
-                                .bold()
-                                .foregroundColor(.white)
-                                .imageScale(.large)
-                        }
-
-                            Text("Add DVIR")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .fontWeight(.semibold)
-                        
-                        Spacer()
-                    }
-                    .padding()
-                    .background(Color(UIColor.wine).shadow(radius: 1))
-                    .frame(height: 40, alignment: .topLeading)
+        ZStack(alignment: .topLeading) {
+            Color(UIColor.wine)
+                .edgesIgnoringSafeArea(.top)
+                .frame(height: 10)
         }
     }
+    
+    private var headerView: some View {
+        ZStack(alignment: .top) {
+            Color.white
+                .frame(height: 52)
+                .shadow(color: Color(uiColor:.black).opacity(0.2), radius: 4, x: 0, y: 4)
+            
+            HStack {
+                Button(action: {
+                    navmanager.goBack()
+                }) {
+                    Image(systemName: "arrow.left")
+                        .bold()
+                        .foregroundColor(.white)
+                        .imageScale(.large)
+                }
                 
+                Text("Add DVIR")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+            }
+            .padding()
+            .background(Color(UIColor.wine).shadow(radius: 1))
+            .frame(height: 40, alignment: .topLeading)
+        }
+    }
+    
     private var mainContent: some View {
-                UniversalScrollView {
-                    VStack(spacing: 8) {
+        UniversalScrollView {
+            VStack(spacing: 8) {
                 driverInfoSection
                 vehicleSection
                 trailerSection
@@ -92,156 +92,156 @@ struct AddDvirScreenView: View  {
     
     private var driverInfoSection: some View {
         
-                        CardContainer {
-                            
-                            VStack(alignment: .leading, spacing: 15) {
-                                DvirField(label: "Driver", value: viewModel.driverName)
-                                DvirField(label: "Time", value: viewModel.Drivetime.isEmpty ? DateTimeHelper.currentTime() : viewModel.Drivetime)
-                                DvirField(label: "Date", value: viewModel.StartTime.isEmpty ? DateTimeHelper.currentDate() : viewModel.StartTime)
-                                DvirField(label: "Odometer", value: "0")
-                                DvirField(label: "Company", value: viewModel.companyName)
-                                DvirField(label: "Location", value: self.address)
+        CardContainer {
+            
+            VStack(alignment: .leading, spacing: 15) {
+                DvirField(label: "Driver", value: viewModel.driverName)
+                DvirField(label: "Time", value: viewModel.Drivetime.isEmpty ? DateTimeHelper.currentTime() : viewModel.Drivetime)
+                DvirField(label: "Date", value: viewModel.StartTime.isEmpty ? DateTimeHelper.currentDate() : viewModel.StartTime)
+                DvirField(label: "Odometer", value: "0")
+                DvirField(label: "Company", value: viewModel.companyName)
+                DvirField(label: "Location", value: self.address)
             }
-                            }
-                        }
-                        
+        }
+    }
+    
     private var vehicleSection: some View {
         
         
-                        CardContainer {
-                            
-                            Button(action: {
-                              //print("Navigate to AddVehicleForDvir - Current vehicle: \(vehicleVM.selectedVehicleNumber)")
-                                navmanager.navigate(to: AppRoute.HomeFlow.AddVehicleForDVIR(vehicleID: vehicleVM.vehicleID, vehicleNo: vehicleVM.selectedVehicleNumber))
-                            }) {
-                                HStack {
+        CardContainer {
+            
+            Button(action: {
+                //print("Navigate to AddVehicleForDvir - Current vehicle: \(vehicleVM.selectedVehicleNumber)")
+                navmanager.navigate(to: AppRoute.HomeFlow.AddVehicleForDVIR(vehicleID: vehicleVM.vehicleID, vehicleNo: vehicleVM.selectedVehicleNumber))
+            }) {
+                HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("Vehicle")
-                                            .font(.headline)
-                                            .foregroundColor(Color(uiColor:.black))
+                        Text("Vehicle")
+                            .font(.headline)
+                            .foregroundColor(Color(uiColor:.black))
                         Text(vehicleVM.selectedVehicleNumber.isEmpty ? (AppStorageHandler.shared.vehicleNo ?? "Select Vehicle") : vehicleVM.selectedVehicleNumber)
-                                            .font(.headline)
-                                            .foregroundColor(Color(uiColor:.black))
-                                    }
-                                    Spacer()
-                                    Image("pencil").foregroundColor(Color(uiColor:.gray))
-                                }
-                                .padding()
-                                .background(Color(uiColor:.white))
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                          }
+                            .font(.headline)
+                            .foregroundColor(Color(uiColor:.black))
+                    }
+                    Spacer()
+                    Image("pencil").foregroundColor(Color(uiColor:.gray))
+                }
+                .padding()
+                .background(Color(uiColor:.white))
+            }
+            .buttonStyle(PlainButtonStyle())
+        }
         
-                        }
-                        
+    }
+    
     private var trailerSection: some View {
         
-                        CardContainer {
-                            Button(action: {
-                                navmanager.path.append(AppRoute.HomeFlow.trailerScreen(trailerVM: trailerVM))
-                            }) {
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("Trailer")
-                                            .font(.headline)
-                                            .foregroundColor(Color(uiColor:.black))
-                                        Text(trailerVM.trailers.isEmpty ? "None" : trailerVM.trailers.joined(separator: ", "))
-                                            .font(.headline)
-                                            .foregroundColor(Color(uiColor:.black))
-                                    }
-                                    Spacer()
-                                    Image("pencil").foregroundColor(Color(uiColor:.gray))
-                                }
-                                .padding()
-                                .background(Color(uiColor:.white))
-                            }
-                            .buttonStyle(PlainButtonStyle())
+        CardContainer {
+            Button(action: {
+                navmanager.path.append(AppRoute.HomeFlow.trailerScreen(trailerVM: trailerVM))
+            }) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Trailer")
+                            .font(.headline)
+                            .foregroundColor(Color(uiColor:.black))
+                        Text(trailerVM.trailers.isEmpty ? "None" : trailerVM.trailers.joined(separator: ", "))
+                            .font(.headline)
+                            .foregroundColor(Color(uiColor:.black))
+                    }
+                    Spacer()
+                    Image("pencil").foregroundColor(Color(uiColor:.gray))
+                }
+                .padding()
+                .background(Color(uiColor:.white))
+            }
+            .buttonStyle(PlainButtonStyle())
         }
-                        }
-
+    }
+    
     private var defectSection: some View {
         
-                        CardContainer {
-                            VStack(spacing: 16) {
-                                Text("Truck Defects").font(.headline)
-                                DefectsSection(title: "Truck", selection: $trailerVM.truckDefectSelection, onSelectNoDefect: {
-                                    alreadycheckAndSetVehicleCondition()
-                                }) {
-                                    if trailerVM.truckDefectSelection == nil || trailerVM.truckDefectSelection?.lowercased() == "none" {
-                                        trailerVM.truckDefectSelection = "yes"
-                                    }
-                                    viewModel.popupType = "Truck"
-                                    viewModel.showPopup = true
-                                }
-
-                                Text("Trailer Defects").font(.headline)
-                                DefectsSection(title: "Trailer", selection: $trailerVM.trailerDefectSelection, onSelectNoDefect: {
-                                    alreadycheckAndSetVehicleCondition()
-                                }) {
-                                    if trailerVM.trailerDefectSelection == nil || trailerVM.trailerDefectSelection?.lowercased() == "none" {
-                                        trailerVM.trailerDefectSelection = "yes"
-                                    }
-                                    viewModel.popupType = "Trailer"
-                                    viewModel.showPopup = true
-                                }
-                            }
-                            .onChange(of: trailerVM.truckDefectSelection) { newValue in
-                                alreadycheckAndSetVehicleCondition()
-                            }
-                            .onChange(of: trailerVM.trailerDefectSelection) { newValue in
-                                alreadycheckAndSetVehicleCondition()
-            }
-                            }
-                        }
-
-    private var notesSection: some View {
-                        CardContainer {
-                            Text("Notes")
-                                .font(.headline)
-                                .foregroundColor(Color(uiColor:.black))
-                                .padding()
-                            
-                            ZStack(alignment: .topLeading) {
-                                TextEditor(text: $viewModel.notesText)
-                                    .frame(height: 200)
-                                    .padding(2)
-                                    .background(Color(UIColor.systemGray6))
-                                    .cornerRadius(10)
-                                
-                                if viewModel.notesText.isEmpty {
-                                    Text("Write note here...")
-                                        .foregroundColor(Color(uiColor:.gray))
-                                        .padding(.horizontal, 14)
-                                        .padding(.vertical, 12)
-                                }
-                            }
-                            
-                            HStack {
-                                Button(action: {
-                    vehicleVM.showPopupVechicle = true
-                                    // print("Vehicle Condition Added")
-                                }) {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("Vehicle Condition")
-                                            .fontWeight(.bold)
-                                            .foregroundColor(Color(uiColor:.black))
-                                        Text(vehicleVM.selectedCondition ?? "None")
-                                            .font(.subheadline)
-                                            .foregroundColor(Color(uiColor:.gray))
-                                    }
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 10)
-                                    .background(Color.clear)
-                                }
-                            }
-                        }
+        CardContainer {
+            VStack(spacing: 16) {
+                Text("Truck Defects").font(.headline)
+                DefectsSection(title: "Truck", selection: $trailerVM.truckDefectSelection, onSelectNoDefect: {
+                    alreadycheckAndSetVehicleCondition()
+                }) {
+                    if trailerVM.truckDefectSelection == nil || trailerVM.truckDefectSelection?.lowercased() == "none" {
+                        trailerVM.truckDefectSelection = "yes"
                     }
-                    
+                    viewModel.popupType = "Truck"
+                    viewModel.showPopup = true
+                }
+                
+                Text("Trailer Defects").font(.headline)
+                DefectsSection(title: "Trailer", selection: $trailerVM.trailerDefectSelection, onSelectNoDefect: {
+                    alreadycheckAndSetVehicleCondition()
+                }) {
+                    if trailerVM.trailerDefectSelection == nil || trailerVM.trailerDefectSelection?.lowercased() == "none" {
+                        trailerVM.trailerDefectSelection = "yes"
+                    }
+                    viewModel.popupType = "Trailer"
+                    viewModel.showPopup = true
+                }
+            }
+            .onChange(of: trailerVM.truckDefectSelection) { newValue in
+                alreadycheckAndSetVehicleCondition()
+            }
+            .onChange(of: trailerVM.trailerDefectSelection) { newValue in
+                alreadycheckAndSetVehicleCondition()
+            }
+        }
+    }
+    
+    private var notesSection: some View {
+        CardContainer {
+            Text("Notes")
+                .font(.headline)
+                .foregroundColor(Color(uiColor:.black))
+                .padding()
+            
+            ZStack(alignment: .topLeading) {
+                TextEditor(text: $viewModel.notesText)
+                    .frame(height: 200)
+                    .padding(2)
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(10)
+                
+                if viewModel.notesText.isEmpty {
+                    Text("Write note here...")
+                        .foregroundColor(Color(uiColor:.gray))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 12)
+                }
+            }
+            
+            HStack {
+                Button(action: {
+                    vehicleVM.showPopupVechicle = true
+                    // print("Vehicle Condition Added")
+                }) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Vehicle Condition")
+                            .fontWeight(.bold)
+                            .foregroundColor(Color(uiColor:.black))
+                        Text(vehicleVM.selectedCondition ?? "None")
+                            .font(.subheadline)
+                            .foregroundColor(Color(uiColor:.gray))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(Color.clear)
+                }
+            }
+        }
+    }
+    
     private var signatureButton: some View {
-                    CardContainer {
-                        Button(action: {
-                  viewModel.showSignaturePopup = true
-                        }) {
+        CardContainer {
+            Button(action: {
+                viewModel.showSignaturePopup = true
+            }) {
                 HStack {
                     if let signatureImage = viewModel.signatureImage {
                         Image(uiImage: signatureImage)
@@ -250,7 +250,7 @@ struct AddDvirScreenView: View  {
                             .frame(height: 60)
                             .cornerRadius(8)
                             .padding(.trailing, 8)
-                            } else {
+                    } else {
                         Image(systemName: "pencil")
                             .font(.title2)
                             .foregroundColor(.gray)
@@ -274,12 +274,12 @@ struct AddDvirScreenView: View  {
     private var addDvirButton: some View {
         Button(action: handleAddDvirButtonTap , ) {
             Text(buttonText)
-                            .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                            .foregroundColor(Color(uiColor:.white))
-                            .background(Color(UIColor.wine))
-                            .cornerRadius(10)
-                            .padding(.horizontal, 20)
+                .foregroundColor(Color(uiColor:.white))
+                .background(Color(UIColor.wine))
+                .cornerRadius(10)
+                .padding(.horizontal, 20)
         }
     }
     
@@ -293,7 +293,7 @@ struct AddDvirScreenView: View  {
                 mainContent
                 addDvirButton
             }
-        
+            
             
             .onAppear {
                 // print(" AddDvirScreenView - onAppear called")
@@ -318,11 +318,11 @@ struct AddDvirScreenView: View  {
                     trailerVM.trailers = newValue
                 }
             }
-                   
+            
             
             
             // MARK: - Signature Popup Overlay
-
+            
             if viewModel.showSignaturePopup {
                 SignatureAddDvir(
                     isPresented: $viewModel.showSignaturePopup,
@@ -333,9 +333,9 @@ struct AddDvirScreenView: View  {
                 .transition(.scale)
                 .zIndex(1)
             }
-
-     
-
+            
+            
+            
             // MARK: - Defect Popup Overlay
             if viewModel.showPopup {
                 Color(uiColor:.black).opacity(0.4)
@@ -351,15 +351,15 @@ struct AddDvirScreenView: View  {
                 )
                 .environmentObject(appRootManager)
                 .frame(width: 300, height: 400)
-                               .background(Color(uiColor:.white))
-                               .cornerRadius(12)
-                               .shadow(radius: 10)
-                               .zIndex(2)
-                               .transition(.scale)
-             
+                .background(Color(uiColor:.white))
+                .cornerRadius(12)
+                .shadow(radius: 10)
+                .zIndex(2)
+                .transition(.scale)
+                
             }
-
-
+            
+            
             //MARK: - Vehicle popup
             
             if vehicleVM.showPopupVechicle {
@@ -375,10 +375,10 @@ struct AddDvirScreenView: View  {
             if viewModel.isLoading {
                 LoadingView()
             }
-
+            
         }
         .navigationBarBackButtonHidden()
-  
+        
         .alert(item: $viewModel.alertType) { alertType in
             switch alertType {
             case .validation(let message):
@@ -387,7 +387,7 @@ struct AddDvirScreenView: View  {
                     message: Text(message),
                     dismissButton: .default(Text("OK"))
                 )
-
+                
             case .success(let message):
                 return Alert(
                     title: Text("Success"),
@@ -398,7 +398,7 @@ struct AddDvirScreenView: View  {
                 )
             }
         }
-
+        
         
         .onAppear {
             Task { @MainActor in
@@ -460,8 +460,8 @@ struct AddDvirScreenView: View  {
             
             if !selectedRecord.Trailer.isEmpty {
                 let trailerList = selectedRecord.Trailer.contains(",")
-                    ? selectedRecord.Trailer.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-                    : [selectedRecord.Trailer]
+                ? selectedRecord.Trailer.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+                : [selectedRecord.Trailer]
                 trailerVM.trailers = trailerList
             } else {
                 trailerVM.trailers = []
@@ -497,7 +497,7 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Handle Add DVIR Button Tap
     private func handleAddDvirButtonTap() {
-
+        
         // Ensure login data is loaded
         if viewModel.driverName.isEmpty || viewModel.driverID.isEmpty {
             loadLoginData()
@@ -515,13 +515,13 @@ struct AddDvirScreenView: View  {
         if viewModel.Drivetime.isEmpty {
             viewModel.Drivetime = DateTimeHelper.currentTime()
         }
-
+        
         // Validate form
         if let errorMessage = validateForm() {
             viewModel.alertType = .validation(errorMessage)
             return
         }
-
+        
         // print(" Validation Passed - Proceeding to save")
         
         // Create working record with current form values
@@ -531,7 +531,7 @@ struct AddDvirScreenView: View  {
         var workingRecord: DvirRecord
         if let existingRecord = selectedRecord, let existingId = existingRecord.id {
             // Updating existing record
- 
+            
             workingRecord = existingRecord
             workingRecord.vehicleName = vehicleName.isEmpty ? existingRecord.vehicleName : vehicleName
             workingRecord.vechicleID = vehicleId
@@ -568,7 +568,9 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Save DVIR Record
     private func saveDvirRecord(workingRecord: DvirRecord) {
-
+        
+        print("🔥 saveDvirRecord CALLED")
+        viewModel.isLoading = true
         
         let currentDay = viewModel.StartTime.isEmpty ? DateTimeHelper.currentDate() : viewModel.StartTime
         let currentTime = viewModel.Drivetime.isEmpty ? DateTimeHelper.currentTime() : viewModel.Drivetime
@@ -602,8 +604,8 @@ struct AddDvirScreenView: View  {
             : workingRecord.vehicleName
         
         let finalVehicleID = workingRecord.vechicleID.isEmpty
-            ? "\(vehicleVM.vehicleID > 0 ? vehicleVM.vehicleID : (AppStorageHandler.shared.vehicleId ?? 0))"
-            : workingRecord.vechicleID
+        ? "\(vehicleVM.vehicleID > 0 ? vehicleVM.vehicleID : (AppStorageHandler.shared.vehicleId ?? 0))"
+        : workingRecord.vechicleID
         
         let isExistingRecord: Bool = workingRecord.id != nil
         
@@ -649,11 +651,11 @@ struct AddDvirScreenView: View  {
             fileDVir: signatureData
         )
         
-        viewModel.isLoading = true
+        //.viewModel.isLoading = true
         
-        if let existingId = workingRecord.id {
-        
-            // print(" Calling update API...")
+        if workingRecord.id != nil {
+            
+            print(" Calling update API...")
             DvirDatabaseManager.shared.updateRecord(record)
             updateDvirDataUsingCommonService(record: dvirRecord, dvirLogId: viewModel.driverID, appRootManager: appRootManager, completion: { success in
                 viewModel.isLoading = false
@@ -664,9 +666,9 @@ struct AddDvirScreenView: View  {
                         )
                     }
                 }
-  
+                
             })
-  
+            
         } else {
             // print(" ========== CALLING dispatchadd_dvir_data API ==========")
             DvirDatabaseManager.shared.insertRecord(record)
@@ -679,14 +681,14 @@ struct AddDvirScreenView: View  {
                         )
                     }
                 }
-
+                
             })
         }
         
- 
+        
     }
     
-        //MARK: - load login data into swiftui
+    //MARK: - load login data into swiftui
     func loadLoginData() {
         
         viewModel.driverName = AppStorageHandler.shared.driverName ?? "N/A"//UserDefaults.standard.string(forKey: "driverName") ?? "N/A"
@@ -696,16 +698,16 @@ struct AddDvirScreenView: View  {
         viewModel.driverID = "\(AppStorageHandler.shared.employeeId ?? 0)"
         // Set driverDVIRId from AppStorageHandler or UserDefaults
         viewModel.driverDVIRId = AppStorageHandler.shared.driverId ?? Int(viewModel.driverID) ?? 0
-
-   }
-
+        
+    }
+    
     // MARK: - Validation that returns custom error message
     func validateForm() -> String? {
         
         if viewModel.driverName.isEmpty { return "Please enter Driver Name" }
         if viewModel.StartTime.isEmpty { return "Please enter Time" }
         if viewModel.Drivetime.isEmpty { return "Please enter Day" }
-
+        
         // Check vehicle - use selectedRecord, selectedVehicleNumber, or AppStorageHandler
         let vehicleName: String
         if let recordVehicleName = selectedRecord?.vehicleName, !recordVehicleName.isEmpty {
@@ -732,7 +734,7 @@ struct AddDvirScreenView: View  {
     
     // MARK: - Update selectedRecord with vehicle information
     func updateSelectedRecordFromVehicle() {
-
+        
         
         guard !vehicleVM.selectedVehicleNumber.isEmpty && vehicleVM.vehicleID > 0 else {
             // print("Cannot update - selectedVehicleNumber is empty or ID is 0")
@@ -745,8 +747,8 @@ struct AddDvirScreenView: View  {
             selectedRecord = record
             // print(" Updated selectedRecord - vehicleName: '\(vehicleVM.selectedVehicleNumber)', vechicleID: \(vehicleVM.vehicleID)")
         } else {
-             print(" selectedRecord is nil, creating new record")
-         
+            print(" selectedRecord is nil, creating new record")
+            
         }
     }
     
@@ -762,7 +764,7 @@ struct AddDvirScreenView: View  {
             viewModel.notesText = ""
         }
     }
-
+    
     // MARK: - Wrapper to satisfy existing call site naming
     func alreadycheckAndSetVehicleCondition() {
         checkAndSetVehicleCondition()
