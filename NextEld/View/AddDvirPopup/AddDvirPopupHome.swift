@@ -40,6 +40,7 @@ struct AddDvirPopup: View {
                 // Header
                 
                 HStack {
+                    
 //                    Button(action: {  navManager.path.append(AppRoute.HomeFlow.AddDvirScreenView(vm: trailerVM, selectedRecord: currentRecord)) }) {
 //                        Text("Edit")
 //                            .fontWeight(.bold)

@@ -372,7 +372,7 @@ class CertifyDatabaseManager {
             coDriverID: coDriverId,
             signature: nil, // Signature is stored separately in API as base64 string
             syncStatus: 1, // Mark as synced since it came from server
-            isCertify: "Yes" // Already certified data from server
+            isCertify: "Certified" // Already certified data from server
         )
     }
     
@@ -408,13 +408,13 @@ class CertifyDatabaseManager {
         do {
             if let _ = try db?.pluck(record) {
                 // Row exists -> update
-                try db?.run(record.update(self.isLogcertified <- "Yes"))
+                try db?.run(record.update(self.isLogcertified <- "Certified"))
             } else {
                 // Row does NOT exist -> insert new row
                 try db?.run(certifyTable.insert(
                     self.date <- date,
                     self.userID <- userID,
-                    self.isLogcertified <- "Yes"
+                    self.isLogcertified <- "Certified"
                 ))
             }
         } catch {

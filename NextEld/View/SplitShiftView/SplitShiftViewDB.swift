@@ -13,6 +13,7 @@ extension SplitShiftLog: Identifiable {}
 
 // MARK: - MAIN VIEW
 struct SplitShiftDBView: View {
+    
     @State private var records: [SplitShiftLog] = []
 
     var body: some View {
