@@ -84,7 +84,7 @@ struct HoursRecap: View {
                 HStack {
                     Text("Hours Available Today")
                     Spacer()
-                    Text(DatabaseManager.shared.getTodaysWork().remainingWorkedToday.timeString)
+                    Text(DatabaseManager.shared.getRemainingWorkedToday().timeString)
                 }
                 HStack {
                     Text("Hours Available Tomorrow")

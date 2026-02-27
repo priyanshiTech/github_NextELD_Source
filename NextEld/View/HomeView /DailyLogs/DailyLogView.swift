@@ -236,7 +236,7 @@ struct DailyLogView: View {
         let workedHoursFormatted = workedHours.timeString
         
         // Available hours today (14 hour limit)
-        let availableHours = dbManager.getTodaysWork().remainingWorkedToday
+        let availableHours = dbManager.getRemainingWorkedToday()
         let availableHoursFormatted = availableHours.timeString
         
         // Cycle hours remaining (70 hour/7 days)

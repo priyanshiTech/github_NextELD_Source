@@ -36,7 +36,7 @@ extension HomeViewModel {
          if let lastSplitRecord = getLastRecordFromSplitShiftLog() {
              let alternateSplitType = getAlternateSplitType(duration: lastSplitRecord.splitTime)
              let alternateDuration = alternateSplitType.getSeconds()
-             if totalSleepTaken >= alternateDuration {
+             if totalSleepTaken > alternateDuration {
                  DatabaseManager.shared.updateIdentifier(uniqueId: lastLog.id ?? 0, identifier: 1)
                  // reset sleep time to alertnate remaining sleep
                  let remainingSleepTime = totalSleepRequired - alternateDuration

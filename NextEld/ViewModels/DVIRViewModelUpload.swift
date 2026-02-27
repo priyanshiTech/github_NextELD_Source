@@ -232,13 +232,16 @@ func uploadDvirDataUsingCommonService(record: DvirRecordRequestModel, appRootMan
                             }
                    
                         } else {
+                            completion(false)
                             // print(" Result object not found in response")
                             // print(" Response structure: \(json)")
                         }
                     } else {
+                        completion(false)
                         // print(" Could not parse response JSON")
                     }
                 } else {
+                    completion(false)
                     // print(" Response: (Unable to decode)")
                 }
                 // print(" =================================================")

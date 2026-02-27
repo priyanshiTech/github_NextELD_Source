@@ -416,7 +416,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         checkWhetherTheViolationAlreadyExists()
         restoreAllTimersFromLastStatus()
         validateScenarioInEveryMinute()
-        checkForSplitShift()
+       // checkForSplitShift()
         serviceTimer
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
@@ -819,28 +819,28 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         case .onDuty:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDutyTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime1 ?? 0))
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.onDutyTime ?? 0) - Int(AppStorageHandler.shared.warningOnDutyTime2 ?? 0))
-            if remainigTime <= warning1 {
+            if remainigTime < warning1 {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDutyViolation, violationKey: AppConstants.onDutyViolationKey)
             }
         case .onDrive:
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.onDriveTime ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime1 ?? 0))
             let warning2 = TimeInterval(Int( AppStorageHandler.shared.onDriveTime  ?? 0) - Int(AppStorageHandler.shared.warningOnDriveTime2  ?? 0))
-            if remainigTime <= warning1 {
+            if remainigTime < warning1 {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onDriveViolation, violationKey: AppConstants.onDriveViolationKey)
             }
             
         case .continueDrive:
             // For continue drive, we can use the same warning times as onDrive or create separate ones
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime1 ?? 0))
-            let warning2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0)) - 900
-            if remainigTime <= warning1 {
+            let warning2 = TimeInterval(Int(AppStorageHandler.shared.continueDriveTime ?? 0) - Int(AppStorageHandler.shared.warningBreakTime2 ?? 0))
+            if remainigTime < warning1 {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .onContinueDriveViolation, violationKey: AppConstants.continueDriveViolationKey)
             }
         case .cycleTimer:
             // For cycle timer, we can use similar warning logic
             let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime30MinTime) ?? 0)) // 30 min
             let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime15MinTime) ?? 0)) // 15 min
-            if remainigTime <= warning1 {
+            if remainigTime < warning1 {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
             }
         case .breakTimer:
@@ -869,34 +869,45 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let uniqueValueForViolation30Min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_30min"
         let uniqueValueForViolation15min = "\(violationKey)_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)_15min"
 
+        var actualViolationDate: Date
+        
+        if remainingTime > 0 {
+            let violationDate = DateTimeHelper.calendar.date(byAdding: .second,
+                                                                   value: Int(remainingTime+1), to: DateTimeHelper.currentDateTime())
+            actualViolationDate = violationDate ?? DateTimeHelper.currentDateTime()
+        } else {
+            let violationDate = DateTimeHelper.calendar.date(byAdding: .second,
+                        value: Int(remainingTime+1),
+                                                   to: DateTimeHelper.currentDateTime())
+            actualViolationDate = violationDate ?? DateTimeHelper.currentDateTime()
+        }
+        
         guard lastViolationDate30MinValue != uniqueValueForViolation30Min ||
               lastViolationDate15minValue != uniqueValueForViolation15min ||
               uniqueValueForViolation != lastViolationDateValue else {
             return
         }
-
-        guard let violationDate = remainingTime < 0
-                ? DateTimeHelper.calendar.date(byAdding: .second,
-                    value: Int(remainingTime+1),
-                                               to: DateTimeHelper.currentDateTime())
-                : DateTimeHelper.currentDateTime()
-        else { return }
+        
+        
+        
 
         //  30 MIN WARNING
         if remainingTime < warning1 &&
             remainingTime > warning2 &&
             lastViolationDate30MinValue != uniqueValueForViolation30Min {
+            
+            let violationDate = DateTimeHelper.get30MinBeforeDate(date: actualViolationDate)
 
             var violationData = ViolationData()
             violationData.violationType = type
             violationData.thirtyMinWarning = true
-            self.violationDataArray.append(violationData)
-
-            //  AUDIO
-            playAudio(for: type, kind: .warning30)
-
+            
             UserDefaults.standard.setValue(uniqueValueForViolation30Min,
                                            forKey: violationKey + "_30min")
+            
+            self.violationDataArray.append(violationData)
+            self.playAudio(for: type, kind: .warning30)
+            
             saveViolation(for: violationData, date: violationDate)
         }
 
@@ -909,26 +920,27 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
-                self.violationDataArray.append(violationData)
 
-                playAudio(for: type, kind: .warning30)
-
-                saveViolation(for: violationData,
-                              date: DateTimeHelper.get15MinBeforeDate(date: violationDate))
+                
                 UserDefaults.standard.setValue(uniqueValueForViolation30Min,
                                                forKey: violationKey + "_30min")
+                self.violationDataArray.append(violationData)
+                self.playAudio(for: type, kind: .warning30)
+                saveViolation(for: violationData,
+                              date: DateTimeHelper.get30MinBeforeDate(date: actualViolationDate))
             }
 
             var violationData = ViolationData()
             violationData.violationType = type
             violationData.fifteenMinWarning = true
-            self.violationDataArray.append(violationData)
-
-            playAudio(for: type, kind: .warning15)
-
-            saveViolation(for: violationData, date: violationDate)
+            
+            let violationDate = DateTimeHelper.get15MinBeforeDate(date: actualViolationDate)
+            
             UserDefaults.standard.setValue(uniqueValueForViolation15min,
                                            forKey: violationKey + "_15min")
+            self.violationDataArray.append(violationData)
+            self.playAudio(for: type, kind: .warning15)
+            saveViolation(for: violationData, date: violationDate)
         }
 
         //  FINAL VIOLATION
@@ -939,40 +951,39 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.thirtyMinWarning = true
-                self.violationDataArray.append(violationData)
 
-                playAudio(for: type, kind: .warning30)  //MARK:-  voice play
-
-                saveViolation(for: violationData,
-                              date: DateTimeHelper.get30MinBeforeDate(date: violationDate))
+                
                 UserDefaults.standard.setValue(uniqueValueForViolation30Min,
                                                forKey: violationKey + "_30min")
+                self.violationDataArray.append(violationData)
+                self.playAudio(for: type, kind: .warning30)  //MARK:-
+                saveViolation(for: violationData,
+                              date: DateTimeHelper.get30MinBeforeDate(date: actualViolationDate))
             }
 
             if lastViolationDate15minValue != uniqueValueForViolation15min {
                 var violationData = ViolationData()
                 violationData.violationType = type
                 violationData.fifteenMinWarning = true
-                self.violationDataArray.append(violationData)
-
-                playAudio(for: type, kind: .warning15) //MARK:-  voice play
-
-                saveViolation(for: violationData,
-                              date: DateTimeHelper.get15MinBeforeDate(date: violationDate))
+                
+                
                 UserDefaults.standard.setValue(uniqueValueForViolation15min,
                                                forKey: violationKey + "_15min")
+                self.violationDataArray.append(violationData)
+                self.playAudio(for: type, kind: .warning15)
+                saveViolation(for: violationData,
+                              date: DateTimeHelper.get15MinBeforeDate(date: actualViolationDate))
             }
 
             var violationData = ViolationData()
             violationData.violationType = type
             violationData.violation = true
-            self.violationDataArray.append(violationData)
-
-            playAudio(for: type, kind: .violation) //MARK:-  voice play
-
             UserDefaults.standard.setValue(uniqueValueForViolation,
                                            forKey: violationKey)
-            saveViolation(for: violationData, date: violationDate)
+            
+            self.violationDataArray.append(violationData)
+            self.playAudio(for: type, kind: .violation) //MARK:-  voice p
+            saveViolation(for: violationData, date: actualViolationDate)
         }
 
         UserDefaults.standard.synchronize()

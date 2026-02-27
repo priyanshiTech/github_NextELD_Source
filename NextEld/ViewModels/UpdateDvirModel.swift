@@ -128,6 +128,7 @@ func updateDvirDataUsingCommonService(record: DvirRecordRequestModel, dvirLogId:
                             completion(true)
                         }
                     } else {
+                        completion(false)
                         // print("  Response: (Unable to decode)")
                     }
                 case .failure(let error):
