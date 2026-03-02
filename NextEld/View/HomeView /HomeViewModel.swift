@@ -1000,12 +1000,15 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         switch (type, kind) {
             
             
-            
         case (.onDriveViolation, .warning15):
             AudioWarningManager.shared.playWarningAudio(fileName: "ondrive_warning_punjabi")
             
         case (.onDriveViolation, .violation):
             AudioWarningManager.shared.playWarningAudio(fileName: "ondrive_violation_punjabi")
+            
+        case (.onDriveViolation, .warning30):
+            AudioWarningManager.shared.playWarningAudio(fileName: "30_min_warning_OnDrive")
+            
             
         case (.onContinueDriveViolation, .warning15):
             AudioWarningManager.shared.playWarningAudio(fileName: "continue_drive_warning_punjabi")
@@ -1013,17 +1016,29 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         case (.onContinueDriveViolation, .violation):
             AudioWarningManager.shared.playWarningAudio(fileName: "continue_driving_violation_punjabi")
             
+        case (.onContinueDriveViolation, .warning30):
+            AudioWarningManager.shared.playWarningAudio(fileName: "30_min_warning_OnDrive")
+            
+            
         case (.onDutyViolation, .warning15):
             AudioWarningManager.shared.playWarningAudio(fileName: "onduty_warning_punjabi")
             
         case (.onDutyViolation, .violation):
             AudioWarningManager.shared.playWarningAudio(fileName: "onduty_violation_punjabi")
             
+        case (.onDutyViolation, .warning30):
+            AudioWarningManager.shared.playWarningAudio(fileName: "30_min_warning_Voice_onduty")
+            
+            
         case (.cycleTimerViolation, .warning15):
             AudioWarningManager.shared.playWarningAudio(fileName: "weekly_warning_15min")
             
+        case (.cycleTimerViolation, .warning30):
+            AudioWarningManager.shared.playWarningAudio(fileName: "30 min_warning_Weekly_timing.")
+            
         case (.cycleTimerViolation, .violation):
             AudioWarningManager.shared.playWarningAudio(fileName: "weekly_violation_punjabi")
+            
 
         default:
             break
