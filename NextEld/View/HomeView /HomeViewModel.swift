@@ -670,10 +670,11 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             cycleTimer = CountdownTimer(startTime: cycleTime)
             cycleTimer?.start()
             
-            if let _ = getLastRecordFromSplitShiftLog() {
+            if let splitLog = getLastRecordFromSplitShiftLog() {
                 // split sleep case, reset to remaining sleep time
-                let shiftType = getSplitShiftType()
-                let remainingSleepTime = (AppStorageHandler.shared.onSleepTime ?? 0) - shiftType.getSeconds()
+                let alternateSplitType = getAlternateSplitType(duration: splitLog.splitTime)
+                let alternateDuration = alternateSplitType.getSeconds()
+                let remainingSleepTime = (AppStorageHandler.shared.onSleepTime ?? 0) - alternateDuration
                 sleepTimer = CountdownTimer(startTime: remainingSleepTime)
             } else {
                 // default sleep case, reset to 10 hours
