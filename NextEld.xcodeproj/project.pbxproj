@@ -106,10 +106,6 @@
 		AF7951192E3BA7B5005FFFBF /* DVIRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7951142E3BA7B5005FFFBF /* DVIRModel.swift */; };
 		AF79511A2E3BA7B5005FFFBF /* DvirdataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7951152E3BA7B5005FFFBF /* DvirdataBaseManager.swift */; };
 		AF79511C2E3BA83D005FFFBF /* DVIRViewModelUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF79511B2E3BA83D005FFFBF /* DVIRViewModelUpload.swift */; };
-		AF7ED9622F559C8500E1DE0B /* 30_min_warning_Voice_onduty.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AF7ED9612F559C8500E1DE0B /* 30_min_warning_Voice_onduty.mp3 */; };
-		AF7ED9642F559D6A00E1DE0B /* 30_min_warning_OnDrive.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AF7ED9632F559D6A00E1DE0B /* 30_min_warning_OnDrive.mp3 */; };
-		AF7ED9662F559E3900E1DE0B /* 30 min warning onsleep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AF7ED9652F559E3900E1DE0B /* 30 min warning onsleep.mp3 */; };
-		AF7ED9682F55A03800E1DE0B /* 30 min_warning_Weekly_timing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AF7ED9672F55A03800E1DE0B /* 30 min_warning_Weekly_timing.mp3 */; };
 		AF80FFA92DDF64DE00CC6A3D /* DotInspection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF80FFA82DDF64DE00CC6A3D /* DotInspection.swift */; };
 		AF82B04D2ED4415900081803 /* all_star_manual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AF82B04C2ED4415900081803 /* all_star_manual.pdf */; };
 		AF8717FA2DFFF97400544383 /* blueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8717F92DFFF97400544383 /* blueModel.swift */; };
@@ -126,6 +122,9 @@
 		AF9024982E93DD920005F0D7 /* AvailableHourBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9024902E93DD920005F0D7 /* AvailableHourBox.swift */; };
 		AF9024992E93DD920005F0D7 /* VechicleInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF90248E2E93DD920005F0D7 /* VechicleInfoView.swift */; };
 		AF910B5F2E14009100BCC9E9 /* VoilationsAlert's.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */; };
+		AF9212C32F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF9212C22F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a */; };
+		AF9212C52F59B1CC007F2BBA /* 30 min warning Onduty.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF9212C42F59B1CC007F2BBA /* 30 min warning Onduty.m4a */; };
+		AF9212C72F59B6F1007F2BBA /* 30 minutes cycletimer.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF9212C62F59B6F1007F2BBA /* 30 minutes cycletimer.m4a */; };
 		AF92D3FD2EC5B8740080F895 /* DriverWorkingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92D3FC2EC5B8740080F895 /* DriverWorkingViewModel.swift */; };
 		AF92D4002EC5B9310080F895 /* WorkingDriveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92D3FF2EC5B9310080F895 /* WorkingDriveModel.swift */; };
 		AF92F4DD2DDDE7DB00DEBBF6 /* EmailDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */; };
@@ -405,10 +404,6 @@
 		AF7951152E3BA7B5005FFFBF /* DvirdataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirdataBaseManager.swift; sourceTree = "<group>"; };
 		AF7951162E3BA7B5005FFFBF /* DVIRDataTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRDataTableView.swift; sourceTree = "<group>"; };
 		AF79511B2E3BA83D005FFFBF /* DVIRViewModelUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVIRViewModelUpload.swift; sourceTree = "<group>"; };
-		AF7ED9612F559C8500E1DE0B /* 30_min_warning_Voice_onduty.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 30_min_warning_Voice_onduty.mp3; sourceTree = "<group>"; };
-		AF7ED9632F559D6A00E1DE0B /* 30_min_warning_OnDrive.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 30_min_warning_OnDrive.mp3; sourceTree = "<group>"; };
-		AF7ED9652F559E3900E1DE0B /* 30 min warning onsleep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "30 min warning onsleep.mp3"; sourceTree = "<group>"; };
-		AF7ED9672F55A03800E1DE0B /* 30 min_warning_Weekly_timing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "30 min_warning_Weekly_timing.mp3"; sourceTree = "<group>"; };
 		AF80FFA82DDF64DE00CC6A3D /* DotInspection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotInspection.swift; sourceTree = "<group>"; };
 		AF82B04C2ED4415900081803 /* all_star_manual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = all_star_manual.pdf; sourceTree = "<group>"; };
 		AF8717F92DFFF97400544383 /* blueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blueModel.swift; sourceTree = "<group>"; };
@@ -425,6 +420,9 @@
 		AF9024912E93DD920005F0D7 /* StatusBox&StatusButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatusBox&StatusButton.swift"; sourceTree = "<group>"; };
 		AF9024922E93DD920005F0D7 /* TopbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopbarView.swift; sourceTree = "<group>"; };
 		AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VoilationsAlert's.swift"; sourceTree = "<group>"; };
+		AF9212C22F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ondrive 30 Min Warning.m4a"; sourceTree = "<group>"; };
+		AF9212C42F59B1CC007F2BBA /* 30 min warning Onduty.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "30 min warning Onduty.m4a"; sourceTree = "<group>"; };
+		AF9212C62F59B6F1007F2BBA /* 30 minutes cycletimer.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "30 minutes cycletimer.m4a"; sourceTree = "<group>"; };
 		AF92D3FC2EC5B8740080F895 /* DriverWorkingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverWorkingViewModel.swift; sourceTree = "<group>"; };
 		AF92D3FF2EC5B9310080F895 /* WorkingDriveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingDriveModel.swift; sourceTree = "<group>"; };
 		AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailDvir.swift; sourceTree = "<group>"; };
@@ -915,11 +913,10 @@
 				AF4750632F08E85D00726F27 /* ondrive_warning_punjabi.m4a */,
 				AF4750642F08E85D00726F27 /* onduty_violation_punjabi.m4a */,
 				AF4750652F08E85D00726F27 /* onduty_warning_punjabi.m4a */,
+				AF9212C42F59B1CC007F2BBA /* 30 min warning Onduty.m4a */,
+				AF9212C22F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a */,
+				AF9212C62F59B6F1007F2BBA /* 30 minutes cycletimer.m4a */,
 				AF4750662F08E85D00726F27 /* weekily_warning_15min.m4a */,
-				AF7ED9652F559E3900E1DE0B /* 30 min warning onsleep.mp3 */,
-				AF7ED9632F559D6A00E1DE0B /* 30_min_warning_OnDrive.mp3 */,
-				AF7ED9672F55A03800E1DE0B /* 30 min_warning_Weekly_timing.mp3 */,
-				AF7ED9612F559C8500E1DE0B /* 30_min_warning_Voice_onduty.mp3 */,
 				AF4750672F08E85D00726F27 /* weekly_violation_punjabi.m4a */,
 				AF4750682F08E85D00726F27 /* weekly_warning_30min.m4a */,
 			);
@@ -1815,6 +1812,7 @@
 			files = (
 				AFB943102E029C5B00AD19D7 /* Main.storyboard in Resources */,
 				AF217C212EC867F800A30C7D /* eld_disclaimer 1.html in Resources */,
+				AF9212C72F59B6F1007F2BBA /* 30 minutes cycletimer.m4a in Resources */,
 				AFB943192E029C9500AD19D7 /* DashboardReportView.xib in Resources */,
 				AF8EB9D12ECDDACB006614A3 /* LocalizablePunjabi.strings in Resources */,
 				AFB9431A2E029C9500AD19D7 /* DeviceInfoView.xib in Resources */,
@@ -1823,20 +1821,18 @@
 				AF04B1B12DE9839000A5F3D1 /* LocalizableEng.strings in Resources */,
 				AF44AAB72F03ADF6006D8AED /* all_star_instruction.pdf in Resources */,
 				AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */,
+				AF9212C52F59B1CC007F2BBA /* 30 min warning Onduty.m4a in Resources */,
 				AF47506A2F08E85D00726F27 /* continue_driving_violation_punjabi.m4a in Resources */,
-				AF7ED9662F559E3900E1DE0B /* 30 min warning onsleep.mp3 in Resources */,
 				AF47506B2F08E85D00726F27 /* weekily_warning_15min.m4a in Resources */,
-				AF7ED9622F559C8500E1DE0B /* 30_min_warning_Voice_onduty.mp3 in Resources */,
 				AF47506C2F08E85D00726F27 /* ideal_msg.m4a in Resources */,
 				AF47506D2F08E85D00726F27 /* onduty_violation_punjabi.m4a in Resources */,
 				AF47506E2F08E85D00726F27 /* ondrive_warning_punjabi.m4a in Resources */,
 				AF47506F2F08E85D00726F27 /* onduty_warning_punjabi.m4a in Resources */,
+				AF9212C32F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a in Resources */,
 				AF4750702F08E85D00726F27 /* weekly_warning_30min.m4a in Resources */,
 				AF4750712F08E85D00726F27 /* ondrive_violation_punjabi.m4a in Resources */,
-				AF7ED9682F55A03800E1DE0B /* 30 min_warning_Weekly_timing.mp3 in Resources */,
 				AF4750722F08E85D00726F27 /* weekly_violation_punjabi.m4a in Resources */,
 				AF4750732F08E85D00726F27 /* continue_drive_warning_punjabi.m4a in Resources */,
-				AF7ED9642F559D6A00E1DE0B /* 30_min_warning_OnDrive.mp3 in Resources */,
 				AF82B04D2ED4415900081803 /* all_star_manual.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
