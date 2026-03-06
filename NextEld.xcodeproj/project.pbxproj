@@ -48,17 +48,6 @@
 		AF45BB752EB893BF00DDDB4D /* VehicleConditionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB742EB893BF00DDDB4D /* VehicleConditionViewModel.swift */; };
 		AF45BB782EB8968600DDDB4D /* VehicleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB772EB8968600DDDB4D /* VehicleModel.swift */; };
 		AF45BB7B2EB8AAE800DDDB4D /* vehicleCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB7A2EB8AAE800DDDB4D /* vehicleCondition.swift */; };
-		AF47506A2F08E85D00726F27 /* continue_driving_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750602F08E85D00726F27 /* continue_driving_violation_punjabi.m4a */; };
-		AF47506B2F08E85D00726F27 /* weekily_warning_15min.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750662F08E85D00726F27 /* weekily_warning_15min.m4a */; };
-		AF47506C2F08E85D00726F27 /* ideal_msg.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750612F08E85D00726F27 /* ideal_msg.m4a */; };
-		AF47506D2F08E85D00726F27 /* onduty_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750642F08E85D00726F27 /* onduty_violation_punjabi.m4a */; };
-		AF47506E2F08E85D00726F27 /* ondrive_warning_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750632F08E85D00726F27 /* ondrive_warning_punjabi.m4a */; };
-		AF47506F2F08E85D00726F27 /* onduty_warning_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750652F08E85D00726F27 /* onduty_warning_punjabi.m4a */; };
-		AF4750702F08E85D00726F27 /* weekly_warning_30min.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750682F08E85D00726F27 /* weekly_warning_30min.m4a */; };
-		AF4750712F08E85D00726F27 /* ondrive_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750622F08E85D00726F27 /* ondrive_violation_punjabi.m4a */; };
-		AF4750722F08E85D00726F27 /* weekly_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF4750672F08E85D00726F27 /* weekly_violation_punjabi.m4a */; };
-		AF4750732F08E85D00726F27 /* continue_drive_warning_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF47505F2F08E85D00726F27 /* continue_drive_warning_punjabi.m4a */; };
-		AF4750742F08E85D00726F27 /* AudioPlayingFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF47505D2F08E85D00726F27 /* AudioPlayingFiles.swift */; };
 		AF58BFD82E69C7CE00F0E765 /* SignatureAddDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */; };
 		AF5EE7122EF3DB07001AE01A /* VoilationRedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5EE7112EF3DB07001AE01A /* VoilationRedBox.swift */; };
 		AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */; };
@@ -122,9 +111,6 @@
 		AF9024982E93DD920005F0D7 /* AvailableHourBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9024902E93DD920005F0D7 /* AvailableHourBox.swift */; };
 		AF9024992E93DD920005F0D7 /* VechicleInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF90248E2E93DD920005F0D7 /* VechicleInfoView.swift */; };
 		AF910B5F2E14009100BCC9E9 /* VoilationsAlert's.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */; };
-		AF9212C32F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF9212C22F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a */; };
-		AF9212C52F59B1CC007F2BBA /* 30 min warning Onduty.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF9212C42F59B1CC007F2BBA /* 30 min warning Onduty.m4a */; };
-		AF9212C72F59B6F1007F2BBA /* 30 minutes cycletimer.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF9212C62F59B6F1007F2BBA /* 30 minutes cycletimer.m4a */; };
 		AF92D3FD2EC5B8740080F895 /* DriverWorkingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92D3FC2EC5B8740080F895 /* DriverWorkingViewModel.swift */; };
 		AF92D4002EC5B9310080F895 /* WorkingDriveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92D3FF2EC5B9310080F895 /* WorkingDriveModel.swift */; };
 		AF92F4DD2DDDE7DB00DEBBF6 /* EmailDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */; };
@@ -257,6 +243,20 @@
 		CB8A64CA2F29470300374724 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CB8A64C92F29470300374724 /* KeychainSwift */; };
 		CB99EBD12EA2CA5B0062AC9A /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD02EA2C3420062AC9A /* Double+Extension.swift */; };
 		CB99EBD32EA3E58A0062AC9A /* HomeViewModel+Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */; };
+		CBAB6AD82F5ABCC30082B89E /* AudioPlayingFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBAB6AC82F5ABCC30082B89E /* AudioPlayingFiles.swift */; };
+		CBAB6AD92F5ABCC30082B89E /* 30 minutes cycletimer.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6ACB2F5ABCC30082B89E /* 30 minutes cycletimer.m4a */; };
+		CBAB6ADA2F5ABCC30082B89E /* 30 min warning Onduty.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6ACA2F5ABCC30082B89E /* 30 min warning Onduty.m4a */; };
+		CBAB6ADB2F5ABCC30082B89E /* continue_drive_warning_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6ACC2F5ABCC30082B89E /* continue_drive_warning_punjabi.m4a */; };
+		CBAB6ADC2F5ABCC30082B89E /* ondrive_warning_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6AD12F5ABCC30082B89E /* ondrive_warning_punjabi.m4a */; };
+		CBAB6ADD2F5ABCC30082B89E /* onduty_warning_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6AD32F5ABCC30082B89E /* onduty_warning_punjabi.m4a */; };
+		CBAB6ADE2F5ABCC30082B89E /* ideal_msg.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6ACE2F5ABCC30082B89E /* ideal_msg.m4a */; };
+		CBAB6ADF2F5ABCC30082B89E /* onduty_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6AD22F5ABCC30082B89E /* onduty_violation_punjabi.m4a */; };
+		CBAB6AE02F5ABCC30082B89E /* weekly_warning_30min.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6AD62F5ABCC30082B89E /* weekly_warning_30min.m4a */; };
+		CBAB6AE12F5ABCC30082B89E /* Ondrive 30 Min Warning.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6ACF2F5ABCC30082B89E /* Ondrive 30 Min Warning.m4a */; };
+		CBAB6AE22F5ABCC30082B89E /* continue_driving_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6ACD2F5ABCC30082B89E /* continue_driving_violation_punjabi.m4a */; };
+		CBAB6AE32F5ABCC30082B89E /* ondrive_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6AD02F5ABCC30082B89E /* ondrive_violation_punjabi.m4a */; };
+		CBAB6AE42F5ABCC30082B89E /* weekily_warning_15min.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6AD42F5ABCC30082B89E /* weekily_warning_15min.m4a */; };
+		CBAB6AE52F5ABCC30082B89E /* weekly_violation_punjabi.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CBAB6AD52F5ABCC30082B89E /* weekly_violation_punjabi.m4a */; };
 		CBBC96FE2EC6235D0049E376 /* SessionCleanupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */; };
 		CBBC97012EC6278B0049E376 /* DataBaseManagerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC97002EC6278B0049E376 /* DataBaseManagerClass.swift */; };
 		CBBC97032EC6289F0049E376 /* DriverLogList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBC97022EC6289F0049E376 /* DriverLogList.swift */; };
@@ -346,17 +346,6 @@
 		AF45BB742EB893BF00DDDB4D /* VehicleConditionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleConditionViewModel.swift; sourceTree = "<group>"; };
 		AF45BB772EB8968600DDDB4D /* VehicleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleModel.swift; sourceTree = "<group>"; };
 		AF45BB7A2EB8AAE800DDDB4D /* vehicleCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vehicleCondition.swift; sourceTree = "<group>"; };
-		AF47505D2F08E85D00726F27 /* AudioPlayingFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayingFiles.swift; sourceTree = "<group>"; };
-		AF47505F2F08E85D00726F27 /* continue_drive_warning_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = continue_drive_warning_punjabi.m4a; sourceTree = "<group>"; };
-		AF4750602F08E85D00726F27 /* continue_driving_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = continue_driving_violation_punjabi.m4a; sourceTree = "<group>"; };
-		AF4750612F08E85D00726F27 /* ideal_msg.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ideal_msg.m4a; sourceTree = "<group>"; };
-		AF4750622F08E85D00726F27 /* ondrive_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ondrive_violation_punjabi.m4a; sourceTree = "<group>"; };
-		AF4750632F08E85D00726F27 /* ondrive_warning_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ondrive_warning_punjabi.m4a; sourceTree = "<group>"; };
-		AF4750642F08E85D00726F27 /* onduty_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = onduty_violation_punjabi.m4a; sourceTree = "<group>"; };
-		AF4750652F08E85D00726F27 /* onduty_warning_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = onduty_warning_punjabi.m4a; sourceTree = "<group>"; };
-		AF4750662F08E85D00726F27 /* weekily_warning_15min.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekily_warning_15min.m4a; sourceTree = "<group>"; };
-		AF4750672F08E85D00726F27 /* weekly_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekly_violation_punjabi.m4a; sourceTree = "<group>"; };
-		AF4750682F08E85D00726F27 /* weekly_warning_30min.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekly_warning_30min.m4a; sourceTree = "<group>"; };
 		AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureAddDvir.swift; sourceTree = "<group>"; };
 		AF5EE7112EF3DB07001AE01A /* VoilationRedBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoilationRedBox.swift; sourceTree = "<group>"; };
 		AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashModel.swift; sourceTree = "<group>"; };
@@ -420,9 +409,6 @@
 		AF9024912E93DD920005F0D7 /* StatusBox&StatusButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatusBox&StatusButton.swift"; sourceTree = "<group>"; };
 		AF9024922E93DD920005F0D7 /* TopbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopbarView.swift; sourceTree = "<group>"; };
 		AF910B5E2E14009100BCC9E9 /* VoilationsAlert's.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VoilationsAlert's.swift"; sourceTree = "<group>"; };
-		AF9212C22F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ondrive 30 Min Warning.m4a"; sourceTree = "<group>"; };
-		AF9212C42F59B1CC007F2BBA /* 30 min warning Onduty.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "30 min warning Onduty.m4a"; sourceTree = "<group>"; };
-		AF9212C62F59B6F1007F2BBA /* 30 minutes cycletimer.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "30 minutes cycletimer.m4a"; sourceTree = "<group>"; };
 		AF92D3FC2EC5B8740080F895 /* DriverWorkingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverWorkingViewModel.swift; sourceTree = "<group>"; };
 		AF92D3FF2EC5B9310080F895 /* WorkingDriveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingDriveModel.swift; sourceTree = "<group>"; };
 		AF92F4DC2DDDE7DB00DEBBF6 /* EmailDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailDvir.swift; sourceTree = "<group>"; };
@@ -551,6 +537,20 @@
 		CB4D81812ECA86E400590F62 /* HomeViewModel+splitshift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+splitshift.swift"; sourceTree = "<group>"; };
 		CB99EBD02EA2C3420062AC9A /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		CB99EBD22EA3E5810062AC9A /* HomeViewModel+Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+Graph.swift"; sourceTree = "<group>"; };
+		CBAB6AC82F5ABCC30082B89E /* AudioPlayingFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayingFiles.swift; sourceTree = "<group>"; };
+		CBAB6ACA2F5ABCC30082B89E /* 30 min warning Onduty.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "30 min warning Onduty.m4a"; sourceTree = "<group>"; };
+		CBAB6ACB2F5ABCC30082B89E /* 30 minutes cycletimer.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "30 minutes cycletimer.m4a"; sourceTree = "<group>"; };
+		CBAB6ACC2F5ABCC30082B89E /* continue_drive_warning_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = continue_drive_warning_punjabi.m4a; sourceTree = "<group>"; };
+		CBAB6ACD2F5ABCC30082B89E /* continue_driving_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = continue_driving_violation_punjabi.m4a; sourceTree = "<group>"; };
+		CBAB6ACE2F5ABCC30082B89E /* ideal_msg.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ideal_msg.m4a; sourceTree = "<group>"; };
+		CBAB6ACF2F5ABCC30082B89E /* Ondrive 30 Min Warning.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ondrive 30 Min Warning.m4a"; sourceTree = "<group>"; };
+		CBAB6AD02F5ABCC30082B89E /* ondrive_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ondrive_violation_punjabi.m4a; sourceTree = "<group>"; };
+		CBAB6AD12F5ABCC30082B89E /* ondrive_warning_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ondrive_warning_punjabi.m4a; sourceTree = "<group>"; };
+		CBAB6AD22F5ABCC30082B89E /* onduty_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = onduty_violation_punjabi.m4a; sourceTree = "<group>"; };
+		CBAB6AD32F5ABCC30082B89E /* onduty_warning_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = onduty_warning_punjabi.m4a; sourceTree = "<group>"; };
+		CBAB6AD42F5ABCC30082B89E /* weekily_warning_15min.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekily_warning_15min.m4a; sourceTree = "<group>"; };
+		CBAB6AD52F5ABCC30082B89E /* weekly_violation_punjabi.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekly_violation_punjabi.m4a; sourceTree = "<group>"; };
+		CBAB6AD62F5ABCC30082B89E /* weekly_warning_30min.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekly_warning_30min.m4a; sourceTree = "<group>"; };
 		CBBC96FD2EC6235D0049E376 /* SessionCleanupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCleanupManager.swift; sourceTree = "<group>"; };
 		CBBC97002EC6278B0049E376 /* DataBaseManagerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerClass.swift; sourceTree = "<group>"; };
 		CBBC97022EC6289F0049E376 /* DriverLogList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverLogList.swift; sourceTree = "<group>"; };
@@ -892,35 +892,6 @@
 				AF45BB7A2EB8AAE800DDDB4D /* vehicleCondition.swift */,
 			);
 			path = VehicleConditionPopup;
-			sourceTree = "<group>";
-		};
-		AF47505E2F08E85D00726F27 /* AudioPlaying */ = {
-			isa = PBXGroup;
-			children = (
-				AF47505D2F08E85D00726F27 /* AudioPlayingFiles.swift */,
-			);
-			path = AudioPlaying;
-			sourceTree = "<group>";
-		};
-		AF4750692F08E85D00726F27 /* AudioVoilation */ = {
-			isa = PBXGroup;
-			children = (
-				AF47505E2F08E85D00726F27 /* AudioPlaying */,
-				AF47505F2F08E85D00726F27 /* continue_drive_warning_punjabi.m4a */,
-				AF4750602F08E85D00726F27 /* continue_driving_violation_punjabi.m4a */,
-				AF4750612F08E85D00726F27 /* ideal_msg.m4a */,
-				AF4750622F08E85D00726F27 /* ondrive_violation_punjabi.m4a */,
-				AF4750632F08E85D00726F27 /* ondrive_warning_punjabi.m4a */,
-				AF4750642F08E85D00726F27 /* onduty_violation_punjabi.m4a */,
-				AF4750652F08E85D00726F27 /* onduty_warning_punjabi.m4a */,
-				AF9212C42F59B1CC007F2BBA /* 30 min warning Onduty.m4a */,
-				AF9212C22F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a */,
-				AF9212C62F59B6F1007F2BBA /* 30 minutes cycletimer.m4a */,
-				AF4750662F08E85D00726F27 /* weekily_warning_15min.m4a */,
-				AF4750672F08E85D00726F27 /* weekly_violation_punjabi.m4a */,
-				AF4750682F08E85D00726F27 /* weekly_warning_30min.m4a */,
-			);
-			path = AudioVoilation;
 			sourceTree = "<group>";
 		};
 		AF58BFD62E69C7B100F0E765 /* SignatureViewADDDvir */ = {
@@ -1387,7 +1358,7 @@
 		AFB943512E02D3B000AD19D7 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				AF4750692F08E85D00726F27 /* AudioVoilation */,
+				CBAB6AD72F5ABCC30082B89E /* AudioVoilation */,
 				AF97AFA62E2B664D009F1B06 /* InternateValidity */,
 				AFB943522E02D3FD00AD19D7 /* APIClient */,
 			);
@@ -1682,6 +1653,35 @@
 			path = Disclamer;
 			sourceTree = "<group>";
 		};
+		CBAB6AC92F5ABCC30082B89E /* AudioPlaying */ = {
+			isa = PBXGroup;
+			children = (
+				CBAB6AC82F5ABCC30082B89E /* AudioPlayingFiles.swift */,
+			);
+			path = AudioPlaying;
+			sourceTree = "<group>";
+		};
+		CBAB6AD72F5ABCC30082B89E /* AudioVoilation */ = {
+			isa = PBXGroup;
+			children = (
+				CBAB6AC92F5ABCC30082B89E /* AudioPlaying */,
+				CBAB6ACA2F5ABCC30082B89E /* 30 min warning Onduty.m4a */,
+				CBAB6ACB2F5ABCC30082B89E /* 30 minutes cycletimer.m4a */,
+				CBAB6ACC2F5ABCC30082B89E /* continue_drive_warning_punjabi.m4a */,
+				CBAB6ACD2F5ABCC30082B89E /* continue_driving_violation_punjabi.m4a */,
+				CBAB6ACE2F5ABCC30082B89E /* ideal_msg.m4a */,
+				CBAB6ACF2F5ABCC30082B89E /* Ondrive 30 Min Warning.m4a */,
+				CBAB6AD02F5ABCC30082B89E /* ondrive_violation_punjabi.m4a */,
+				CBAB6AD12F5ABCC30082B89E /* ondrive_warning_punjabi.m4a */,
+				CBAB6AD22F5ABCC30082B89E /* onduty_violation_punjabi.m4a */,
+				CBAB6AD32F5ABCC30082B89E /* onduty_warning_punjabi.m4a */,
+				CBAB6AD42F5ABCC30082B89E /* weekily_warning_15min.m4a */,
+				CBAB6AD52F5ABCC30082B89E /* weekly_violation_punjabi.m4a */,
+				CBAB6AD62F5ABCC30082B89E /* weekly_warning_30min.m4a */,
+			);
+			path = AudioVoilation;
+			sourceTree = "<group>";
+		};
 		CBE1984A2EFC764E00DDA94A /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -1812,27 +1812,27 @@
 			files = (
 				AFB943102E029C5B00AD19D7 /* Main.storyboard in Resources */,
 				AF217C212EC867F800A30C7D /* eld_disclaimer 1.html in Resources */,
-				AF9212C72F59B6F1007F2BBA /* 30 minutes cycletimer.m4a in Resources */,
 				AFB943192E029C9500AD19D7 /* DashboardReportView.xib in Resources */,
 				AF8EB9D12ECDDACB006614A3 /* LocalizablePunjabi.strings in Resources */,
 				AFB9431A2E029C9500AD19D7 /* DeviceInfoView.xib in Resources */,
 				AF8EB9D72ECE00B0006614A3 /* Localizable.xcstrings in Resources */,
 				AFB943112E029C5B00AD19D7 /* LaunchScreen.storyboard in Resources */,
+				CBAB6AD92F5ABCC30082B89E /* 30 minutes cycletimer.m4a in Resources */,
+				CBAB6ADA2F5ABCC30082B89E /* 30 min warning Onduty.m4a in Resources */,
+				CBAB6ADB2F5ABCC30082B89E /* continue_drive_warning_punjabi.m4a in Resources */,
+				CBAB6ADC2F5ABCC30082B89E /* ondrive_warning_punjabi.m4a in Resources */,
+				CBAB6ADD2F5ABCC30082B89E /* onduty_warning_punjabi.m4a in Resources */,
+				CBAB6ADE2F5ABCC30082B89E /* ideal_msg.m4a in Resources */,
+				CBAB6ADF2F5ABCC30082B89E /* onduty_violation_punjabi.m4a in Resources */,
+				CBAB6AE02F5ABCC30082B89E /* weekly_warning_30min.m4a in Resources */,
+				CBAB6AE12F5ABCC30082B89E /* Ondrive 30 Min Warning.m4a in Resources */,
+				CBAB6AE22F5ABCC30082B89E /* continue_driving_violation_punjabi.m4a in Resources */,
+				CBAB6AE32F5ABCC30082B89E /* ondrive_violation_punjabi.m4a in Resources */,
+				CBAB6AE42F5ABCC30082B89E /* weekily_warning_15min.m4a in Resources */,
+				CBAB6AE52F5ABCC30082B89E /* weekly_violation_punjabi.m4a in Resources */,
 				AF04B1B12DE9839000A5F3D1 /* LocalizableEng.strings in Resources */,
 				AF44AAB72F03ADF6006D8AED /* all_star_instruction.pdf in Resources */,
 				AFCAF8252DD85D9200D82F29 /* assets .xcassets in Resources */,
-				AF9212C52F59B1CC007F2BBA /* 30 min warning Onduty.m4a in Resources */,
-				AF47506A2F08E85D00726F27 /* continue_driving_violation_punjabi.m4a in Resources */,
-				AF47506B2F08E85D00726F27 /* weekily_warning_15min.m4a in Resources */,
-				AF47506C2F08E85D00726F27 /* ideal_msg.m4a in Resources */,
-				AF47506D2F08E85D00726F27 /* onduty_violation_punjabi.m4a in Resources */,
-				AF47506E2F08E85D00726F27 /* ondrive_warning_punjabi.m4a in Resources */,
-				AF47506F2F08E85D00726F27 /* onduty_warning_punjabi.m4a in Resources */,
-				AF9212C32F59AB40007F2BBA /* Ondrive 30 Min Warning.m4a in Resources */,
-				AF4750702F08E85D00726F27 /* weekly_warning_30min.m4a in Resources */,
-				AF4750712F08E85D00726F27 /* ondrive_violation_punjabi.m4a in Resources */,
-				AF4750722F08E85D00726F27 /* weekly_violation_punjabi.m4a in Resources */,
-				AF4750732F08E85D00726F27 /* continue_drive_warning_punjabi.m4a in Resources */,
 				AF82B04D2ED4415900081803 /* all_star_manual.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1859,7 +1859,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF72E4312DFD54B400626DC0 /* DataRow.swift in Sources */,
-				AF4750742F08E85D00726F27 /* AudioPlayingFiles.swift in Sources */,
 				AFB9433F2E029CEB00AD19D7 /* Double+Round.swift in Sources */,
 				AFAABC412F0D22E4003A7311 /* Malfunction&dataDignosis.swift in Sources */,
 				AFCC4CA52E4A24CC00629DE3 /* CompanyInfo.swift in Sources */,
@@ -2042,6 +2041,7 @@
 				AFC1B5562E154A6500C57620 /* ForgetpasswordModel.swift in Sources */,
 				AFB9431D2E029C9500AD19D7 /* EventTableViewCell.swift in Sources */,
 				AF210E9B2E9A56B900E926DF /* privacyPolicyView.swift in Sources */,
+				CBAB6AD82F5ABCC30082B89E /* AudioPlayingFiles.swift in Sources */,
 				AFB9431E2E029C9500AD19D7 /* DeviceInfoView.swift in Sources */,
 				AF8D8FE92F1B843F008526F9 /* SignatureViewModel.swift in Sources */,
 				AFCC878C2E56F48D00A09745 /* DisConnetedViewModel.swift in Sources */,
