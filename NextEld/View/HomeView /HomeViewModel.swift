@@ -1285,7 +1285,9 @@ extension HomeViewModel {
     }
     
     func showCycleMessage() {
-        guard isCycleTimeCompleted(), AppStorageHandler.shared.is34HourStarted == nil else {
+        guard isCycleTimeCompleted(),
+              (currentDriverStatus == .offDuty || currentDriverStatus == .onsleep || currentDriverStatus == .personalUse),
+              AppStorageHandler.shared.is34HourStarted == nil else {
             return
         }
         

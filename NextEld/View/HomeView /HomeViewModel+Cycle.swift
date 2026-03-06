@@ -58,7 +58,7 @@ extension  HomeViewModel {
         for log in sortedLogs {
             let duration = getElapsedTime(lastLog: log)
             let status = DriverStatusType(fromName: log.status) ?? .none
-            if status == .onsleep || status == .offDuty || driverStatus == .personalUse {
+            if status == .onsleep || status == .offDuty || status == .personalUse {
                 totalSleep = duration
             } else {
                 break // for other status will break the loop
