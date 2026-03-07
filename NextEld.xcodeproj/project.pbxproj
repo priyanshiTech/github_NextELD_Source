@@ -192,6 +192,7 @@
 		AFBD12CF2E72A899003EA40F /* DvirResponceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD12CE2E72A899003EA40F /* DvirResponceModel.swift */; };
 		AFBD12D22E730357003EA40F /* AddVehicleForDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD12D12E730357003EA40F /* AddVehicleForDvir.swift */; };
 		AFC0386B2E0FF10600944204 /* CountDownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC0386A2E0FF10600944204 /* CountDownTimer.swift */; };
+		AFC06FA12F5C5B3700AEB97F /* LocalizableSpanish.strings in Resources */ = {isa = PBXBuildFile; fileRef = AFC06F9F2F5C5B3700AEB97F /* LocalizableSpanish.strings */; };
 		AFC1B5542E15499000C57620 /* ForgetPasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5532E15499000C57620 /* ForgetPasswordModel.swift */; };
 		AFC1B5562E154A6500C57620 /* ForgetpasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */; };
 		AFC1B5582E155BA100C57620 /* forgetUserNmeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC1B5572E155BA100C57620 /* forgetUserNmeModel.swift */; };
@@ -489,6 +490,7 @@
 		AFBD12CE2E72A899003EA40F /* DvirResponceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvirResponceModel.swift; sourceTree = "<group>"; };
 		AFBD12D12E730357003EA40F /* AddVehicleForDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVehicleForDvir.swift; sourceTree = "<group>"; };
 		AFC0386A2E0FF10600944204 /* CountDownTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownTimer.swift; sourceTree = "<group>"; };
+		AFC06FA02F5C5B3700AEB97F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LocalizableSpanish.strings; sourceTree = "<group>"; };
 		AFC1B5532E15499000C57620 /* ForgetPasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetPasswordModel.swift; sourceTree = "<group>"; };
 		AFC1B5552E154A6500C57620 /* ForgetpasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetpasswordModel.swift; sourceTree = "<group>"; };
 		AFC1B5572E155BA100C57620 /* forgetUserNmeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = forgetUserNmeModel.swift; sourceTree = "<group>"; };
@@ -789,6 +791,7 @@
 				AF04B1B02DE9839000A5F3D1 /* LocalizableEng.strings */,
 				AF8EB9CF2ECDDACB006614A3 /* LocalizablePunjabi.strings */,
 				AF8EB9D62ECE00B0006614A3 /* Localizable.xcstrings */,
+				AFC06F9F2F5C5B3700AEB97F /* LocalizableSpanish.strings */,
 			);
 			path = LocalizableString;
 			sourceTree = "<group>";
@@ -1788,6 +1791,7 @@
 				en,
 				Base,
 				pa,
+				"es-US",
 			);
 			mainGroup = 108FF7F52DC895E10051671B;
 			packageReferences = (
@@ -1814,6 +1818,7 @@
 				AF217C212EC867F800A30C7D /* eld_disclaimer 1.html in Resources */,
 				AFB943192E029C9500AD19D7 /* DashboardReportView.xib in Resources */,
 				AF8EB9D12ECDDACB006614A3 /* LocalizablePunjabi.strings in Resources */,
+				AFC06FA12F5C5B3700AEB97F /* LocalizableSpanish.strings in Resources */,
 				AFB9431A2E029C9500AD19D7 /* DeviceInfoView.xib in Resources */,
 				AF8EB9D72ECE00B0006614A3 /* Localizable.xcstrings in Resources */,
 				AFB943112E029C5B00AD19D7 /* LaunchScreen.storyboard in Resources */,
@@ -2144,6 +2149,14 @@
 				AFB9430D2E029C5B00AD19D7 /* LaunchScreen.storyboard */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		AFC06F9F2F5C5B3700AEB97F /* LocalizableSpanish.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AFC06FA02F5C5B3700AEB97F /* en */,
+			);
+			name = LocalizableSpanish.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

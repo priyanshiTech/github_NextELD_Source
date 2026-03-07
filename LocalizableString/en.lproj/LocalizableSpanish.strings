@@ -1,0 +1,255 @@
+/* 
+  LocalizableSpanish.strings
+  NextEld
+
+  Created by priyanshi  on 07/03/26.
+  
+*/
+"app_name" = "Excel ELD";
+"dispatch" = "Despacho y Nómina";
+"forgot_password" = "¿Olvidaste tu contraseña?";
+"forgot_username" = "¿Olvidaste tu nombre de usuario?";
+"recap" = "Resumen";
+"logout" = "Cerrar sesión";
+
+"ccmta" = "El conductor actual cerrará sesión y usted se convertirá en el conductor. Aviso según los requisitos de FMCSA.";
+
+"shipping_docs" = "Documentos de envío";
+"trailer" = "Remolque";
+"truck" = "Camión";
+"switch_equipment" = "Cambiar equipo";
+"breaktime" = "Continuar conduciendo";
+"break_time_left" = "Tiempo de descanso";
+"available_hours" = "Horas disponibles";
+"current_status" = "Estado actual";
+"violations" = "Violaciones";
+"current_location" = "Ubicación actual";
+"current_odometer" = "Odómetro actual";
+"enter_note" = "Ingrese nota";
+"connect_now" = "Conectar ahora";
+"search_vehicle" = "Buscar vehículo";
+"scan_qr" = "Escanear QR";
+"connection_text" = "Conectando...";
+"your_are_up_to_date" = "Está actualizado";
+"checking_update" = "Buscando actualizaciones";
+"new_version_found" = "Nueva versión encontrada";
+
+"no_connection_n_at_this_time" = "No hay conexión en este momento";
+"re_set_connection" = "Restablecer conexión";
+"connect" = "Conectar";
+"cancel" = "Cancelar";
+"connected" = "Conectado";
+
+"on_duty" = "En servicio";
+"submit" = "Enviar";
+"editInfo" = "Editar información";
+
+"drive" = "Conducir";
+"offduty" = "Fuera de servicio";
+"split_sleep" = "Descanso dividido";
+"sleep" = "Dormir";
+
+"personal_use" = "Uso personal";
+"yard_move" = "Movimiento en patio";
+
+"exit" = "Salir";
+
+"daily_logs" = "Registros diarios";
+"dvir_history" = "Historial DVIR";
+"email_dvir" = "Enviar DVIR por correo";
+"send" = "Enviar";
+
+"elog" = "Elog 365";
+
+"password" = "Contraseña";
+"user_id_or_email" = "ID de usuario o correo electrónico";
+
+"bluetooth_connection" = "Conexión Bluetooth";
+
+"road_side_inspection" = "Inspección en carretera";
+
+"phone" = "Teléfono :";
+"dateTime" = "Fecha y hora :";
+"referMode" = "Modo de referencia :";
+
+"pickup_" = "Recogida #";
+"cases" = "Cajas :";
+"commodity" = "Mercancía :";
+"pallets" = "Palets :";
+"weight" = "Peso :";
+"temp" = "Temperatura establecida :";
+
+"we_are_unable_to_process_your_request" = "No podemos procesar su solicitud en este momento. Por favor inténtelo más tarde.";
+
+"no_internet_connection" = "Sin conexión a internet";
+
+"forgot_pass" = "Olvidé la contraseña";
+"forgot_user" = "Olvidé el usuario";
+
+"verify_email_message" = "Enviaremos un correo electrónico para restablecer la contraseña.";
+"verify_moblie_message" = "Enviaremos un SMS con su nombre de usuario.";
+
+"please_enter_valid_email_id" = "Por favor ingrese un correo electrónico válido";
+"please_enter_validmobile" = "Por favor ingrese un número móvil válido";
+
+"upload_document" = "Subir documento";
+
+"location_permission" = "Permiso de ubicación";
+"location_text" = "Permita que la aplicación acceda a la ubicación de este dispositivo para proporcionar una ubicación precisa.";
+
+"enable_location" = "Activar ubicación";
+
+"nevermiss" = "Nunca pierda un registro de evento";
+
+"turnonoverlay" = "Active el permiso de superposición en la configuración del teléfono para mostrar la conexión Bluetooth.";
+
+"not_now" = "Ahora no";
+
+"settings" = "Configuración";
+"language" = "Idioma";
+
+"gooffDuty" = "Cambie a Fuera de servicio antes de cerrar sesión";
+"gooffDutyCodriver" = "Cambie a Fuera de servicio antes de iniciar sesión como copiloto";
+
+"wanna_logout" = "¿Está seguro de que desea cerrar sesión?";
+
+"cycle_complete" = "Ciclo completado";
+"violation" = "Violación";
+
+"loading" = "Cargando...";
+
+"location_permission_required" = "Permiso de ubicación requerido";
+
+"bluetooth_permission_required" = "Permiso de dispositivos cercanos requerido";
+
+"please_grant_relevant_permissions" = "Por favor conceda los permisos necesarios";
+
+"app_settings" = "Configuración de la aplicación";
+
+"quit" = "Salir";
+
+"disconnected" = "Desconectado";
+"ok" = "Aceptar";
+
+"pt30" = "PT30";
+"ble" = "NT-11";
+
+"tracker_running" = "Seguimiento en ejecución...";
+
+"device" = "Dispositivo:";
+"no_device" = "<Ningún dispositivo seleccionado>";
+
+"select_device" = "Seleccionar dispositivo";
+
+"status" = "Estado";
+
+"scanning" = "Escaneando dispositivos...";
+
+"no_ble_devices" = "No se encontraron dispositivos BLE";
+
+"ready" = "Listo";
+
+"disconnect" = "Desconectar";
+"connecting" = "Conectando...";
+"disconnecting" = "Desconectando...";
+
+"SystemId" = "ID del sistema";
+"ModelNumber" = "Número de modelo";
+"SerialNumber" = "Número de serie";
+
+"FirmwareRevision" = "Versión de firmware";
+"HardwareRevision" = "Versión de hardware";
+"SoftwareRevision" = "Versión de software";
+
+"ManufactureName" = "Nombre del fabricante";
+
+"BatteryLevel" = "Nivel de batería";
+
+"scan" = "Escanear";
+
+"driver" = "Conductor";
+"save" = "Guardar";
+
+"driver_signature" = "Firma del conductor";
+"clear_signature" = "Borrar firma";
+
+"agree" = "Aceptar";
+
+"events" = "Eventos";
+
+"press_back_again_to_exit" = "Presione atrás nuevamente para salir";
+
+"please_add_shipping_documents" = "Por favor agregue documentos de envío";
+
+"form_has_been_saved" = "El formulario ha sido guardado";
+
+"add_co_driver" = "Agregar copiloto";
+"select_co_driver" = "Seleccionar copiloto";
+
+"signature_required" = "Se requiere firma";
+
+"log_has_been_certified" = "El registro ha sido certificado";
+
+"cycle_rule" = "Regla de ciclo";
+
+"cargo_type" = "Tipo de carga";
+
+"restart" = "Reiniciar";
+
+"rest_break" = "Descanso";
+
+"personal_conveyance" = "Conducción personal";
+
+"yard_moves" = "Movimientos en patio";
+
+"driver_id" = "ID del conductor";
+
+"driver_license" = "Licencia de conducir";
+
+"vin" = "VIN";
+"odometer" = "Odómetro";
+"distance" = "Distancia";
+
+"time" = "Tiempo";
+"location" = "Ubicación";
+
+"notes" = "Notas";
+
+"add_dvir" = "Agregar DVIR";
+
+"vehicle" = "Vehículo";
+
+"no_defects" = "Sin defectos";
+"has_defects" = "Tiene defectos";
+
+"vehicle_condition" = "Condición del vehículo";
+
+"update_dvir" = "Actualizar DVIR";
+
+"log_report" = "Reporte de registros";
+
+"go_back" = "Regresar";
+
+"sending_report" = "Enviando reporte...";
+
+"none" = "Ninguno";
+
+"select_vehicle" = "Seleccionar vehículo";
+
+"email_logs" = "Enviar registros por correo";
+
+"data_transfer" = "Transferencia de datos";
+
+"review_on_device" = "Revisar en el dispositivo";
+
+"toll_free" = "Llamada gratuita";
+
+"engine" = "Motor";
+
+"eld_connection" = "Conexión ELD";
+
+"support" = "Soporte";
+
+"Sync" = "Sincronizar";
+
+"version" = "Versión %@";
