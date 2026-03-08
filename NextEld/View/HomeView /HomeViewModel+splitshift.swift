@@ -29,7 +29,7 @@ extension HomeViewModel {
     func checkForSplitShift() {
         let totalSleepTaken = calculateOffDutyAndSleepTime()
         let totalSleepRequired = AppStorageHandler.shared.onSleepTime ?? 0
-        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift]), (lastLog.status == AppConstants.onSleep || lastLog.status == AppConstants.offDuty), totalSleepTaken < totalSleepRequired else {
+        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift]), (lastLog.status == AppConstants.onSleep || lastLog.status == AppConstants.offDuty || lastLog.status == AppConstants.personalUse), totalSleepTaken < totalSleepRequired else {
             return
         }
         

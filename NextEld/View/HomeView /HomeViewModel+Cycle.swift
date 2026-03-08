@@ -3,7 +3,7 @@ import Foundation
 extension  HomeViewModel {
     // Show the next day dialog once sleep exceed to 10 hours
     func showNextShiftAlert() {
-        guard currentDriverStatus == .offDuty || currentDriverStatus == .onsleep else {
+        guard currentDriverStatus == .offDuty || currentDriverStatus == .onsleep || currentDriverStatus == .personalUse else {
             return
         }
         // check whether 34 hours completed or not
@@ -12,7 +12,7 @@ extension  HomeViewModel {
         if check34HoursSleepOrOffDutyCompleted() {
             if shiftChangeAlertValue != uniqueValueForShiftChange {
                 // Shift change
-                AppStorageHandler.shared.is34HourStarted = false
+                AppStorageHandler.shared.is34HourStarted = nil
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     self.changeShiftAfter34HoursComplete(uniqueValue: uniqueValueForShiftChange)
                 }
@@ -24,6 +24,7 @@ extension  HomeViewModel {
         }
                 
         if isCycleTimeCompleted() == false { // when cycle is running
+            AppStorageHandler.shared.is34HourStarted = nil
             let nextDayAlertValue = UserDefaults.standard.string(forKey: AppConstants.nextDayAlert)
             let uniqueValueForNextDayAlert = "nextday_shift_\(AppStorageHandler.shared.shift)_day_\(AppStorageHandler.shared.days)"
             if  check10HoursSleepOrOffDutyCompleted() && nextDayAlertValue != uniqueValueForNextDayAlert {
@@ -46,7 +47,7 @@ extension  HomeViewModel {
         guard !allLogs.isEmpty,
                 let status = allLogs.last?.status,
                 let driverStatus = DriverStatusType(fromName: status),
-              (driverStatus == .onsleep || driverStatus == .offDuty) else {
+              (driverStatus == .onsleep || driverStatus == .offDuty || driverStatus == .personalUse) else {
             debugPrint("calculateOffDutyAndSleepTime: No logs found in database")
             return 0
         }
@@ -57,7 +58,7 @@ extension  HomeViewModel {
         for log in sortedLogs {
             let duration = getElapsedTime(lastLog: log)
             let status = DriverStatusType(fromName: log.status) ?? .none
-            if status == .onsleep || status == .offDuty {
+            if status == .onsleep || status == .offDuty || driverStatus == .personalUse {
                 totalSleep = duration
             } else {
                 break // for other status will break the loop
@@ -85,7 +86,7 @@ extension  HomeViewModel {
     
     func changeShiftAfter34HoursComplete(uniqueValue: String) {
         cycleMessage = ""
-        AppStorageHandler.shared.is34HourStarted = false
+        AppStorageHandler.shared.is34HourStarted = nil
         AppStorageHandler.shared.shift += 1
         AppStorageHandler.shared.days = 1
         resetToInitialState(isResetCycleTimer: true)

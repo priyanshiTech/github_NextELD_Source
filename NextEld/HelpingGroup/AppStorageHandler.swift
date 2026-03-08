@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CoreMedia
 
+
 struct AppStorageHandler {
     
     static let shared = AppStorageHandler()
@@ -53,7 +54,8 @@ struct AppStorageHandler {
     @AppStorage("warningOnDriveTime2") var warningOnDriveTime2: Int?
     @AppStorage("warningBreakTime1") var warningBreakTime1: Int?
     @AppStorage("warningBreakTime2") var warningBreakTime2: Int?
-    @AppStorage("is34HourStarted") var is34HourStarted: Bool = false
+    
+    @AppStorage("is34HourStarted") var is34HourStarted: String?
     @AppStorage("remainingBreakTime") var remainingBreakTime: Int = 0
     @AppStorage("remainingContinueDriveTime") var remainingContinueDriveTime: Int = 0
     //MARK: -  for saving a data to Add dvir
@@ -107,11 +109,9 @@ struct AppStorageHandler {
         warningOnDriveTime2 = nil
         warningBreakTime1 = nil
         warningBreakTime2 = nil
-        is34HourStarted = false
         dvirLogId = nil
         remainingBreakTime = 0
         remainingContinueDriveTime = 0
-        
     }
 }
 

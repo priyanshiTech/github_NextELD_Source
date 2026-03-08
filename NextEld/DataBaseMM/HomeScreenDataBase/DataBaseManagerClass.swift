@@ -535,6 +535,12 @@ class DatabaseManager: DatabaseHandler {
             var isVoilation: String = ""
             
             var dutyType: String = log.status ?? ""
+            
+            var status: String = log.status ?? ""
+            
+            if status == "Voilation" {
+                status = "Violation"
+            }
 
             if log.status == AppConstants.personalUse {
                 isVoilation = "NO"
@@ -558,7 +564,7 @@ class DatabaseManager: DatabaseHandler {
             
             let model = DriverLogModel(
                 id: nil,
-                status: log.status ?? "",
+                status: status,
                 startTime: log.dateTime?.asDate() ?? Date(),
                 userId: log.driverId ?? 0,
                 day: log.days ?? 0,

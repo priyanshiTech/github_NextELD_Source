@@ -410,7 +410,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     //Create #P
     var cancellable: Set<AnyCancellable> = []
     let apiCallTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
-    let serviceTimer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
+    let serviceTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     
     init() {
         checkWhetherTheViolationAlreadyExists()
@@ -430,6 +430,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             .sink { [weak self] _ in
                 Task { @MainActor in
                     // Sync offline data
+                    self?.loadEventsFromDatabase()
                     await self?.syncViewModel.syncOfflineData()
                   
                     let certifySuccess = await self?.certifySyncViewModel.syncCertifiedOfflineLogs()
@@ -467,10 +468,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
     }
     
     func validateScenarioInEveryMinute() {
-        self.loadEventsFromDatabase()
         showNextShiftAlert()
         checkForViolation()
-        
     }
     
     func stopTimers(for types: [TimerType]) {
@@ -661,7 +660,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let totalSleep = calculateOffDutyAndSleepTime()
         
         // off duty or sleep less than 2 hours will be adjusted from cycle and onDuty time
-        if (status == .offDuty || status == .onsleep) && totalSleep < twoHrs  {
+        if (status == .offDuty || status == .onsleep || status == .personalUse) && totalSleep < twoHrs  {
             
             let onDutyRemainingTime = adjusted(lastRecord.remainingDutyTime, elapsed: totalSleep, active: true)
             onDutyTimer = CountdownTimer(startTime: onDutyRemainingTime)
@@ -769,11 +768,11 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         let continueDriveRemainingTime = adjusted(remainingContinueDrive, elapsed: elapsed, active: isDrive)
         let breakRemainingTime = adjusted(Int(remainingBreakTime), elapsed: elapsed, active: isBreak)
         
-        if AppStorageHandler.shared.is34HourStarted {
-            let total34Hour = (34 * 60 * 60)
-            let remainingTimeFrom34Hour = adjusted(Int(total34Hour), elapsed: elapsed, active: isBreak)
-            let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(remainingTimeFrom34Hour)
-            self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
+        if let dateAfter34Hour = AppStorageHandler.shared.is34HourStarted {
+//            let total34Hour = (34 * 60 * 60)
+//            let remainingTimeFrom34Hour = adjusted(Int(total34Hour), elapsed: elapsed, active: isBreak)
+//            let dateAfter34Hour = DateTimeHelper.currentDateTime().addingTimeInterval(remainingTimeFrom34Hour)
+            self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour)"
         } else {
             self.cycleMessage = ""
         }
@@ -1270,8 +1269,7 @@ extension HomeViewModel {
     }
     
     func showCycleMessage() {
-        guard isCycleTimeCompleted(), (currentDriverStatus == .offDuty || currentDriverStatus == .onsleep), !AppStorageHandler.shared.is34HourStarted else {
-            cycleMessage = ""
+        guard isCycleTimeCompleted(), AppStorageHandler.shared.is34HourStarted == nil else {
             return
         }
         
@@ -1279,8 +1277,9 @@ extension HomeViewModel {
         resetBreakTime()
         let currentDateTime = DateTimeHelper.currentDateTime()
         let dateAfter34Hour = currentDateTime.addingTimeInterval(time34Hour)
-        self.cycleMessage = "Your next cycle will be starting at \(dateAfter34Hour.toLocalString(format: .dayMonthTime))"
-        AppStorageHandler.shared.is34HourStarted = true
+        let dateInStringAfter34Hour = dateAfter34Hour.toLocalString(format: .dayMonthTime)
+        AppStorageHandler.shared.is34HourStarted = dateInStringAfter34Hour
+        self.cycleMessage = "Your next cycle will be starting at \(dateInStringAfter34Hour)"
     }
     
 }
