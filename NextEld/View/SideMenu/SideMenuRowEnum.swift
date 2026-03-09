@@ -77,6 +77,8 @@ enum SideMenuRowType: Int, CaseIterable{
 //    case emailLogs
 //    case RecapHour
     
+
+    
     var title: String {
         
         switch self {

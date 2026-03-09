@@ -17,7 +17,7 @@ struct LogOutPopup: View {
     var body: some View {
         VStack(spacing: 20) {
             
-            Text("Log Out")
+            Text("Logout")
                 .font(.title.bold())
                 .foregroundColor(Color(uiColor: .wine))
 
@@ -45,7 +45,7 @@ struct LogOutPopup: View {
             }
             .padding(.top, 10)
 
-            Button("Log-out", action: onLogout)
+            Button("Logout", action: onLogout)
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(Color(uiColor: .wine))

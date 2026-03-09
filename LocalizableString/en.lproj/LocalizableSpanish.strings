@@ -253,3 +253,33 @@
 "Sync" = "Sincronizar";
 
 "version" = "Versión %@";
+
+"Dvir - Pri Trip" = "Registros Diarios";
+
+"dvir_pre_trip" = "DVIR - Viaje Previo";
+
+"Dot Inspection" = "Inspección DOT";
+
+"Co-Driver" = "Co-Conductor";
+
+"Vehicle" = "Vehículo";
+
+"ELD Connection" = "Conexión ELD";
+
+"company_information" = "Información de la Empresa";
+
+"information_pocket" = "Bolsa de Información";
+
+"rules" = "Reglas";
+
+"settings" = "Configuración";
+
+"support" = "Soporte";
+
+"firmware_update" = "Actualización de Firmware";
+
+"logout" = "Cerrar Sesión";
+
+"sync" = "Sincronizar";
+
+"version" = "Versión";
