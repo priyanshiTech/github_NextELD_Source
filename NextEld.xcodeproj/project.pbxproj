@@ -49,6 +49,7 @@
 		AF45BB782EB8968600DDDB4D /* VehicleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB772EB8968600DDDB4D /* VehicleModel.swift */; };
 		AF45BB7B2EB8AAE800DDDB4D /* vehicleCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45BB7A2EB8AAE800DDDB4D /* vehicleCondition.swift */; };
 		AF58BFD82E69C7CE00F0E765 /* SignatureAddDvir.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */; };
+		AF5A71682F602ACB00BCA3D1 /* weekly 60 days cycle.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF5A71672F602ACB00BCA3D1 /* weekly 60 days cycle.m4a */; };
 		AF5EE7122EF3DB07001AE01A /* VoilationRedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5EE7112EF3DB07001AE01A /* VoilationRedBox.swift */; };
 		AF6532A32E66CFCE00FB2A11 /* SplashModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */; };
 		AF6532A52E66D07000FB2A11 /* SplashScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */; };
@@ -348,6 +349,7 @@
 		AF45BB772EB8968600DDDB4D /* VehicleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleModel.swift; sourceTree = "<group>"; };
 		AF45BB7A2EB8AAE800DDDB4D /* vehicleCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vehicleCondition.swift; sourceTree = "<group>"; };
 		AF58BFD72E69C7CE00F0E765 /* SignatureAddDvir.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureAddDvir.swift; sourceTree = "<group>"; };
+		AF5A71672F602ACB00BCA3D1 /* weekly 60 days cycle.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "weekly 60 days cycle.m4a"; sourceTree = "<group>"; };
 		AF5EE7112EF3DB07001AE01A /* VoilationRedBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoilationRedBox.swift; sourceTree = "<group>"; };
 		AF6532A22E66CFCE00FB2A11 /* SplashModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashModel.swift; sourceTree = "<group>"; };
 		AF6532A42E66D07000FB2A11 /* SplashScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewModel.swift; sourceTree = "<group>"; };
@@ -1680,6 +1682,7 @@
 				CBAB6AD32F5ABCC30082B89E /* onduty_warning_punjabi.m4a */,
 				CBAB6AD42F5ABCC30082B89E /* weekily_warning_15min.m4a */,
 				CBAB6AD52F5ABCC30082B89E /* weekly_violation_punjabi.m4a */,
+				AF5A71672F602ACB00BCA3D1 /* weekly 60 days cycle.m4a */,
 				CBAB6AD62F5ABCC30082B89E /* weekly_warning_30min.m4a */,
 			);
 			path = AudioVoilation;
@@ -1816,6 +1819,7 @@
 			files = (
 				AFB943102E029C5B00AD19D7 /* Main.storyboard in Resources */,
 				AF217C212EC867F800A30C7D /* eld_disclaimer 1.html in Resources */,
+				AF5A71682F602ACB00BCA3D1 /* weekly 60 days cycle.m4a in Resources */,
 				AFB943192E029C9500AD19D7 /* DashboardReportView.xib in Resources */,
 				AF8EB9D12ECDDACB006614A3 /* LocalizablePunjabi.strings in Resources */,
 				AFC06FA12F5C5B3700AEB97F /* LocalizableSpanish.strings in Resources */,
