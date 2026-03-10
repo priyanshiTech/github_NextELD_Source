@@ -609,6 +609,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             timerTypes = [.breakTimer]
 
         case .yardMode:
+            AppStorageHandler.shared.is34HourStarted = nil
+            cycleMessage = ""
             timerTypes = [.cycleTimer, .onDuty]
             if previousStatus == .onDrive {
                 timerTypes = [.breakTimer , .onDuty, .cycleTimer]
