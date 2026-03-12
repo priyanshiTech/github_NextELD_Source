@@ -583,6 +583,23 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         currentDriverStatus = status
    //     AppStorageHandler.shared.isContinueDriveTimeRunning = false
         var timerTypes: [TimerType] = []
+        
+
+        //MArk: -  Sleep reset logic
+        if previousStatus == .onsleep &&
+           (status == .yardMode || status == .onDuty || status == .onDrive) {
+
+            let sleepElapsed = (sleepTimer?.startDuration ?? 0) - (sleepTimer?.remainingTime ?? 0)
+
+            let twoHours: TimeInterval = 2 * 60 * 60
+
+            if sleepElapsed < twoHours {
+                print("Sleep less than 2 hours → Reset sleep timer")
+
+                sleepTimer?.stop()
+                sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
+            }
+        }
 
         switch status {
 
@@ -1010,8 +1027,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         case (.onDriveViolation, .violation):
             AudioWarningManager.shared.playWarningAudio(fileName: "ondrive_violation_punjabi")
             
-   
-            
         case (.onContinueDriveViolation, .warning30):
             AudioWarningManager.shared.playWarningAudio(fileName: "Ondrive 30 Min Warning")
             
@@ -1034,15 +1049,13 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         case (.cycleTimerViolation, .warning30):
             AudioWarningManager.shared.playWarningAudio(fileName: "30 minutes cycletimer")
             
- 
         case (.cycleTimerViolation, .warning15):
             AudioWarningManager.shared.playWarningAudio(fileName: "weekly_warning_15min")
             
-        case (.cycleTimerViolation, .violation):
-            
-            let cycleHours = (AppStorageHandler.shared.cycleTime ?? 0) / 3600
-            if cycleHours == 60 {
-                AudioWarningManager.shared.playWarningAudio(fileName: "60_cycle_violation")
+            let cycleHours = Double(AppStorageHandler.shared.cycleTime ?? 0) / 3600
+
+            if cycleHours <= 60 {
+                AudioWarningManager.shared.playWarningAudio(fileName: "weekly_cycle60_min")
             } else {
                 AudioWarningManager.shared.playWarningAudio(fileName: "weekly_violation_punjabi")
             }

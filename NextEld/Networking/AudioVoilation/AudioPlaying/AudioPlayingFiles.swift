@@ -38,7 +38,7 @@ final class AudioWarningManager {
     
     
 
-    func speak(text: String, languageCode: String = Locale.current.identifier) {
+    /*func speak(text: String, languageCode: String = Locale.current.identifier) {
         // 3. Create an utterance
         let utterance = AVSpeechUtterance(string: "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ, ਮੈਂ ਪੰਜਾਬੀ ਵਿੱਚ ਬੋਲ ਰਿਹਾ ਹਾਂ।")
         let voice = AVSpeechSynthesisVoice.speechVoices().first { voice in
@@ -50,6 +50,30 @@ final class AudioWarningManager {
         utterance.rate = 0.5 // Adjust speaking rate (0.0 to 1.0)
         utterance.pitchMultiplier = 1.0 // Adjust pitch (0.5 to 2.0)
         // 4. Speak the utterance
+        synthesizer.speak(utterance)
+    }*/
+    
+    func speak(text: String) {
+
+        let utterance = AVSpeechUtterance(string: text)
+
+        // Get current app language
+        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+
+        switch languageCode {
+        case "es":
+            utterance.voice = AVSpeechSynthesisVoice(language: "es-ES")
+            
+        case "pa":
+            utterance.voice = AVSpeechSynthesisVoice(language: "pa-IN")
+            
+        default:
+            utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        }
+
+        utterance.rate = 0.5
+        utterance.pitchMultiplier = 1.0
+
         synthesizer.speak(utterance)
     }
 }

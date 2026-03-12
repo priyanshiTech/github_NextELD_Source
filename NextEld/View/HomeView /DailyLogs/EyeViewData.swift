@@ -250,7 +250,8 @@ struct EyeViewData: View {
                             }
                             
                             return (normalLogs + certifiedLogs)
-                                .sorted { $0.date > $1.date }   // Latest first
+                                //.sorted { $0.date > $1.date }   // Latest first
+                                .sorted { $0.date < $1.date }
                         }
 
                         // Header
