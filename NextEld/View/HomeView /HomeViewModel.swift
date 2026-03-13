@@ -1048,10 +1048,13 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
 
         case (.cycleTimerViolation, .warning30):
             AudioWarningManager.shared.playWarningAudio(fileName: "30 minutes cycletimer")
+
             
         case (.cycleTimerViolation, .warning15):
-            AudioWarningManager.shared.playWarningAudio(fileName: "weekly_warning_15min")
-            
+            AudioWarningManager.shared.playWarningAudio(fileName: "weekily_warning_15min")
+
+        case (.cycleTimerViolation, .violation):
+
             let cycleHours = Double(AppStorageHandler.shared.cycleTime ?? 0) / 3600
 
             if cycleHours <= 60 {
