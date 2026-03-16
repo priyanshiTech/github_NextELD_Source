@@ -197,6 +197,14 @@ class RefreshViewModel: ObservableObject {
         if let warningBreak2 = result.rules?.first?.warningBreakTime2 {
             AppStorageHandler.shared.warningBreakTime2 = warningBreak2
         }
+        
+        if let cycleWarningTime1 =  result.rules?.first?.cycleWarningTime1{
+            AppStorageHandler.shared.cycleWarningTime1 = cycleWarningTime1
+        }
+        
+        if let cycleWarningTime2 =  result.rules?.first?.cycleWarningTime2 {
+            AppStorageHandler.shared.cycleWarningTime2 = cycleWarningTime2
+        }
         //Save Shift
     
         

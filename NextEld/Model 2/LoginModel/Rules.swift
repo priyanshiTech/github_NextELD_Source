@@ -22,4 +22,6 @@ struct Rules: Decodable {
     let warningOnDriveTime2: Int?
     let warningBreakTime1: Int?
     let warningBreakTime2: Int?
+    let cycleWarningTime1: Int?
+    let cycleWarningTime2: Int?
 }

@@ -234,7 +234,7 @@ enum ViolationType: Hashable {
             return "you have \(warning2.getMin()) minutes left to complete your Drive cycle for today"
             
         case .cycleTimerViolation:
-            let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime15MinTime) ?? 0))
+            let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (AppStorageHandler.shared.cycleWarningTime2  ?? 0))
             return "you have \(warning2.getMin()) minutes left to complete your  cycle for today"
             
         case .none:
@@ -258,7 +258,7 @@ enum ViolationType: Hashable {
             return "You have \(warning1.getMin()) minutes left to complete your  on-Drive cycle for today"
             
         case .cycleTimerViolation:
-             let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime30MinTime) ?? 0))
+             let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (AppStorageHandler.shared.cycleWarningTime1  ?? 0))
             return "You have \(warning1.getMin()) minutes left to complete your  cycle for today"
         case .none:
             return ""
@@ -840,8 +840,8 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             }
         case .cycleTimer:
             // For cycle timer, we can use similar warning logic
-            let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime30MinTime) ?? 0)) // 30 min
-            let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (Int(AppConstants.cycleTime15MinTime) ?? 0)) // 15 min
+            let warning1 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (AppStorageHandler.shared.cycleWarningTime1  ?? 0)) // 30 min
+            let warning2 = TimeInterval(Int(AppStorageHandler.shared.cycleTime ?? 0) - (AppStorageHandler.shared.cycleWarningTime2  ?? 0)) // 15 min
             if remainigTime < warning1 {
                 checkViolation(for: warning1, for: warning2, remainingTime: remainigTime, type: .cycleTimerViolation, violationKey: AppConstants.cycleTimeViolationKey)
             }

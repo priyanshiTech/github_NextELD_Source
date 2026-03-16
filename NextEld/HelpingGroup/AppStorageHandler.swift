@@ -54,6 +54,8 @@ struct AppStorageHandler {
     @AppStorage("warningOnDriveTime2") var warningOnDriveTime2: Int?
     @AppStorage("warningBreakTime1") var warningBreakTime1: Int?
     @AppStorage("warningBreakTime2") var warningBreakTime2: Int?
+    @AppStorage("cycleWarningTime1") var cycleWarningTime1: Int?
+    @AppStorage("cycleWarningTime2") var cycleWarningTime2: Int?
     
     @AppStorage("is34HourStarted") var is34HourStarted: String?
     @AppStorage("remainingBreakTime") var remainingBreakTime: Int = 0

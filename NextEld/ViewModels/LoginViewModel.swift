@@ -128,7 +128,7 @@ class LoginViewModel: ObservableObject {
                 
                 //MARK: -  value get from Rule module in Login Times
                 
-                if let cycleTime =  response.result?.rules?.first?.cycleTime{
+                if let cycleTime =  response.result?.rules?.first?.cycleTime {
                    // UserDefaults.standard.set(cycleTime, forKey: "cycleTime")
                     AppStorageHandler.shared.cycleTime = cycleTime
                     // print(" Saved to cycle Time: \(cycleTime)")
@@ -285,7 +285,7 @@ class LoginViewModel: ObservableObject {
                         AppStorageHandler.shared.warningOnDutyTime1 = warningOnDutyTime1
                     }
                 
-                    if let warningOnDutyTime2 =  response.result?.rules?.first?.warningOnDutyTime2{
+                    if let warningOnDutyTime2 =  response.result?.rules?.first?.warningOnDutyTime2 {
                        // UserDefaults.standard.set(warningOnDutyTime2, forKey: "warningOnDutyTime2")
                         AppStorageHandler.shared.warningOnDutyTime2 = warningOnDutyTime2
                     }
@@ -304,6 +304,16 @@ class LoginViewModel: ObservableObject {
                 if let warningBreakTime2 =  response.result?.rules?.first?.warningBreakTime2{
                        // UserDefaults.standard.set(warningBreakTime2, forKey: "warningBreakTime2")
                         AppStorageHandler.shared.warningBreakTime2 = warningBreakTime2
+                    }
+                
+                if let cycleWarningTime1 =  response.result?.rules?.first?.cycleWarningTime1{
+                       // UserDefaults.standard.set(warningBreakTime2, forKey: "warningBreakTime2")
+                        AppStorageHandler.shared.cycleWarningTime1 = cycleWarningTime1
+                    }
+                
+                if let cycleWarningTime2 =  response.result?.rules?.first?.cycleWarningTime2{
+                       // UserDefaults.standard.set(warningBreakTime2, forKey: "warningBreakTime2")
+                        AppStorageHandler.shared.cycleWarningTime2 = cycleWarningTime2
                     }
                 
                 // MARK: - Personal Use / Yard Move / Exempt flags
