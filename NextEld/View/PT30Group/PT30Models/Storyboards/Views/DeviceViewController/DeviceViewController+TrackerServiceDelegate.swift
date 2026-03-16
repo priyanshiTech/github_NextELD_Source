@@ -128,7 +128,9 @@ extension DeviceViewController: TrackerServiceDelegate {
             
         deviceInfoView.headingLabel.text = "\(event.geolocation.heading)"
         deviceInfoView.sateliteStatusLabel.text = "\(event.geolocation.isLocked ? "Locked" : "Not Locked") (Sat. Count: \(event.geolocation.sateliteCount))"
-        deviceInfoView.odometerLabel.text = "\(event.odometer) km"
+        currentOdometerKM = Double(event.odometer)
+        updateOdometer()
+      //  deviceInfoView.odometerLabel.text = "\(event.odometer) km"
         deviceInfoView.velocityLabel.text = "\(event.velocity) km/h"
         deviceInfoView.engineHoursLabel.text = "\(event.engineHours)"
         deviceInfoView.rpmLabel.text = "\(event.rpm)"
@@ -139,6 +141,7 @@ extension DeviceViewController: TrackerServiceDelegate {
 //        AppStorageHandler.shared.odometer = Double(event.odometer)
 //        AppStorageHandler.shared.engineHours = Double(event.engineHours)
         //HomeViewModel.engineStartNotification.send(event.rpm)
+        
         let userInfo = [
             "speed": convertKmToMile(event.velocity),
             "rpm": event.rpm,
@@ -154,6 +157,17 @@ extension DeviceViewController: TrackerServiceDelegate {
         processed(true)
     }
     
+    //MARK: for Mile & Kilometer
+    func updateOdometer() {
+
+        if SwitchToMile.isOn {
+            let miles = currentOdometerKM * 0.621371
+            deviceInfoView.odometerLabel.text = String(format: "%.2f Miles", miles)
+        } else {
+            deviceInfoView.odometerLabel.text = String(format: "%.2f km", currentOdometerKM)
+        }
+
+    }
     func trackerService(_ trackerService: TrackerService, didReceiveSPN spnEvent: SPNEventFrame, processed: ((Bool) -> Void)) {
         
     }

@@ -33,7 +33,6 @@
 		AF0F71AC2E34FA85005F950C /* TrailerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */; };
 		AF0F71AF2E34FAA2005F950C /* TrailerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F71AD2E34FAA2005F950C /* TrailerView.swift */; };
 		AF1073582EB52C0200C3CE0E /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1073572EB52C0200C3CE0E /* ImagePickerController.swift */; };
-		AF1356C82F63405C003CEC96 /* weekly_cycle60_min.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AF1356C72F63405C003CEC96 /* weekly_cycle60_min.m4a */; };
 		AF210E9B2E9A56B900E926DF /* privacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF210E9A2E9A56B900E926DF /* privacyPolicyView.swift */; };
 		AF217C122EC8507100A30C7D /* DisclamerAPIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF217C112EC8507100A30C7D /* DisclamerAPIModel.swift */; };
 		AF217C152EC851BA00A30C7D /* DisclamerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF217C142EC851BA00A30C7D /* DisclamerViewModel.swift */; };
@@ -151,6 +150,7 @@
 		AFA98C992E01826100E87802 /* FrimWareUpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */; };
 		AFAABC3E2F0D0674003A7311 /* BleConnectionBoxview.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAABC3D2F0D0674003A7311 /* BleConnectionBoxview.swift */; };
 		AFAABC412F0D22E4003A7311 /* Malfunction&dataDignosis.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAABC402F0D22E4003A7311 /* Malfunction&dataDignosis.swift */; };
+		AFB3BEBD2F6543A700D81487 /* weekly_cycle60_min.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AFB3BEBC2F6543A700D81487 /* weekly_cycle60_min.m4a */; };
 		AFB6A25F2EF0191A004D3C82 /* DefectSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB6A25E2EF0191A004D3C82 /* DefectSection.swift */; };
 		AFB7511B2E97C20900A4B65F /* Extension + View.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB7511A2E97C20900A4B65F /* Extension + View.swift */; };
 		AFB9430A2E029A7900AD19D7 /* TrackerPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB943082E029A7900AD19D7 /* TrackerPeripheral.swift */; };
@@ -333,7 +333,6 @@
 		AF0F71AB2E34FA85005F950C /* TrailerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerViewModel.swift; sourceTree = "<group>"; };
 		AF0F71AD2E34FAA2005F950C /* TrailerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailerView.swift; sourceTree = "<group>"; };
 		AF1073572EB52C0200C3CE0E /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
-		AF1356C72F63405C003CEC96 /* weekly_cycle60_min.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekly_cycle60_min.m4a; sourceTree = "<group>"; };
 		AF210E9A2E9A56B900E926DF /* privacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = privacyPolicyView.swift; sourceTree = "<group>"; };
 		AF217C112EC8507100A30C7D /* DisclamerAPIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclamerAPIModel.swift; sourceTree = "<group>"; };
 		AF217C142EC851BA00A30C7D /* DisclamerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclamerViewModel.swift; sourceTree = "<group>"; };
@@ -450,6 +449,7 @@
 		AFA98C982E01826100E87802 /* FrimWareUpdateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrimWareUpdateModel.swift; sourceTree = "<group>"; };
 		AFAABC3D2F0D0674003A7311 /* BleConnectionBoxview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleConnectionBoxview.swift; sourceTree = "<group>"; };
 		AFAABC402F0D22E4003A7311 /* Malfunction&dataDignosis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Malfunction&dataDignosis.swift"; sourceTree = "<group>"; };
+		AFB3BEBC2F6543A700D81487 /* weekly_cycle60_min.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = weekly_cycle60_min.m4a; sourceTree = "<group>"; };
 		AFB6A25E2EF0191A004D3C82 /* DefectSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefectSection.swift; sourceTree = "<group>"; };
 		AFB7511A2E97C20900A4B65F /* Extension + View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + View.swift"; sourceTree = "<group>"; };
 		AFB943082E029A7900AD19D7 /* TrackerPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerPeripheral.swift; sourceTree = "<group>"; };
@@ -1682,7 +1682,7 @@
 				CBAB6AD32F5ABCC30082B89E /* onduty_warning_punjabi.m4a */,
 				CBAB6AD42F5ABCC30082B89E /* weekily_warning_15min.m4a */,
 				CBAB6AD52F5ABCC30082B89E /* weekly_violation_punjabi.m4a */,
-				AF1356C72F63405C003CEC96 /* weekly_cycle60_min.m4a */,
+				AFB3BEBC2F6543A700D81487 /* weekly_cycle60_min.m4a */,
 				CBAB6AD62F5ABCC30082B89E /* weekly_warning_30min.m4a */,
 			);
 			path = AudioVoilation;
@@ -1820,7 +1820,7 @@
 				AFB943102E029C5B00AD19D7 /* Main.storyboard in Resources */,
 				AF217C212EC867F800A30C7D /* eld_disclaimer 1.html in Resources */,
 				AFB943192E029C9500AD19D7 /* DashboardReportView.xib in Resources */,
-				AF1356C82F63405C003CEC96 /* weekly_cycle60_min.m4a in Resources */,
+				AFB3BEBD2F6543A700D81487 /* weekly_cycle60_min.m4a in Resources */,
 				AF8EB9D12ECDDACB006614A3 /* LocalizablePunjabi.strings in Resources */,
 				AFC06FA12F5C5B3700AEB97F /* LocalizableSpanish.strings in Resources */,
 				AFB9431A2E029C9500AD19D7 /* DeviceInfoView.xib in Resources */,

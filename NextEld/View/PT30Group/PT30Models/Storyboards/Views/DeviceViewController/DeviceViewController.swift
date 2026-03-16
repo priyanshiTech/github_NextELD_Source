@@ -29,6 +29,8 @@ class DeviceViewController: UIViewController {
     @IBOutlet var firmwareVersionLabel: UILabel!
     @IBOutlet var bleVersionLabel: UILabel!
     
+    @IBOutlet weak var SwitchToMile: UISwitch!
+    @IBOutlet weak var switchTextLabel: UILabel!
     @IBOutlet var vinLabel: UILabel!
     @IBOutlet var imeiLabel: UILabel!
     @IBOutlet var imeiTitleLabel: UILabel!
@@ -43,7 +45,7 @@ class DeviceViewController: UIViewController {
     @IBOutlet var tabViewTopConstraint: NSLayoutConstraint!
     
     @IBOutlet var updateFirmwareButton: UIButton!
-    
+    var currentOdometerKM: Double = 0
     var updateStartTime: DispatchTime?
     
     var delegate: DeviceHandlerDelegate?
@@ -89,7 +91,7 @@ class DeviceViewController: UIViewController {
             virtualDashboardScrollView.isHidden = false
         }
     }
-    
+
     func refreshDeviceInfo(withTrackerInfo trackerInfo: TrackerInfo) {
         modelLabel.text = trackerInfo.productName
         serialLabel.text = trackerInfo.serialNumber
@@ -118,6 +120,18 @@ class DeviceViewController: UIViewController {
     @IBAction func reloadStoredEventsCountTapped(_ sender: UIButton) {
         fetchStoredEventsCount()
     }
+    
+    @IBAction func actionOnSwitch(_ sender: UISwitch) {
+        
+        if sender.isOn {
+        switchTextLabel.text = "Miles"
+        } else {
+        switchTextLabel.text = "Kilometer"
+        }
+
+        updateOdometer()
+    }
+    
     
     func fetchStoredEventsCount() {
         trackerService.getStoredEventsCount { response, error in

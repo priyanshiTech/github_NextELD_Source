@@ -806,9 +806,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         breakTimer                = CountdownTimer(startTime: breakRemainingTime)
         
 
-      //  setupTimerCallbacks()
-
+        //setupTimerCallbacks()
         // Resume
+        
         setDriverStatus(status: status)
     }
 
@@ -1054,7 +1054,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             AudioWarningManager.shared.playWarningAudio(fileName: "weekily_warning_15min")
 
         case (.cycleTimerViolation, .violation):
-
             let cycleHours = Double(AppStorageHandler.shared.cycleTime ?? 0) / 3600
 
             if cycleHours <= 60 {
@@ -1142,7 +1141,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
                 remainingOnDriveTime = totalTime
                 DatabaseManager.shared.updateValues(id: lastRecord.id ?? 0, remainingCycleTime: remainingCycleTime, remainingOnDutyTime: remainingOnDutyTime, remainingOnDriveTime: remainingOnDriveTime)
             }
-            
             onDutyTimer = CountdownTimer(startTime: remainingOnDutyTime)
             cycleTimer = CountdownTimer(startTime: remainingCycleTime)
             onDriveTimer = CountdownTimer(startTime: remainingOnDriveTime)
