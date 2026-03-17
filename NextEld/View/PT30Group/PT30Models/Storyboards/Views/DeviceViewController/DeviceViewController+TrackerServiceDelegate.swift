@@ -36,7 +36,9 @@ extension DeviceViewController: TrackerServiceDelegate {
         dashboardReportView.busLabel.text = busString
         dashboardReportView.gearLabel.text = virtualDashboardData.currentGear != nil ? "\(virtualDashboardData.currentGear!)" : "-"
         dashboardReportView.seatBeltLabel.text = virtualDashboardData.seatbeltOn != nil ? (virtualDashboardData.seatbeltOn! ? "Yes" : "No") : "-"
-        dashboardReportView.speedLabel.text = virtualDashboardData.speed != nil ? "\(virtualDashboardData.speed!)" : "-"
+        //dashboardReportView.speedLabel.text = virtualDashboardData.speed != nil ? "\(virtualDashboardData.speed!)" : "-"
+        
+        updateSpeed()
         dashboardReportView.rpmLabel.text = virtualDashboardData.rpm != nil ? "\(virtualDashboardData.rpm!)" : "-"
         dashboardReportView.numberOfDtcLabel.text = virtualDashboardData.numberOfDTCPending != nil ? "\(virtualDashboardData.numberOfDTCPending!)" : "-"
         dashboardReportView.oilPressureLabel.text = virtualDashboardData.oilPressure != nil ? "\(virtualDashboardData.oilPressure!)" : "-"
@@ -167,6 +169,20 @@ extension DeviceViewController: TrackerServiceDelegate {
             deviceInfoView.odometerLabel.text = String(format: "%.2f km", currentOdometerKM)
         }
 
+    }
+    func updateSpeed() {
+        
+        guard let speed = trackerService.virtualDashboardData.speed else {
+            dashboardReportView.speedLabel.text = "-"
+            return
+        }
+        
+        if SwitchToMile.isOn {
+            let mileSpeed = Double(speed) * 0.621371
+            dashboardReportView.speedLabel.text = String(format: "%.2f miles", mileSpeed)
+        } else {
+            dashboardReportView.speedLabel.text = "\(speed) km/h"
+        }
     }
     func trackerService(_ trackerService: TrackerService, didReceiveSPN spnEvent: SPNEventFrame, processed: ((Bool) -> Void)) {
         
