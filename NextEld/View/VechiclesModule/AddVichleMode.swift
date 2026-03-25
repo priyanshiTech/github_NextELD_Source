@@ -14,8 +14,8 @@ struct AddVichleMode: View {
     @EnvironmentObject var appRootManager: AppRootManager
     @Binding var selectedVehicle: String
     @Binding var selectedVehicleId: Int
-
-    //  use AddMacAddressViewModel here
+    @State private var showAlert = false
+    //use AddMacAddressViewModel here
     @StateObject private var viewModel = AddMacAddressViewModel(
         networkManager: NetworkManager()
     )
@@ -90,6 +90,10 @@ struct AddVichleMode: View {
             }
 
             Button(action: {
+                if selectedVehicle.isEmpty || selectedVehicleId == 0 {
+                       showAlert = true
+                       return
+                   }
                 Task {
                     await viewModel.addMacAddress(
                         macAddress: "", // example values
@@ -152,6 +156,11 @@ struct AddVichleMode: View {
         }
         
         .navigationBarBackButtonHidden()
+        .alert("Select Vehicle", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Please select a vehicle before submitting.")
+        }
     }
 }
 

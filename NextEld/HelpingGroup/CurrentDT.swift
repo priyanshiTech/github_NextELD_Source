@@ -22,7 +22,7 @@ struct DateTimeHelper {
         calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .current
         calendar.locale = Locale(identifier: "en_US_POSIX")
         return calendar
-    }
+    } 
     
     static var currentCalendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)

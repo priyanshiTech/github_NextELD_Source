@@ -14,6 +14,7 @@ struct ADDVehicle: View {
     @EnvironmentObject var navmanager: NavigationManager
     @EnvironmentObject var appRootManager: AppRootManager
     @State private var searchText = ""
+    @State private var showAlert = false
 
     @StateObject private var vehicleVM = VehicleInfoViewModel(networkManager: NetworkManager())
 
@@ -38,6 +39,7 @@ struct ADDVehicle: View {
             HStack {
                 // Back Button (left corner)
                 Button(action: {
+                    
                     navmanager.goBack()
                 }) {
                     Image(systemName: "arrow.left")
@@ -102,7 +104,12 @@ struct ADDVehicle: View {
             .listStyle(PlainListStyle())
             // Submit Button
             Button {
-                navmanager.goBack()
+                if selectedVehicleNumber.isEmpty || VechicleID == 0 {
+                       showAlert = true
+                   } else {
+                       navmanager.goBack()
+                   }
+                //navmanager.goBack()
             } label: {
                 Text("Submit")
                     .frame(maxWidth: .infinity)
@@ -114,6 +121,11 @@ struct ADDVehicle: View {
             }
             .disabled(selectedVehicleNumber.isEmpty || VechicleID == 0)
             .padding(.bottom, 16)
+            .alert("Select Vehicle", isPresented: $showAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please select a vehicle before submitting.")
+            }
         }
         .edgesIgnoringSafeArea(.top)
         .navigationBarBackButtonHidden()
