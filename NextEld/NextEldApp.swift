@@ -40,5 +40,7 @@ struct NextEldApp: App {
         }
         .environmentObject(rootManager)
         .environmentObject(networkMonitor)
+        .environmentObject(NavigationManager())
+
     }
 }
