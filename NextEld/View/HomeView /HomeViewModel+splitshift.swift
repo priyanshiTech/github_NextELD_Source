@@ -27,16 +27,22 @@ struct SplitShiftLog {
 extension HomeViewModel {
     
     func checkForSplitShift() {
-        let totalSleepTaken = calculateOffDutyAndSleepTime()
+        let totalSleepAndOffdutyTimeTaken = calculateOffDutyAndSleepTime()
         let totalSleepRequired = AppStorageHandler.shared.onSleepTime ?? 0
-        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift]), (lastLog.status == AppConstants.onSleep || lastLog.status == AppConstants.offDuty || lastLog.status == AppConstants.personalUse), totalSleepTaken < totalSleepRequired else {
+        guard let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift]), (lastLog.status == AppConstants.onSleep || lastLog.status == AppConstants.offDuty || lastLog.status == AppConstants.personalUse), totalSleepAndOffdutyTimeTaken < totalSleepRequired else {
             return
         }
         
          if let lastSplitRecord = getLastRecordFromSplitShiftLog() {
+             var totalSleep: TimeInterval = totalSleepAndOffdutyTimeTaken
              let alternateSplitType = getAlternateSplitType(duration: lastSplitRecord.splitTime)
+             
+             if alternateSplitType == .sleep8hours || alternateSplitType == .sleep7hours {
+                 totalSleep = calculateTotalSleepTimeOnly()
+             }
+             
              let alternateDuration = alternateSplitType.getSeconds()
-             if totalSleepTaken > alternateDuration {
+             if totalSleep > alternateDuration {
                  DatabaseManager.shared.updateIdentifier(uniqueId: lastLog.id ?? 0, identifier: 1)
                  // reset sleep time to alertnate remaining sleep
                  let remainingSleepTime = totalSleepRequired - alternateDuration
@@ -51,6 +57,8 @@ extension HomeViewModel {
                      self.sleepTimer = CountdownTimer(startTime: remainingSleepTime)
                      updateSplitDuration(id: lastSplitRecord.id, duration: shiftType.getSeconds())
                      updateTimeAfterSplitShiftEnds()
+                 } else {
+                     self.sleepTimer = CountdownTimer(startTime: totalSleepRequired)
                  }
              }
          } else {
@@ -60,6 +68,8 @@ extension HomeViewModel {
                  let remainingSleepTime = totalSleepRequired - shiftType.getSeconds()
                  self.sleepTimer = CountdownTimer(startTime: remainingSleepTime)
                  saveSplitShiftRecord(for: shiftType, status: currentDriverStatus.getName())
+             } else {
+                 self.sleepTimer = CountdownTimer(startTime: totalSleepRequired)
              }
          }
     }
@@ -89,6 +99,7 @@ extension HomeViewModel {
             return .none
         }
         let calculatedSleepTime = calculateOffDutyAndSleepTime()
+        let totalSleepTime = calculateTotalSleepTimeOnly() // used for 7 hour and 8 hours
         
         var splitShiftType: SplitShiftType = .none
         
@@ -96,10 +107,13 @@ extension HomeViewModel {
             splitShiftType = .sleep2hours
         } else if calculatedSleepTime > SplitShiftType.sleep3hours.getSeconds() && calculatedSleepTime < SplitShiftType.sleep7hours.getSeconds() {
             splitShiftType = .sleep3hours
-        } else if calculatedSleepTime > SplitShiftType.sleep7hours.getSeconds() && calculatedSleepTime < SplitShiftType.sleep8hours.getSeconds() {
+        } else if totalSleepTime > SplitShiftType.sleep7hours.getSeconds() && calculatedSleepTime < SplitShiftType.sleep8hours.getSeconds() {
             splitShiftType = .sleep7hours
-        } else if calculatedSleepTime > SplitShiftType.sleep8hours.getSeconds() && calculatedSleepTime < SplitShiftType.sleep10hours.getSeconds() {
+        } else if totalSleepTime > SplitShiftType.sleep8hours.getSeconds() && calculatedSleepTime < SplitShiftType.sleep10hours.getSeconds() {
             splitShiftType = .sleep8hours
+        } else {
+            splitShiftType = .none
+            DatabaseManager.shared.deleteAllSplitShiftLogs()
         }
         return splitShiftType
     }

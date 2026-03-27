@@ -585,21 +585,21 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         var timerTypes: [TimerType] = []
         
 
-        //MArk: -  Sleep reset logic
-        if previousStatus == .onsleep &&
-           (status == .yardMode || status == .onDuty || status == .onDrive) {
-
-            let sleepElapsed = (sleepTimer?.startDuration ?? 0) - (sleepTimer?.remainingTime ?? 0)
-
-            let twoHours: TimeInterval = 2 * 60 * 60
-
-            if sleepElapsed < twoHours {
-                print("Sleep less than 2 hours → Reset sleep timer")
-
-                sleepTimer?.stop()
-                sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
-            }
-        }
+//        //MArk: -  Sleep reset logic
+//        if previousStatus == .onsleep &&
+//           (status == .yardMode || status == .onDuty || status == .onDrive) {
+//
+//            let sleepElapsed = (sleepTimer?.startDuration ?? 0) - (sleepTimer?.remainingTime ?? 0)
+//
+//            let twoHours: TimeInterval = 2 * 60 * 60
+//
+//            if sleepElapsed < twoHours {
+//                print("Sleep less than 2 hours → Reset sleep timer")
+//
+//                sleepTimer?.stop()
+//                sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
+//            }
+//        }
 
         switch status {
 
@@ -701,6 +701,9 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             }
             
             DatabaseManager.shared.updateValues(id: lastRecord.id ?? 0, remainingCycleTime: cycleTime, remainingOnDutyTime: onDutyRemainingTime)
+        } else if calculateTotalSleepTimeOnly() < twoHrs {
+            // default sleep case, reset to 10 hours
+            sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
         }
     }
 
