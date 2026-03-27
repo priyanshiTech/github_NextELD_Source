@@ -68,6 +68,17 @@ extension  HomeViewModel {
         return totalSleep
     }
     
+    // calucate sleep time to 10 hours to change day to next
+    func calculateTotalSleepTimeOnly() -> TimeInterval {
+        if let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.day, .shift]),
+           lastLog.status == AppConstants.onSleep {
+            let sleeptime = getElapsedTime(lastLog: lastLog)
+            debugPrint("total sleep taken: ", sleeptime.getHours())
+            return sleeptime
+        }
+        return 0
+    }
+
     func resetContinueDriveAfter30MinBreak() {
         resetBreakTime()
         resetContinueDriveTimeWhenMoveFromOnDrvieToOnDuty()
