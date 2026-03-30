@@ -146,4 +146,15 @@ extension HomeViewModel {
         }
         return splitShiftType
     }
+    
+    func resetSplit() {
+        if let splitLog = getLastRecordFromSplitShiftLog() {
+            let totalSleepRequired = AppStorageHandler.shared.onSleepTime ?? 0
+            let alternateSplitType = getAlternateSplitType(duration: splitLog.splitTime)
+            if alternateSplitType == .sleep8hours || alternateSplitType == .sleep7hours {
+                DatabaseManager.shared.deleteAllSplitShiftLogs()
+                self.sleepTimer = CountdownTimer(startTime: totalSleepRequired)
+            }
+        }
+    }
 }
