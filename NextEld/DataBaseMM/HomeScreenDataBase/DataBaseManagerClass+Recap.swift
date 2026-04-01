@@ -130,10 +130,10 @@ extension DatabaseManager {
                 return TimeInterval(remainingWeeklyTime)
             }
         }
-        return 0
+        return TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0)
     }
     
-    func getTodaysWork() -> (totalWorkedToday: TimeInterval, remainingWorkedToday: TimeInterval) {
+    func getTodaysWork() -> TimeInterval {
         let OnDutyTodayTotalTime = TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0)
         var dutySeconds: TimeInterval = 0
         var sleepDuration: TimeInterval = 0
@@ -179,10 +179,11 @@ extension DatabaseManager {
         }
         let dutyTime = max(0, OnDutyTodayTotalTime - dutySeconds)
         
-        return (dutySeconds, dutyTime)
+        return dutyTime
     }
     
     func getRemainingCycleTime() -> TimeInterval {
+        
         if let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.shift]),
            let remainingWeeklyTime = lastLog.remainingWeeklyTime {
             let status = DriverStatusType(fromName: lastLog.status) ?? .none
@@ -194,58 +195,8 @@ extension DatabaseManager {
                 return TimeInterval(remainingWeeklyTime)
             }
         }
-        return 0
-//        let today = DateTimeHelper.currentDateTime()
-//        let cycleLimit: TimeInterval = TimeInterval(AppStorageHandler.shared.cycleTime ?? 0)
-//        
-//        let allLogs = fetchLogs(filterTypes: [.shift])
-//        if allLogs.isEmpty {
-//            return cycleLimit
-//        }
-//        let logsForDay = allLogs.compactMap { log -> (Date, String)? in
-//            return (log.startTime, log.status)
-//        }
-//        .sorted { $0.0 < $1.0 }
-//        
-//        var dutySeconds: TimeInterval = 0
-//        var sleepDuration: TimeInterval = 0
-//        
-//        for (i, log) in logsForDay.enumerated() {
-//            let startDate = log.0
-//            let status = log.1
-//            
-//            let endDate: Date
-//            if i + 1 < logsForDay.count {
-//                endDate = logsForDay[i+1].0
-//            } else {
-//                endDate = today
-//            }
-//            
-//            let duration = max(0, endDate.timeIntervalSince(startDate))
-//            
-//            // cycle time include onDuty, onDrive, yardMove, personalUse
-//            // When offduty or sleep or together is < 2 hour count in cycle and onduty
-//            
-//            if status == AppConstants.onDuty || status == AppConstants.onDrive || status == AppConstants.yardMove || status == AppConstants.personalUse {
-//                
-//                // checking the continuous sleep or offduty
-//                if sleepDuration < (2 * 3600) {
-//                    dutySeconds += sleepDuration
-//                }
-//                dutySeconds += duration
-//                sleepDuration = 0
-//            } else if (status == AppConstants.offDuty || status == AppConstants.onSleep) {
-//                // if last record is offduty will not check < 2hour condition
-//                if i != (logsForDay.count - 1) {
-//                    sleepDuration += duration
-//                }
-//            }
-//            print("duration===",duration)
-    //    }
-        
-//        let cycleTime = max(0, cycleLimit - dutySeconds)
-//        return cycleTime
-    }
+        return TimeInterval(AppStorageHandler.shared.cycleTime ?? 0)
+     }
     
     
 }
