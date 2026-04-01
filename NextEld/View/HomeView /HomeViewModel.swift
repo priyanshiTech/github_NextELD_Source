@@ -620,9 +620,11 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             timerTypes = [.breakTimer, .sleepTimer]
 
         case .offDuty:
+            resetSplit()
             timerTypes = [.breakTimer]
 
         case .personalUse:
+            resetSplit()
             timerTypes = [.breakTimer]
 
         case .yardMode:
@@ -701,9 +703,6 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
             }
             
             DatabaseManager.shared.updateValues(id: lastRecord.id ?? 0, remainingCycleTime: cycleTime, remainingOnDutyTime: onDutyRemainingTime)
-        } else if calculateTotalSleepTimeOnly() < twoHrs {
-            // default sleep case, reset to 10 hours
-            sleepTimer = CountdownTimer(startTime: TimeInterval(AppStorageHandler.shared.onSleepTime ?? 0))
         }
     }
 
