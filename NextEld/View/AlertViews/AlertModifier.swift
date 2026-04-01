@@ -135,15 +135,29 @@ struct StatusDetailsPopup: View {
                 
                 VStack(alignment: .leading, spacing: 6) {
           
+//                    TextField("Enter note", text: $note)
+//                           .padding(.horizontal, 12)
+//                           .frame(height: 44)
+//                           .frame(maxWidth: .infinity)
+//                           .background(Color.white)
+//                           .overlay(
+//                               RoundedRectangle(cornerRadius: 8)
+//                                   .stroke(Color(uiColor: .wine), lineWidth: 1)
+//                           )
                     TextField("Enter note", text: $note)
-                           .padding(.horizontal, 12)
-                           .frame(height: 44)
-                           .frame(maxWidth: .infinity)
-                           .background(Color.white)
-                           .overlay(
-                               RoundedRectangle(cornerRadius: 8)
-                                   .stroke(Color(uiColor: .wine), lineWidth: 1)
-                           )
+                        .padding(.horizontal, 12)
+                        .frame(height: 44)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(uiColor: .wine), lineWidth: 1)
+                        )
+                        .onChange(of: note) { newValue in
+                            if newValue.count > 60 {
+                                note = String(newValue.prefix(60))
+                            }
+                        }
                     
                     if statusTitle.lowercased() == "onsleep" {
                         Text("NOTE: Split time will work with 7:3 & 8:2 ratio")
