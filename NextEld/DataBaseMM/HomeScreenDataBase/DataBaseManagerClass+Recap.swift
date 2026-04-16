@@ -118,23 +118,22 @@ extension DatabaseManager {
     
     func getRemainingWorkedToday() -> TimeInterval {
         if let lastLog = DatabaseManager.shared.getLastRecordOfDriverLogs(filterTypes: [.shift]),
-           let remainingWeeklyTime = lastLog.remainingDutyTime {
+           let remainingDutyTime = lastLog.remainingDutyTime {
             let status = DriverStatusType(fromName: lastLog.status) ?? .none
             let duration = DateTimeHelper.currentDateTime().timeIntervalSince(lastLog.startTime)
             let isYardMove = (status == .yardMode)
             let isDrive   = (status == .onDrive)
             let isOnDuty  = (status == .onDuty) || isDrive || isYardMove
             if isOnDuty {
-                return TimeInterval(remainingWeeklyTime - Int(duration))
+                return max(0, TimeInterval(remainingDutyTime - Int(duration)))
             } else {
-                return TimeInterval(remainingWeeklyTime)
+                return TimeInterval(remainingDutyTime)
             }
         }
         return TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0)
     }
     
     func getTodaysWork() -> TimeInterval {
-        let OnDutyTodayTotalTime = TimeInterval(AppStorageHandler.shared.onDutyTime ?? 0)
         var dutySeconds: TimeInterval = 0
         var sleepDuration: TimeInterval = 0
         let allLogs = fetchLogs(filterTypes: [.getTodayRecord])
@@ -177,9 +176,8 @@ extension DatabaseManager {
             }
             
         }
-        let dutyTime = max(0, OnDutyTodayTotalTime - dutySeconds)
         
-        return dutyTime
+        return dutySeconds
     }
     
     func getRemainingCycleTime() -> TimeInterval {
