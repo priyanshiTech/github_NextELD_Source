@@ -20,7 +20,7 @@ class SyncViewModel: ObservableObject {
         let unsyncedLogs = DatabaseManager.shared
             .fetchLogs(
                 filterTypes: [.notSync, .warning, .nextDayAlert],
-                addWarningAndViolation: true
+                addWarningAndViolation: true,limit: 10
             )
             .filter { log in
                 let status = log.status.trimmingCharacters(in: .whitespacesAndNewlines)
