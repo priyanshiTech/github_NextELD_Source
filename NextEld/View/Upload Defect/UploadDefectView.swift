@@ -148,7 +148,7 @@ extension UploadDefectView {
     }
     
     // Helper function to check if upload button should be shown for a specific defect type
-    private func shouldShowUploadButtonForDefectType(title: String) -> Bool {
+   private func shouldShowUploadButtonForDefectType(title: String) -> Bool {
         let recordToUse = currentRecord ?? selectedRecord
         guard let record = recordToUse else { return true }
         
@@ -173,7 +173,10 @@ extension UploadDefectView {
         
         return true
     }
+    
 }
+    
+    
 
 // MARK: - Popups
 extension UploadDefectView {
@@ -286,6 +289,20 @@ extension UploadDefectView {
     private var shouldShowUploadButton: Bool {
         let recordToUse = currentRecord ?? selectedRecord
         guard let record = recordToUse else { return false }
+
+        let truckDefect = record.truckDefect.trimmingCharacters(in: .whitespaces).lowercased()
+        let trailerDefect = record.trailerDefect.trimmingCharacters(in: .whitespaces).lowercased()
+
+        //  FIXED CONDITION
+        let isTruckNone = (truckDefect == "none" || truckDefect == "no")
+        let isTrailerNone = (trailerDefect == "none" || trailerDefect == "no")
+
+        return !(isTruckNone && isTrailerNone)
+    }
+    
+  /*  private var shouldShowUploadButton: Bool {
+        let recordToUse = currentRecord ?? selectedRecord
+        guard let record = recordToUse else { return false }
         
         let truckDefect = record.truckDefect.trimmingCharacters(in: .whitespaces).lowercased()
         let trailerDefect = record.trailerDefect.trimmingCharacters(in: .whitespaces).lowercased()
@@ -296,7 +313,7 @@ extension UploadDefectView {
         }
         
         return true
-    }
+    }*/
     
     private func initializeData() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
