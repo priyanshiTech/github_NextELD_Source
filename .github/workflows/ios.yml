@@ -40,7 +40,7 @@ jobs:
           xcodebuild clean build \
             -"$PARAM" "$FILE" \
             -scheme "$SCHEME" \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             ONLY_ACTIVE_ARCH=NO
