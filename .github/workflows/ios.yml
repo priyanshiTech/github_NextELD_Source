@@ -1,4 +1,3 @@
-
 name: iOS CI
 
 on:
@@ -9,38 +8,22 @@ on:
 
 jobs:
   build:
-    name: Build and Test
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Show structure (debug)
+      - name: Show Xcode Version
+        run: xcodebuild -version
+
+      - name: Show Project Structure
+        run: find . \( -name "*.xcodeproj" -o -name "*.xcworkspace" \)
+
+      - name: Build
         run: |
-          find . -name "*.xcodeproj" -o -name "*.xcworkspace" | grep -v ".xcodeproj/project.xcworkspace"
-          ls -la
-
-      - name: Build and Test
-        run: |
-          if ls | grep -qi "\.xcworkspace$"; then
-            FILE=$(ls | grep -i "\.xcworkspace$" | head -1)
-            PARAM="workspace"
-          else
-            FILE=$(ls | grep -i "\.xcodeproj$" | head -1)
-            PARAM="project"
-          fi
-
-          SCHEME=$(xcodebuild -"$PARAM" "$FILE" -list 2>/dev/null | awk '/Schemes:/,0' | tail -n +2 | head -1 | tr -d ' ')
-
-          echo "FILE: $FILE"
-          echo "PARAM: $PARAM"
-          echo "SCHEME: $SCHEME"
-
+          FILE="NextEld.xcodeproj"
           xcodebuild clean build \
-            -"$PARAM" "$FILE" \
-            -scheme "$SCHEME" \
-           -destination 'platform=iOS Simulator,id=8D0474B3-1BD6-45B2-A9B9-219DBB956747' \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            ONLY_ACTIVE_ARCH=NO
+            -project "$FILE" \
+            -scheme "NextEld" \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            CODE_SIGNING_ALLOWED=NO
