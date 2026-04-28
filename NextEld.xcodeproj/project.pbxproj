@@ -865,13 +865,13 @@
 			path = "String Folder";
 			sourceTree = "<group>";
 		};
-		AF2E0D242E8BBFA000172174 /* ContinueDrive  */ = {
+		AF2E0D242E8BBFA000172174 /* ContinueDrive */ = {
 			isa = PBXGroup;
 			children = (
 				AF2E0D252E8BBFCE00172174 /* ContinueDriveDB.swift */,
 				AF2E0D272E8BC5B200172174 /* ContinueDriveView.swift */,
 			);
-			path = "ContinueDrive ";
+			path = "ContinueDrive";
 			sourceTree = "<group>";
 		};
 		AF3A59302EB4F3D9007A438F /* Upload Defect */ = {
@@ -1478,7 +1478,7 @@
 			isa = PBXGroup;
 			children = (
 				AFA6621C2F0FC5950052FB07 /* DeviceDataDB */,
-				AF2E0D242E8BBFA000172174 /* ContinueDrive  */,
+				AF2E0D242E8BBFA000172174 /* ContinueDrive */,
 				AF66F78E2E4C6344009A13A0 /* DataBaseForCertify */,
 				AF7951172E3BA7B5005FFFBF /* DvirProDatabase */,
 				AF7951122E3BA766005FFFBF /* HomeScreenDataBase */,
