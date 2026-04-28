@@ -8,22 +8,21 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Show Xcode Version
-        run: xcodebuild -version
+      - name: Resolve Packages
+        run: xcodebuild -resolvePackageDependencies -project NextEld.xcodeproj
 
-      - name: Show Project Structure
-        run: find . \( -name "*.xcodeproj" -o -name "*.xcworkspace" \)
-
-      - name: Build
+      - name: Build App
         run: |
-          FILE="NextEld.xcodeproj"
           xcodebuild clean build \
-            -project "$FILE" \
-            -scheme "NextEld" \
-            -destination 'platform=iOS Simulator,name=iPhone 15' \
-            CODE_SIGNING_ALLOWED=NO
+          -project NextEld.xcodeproj \
+          -scheme NextEld \
+          -destination 'generic/platform=iOS Simulator' \
+          -derivedDataPath /tmp/DerivedData \
+          CODE_SIGNING_ALLOWED=NO \
+          COMPILER_INDEX_STORE_ENABLE=NO
