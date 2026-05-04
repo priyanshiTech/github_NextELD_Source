@@ -1162,7 +1162,7 @@ class HomeViewModel: ObservableObject, Hashable, Equatable {
         if let workEntry = DatabaseManager.shared.getRecapeAfterSevenDays() {
             let totalTime = workEntry.hoursWorked + remainingCycleTime
             if totalTime > onDutyTime {
-                remainingCycleTime =  onDutyTime
+                remainingCycleTime =  totalTime
             } else if totalTime > onDriveTime && totalTime <= onDutyTime {
                 remainingCycleTime = totalTime
                 remainingOnDutyTime = totalTime
